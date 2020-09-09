@@ -1,0 +1,156 @@
+scalar AWSDateTime
+directive @aws_iam on FIELD_DEFINITION | OBJECT
+directive @aws_cognito_user_pools on FIELD_DEFINITION | OBJECT
+directive @aws_subscribe on FIELD_DEFINITION
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+type Subscription {
+    updateTaskProgress: Task @aws_subscribe(mutations: ["updateTaskProgress"])
+}
+
+
+type Query {
+    """
+    Get a task list.
+
+    Arguments
+    limit: The max number of items to return. Default 20.
+    nextToken: Pagination token. Optional.
+    """
+    listTasks(limit: Int = 20, nextToken: String): ModelTaskConnection
+
+    """
+    Get a task object by ID.
+    """
+    getTask(id: ID!): Task
+}
+
+type Mutation {
+    createTask(input: CreateTaskInput!): Task @aws_iam @aws_cognito_user_pools
+    # updateTask(id: String, input: UpdateTaskInput!): Task @aws_iam @aws_cognito_user_pools
+    updateTaskProgress(id: String, input: UpdateTaskProgressInput): Task @aws_iam
+    stopTask(id: String): Task @aws_iam @aws_cognito_user_pools
+}
+
+
+
+input UpdateTaskProgressInput {
+    toal: Int
+    replicated: Int
+}
+
+"""
+Task. A Data Replication Hub task.
+"""
+type Task @aws_iam @aws_cognito_user_pools{
+    "ID. Auto-generated."
+    id: ID!
+
+    "Explanatory description of the task."
+    description: String
+
+    "Task type"
+    type: TaskType!
+
+    "The CloudFormation template url."
+    templateUrl: String
+
+    "CloudFormation template parameters."
+    parameters: [ TaskParameter ]
+
+    "Task creation time."
+    createdAt: AWSDateTime
+
+    "Task stop time."
+    stoppedAt: AWSDateTime
+
+    "Task progress indicator."
+    progress: TaskProgress
+
+    "Task progress information."
+    progressInfo: CommonProgressInfo
+
+    "CloudFormation Stack ID"
+    stackId: String
+
+    "CloudFormation Stack status"
+    stackStatus: String
+
+    "CloudFormation Stack status reason. Normally holds error message."
+    stackStatusReason: String
+
+    "StepFunctions execution ARN."
+    executionArn: String
+}
+
+"""
+The set of task types supported by AWS Data Replication Hub.
+"""
+enum TaskType {
+    S3
+    DynamoDB
+    ECR
+}
+
+"""
+Task progress indicator.
+"""
+enum TaskProgress {
+    "The task has been started. The underlying infrastructure is provisioning."
+    STARTING
+
+    "The task is stopping. The underlying infrastructure is being destroyed."
+    STOPPING
+
+    "Error occurs."
+    ERROR
+
+    "Task in progress."
+    IN_PROGRESS
+
+    "Done. This is used for one-time replication task ONLY."
+    DONE
+
+    "Task stopped. The underlying infrastructure has been destroyed."
+    STOPPED
+}
+
+type CommonProgressInfo @aws_iam{
+    "Total number of records. In S3 task, it is the total number of objects."
+    total: Int
+
+    "Number of records being replicated."
+    replicated: Int
+}
+
+
+type TaskParameter {
+    ParameterKey: String
+    ParameterValue: String
+}
+
+type ModelTaskConnection {
+    items: [Task],
+    nextToken: String
+}
+
+input TaskParameterInput {
+    ParameterKey: String
+    ParameterValue: String
+}
+
+input CreateTaskInput {
+    type: TaskType!
+    description: String
+    parameters: [ TaskParameterInput ]
+}
+
+input UpdateTaskInput {
+    description: String
+    parameters: [ TaskParameterInput ]
+}
