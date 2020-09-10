@@ -74,7 +74,7 @@ export class ConstructsStack extends cdk.Stack {
       description: 'Admin username'
     }).overrideLogicalId('AdminUsername')
     new cdk.CfnOutput(this, 'ApiEndpointOutput', {
-      value: dataReplicationHub.api.graphQlUrl
+      value: dataReplicationHub.api.graphqlUrl
     }).overrideLogicalId('ApiEndpoint')
   }
 }

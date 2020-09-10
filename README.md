@@ -161,4 +161,8 @@ or in the "license" file accompanying this file. This file is distributed on an 
 
 ```
 cdk deploy --parameters AdminEmail=qiaoshi@amazon.com
+cdk deploy --parameters AdminEmail=qiaoshi@amazon.com -c DryRun=True
+
+aws cognito-idp admin-set-user-password --user-pool-id us-west-2_gGtvk35qo --username qiaoshi@amazon.com --password 'Sq110966!@#' --permanent
 ```
+

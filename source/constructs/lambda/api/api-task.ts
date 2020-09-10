@@ -1,6 +1,6 @@
 import * as AWS from "aws-sdk";
 import { Context } from "aws-lambda";
-import {Task, CreateTaskInput, UpdateTaskInput, assert, pprint, CommonTaskProgress, makeid,} from '../../../common/common';
+import {Task, CreateTaskInput, UpdateTaskInput, assert, pprint, CommonTaskProgress, makeid,} from '../common';
 import { v4 as uuidv4 } from 'uuid';
 
 type CreateTaskInputArg = {

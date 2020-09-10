@@ -17,7 +17,7 @@ export class AwsDataReplicationHubStack extends Construct {
 
   readonly taskTable: ddb.Table
   readonly userPool: cognito.UserPool
-  readonly api: appsync.GraphQLApi
+  readonly api: appsync.GraphqlApi
   readonly userPoolApiClient: cognito.UserPoolClient
   readonly userPoolDomain: cognito.UserPoolDomain
 
@@ -43,8 +43,30 @@ export class AwsDataReplicationHubStack extends Construct {
       nonKeyAttributes: ['id', 'status', 'stackStatus']
     })
 
+    const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
+        bundling: {
+          image: lambda.Runtime.NODEJS_12_X.bundlingDockerImage,
+          command: [
+            'bash', '-c', [
+              `cd /asset-output/`,
+              `mkdir nodejs`,
+              `cp /asset-input/nodejs/package.json /asset-output/nodejs/`,
+              `cd /asset-output/nodejs/`,
+              `npm install`
+            ].join(' && ')
+          ],
+          user: 'root'
+        }
+      }),
+      compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
+      description: 'AWS Data Replication Hub - Lambda Layer'
+    })
+
+
     const stateMachine = new cfnSate.CloudFormationStateMachine(this, 'CfnWorkflow', {
-      taskTableName: this.taskTable.tableName
+      taskTableName: this.taskTable.tableName,
+      lambdaLayer: lambdaLayer
     })
 
     // Create Cognito User Pool
@@ -94,31 +116,31 @@ export class AwsDataReplicationHubStack extends Construct {
     // })
 
     // Create the GraphQL API Endpoint, enable Cognito User Pool Auth and IAM Auth.
-    this.api = new appsync.GraphQLApi(this, 'ApiEndpoint', {
+    this.api = new appsync.GraphqlApi(this, 'ApiEndpoint', {
       name: 'ReplicationHubAPI',
-      schemaDefinition: appsync.SchemaDefinition.FILE,
-      schemaDefinitionFile: path.join(__dirname, '../../schema/schema.graphql'),
+      schema: appsync.Schema.fromAsset(path.join(__dirname, '../../schema/schema.graphql')),
       authorizationConfig: {
         defaultAuthorization: {
           authorizationType: appsync.AuthorizationType.USER_POOL,
           userPoolConfig: {
             userPool: this.userPool,
-            appIdClientRegex: this.userPoolApiClient.userPoolClientId
+            appIdClientRegex: this.userPoolApiClient.userPoolClientId,
+            defaultAction: appsync.UserPoolDefaultAction.ALLOW
           }
         },
         additionalAuthorizationModes: [
           {
-            authorizationType: appsync.AuthorizationType.IAM
+            authorizationType: appsync.AuthorizationType.IAM,
           }
         ]
       },
       logConfig: {
-        fieldLogLevel: appsync.FieldLogLevel.ERROR
+        fieldLogLevel: appsync.FieldLogLevel.ALL
       },
       xrayEnabled: true
     })
 
-    const taskDS = this.api.addDynamoDbDataSource('TaskTableDS', 'Table for Task', this.taskTable)
+    const taskDS = this.api.addDynamoDbDataSource('TaskTableDS', this.taskTable)
 
     taskDS.createResolver({
       typeName: 'Query',
@@ -134,18 +156,15 @@ export class AwsDataReplicationHubStack extends Construct {
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem()
     })
 
-    const lambdaLayer = new lambda.LayerVersion(this, 'LambdaLayer', {
-      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/cdk/')),
-      compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
-      description: 'AWS Data Replication Hub - Lambda Layer used by CDK'
-    })
 
     // Create Lambda Data Source
     const isDryRun = this.node.tryGetContext('DRY_RUN')
     const taskHandlerFn = new lambda.Function(this, 'TaskHandlerFn', {
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/')),
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: [ 'cdk/*', 'layer/*' ]
+      }),
       runtime: lambda.Runtime.NODEJS_12_X,
-      handler: 'api-task.handler',
+      handler: 'api/api-task.handler',
       timeout: Duration.seconds(10),
       memorySize: 512,
       environment: {
@@ -166,7 +185,9 @@ export class AwsDataReplicationHubStack extends Construct {
       ]
     }))
 
-    const lambdaDS = this.api.addLambdaDataSource('TaskLambdaDS', 'Task Handler Lambda Datasource', taskHandlerFn);
+    const lambdaDS = this.api.addLambdaDataSource('TaskLambdaDS', taskHandlerFn, {
+      description: 'Lambda Resolver Datasource'
+    });
 
     lambdaDS.createResolver({
       typeName: 'Mutation',

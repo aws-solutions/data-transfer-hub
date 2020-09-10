@@ -1,4 +1,4 @@
-import { makeid } from "../../common/common";
+import { makeid } from "../lambda/common";
 
 test('makeid function', () => {
   const id = makeid(10)

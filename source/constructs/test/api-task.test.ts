@@ -1,5 +1,5 @@
 import * as task from '../lambda/api/api-task'
-import { TaskType } from '../../common/common'
+import { TaskType } from '../lambda/common'
 import * as AWSMock from 'aws-sdk-mock'
 import * as AWS from 'aws-sdk'
 import {StartExecutionOutput} from "aws-sdk/clients/stepfunctions"

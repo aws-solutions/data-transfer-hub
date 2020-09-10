@@ -27,22 +27,22 @@
 #  - version-code: version of the package
 
 ## Important: CDK global version number
-#cdk_version=1.57.0
+cdk_version=1.62.0
 #
-## Check to see if the required parameters have been provided:
-#if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-#    echo "Please provide the base source bucket name, trademark approved solution name and version where the lambda code will eventually reside."
-#    echo "For example: ./build-s3-dist.sh solutions trademarked-solution-name v1.0.0"
-#    exit 1
-#fi
-#
-## Get reference for all important folders
-#template_dir="$PWD"
-#staging_dist_dir="$template_dir/staging"
-#template_dist_dir="$template_dir/global-s3-assets"
-#build_dist_dir="$template_dir/regional-s3-assets"
-#source_dir="$template_dir/../source"
-#
+# Check to see if the required parameters have been provided:
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Please provide the base source bucket name, trademark approved solution name and version where the lambda code will eventually reside."
+    echo "For example: ./build-s3-dist.sh solutions trademarked-solution-name v1.0.0"
+    exit 1
+fi
+
+# Get reference for all important folders
+template_dir="$PWD"
+staging_dist_dir="$template_dir/staging"
+template_dist_dir="$template_dir/global-s3-assets"
+build_dist_dir="$template_dir/regional-s3-assets"
+source_dir="$template_dir/../source"
+
 #echo "------------------------------------------------------------------------------"
 #echo "[Init] Remove any old dist files from previous runs"
 #echo "------------------------------------------------------------------------------"
@@ -69,13 +69,13 @@
 #echo "npm install"
 #npm install
 #
-#echo "------------------------------------------------------------------------------"
-#echo "[Synth] CDK Project"
-#echo "------------------------------------------------------------------------------"
-#
-# Install the global aws-cdk package
-#echo "npm install -g aws-cdk@$cdk_version"
-#npm install -g aws-cdk@$cdk_version
+##echo "------------------------------------------------------------------------------"
+##echo "[Synth] CDK Project"
+##echo "------------------------------------------------------------------------------"
+##
+## Install the global aws-cdk package
+##echo "npm install -g aws-cdk@$cdk_version"
+##npm install -g aws-cdk@$cdk_version
 #
 #
 ## Run 'npm run build && cdk synth' to generate raw solution outputs
@@ -134,82 +134,82 @@
 #replace="s/%%VERSION%%/$3/g"
 #echo "sed -i '' -e $replace $template_dist_dir/*.template"
 #sed -i '' -e $replace $template_dist_dir/*.template
-
-
-echo "------------------------------------------------------------------------------"
-echo "[Packing] Source code artifacts"
-echo "------------------------------------------------------------------------------"
+#
+#
+#echo "------------------------------------------------------------------------------"
+#echo "[Packing] Source code artifacts"
+#echo "------------------------------------------------------------------------------"
 
 # General cleanup of node_modules and package-lock.json files
-echo "find $staging_dist_dir -iname "node_modules" -type d -exec rm -rf "{}" \; 2> /dev/null"
+#echo "find $staging_dist_dir -iname "node_modules" -type d -exec rm -rf "{}" \; 2> /dev/null"
 #find $staging_dist_dir -iname "node_modules" -type d -exec rm -rf "{}" \; 2> /dev/null
 #echo "find $staging_dist_dir -iname "package-lock.json" -type f -exec rm -f "{}" \; 2> /dev/null"
 #find $staging_dist_dir -iname "package-lock.json" -type f -exec rm -f "{}" \; 2> /dev/null
 #
 ## ... For each asset.* source code artifact in the temporary /staging folder...
-#cd $staging_dist_dir
-#for d in `find . -mindepth 1 -maxdepth 1 -type d`; do
-#
-#    # Rename the artifact, removing the period for handler compatibility
-#    pfname="$(basename -- $d)"
-#    fname="$(echo $pfname | sed -e 's/\.//g')"
-#    echo "zip -r $fname.zip $fname"
-#    mv $d $fname
-#
-#    # Build the artifcats
-#    if ls $fname/*.py 1> /dev/null 2>&1; then
-#        echo "===================================="
-#        echo "This is Python runtime"
-#        echo "===================================="
-#        cd $fname
-#        venv_folder="./venv-prod/"
-#        rm -fr .venv-test
-#        rm -fr .venv-prod
-#        echo "Initiating virtual environment"
-#        python3 -m venv $venv_folder
-#        source $venv_folder/bin/activate
-#        pip3 install -q -r requirements.txt --target .
-#        deactivate
-#        cd $staging_dist_dir/$fname/$venv_folder/lib/python3.*/site-packages
-#        echo "zipping the artifact"
-#        zip -qr9 $staging_dist_dir/$fname.zip .
-#        cd $staging_dist_dir/$fname
-#        zip -gq $staging_dist_dir/$fname.zip *.py util/*
-#        cd $staging_dist_dir
-#    elif ls $fname/*.js 1> /dev/null 2>&1; then
-#        echo "===================================="
-#        echo "This is Node runtime"
-#        echo "===================================="
-#        cd $fname
-#        echo "Clean and rebuild artifacts"
-#        npm run clean
-#        npm ci
-#        if [ "$?" = "1" ]; then
-#	        echo "ERROR: Seems like package-lock.json does not exists or is out of sync with package.josn. Trying npm install instead" 1>&2
-#            npm install
-#        fi
-#        cd $staging_dist_dir
-#        # Zip the artifact
-#        echo "zip -r $fname.zip $fname"
-#        zip -rq $fname.zip $fname
-#    fi
-#
-#    # Copy the zipped artifact from /staging to /regional-s3-assets
-#    echo "cp $fname.zip $build_dist_dir"
-#    cp $fname.zip $build_dist_dir
-#
-#    # Remove the old, unzipped artifact from /staging
-#    echo "rm -rf $fname"
-#    rm -rf $fname
-#
-#    # Remove the old, zipped artifact from /staging
-#    echo "rm $fname.zip"
-#    rm $fname.zip
-#
-#    # ... repeat until all source code artifacts are zipped and placed in the
-#    # ... /regional-s3-assets folder
-#
-#done
+cd $staging_dist_dir
+for d in `find . -mindepth 1 -maxdepth 1 -type d`; do
+
+    # Rename the artifact, removing the period for handler compatibility
+    pfname="$(basename -- $d)"
+    fname="$(echo $pfname | sed -e 's/\.//g')"
+    echo "zip -r $fname.zip $fname"
+    mv $d $fname
+
+    # Build the artifcats
+    if ls $fname/*.py 1> /dev/null 2>&1; then
+        echo "===================================="
+        echo "This is Python runtime"
+        echo "===================================="
+        cd $fname
+        venv_folder="./venv-prod/"
+        rm -fr .venv-test
+        rm -fr .venv-prod
+        echo "Initiating virtual environment"
+        python3 -m venv $venv_folder
+        source $venv_folder/bin/activate
+        pip3 install -q -r requirements.txt --target .
+        deactivate
+        cd $staging_dist_dir/$fname/$venv_folder/lib/python3.*/site-packages
+        echo "zipping the artifact"
+        zip -qr9 $staging_dist_dir/$fname.zip .
+        cd $staging_dist_dir/$fname
+        zip -gq $staging_dist_dir/$fname.zip *.py util/*
+        cd $staging_dist_dir
+    elif ls $fname/*.js 1> /dev/null 2>&1; then
+        echo "===================================="
+        echo "This is Node runtime"
+        echo "===================================="
+        cd $fname
+        echo "Clean and rebuild artifacts"
+        npm run clean
+        npm ci
+        if [ "$?" = "1" ]; then
+	        echo "ERROR: Seems like package-lock.json does not exists or is out of sync with package.josn. Trying npm install instead" 1>&2
+            npm install
+        fi
+        cd $staging_dist_dir
+        # Zip the artifact
+        echo "zip -r $fname.zip $fname"
+        zip -rq $fname.zip $fname
+    fi
+
+    # Copy the zipped artifact from /staging to /regional-s3-assets
+    echo "cp $fname.zip $build_dist_dir"
+    cp $fname.zip $build_dist_dir
+
+    # Remove the old, unzipped artifact from /staging
+    echo "rm -rf $fname"
+    rm -rf $fname
+
+    # Remove the old, zipped artifact from /staging
+    echo "rm $fname.zip"
+    rm $fname.zip
+
+    # ... repeat until all source code artifacts are zipped and placed in the
+    # ... /regional-s3-assets folder
+
+done
 #
 #echo "------------------------------------------------------------------------------"
 #echo "[Cleanup] Remove temporary files"

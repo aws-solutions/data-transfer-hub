@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { Context, } from 'aws-lambda';
-import { CreateTaskInput, pprint, assert, makeid } from '../../../common/common';
+import { CreateTaskInput, pprint, assert, makeid } from '../common';
 
 interface QueryTaskCfnResponse {
   stackId: string,

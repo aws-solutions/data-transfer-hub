@@ -38,7 +38,6 @@ type Mutation {
 }
 
 
-
 input UpdateTaskProgressInput {
     toal: Int
     replicated: Int
@@ -120,7 +119,7 @@ enum TaskProgress {
     STOPPED
 }
 
-type CommonProgressInfo @aws_iam{
+type CommonProgressInfo @aws_iam @aws_cognito_user_pools{
     "Total number of records. In S3 task, it is the total number of objects."
     total: Int
 

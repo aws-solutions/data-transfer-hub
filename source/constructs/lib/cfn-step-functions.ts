@@ -7,6 +7,7 @@ import * as path from 'path'
 
 export interface CloudFormationStateMachineProps {
   taskTableName: string,
+  lambdaLayer: lambda.LayerVersion
 }
 
 export class CloudFormationStateMachine extends cdk.Construct {
@@ -16,39 +17,28 @@ export class CloudFormationStateMachine extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: CloudFormationStateMachineProps) {
     super(scope, id);
 
-    // Create a Lambda Layer
-    const layer = new lambda.LayerVersion(this, 'LambdaLayer', {
-      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
-        bundling: {
-          image: lambda.Runtime.NODEJS_12_X.bundlingDockerImage,
-          command: [
-            'bash', '-c', 'pip install'
-          ]
-        }
-      }),
-      compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
-      description: 'AWS Data Replication Hub API Lambda Layer'
-    })
-
     const createTaskCfnFn = new lambda.Function(this, 'CreateTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      // TODO: need to include common.ts
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/cdk/')),
-      handler: 'cfn-task.createTaskCfn',
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: [ 'api/*', 'layer/*' ]
+      }),
+      handler: 'cdk/cfn-task.createTaskCfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [ layer ]
+      layers: [ props.lambdaLayer ]
     })
 
     const stopTaskCfnFn = new lambda.Function(this, 'StopTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/cdk/')),
-      handler: 'cfn-task.stopTaskCfn',
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: [ 'api/*', 'layer/*' ]
+      }),
+      handler: 'cdk/cfn-task.stopTaskCfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [ layer ]
+      layers: [ props.lambdaLayer ]
     })
 
     // TODO: The CloudFormation creation lambda needs Admin permission.
@@ -71,12 +61,14 @@ export class CloudFormationStateMachine extends cdk.Construct {
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/cdk/')),
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: [ 'api/*', 'layer/*' ]
+      }),
       handler: 'cdk/cfn-task.queryTaskCfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [ layer ]
+      layers: [ props.lambdaLayer ]
     })
     queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
