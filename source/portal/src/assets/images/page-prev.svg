@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Previous</title>
+    <defs>
+        <polygon id="path-1" points="10 1 11.2844632 2.28446319 5.56964066 8 11.2844632 13.7155368 10 15 3 8"></polygon>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Table-/-Pagination-/-Basic-+-preferences" transform="translate(-3.000000, -9.000000)">
+            <g id="Icon-previous" transform="translate(0.000000, 8.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Icon" fill="#545B64" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

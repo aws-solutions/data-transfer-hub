@@ -1,0 +1,140 @@
+// @font-face {font-family: "Amazon Ember"; src: url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.eot"); src: url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.woff") format("woff"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.svg#Amazon Ember") format("svg"); }
+// $font-family: "Amazon Ember", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+// 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+// sans-serif;
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen','Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+
+body, input, button {
+  font-size: 14px;
+  margin: 0;
+  font-family: $font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #F2F3F3;
+}
+
+.MuiTypography-body1, .MuiButton-root, .MuiTab-root {
+  font-family: $font-family !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.hand-point {
+  cursor: pointer;
+  label {
+    cursor: pointer;
+  }
+}
+
+.login-wrap {
+  width: 460px;
+  margin: 50px auto 0;
+}
+
+.logout-btn-style {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.loading-style {
+  text-align: center;
+  margin: 40px auto;
+}
+
+.background-white {
+  background: "#fff"
+}
+
+.padding-20 {
+  padding: 20px;
+}
+
+.padding-15 {
+  padding: 15px;
+  button {
+    margin-left: 10px;
+  }
+}
+
+.padding-left-40 {
+  padding-left: 0px;
+}
+
+.padding-right-40 {
+  padding-right: 40px;
+}
+
+.margin-left-40 {
+  margin-left: 40px;
+}
+
+.info-span {
+  color: #0073bb;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.drh-page {
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  .left {
+    // position: absolute;
+    position: relative;
+    z-index: 1;
+    // left: 0;
+    // top: 0;
+    // bottom: 0;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 2px #ccc;
+    width: 40px;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    &.opened {
+      width: 280px;
+      cursor: default;
+      &:hover {
+        background-color: #ffffff;
+      }
+    }
+  }
+  .right {
+    position: relative;
+    z-index: 4;
+    flex: 1;
+    overflow: auto;
+    padding-bottom: 30px;
+    .bottom {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      z-index: 999;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background-color: #232F3E;
+    }
+  }
+}
+
+.MuiButton-root {
+  text-transform: none !important;
+}

@@ -1,0 +1,22 @@
+{
+  "title": "AWS Data Replication Hub",
+  "top": {
+    "account": "Account"
+  },
+  "home": {
+    "title": {
+      "createTitle": "Create Replication Task",
+      "quickStart": "快速开始",
+      "moreResouce": "更多资源"
+    }
+  },
+  "bottom": {
+    "copy": "© 2008 - 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
+    "feedback":"Feedback",
+    "privacy":"Privacy Policy",
+    "use": "Terms of Use"
+  },
+  "btn": {
+    "next": "Next Step"
+  }
+}
