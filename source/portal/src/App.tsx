@@ -3,8 +3,8 @@ import { withTranslation } from "react-i18next";
 import { HashRouter, Route } from "react-router-dom";
 
 import Amplify, { Auth } from "aws-amplify";
-// import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
-// import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
+import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
 import AWSAppSyncClient, { AUTH_TYPE } from "aws-appsync";
 // import { Rehydrated } from "aws-appsync-react";
@@ -41,39 +41,20 @@ const Loader = () => (
 );
 
 const App: React.FC = () => {
-  // const [authState, setAuthState] = React.useState<AuthState>();
-  // const [user, setUser] = React.useState<any | undefined>();
+  const [authState, setAuthState] = React.useState<AuthState>();
+  const [user, setUser] = React.useState<any | undefined>();
 
-  // React.useEffect(() => {
-  //   return onAuthUIStateChange((nextAuthState, authData: any) => {
-  //     setAuthState(nextAuthState);
-  //     setUser(authData);
-  //     if (authData && authData.hasOwnProperty("attributes")) {
-  //       localStorage.setItem("authDataEmail", authData.attributes.email);
-  //     }
-  //   });
-  // }, []);
+  React.useEffect(() => {
+    return onAuthUIStateChange((nextAuthState, authData: any) => {
+      setAuthState(nextAuthState);
+      setUser(authData);
+      if (authData && authData.hasOwnProperty("attributes")) {
+        localStorage.setItem("authDataEmail", authData.attributes.email);
+      }
+    });
+  }, []);
 
-  return (
-    <div className="bp3-dark">
-      <TopBar />
-      <HashRouter>
-        <Route path="/" exact component={HomePage}></Route>
-        <Route path="/home" exact component={HomePage}></Route>
-        <Route path="/create/step1" exact component={StepOnePage}></Route>
-        <Route path="/create/step2/s3" exact component={StepTwoS3Page}></Route>
-        <Route
-          path="/create/step3/s3"
-          exact
-          component={StepThreeS3Page}
-        ></Route>
-        <Route path="/task/list" exact component={ListPage}></Route>
-        <Route path="/task/detail/:id" exact component={DetailPage}></Route>
-      </HashRouter>
-    </div>
-  );
-
-  // return authState === AuthState.SignedIn && user ? (
+  // return (
   //   <div className="bp3-dark">
   //     <TopBar />
   //     <HashRouter>
@@ -90,11 +71,30 @@ const App: React.FC = () => {
   //       <Route path="/task/detail/:id" exact component={DetailPage}></Route>
   //     </HashRouter>
   //   </div>
-  // ) : (
-  //   <div className="login-wrap">
-  //     <AmplifyAuthenticator />
-  //   </div>
   // );
+
+  return authState === AuthState.SignedIn && user ? (
+    <div className="bp3-dark">
+      <TopBar />
+      <HashRouter>
+        <Route path="/" exact component={HomePage}></Route>
+        <Route path="/home" exact component={HomePage}></Route>
+        <Route path="/create/step1" exact component={StepOnePage}></Route>
+        <Route path="/create/step2/s3" exact component={StepTwoS3Page}></Route>
+        <Route
+          path="/create/step3/s3"
+          exact
+          component={StepThreeS3Page}
+        ></Route>
+        <Route path="/task/list" exact component={ListPage}></Route>
+        <Route path="/task/detail/:id" exact component={DetailPage}></Route>
+      </HashRouter>
+    </div>
+  ) : (
+    <div className="login-wrap">
+      <AmplifyAuthenticator />
+    </div>
+  );
 };
 
 const client = new AWSAppSyncClient(
