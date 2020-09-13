@@ -3,6 +3,7 @@
 
 import * as cdk from '@aws-cdk/core';
 import { AwsDataReplicationHubStack, AwsDataReplicationHubProps } from './aws-data-replication-hub-stack';
+import { S3StaticWebsiteStack } from "./s3-static-site-stack";
 import { CfnParameter } from '@aws-cdk/core';
 
 const { VERSION } = process.env;
@@ -55,6 +56,10 @@ export class ConstructsStack extends cdk.Stack {
 
     // Data Replication Hub Construct
     const dataReplicationHub = new AwsDataReplicationHubStack(this, 'AwsDataReplicationHub', drhProps);
+
+    // S3 Static Website
+    const s3StaticWebsiteStack = new S3StaticWebsiteStack(this, 'S3StaticWebsiteStack');
+    console.info(s3StaticWebsiteStack)
 
     // Outputs
     new cdk.CfnOutput(this, 'UserPoolIdOutput', {
