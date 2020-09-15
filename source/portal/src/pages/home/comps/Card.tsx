@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CUR_SUPPORT_LANGS } from "../../../assets/config/const";
 
 import "./Card.scss";
 
@@ -9,8 +10,15 @@ interface DATA_TYPE {
 
 const Card: React.FC<DATA_TYPE> = (props: any) => {
   const { i18n } = useTranslation();
-  const titleStr = i18n.language + "_title";
-  const nameStr = i18n.language + "_name";
+  const [titleStr, setTitleStr] = useState("en_title");
+  const [nameStr, setNameStr] = useState("en_name");
+
+  useEffect(() => {
+    if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
+      setTitleStr(i18n.language + "_title");
+      setNameStr(i18n.language + "_name");
+    }
+  }, [i18n.language])
 
   const { contentInfo } = props;
   return (

@@ -91,7 +91,6 @@ const List: React.FC = () => {
     // Build Pagination Data
     // First build Table Data
     const dataListArr: any = [];
-    console.info("apiData.data.listTasks:", apiData.data.listTasks);
     // If click the next, set New Next token
     if (direction === "next") {
       if (apiData.data.listTasks.nextToken) {

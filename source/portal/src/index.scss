@@ -36,7 +36,16 @@ code {
 
 .login-wrap {
   width: 460px;
-  margin: 50px auto 0;
+  margin: 100px auto 0;
+  .text-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 26px;
+    color: #ff9900;
+    text-shadow: 1px 1px #ddd;
+    // color: #fff;
+    padding: 5px 0 10px 0;
+  }
 }
 
 .logout-btn-style {

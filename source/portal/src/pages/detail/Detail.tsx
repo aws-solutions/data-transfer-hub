@@ -105,9 +105,8 @@ const Detail: React.FC = (props: any) => {
   const [progress, setProgress] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [isStopLoading, setIsStopLoading] = useState(false);
-
-  // const id = props.match.params.id;
-  // console.info("id:",id);
+  const [accountInSrc, setAccountInSrc] = useState("-");
+  const [accountInDest, setAccountInDest] = useState("-");
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
@@ -117,7 +116,6 @@ const Detail: React.FC = (props: any) => {
         id: taskId,
       },
     });
-    console.info("apiData:", apiData);
     const tmpCurTask = apiData.data.getTask;
     // Calculate the progress
     if (
@@ -141,7 +139,15 @@ const Detail: React.FC = (props: any) => {
           : "-";
       });
     }
-    setCurTaskInfo(tmpCurTask); // console.info("apiData.data.listTasks:", apiData.data.listTasks);
+    if (tmpCurTask.jobType === "PUT") {
+      setAccountInSrc("Yes")
+      setAccountInDest("No")
+    }
+    if (tmpCurTask.jobType === "GET") {
+      setAccountInSrc("No")
+      setAccountInDest("Yes")
+    }
+    setCurTaskInfo(tmpCurTask); 
     setIsLoading(false);
   }
 
@@ -162,9 +168,9 @@ const Detail: React.FC = (props: any) => {
           id: taskId,
         },
       });
+      console.info(stopResData);
       setIsStopLoading(false);
       setOpen(false);
-      console.info("stopResData:", stopResData);
       fetchNotes(props.match.params.id);
     } catch (error) {
       console.error("error:", error.errors[0].message.toString());
@@ -174,10 +180,9 @@ const Detail: React.FC = (props: any) => {
   // Subscribtion Progress Data
   useEffect(() => {
     const subscriber: any = API.graphql(graphqlOperation(updateTaskProgress));
-    console.info("subscriber:", subscriber);
     subscriber.subscribe({
       next: (data: any) => {
-        console.info("data:", data.value.data.updateTaskProgress.id);
+        console.info(data);
         if (data.value.data.updateTaskProgress.id === props.match.params.id) {
           fetchNotes(props.match.params.id);
         }
@@ -321,9 +326,9 @@ const Detail: React.FC = (props: any) => {
                           <div>{curTaskInfo.srcBucketPrefix}</div>
                           <br />
                           <div className="sub-name">
-                            Bucket in this account?
+                            Bucket in This Account?
                           </div>
-                          <div>Yes</div>
+                          <div>{accountInSrc}</div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
@@ -337,9 +342,9 @@ const Detail: React.FC = (props: any) => {
                           <div>{curTaskInfo.destBucketPrefix}</div>
                           <br />
                           <div className="sub-name">
-                            Bucket in this Account?
+                            Bucket in This Account?
                           </div>
-                          <div>No</div>
+                          <div>{accountInDest}</div>
                           <br />
                           <div className="sub-name">
                             Paramete Store for AWS credentials

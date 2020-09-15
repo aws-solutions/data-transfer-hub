@@ -7,7 +7,10 @@
 }
 
 .creation-content {
+  // width: 1180px;
+  // margin: 0 auto;
   display: flex;
+  text-align: left;
   .creation-step {
     width: 320px;
     padding: 10px 50px 20px 40px;
@@ -15,7 +18,10 @@
   .creation-info {
     // flex: 1;
     padding: 10px 20px;
-    width: 840px;
+    // width: 840px;
+    // width: 100%;
+    padding-right: 70px;
+    flex: 1;
     .box-shadow {
       background-color: #ffffff;
       box-shadow: 0px 2px 2px #ccc;
@@ -80,7 +86,7 @@
           .preview-row {
             display: flex;
             .key {
-              width: 320px;
+              width: 350px;
             }
             .value {
               flex: 1;
@@ -139,7 +145,7 @@
         }
       }
       &-list {
-        width: 800px;
+        // width: 800px;
         padding-left: 20px;
         padding-bottom: 30px;
         &-item {

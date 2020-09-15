@@ -54,7 +54,7 @@ type Task @aws_iam @aws_cognito_user_pools{
     description: String
 
     "Task type"
-    type: TaskType!
+    type: TaskType
 
     "The CloudFormation template url."
     templateUrl: String

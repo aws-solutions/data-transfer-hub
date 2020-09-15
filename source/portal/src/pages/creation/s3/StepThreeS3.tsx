@@ -29,6 +29,7 @@ import IMG_STATUS from "../../../assets/images/status.svg";
 import "../Creation.scss";
 import { EnumSourceType } from "../../../assets/types/index";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { S3_PARAMS_LIST_MAP } from "../../../assets/config/const";
 
 interface IParameterType {
   ParameterKey: string;
@@ -49,15 +50,17 @@ const initCredentialJson = {
   Version: "2012-10-17",
   Statement: [
     {
-      Action: ["s3:Get*", "s3:ListBucket"],
+      Action: [],
       Effect: "Allow",
-      Resource: [
-        "arn:aws-cn:s3:::qiaoshi-solutions",
-        "arn:aws-cn:s3:::qiaoshi-solutions/*",
-      ],
+      Resource: [],
     },
   ],
 };
+
+const JOB_TYPE_MAP:any = {
+  "PUT": "Source",
+  "GET": "Destination"
+}
 
 const StepOne: React.FC = () => {
   const handleClick = () => {
@@ -126,6 +129,20 @@ const StepOne: React.FC = () => {
     if (tmpTaskInfo && tmpTaskInfo.parametersObj) {
       const tmpJobType = tmpTaskInfo.parametersObj.jobType;
       tmpJson.Statement[0].Action = ["s3:" + tmpJobType + "*", "s3:ListBucket"];
+      // if job type is GET, set source bucket
+      if (tmpTaskInfo.parametersObj.jobType === "GET") {
+        tmpJson.Statement[0].Resource = [
+          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.srcBucketName+"",
+          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.srcBucketName+"/*"
+        ]
+      }
+      // if job type is PUT, set destination bucket
+      if (tmpTaskInfo.parametersObj.jobType === "PUT") {
+        tmpJson.Statement[0].Resource = [
+          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.destBucketName+"",
+          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.destBucketName+"/*"
+        ]
+      }
     }
     console.info("tmpJson:", tmpJson);
     // setCredentialJson(tmpJson);
@@ -196,7 +213,7 @@ const StepOne: React.FC = () => {
               <div className="box-shadow card-list">
                 <div className="option">
                   <div className="option-title">
-                    Task Parameters <span>(10)</span>
+                    Task Parameters <span>({paramsList.length})</span>
                     <div className="title-search">
                       <input
                         placeholder="Search parameters"
@@ -219,10 +236,16 @@ const StepOne: React.FC = () => {
                               key={index}
                             >
                               <div className="table-td key">
-                                {element.ParameterKey}
+                                {S3_PARAMS_LIST_MAP[element.ParameterKey]&&S3_PARAMS_LIST_MAP[element.ParameterKey].name}
                               </div>
                               <div className="table-td value">
-                                {element.ParameterValue}
+                                {
+                                  element.ParameterKey === "jobType" ? (<span>
+                                    {JOB_TYPE_MAP[element.ParameterValue]}
+                                  </span> 
+                                  ) : (<span>{element.ParameterValue}</span>)
+                                }
+                                
                               </div>
                             </div>
                           );

@@ -3,6 +3,7 @@
 
 import * as cdk from '@aws-cdk/core';
 import { AwsDataReplicationHubStack, AwsDataReplicationHubProps } from './aws-data-replication-hub-stack';
+import { CloudFrontToS3Props } from '@aws-solutions-constructs/aws-cloudfront-s3';
 import { S3StaticWebsiteStack } from "./s3-static-site-stack";
 import { CfnParameter } from '@aws-cdk/core';
 
@@ -54,12 +55,16 @@ export class ConstructsStack extends cdk.Stack {
       usernameParameter
     }
 
+    const cfnProps: CloudFrontToS3Props = {
+      cloudFrontDistributionProps: {},
+      insertHttpSecurityHeaders: false
+    }
+
     // Data Replication Hub Construct
     const dataReplicationHub = new AwsDataReplicationHubStack(this, 'AwsDataReplicationHub', drhProps);
 
     // S3 Static Website
-    const s3StaticWebsiteStack = new S3StaticWebsiteStack(this, 'S3StaticWebsiteStack');
-    console.info(s3StaticWebsiteStack)
+    const s3StaticWebsiteStack = new S3StaticWebsiteStack(this, 'S3StaticWebsiteStack', cfnProps);
 
     // Outputs
     new cdk.CfnOutput(this, 'UserPoolIdOutput', {
@@ -81,5 +86,8 @@ export class ConstructsStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ApiEndpointOutput', {
       value: dataReplicationHub.api.graphqlUrl
     }).overrideLogicalId('ApiEndpoint')
+    new cdk.CfnOutput(this, 'WebsiteURL', {
+      value: s3StaticWebsiteStack.websiteURL
+    }).overrideLogicalId('WebsiteURL')
   }
 }

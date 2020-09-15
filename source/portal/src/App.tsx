@@ -91,7 +91,8 @@ const App: React.FC = () => {
       </HashRouter>
     </div>
   ) : (
-    <div className="login-wrap">
+      <div className="login-wrap">
+      <div className="text-title">Welcome to Data Replication Hub</div>
       <AmplifyAuthenticator />
     </div>
   );

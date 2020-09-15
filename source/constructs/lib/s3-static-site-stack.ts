@@ -11,24 +11,29 @@
  *  and limitations under the License.
  */
 
-import { Construct, Duration, CfnOutput } from '@aws-cdk/core';
-import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
+import { Construct, Duration } from '@aws-cdk/core';
+import { CloudFrontToS3, CloudFrontToS3Props } from '@aws-solutions-constructs/aws-cloudfront-s3';
+
 import * as lambda from '@aws-cdk/aws-lambda';
 import { Provider } from '@aws-cdk/custom-resources';
 import { CustomResource } from '@aws-cdk/aws-cloudformation';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 
+
 export class S3StaticWebsiteStack extends Construct {
+
+  readonly websiteURL: string
+
   
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: CloudFrontToS3Props) {
     super(scope, id);
     // console.info(props)
-    // console.info(props)
+    console.info("PROPS:", props)
 
     const sourceBucket: string = 'magic-dest';
-    const sourcePrefix: string = 'drh-portal/ui/dev1.11/';
+    const sourcePrefix: string = 'drh-portal/ui/dev1.15/';
 
-    const construct:any = new CloudFrontToS3(this, 'CloudFrontToS3', {});
+    const construct: any = new CloudFrontToS3(this, 'CloudFrontToS3', props);
     const targetBucket: string = construct.s3Bucket.bucketName;
 
     const lambdaFunc = new lambda.Function(this, 'copyObjHandler', {
@@ -71,8 +76,10 @@ export class S3StaticWebsiteStack extends Construct {
       }
     });
 
-    new CfnOutput(this, 'websiteURL', {
-      value: 'https://' + construct.cloudFrontWebDistribution.domainName
-    });
+    this.websiteURL = 'https://' + construct.cloudFrontWebDistribution.domainName
+
+    // new CfnOutput(this, 'websiteURL', {
+    //   value: 'https://' + construct.cloudFrontWebDistribution.domainName
+    // });
   }
 }

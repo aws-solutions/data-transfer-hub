@@ -23,13 +23,15 @@ import {
   RESOURCE_LINKS,
 } from "../../assets/config/content";
 
+import { CUR_SUPPORT_LANGS } from "../../assets/config/const";
+
 const mapState = (state: IState) => ({
   isOpen: state.isOpen,
   lastUpdated: state.lastUpdated,
   todoCount: state.todos.length,
 });
 
-const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
+
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
