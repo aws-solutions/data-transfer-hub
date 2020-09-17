@@ -1,0 +1,43 @@
+{
+  "name": "aws-data-replication-hub",
+  "version": "0.1.0",
+  "bin": {
+    "cdk-solution": "bin/cdk-solution.js"
+  },
+  "scripts": {
+    "cleanup": "tsc --build .. --clean && rm -rf node_modules && rm -f package-lock.json",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "aws-cdk": "1.62.0",
+    "aws-sdk": "^2.736.0",
+    "aws-sdk-mock": "^5.1.0",
+    "@aws-cdk/assert": "1.62.0",
+    "@types/jest": "^25.2.1",
+    "@types/node": "10.17.5",
+    "@types/aws-lambda": "^8.10.61",
+    "jest": "^25.5.0",
+    "ts-jest": "^25.3.1",
+    "ts-node": "^8.1.0",
+    "typescript": "~3.7.2",
+    "@types/uuid": "^8.3.0",
+    "uuid": "^8.3.0"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "1.62.0",
+    "@aws-cdk/aws-appsync": "1.62.0",
+    "@aws-cdk/aws-cognito": "1.62.0",
+    "@aws-cdk/aws-dynamodb": "1.62.0",
+    "@aws-cdk/aws-lambda": "1.62.0",
+    "@aws-cdk/aws-stepfunctions": "1.62.0",
+    "@aws-cdk/aws-stepfunctions-tasks": "1.62.0",
+    "@aws-cdk/core": "1.62.0",
+    "@aws-solutions-constructs/aws-apigateway-lambda": "1.62.0",
+    "@aws-solutions-constructs/aws-cloudfront-s3": "^1.62.0",
+    "@aws-solutions-constructs/core": "1.62.0",
+    "source-map-support": "^0.5.16"
+  }
+}
