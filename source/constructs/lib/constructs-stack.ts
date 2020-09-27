@@ -6,6 +6,8 @@ import { AwsDataReplicationHubStack, AwsDataReplicationHubProps } from './aws-da
 import { CloudFrontToS3Props } from '@aws-solutions-constructs/aws-cloudfront-s3';
 import { S3StaticWebsiteStack } from "./s3-static-site-stack";
 import { CfnParameter } from '@aws-cdk/core';
+import { TaskNetwork } from "./task-network";
+import { TaskCluster } from "./task-cluster";
 
 const { VERSION } = process.env;
 
@@ -59,6 +61,24 @@ export class ConstructsStack extends cdk.Stack {
       cloudFrontDistributionProps: {},
       insertHttpSecurityHeaders: false
     }
+
+    const taskNetwork = new TaskNetwork(this, 'TaskNetwork')
+
+    const taskCluster = new TaskCluster(this, 'TaskCluster', {
+      vpc: taskNetwork.vpc
+    })
+
+    new cdk.CfnOutput(this, 'TaskVpc', {
+      exportName: 'TaskVpcId',
+      description: 'Task VPC ID',
+      value: taskNetwork.vpc.vpcId
+    })
+
+    new cdk.CfnOutput(this, 'TaskClusterOutput', {
+      exportName: 'TaskClusterName',
+      description: 'Task Cluster Name',
+      value: taskCluster.clusterName
+    })
 
     // Data Replication Hub Construct
     const dataReplicationHub = new AwsDataReplicationHubStack(this, 'AwsDataReplicationHub', drhProps);
