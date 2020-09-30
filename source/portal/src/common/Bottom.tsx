@@ -5,6 +5,8 @@ import "./Bottom.scss";
 import LanguageIcon from "../assets/images/language.png";
 import FeedbackIcon from "../assets/images/feedback.svg";
 
+import { URL_FEEDBACK } from "../assets/config/const";
+
 const langList = [
   {
     id: "en",
@@ -47,10 +49,12 @@ const Bottom: React.FC = () => {
   };
   return (
     <div className="page-bottom">
+      <a rel="noopener noreferrer" href={URL_FEEDBACK} target="_blank">
       <div className="item feedback">
         <img alt="feedback" src={FeedbackIcon} />
         {t("bottom.feedback")}
-      </div>
+        </div>
+      </a>
       <div className="item language">
         {showLang ? (
           <div className="language-select">

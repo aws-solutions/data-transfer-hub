@@ -44,7 +44,8 @@ export function makeStore(): any {
     createTaskFlag: false,
     tmpTaskInfo: {},
     infoIsOpen: false,
-    isOpen: localStorage.getItem("drhIsOpen") ? true : false,
+    isOpen: false,
+    // isOpen: localStorage.getItem("drhIsOpen") ? true : false,
     lastUpdated: 0,
     todos: [],
   });

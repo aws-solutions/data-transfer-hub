@@ -38,10 +38,6 @@ import "./TaskList.scss";
 import STATUS_OK from "../../assets/images/status-ok.svg";
 // import SETTING_ICON from "../../assets/images/setting-icon.svg";
 
-import STATUS_PENDING from "../../assets/images/icon-status-pending.svg";
-import STATUS_PROGRESS from "../../assets/images/icon-status-progress.svg";
-import STATUS_ERROR from "../../assets/images/icon-status-error.svg";
-import STATUS_DONE from "../../assets/images/icon-status-done.svg";
 
 import PAGE_PREV from "../../assets/images/page-prev.svg";
 import PAGE_PREV_DISABLED from "../../assets/images/page-prev-disable.svg";
@@ -49,6 +45,8 @@ import PAGE_NEXT from "../../assets/images/page-next.svg";
 import PAGE_NEXT_DISABLED from "../../assets/images/page-next-disable.svg";
 
 // import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
+import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
 
 export interface State extends SnackbarOrigin {
   open: boolean;
@@ -73,9 +71,10 @@ const List: React.FC = () => {
   const [isLastpage, setIsLast] = useState(false);
   const [pageTokenArr, setPageTokenArr] = useState<any>([null]);
   const [taskListData, setTaskListData] = useState<any>([]);
-  const [curSelectTask, setCurSelectTask] = useState<string>("");
+  const [curSelectTask, setCurSelectTask] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
+  const [messageOpen, setMessageOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertType, setAlertType] = useState("");
 
@@ -135,12 +134,12 @@ const List: React.FC = () => {
   };
 
   const goToDetail = () => {
-    if (!curSelectTask) {
+    if (curSelectTask === null) {
       setAlertType("detail");
       setOpenAlert(true);
       return;
     }
-    const toPath = `/task/detail/${curSelectTask}`;
+    const toPath = `/task/detail/${curSelectTask.id}`;
     history.push({
       pathname: toPath,
     });
@@ -161,15 +160,16 @@ const List: React.FC = () => {
       refreshData();
     } catch (error) {
       console.error("error:", error.errors[0].message.toString());
-      const errorMsg = "";
+      const errorMsg = error.errors[0].message.toString();
       setIsStopLoading(false);
+      setMessageOpen(true);
       setErrorMessage(errorMsg);
       showErrorMessage();
     }
   }
 
   const stopCurTask = () => {
-    if (curSelectTask) {
+    if (curSelectTask !== null) {
       setOpen(true);
     } else {
       setAlertType("stop");
@@ -187,40 +187,35 @@ const List: React.FC = () => {
     [key: string]: StatusType;
   }
 
-  // 0:pending, 1: success/done, -1: error, 2: in progress
-  const statusMap: StatusDataType = {
-    STARTING: { name: "Starting", src: STATUS_PENDING, class: "gray" },
-    STOPPING: { name: "Stopping", src: STATUS_PENDING, class: "gray" },
-    ERROR: { name: "Error", src: STATUS_ERROR, class: "error" },
-    IN_PROGRESS: { name: "In Progress", src: STATUS_PROGRESS, class: "gray" },
-    DONE: { name: "Done", src: STATUS_DONE, class: "success" },
-    STOPPED: { name: "Starting", src: STATUS_PENDING, class: "gray" },
+  
+
+  const changeRadioSelect = (event:any) => {
+    console.info("event:",event);
   };
 
-  const changeRadioSelect = () => {
-    console.info("changed");
-  };
-
-  const clickTaskInfo = (event: any) => {
-    setCurSelectTask(event.currentTarget.dataset.uuid);
+  const clickTaskInfo = (taskInfo: any, event:any) => {
+    console.info("taskInfo:", taskInfo);
+    console.info("event:", event);
+    setCurSelectTask(taskInfo);
   };
 
   const refreshData = () => {
     setCurPage(1);
     setIsLast(false);
+    setCurSelectTask(null);
     getTaskList(null, "next");
   };
 
   const toPrevPage = () => {
     setIsLast(false);
-    setCurSelectTask("");
+    setCurSelectTask(null);
     const newCurPage = curPage - 1;
     setCurPage(newCurPage < 1 ? 1 : newCurPage);
     getTaskList(pageTokenArr[newCurPage - 1], "prev");
   };
 
   const toNextPage = () => {
-    setCurSelectTask("");
+    setCurSelectTask(null);
     const newCurPage = curPage + 1;
     if (pageTokenArr.indexOf(nextToken) === -1) {
       pageTokenArr.push(nextToken);
@@ -244,12 +239,16 @@ const List: React.FC = () => {
   };
 
   const confirmStopTask = () => {
-    stopTaskFunc(curSelectTask);
+    stopTaskFunc(curSelectTask.id);
   };
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
+
+  const handleCloseMessage = () => {
+    setMessageOpen(false);
+  }
 
   return (
     <div className="drh-page">
@@ -273,7 +272,7 @@ const List: React.FC = () => {
         <DialogTitle id="alert-dialog-title">{"Stop Task"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to stop the Task <b>{curSelectTask}</b>
+            Are you sure you want to stop the Task <b>{ curSelectTask && curSelectTask.id }</b>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -300,9 +299,14 @@ const List: React.FC = () => {
       {tipsOpen && (
         <Snackbar
           anchorOrigin={{ horizontal: "center", vertical: "top" }}
-          open={true}
-          message={errorMessage}
-        />
+          open={messageOpen}
+          onClose={handleCloseMessage}
+          autoHideDuration={1500}
+        >
+          <Alert severity="error">
+            {errorMessage}
+          </Alert>
+        </Snackbar>
       )}
       <LeftMenu />
       <div className="right">
@@ -340,10 +344,10 @@ const List: React.FC = () => {
                     <NormalButton onClick={refreshData}>
                       <RefreshIcon width="10" />
                     </NormalButton>
-                    <NormalButton onClick={goToDetail}>
+                    <NormalButton disabled={curSelectTask===null} onClick={goToDetail}>
                       View Details
                     </NormalButton>
-                    <NormalButton onClick={stopCurTask}>Stop</NormalButton>
+                    <NormalButton disabled={curSelectTask===null || curSelectTask.progress === EnumTaskStatus.STOPPING || curSelectTask.progress === EnumTaskStatus.STOPPED } onClick={stopCurTask}>Stop</NormalButton>
                     <PrimaryButton onClick={goToStepOne}>
                       Create Task
                     </PrimaryButton>
@@ -351,7 +355,7 @@ const List: React.FC = () => {
                 </div>
                 <div className="search">
                   <div className="search-input">
-                    <input type="text" placeholder="Find resources" />
+                    {/* <input type="text" placeholder="Find resources" /> */}
                   </div>
                   <div className="pagination">
                     <div>
@@ -398,19 +402,19 @@ const List: React.FC = () => {
                     {taskListData.map((element: any, index: any) => {
                       const rowClass = classNames({
                         "table-row": true,
-                        active: curSelectTask === element.id,
+                        active: curSelectTask&&curSelectTask.id === element.id,
                       });
                       return (
                         <div
-                          onClick={clickTaskInfo}
+                          onClick={(event)=>{clickTaskInfo(element, event)}}
                           data-uuid={element.id}
                           key={index}
                           className={rowClass}
                         >
                           <div className="table-item check-item center">
                             <input
-                              onChange={changeRadioSelect}
-                              checked={curSelectTask === element.id}
+                              onChange={(event)=>{changeRadioSelect(event)}}
+                              checked={curSelectTask?(curSelectTask.id === element.id):false}
                               type="radio"
                               name="taskList"
                             />
@@ -433,7 +437,7 @@ const List: React.FC = () => {
                             <div
                               className={
                                 element.progress
-                                  ? statusMap[element.progress].class +
+                                  ? TASK_STATUS_MAP[element.progress].class +
                                     " status"
                                   : "status"
                               }
@@ -441,17 +445,17 @@ const List: React.FC = () => {
                               <img
                                 alt={
                                   element.progress
-                                    ? statusMap[element.progress].name
+                                    ? TASK_STATUS_MAP[element.progress].name
                                     : ""
                                 }
                                 src={
                                   element.progress
-                                    ? statusMap[element.progress].src
+                                    ? TASK_STATUS_MAP[element.progress].src
                                     : ""
                                 }
                               />
                               {element.progress
-                                ? statusMap[element.progress].name
+                                ? TASK_STATUS_MAP[element.progress].name
                                 : ""}
                             </div>
                           </div>
