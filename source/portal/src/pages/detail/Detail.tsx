@@ -32,6 +32,8 @@ import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 import InfoSpan from "../../common/InfoSpan";
 import ProgressBar from "../../common/comp/ProgressBar";
 
+import { EnumTaskStatus } from "../../assets/types/index";
+
 import "./Detail.scss";
 
 interface StyledTabProps {
@@ -140,14 +142,14 @@ const Detail: React.FC = (props: any) => {
       });
     }
     if (tmpCurTask.jobType === "PUT") {
-      setAccountInSrc("Yes")
-      setAccountInDest("No")
+      setAccountInSrc("Yes");
+      setAccountInDest("No");
     }
     if (tmpCurTask.jobType === "GET") {
-      setAccountInSrc("No")
-      setAccountInDest("Yes")
+      setAccountInSrc("No");
+      setAccountInDest("Yes");
     }
-    setCurTaskInfo(tmpCurTask); 
+    setCurTaskInfo(tmpCurTask);
     setIsLoading(false);
   }
 
@@ -310,13 +312,22 @@ const Detail: React.FC = (props: any) => {
                           <div>{curTaskInfo.createdAt}</div>
                           <br />
                           <div className="sub-name">Status</div>
-                          <div className="status">Replicating in progress</div>
-                          <div className="progress-bar">
-                            <div className="bar">
-                              <ProgressBar value={progress} />
+                          {curTaskInfo.progress ===
+                          EnumTaskStatus.IN_PROGRESS ? (
+                            <div>
+                              <div className="status">
+                                Replicating in progress
+                              </div>
+                              <div className="progress-bar">
+                                <div className="bar">
+                                  <ProgressBar value={progress} />
+                                </div>
+                                <div className="number">{progress}%</div>
+                              </div>
                             </div>
-                            <div className="number">{progress}%</div>
-                          </div>
+                          ) : (
+                            <div>{curTaskInfo.progress}</div>
+                          )}
                         </div>
                         <div className="split-item">
                           <div className="sub-name">Source Bucket Name</div>

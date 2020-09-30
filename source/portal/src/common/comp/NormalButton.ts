@@ -12,7 +12,7 @@ const NormalButton = withStyles({
     border: "1px solid",
     // lineHeight: 1.5,
     backgroundColor: "#ffffff",
-    borderColor: "#545b64",
+    // borderColor: "#545b64",
     borderRadius: 0,
     "&:hover": {
       backgroundColor: "#ffffff",

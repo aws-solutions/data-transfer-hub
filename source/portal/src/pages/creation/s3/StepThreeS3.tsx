@@ -214,13 +214,14 @@ const StepOne: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     Task Parameters <span>({paramsList.length})</span>
-                    <div className="title-search">
+                    {/* <div className="title-search">
                       <input
                         placeholder="Search parameters"
                         className="option-input"
                         type="text"
+                        
                       />
-                    </div>
+                    </div> */}
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">
