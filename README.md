@@ -5,7 +5,9 @@ The cdk-solution-init-pkg provides a reference for building solutions using the 
 
 ***
 
-## Initializing the Repository
+## Features
+
+[x] Data Replicat
 
 After successfully cloning the repository into your local development environment, a source code package must be built based on your language of choice. This will define which language the CDK code will be written in.
 

@@ -1,0 +1,4 @@
+{
+  "aws_appsync_graphqlEndpoint": "https://",
+  "aws_appsync_region": "us-west-2"
+}

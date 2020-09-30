@@ -1,12 +1,20 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
+/**
+ *  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
+ *  with the License. A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
+ *  and limitations under the License.
+ */
 
 import * as cdk from '@aws-cdk/core';
-import { AwsDataReplicationHubStack, AwsDataReplicationHubProps } from './aws-data-replication-hub-stack';
-import { CloudFrontToS3Props } from '@aws-solutions-constructs/aws-cloudfront-s3';
-import { S3StaticWebsiteStack } from "./s3-static-site-stack";
+import { ApiStack, ApiProps } from './api-stack';
+import { PortalStack } from "./portal-stack";
 import { CfnParameter } from '@aws-cdk/core';
-import { TaskNetwork } from "./task-network";
 import { TaskCluster } from "./task-cluster";
 
 const { VERSION } = process.env;
@@ -52,51 +60,44 @@ export class ConstructsStack extends cdk.Stack {
       }
     });
 
-    // Data Replication Hub props
-    const drhProps: AwsDataReplicationHubProps = {
+    // Task Cluster
+    const taskCluster = new TaskCluster(this, 'TaskCluster')
+
+    // API props
+    const drhProps: ApiProps = {
       usernameParameter
     }
+    // API Stack
+    const apiStack = new ApiStack(this, 'API', drhProps);
 
-    const cfnProps: CloudFrontToS3Props = {
-      cloudFrontDistributionProps: {},
-      insertHttpSecurityHeaders: false
-    }
+    // Portal - S3 Static Website
+    const portal = new PortalStack(this, 'Portal', {
+      aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
+      aws_user_pools_id: apiStack.userPool.userPoolId,
+      aws_user_pools_web_client_id: apiStack.userPoolApiClient.userPoolClientId
+    });
 
-    const taskNetwork = new TaskNetwork(this, 'TaskNetwork')
-
-    const taskCluster = new TaskCluster(this, 'TaskCluster', {
-      vpc: taskNetwork.vpc
-    })
-
+    // Outputs
     new cdk.CfnOutput(this, 'TaskVpc', {
       exportName: 'TaskVpcId',
       description: 'Task VPC ID',
-      value: taskNetwork.vpc.vpcId
+      value: taskCluster.vpc.vpcId
     })
-
     new cdk.CfnOutput(this, 'TaskClusterOutput', {
       exportName: 'TaskClusterName',
       description: 'Task Cluster Name',
       value: taskCluster.clusterName
     })
-
-    // Data Replication Hub Construct
-    const dataReplicationHub = new AwsDataReplicationHubStack(this, 'AwsDataReplicationHub', drhProps);
-
-    // S3 Static Website
-    const s3StaticWebsiteStack = new S3StaticWebsiteStack(this, 'S3StaticWebsiteStack', cfnProps);
-
-    // Outputs
     new cdk.CfnOutput(this, 'UserPoolIdOutput', {
-      value: dataReplicationHub.userPool.userPoolId,
+      value: apiStack.userPool.userPoolId,
       description: 'User Pool Id'
     }).overrideLogicalId('UserPoolId')
     new cdk.CfnOutput(this, 'UserPoolApiClientIdOutput', {
-      value: dataReplicationHub.userPoolApiClient.userPoolClientId,
+      value: apiStack.userPoolApiClient.userPoolClientId,
       description: 'API Client Id'
     }).overrideLogicalId('UserPoolApiClientId')
     new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
-      value: dataReplicationHub.userPoolDomain.domainName,
+      value: apiStack.userPoolDomain.domainName,
       description: 'User pool domain'
     }).overrideLogicalId('UserPoolDomain')
     new cdk.CfnOutput(this, 'AdminUsernameOutput', {
@@ -104,10 +105,10 @@ export class ConstructsStack extends cdk.Stack {
       description: 'Admin username'
     }).overrideLogicalId('AdminUsername')
     new cdk.CfnOutput(this, 'ApiEndpointOutput', {
-      value: dataReplicationHub.api.graphqlUrl
+      value: apiStack.api.graphqlUrl
     }).overrideLogicalId('ApiEndpoint')
-    new cdk.CfnOutput(this, 'WebsiteURL', {
-      value: s3StaticWebsiteStack.websiteURL
-    }).overrideLogicalId('WebsiteURL')
+    new cdk.CfnOutput(this, 'PortalUrlOutput', {
+      value: portal.websiteURL
+    }).overrideLogicalId('PortalUrl')
   }
 }

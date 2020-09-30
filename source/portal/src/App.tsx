@@ -5,7 +5,7 @@ import { HashRouter, Route } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
 import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
-import awsconfig from "./aws-exports";
+import awsconfig from "./aws-exports.json";
 import AWSAppSyncClient, { AUTH_TYPE } from "aws-appsync";
 // import { Rehydrated } from "aws-appsync-react";
 
