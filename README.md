@@ -1,55 +1,107 @@
 # AWS Data Replication Hub
 A reliable, secure, scalable AWS solution that enabled structured and unstructured data replication from different sources to AWS.
 
-The cdk-solution-init-pkg provides a reference for building solutions using the AWS Cloud Development Kit (CDK). This package contains basic build scripts, sample source code implementations, and other essentials for creating a solution from scratch.
-
-***
+![](docs/images/homepage.png)
 
 ## Features
 
-[x] Data Replicat
+- [x] Authentication
+- [x] Self-service Interface
+- [x] CDK Deployment
+- [x] CloudFormation Deployment
+- [x] S3 Plugin
+    - [x] Amazon S3 object replication between AWS Standard partition and AWS CN partition
+    - [x] Replication from Alibaba Cloud OSS to Amazon S3
+    - [x] Replication from Tencent COS to Amazon S3
+    - [x] Replication from Qiniu Kodo to Amazon S3
+    - [ ] Replication from Huawei
+    - [x] Support replication with Metadata
+    - [x] Support One-time replication
+    - [x] Support Incremental replication
+- [ ] ECR Plugin
+    - [ ] Image replication between AWS Standard partition and AWS CN partition
+    - [ ] Image replication from Docker Hub to ECR
+    - [ ] Image replication from gcr.io to ECR
+- [ ] DynamoDB Plugin
 
-After successfully cloning the repository into your local development environment, a source code package must be built based on your language of choice. This will define which language the CDK code will be written in.
+## Architecture
 
-Run the `initialize-repo.sh` script at the root level of the project file. This script will prompt a series of questions before initializing a git repo using the current directory name as the solution name. It will also stage the `deployment` and `source` directories with fundamental assets for your solution.
+![](replication-hub-architect.jpg)
 
-- The language selected when running this script will determine whether to provision a TypeScript, Python, Java, or C# CDK project into your `deployment` and `source` directories. This is the language you will be working with when defining your infrastructure using the CDK. Your source code packages for Lambda functions and custom resources may be in different languages.
+A web portal will be launched in the customer's account. Through the web portal, customers can create replication tasks and manage them in a centralized place. 
 
-***
+Each type of replication type is a plugin for this solution. You can also use the plugin alone without user interface. 
+
+Available Plugins:
+* [S3 Plugin](https://github.com/aws-samples/aws-data-replication-hub-s3-plugin)
+
+## Deploy via CloudFormation
+
+You can choose to [deploy via AWS CDK](#deploy-via-aws-cdk) or deploy via direct launch CloudFormation template.
+
+**Time to deploy:** Approximately 15 minutes.
+
+Follow the step-by-step instructions in this section to configure and deploy the AWS Data Replication Hub into your account.
+
+1. Make sure you have sign in AWS Console already.
+1. Click the following button to launch the CloudFormation Stack in your account.
+    [![](./launch-stack.png)](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/template?stackName=AwsDataReplicationHub&templateURL=https://joes-solutions-reference.s3-us-west-2.amazonaws.com/aws-data-replication-hub/beta/AwsDataReplicationHub.template)
+1. Input **AdminEmail** parameter
+1. Click **Next** and select **Create Stack**.
+
+## Deploy via AWS CDK
+
+_Note_: You should choose either [Deploy via CloudFormation](#deploy-via-cloudformation) or [Deploy via AWS CDK](#deploy-via-aws-cdk). If you are don't want to install the dependencies on your local machine. Please choose [Deploy via CloudFormation](#deploy-via-cloudformation).
+
+### Prerequisites
+
+Please install the following dependencies on your local machine.
+
+* nodejs 12+
+* npm 6+
+* AWS CDK CLI v1.64.1
+* Docker
+
+### Build the Web Portal assets
+
+The Web Portal is being built with React and [AWS Amplify](https://docs.amplify.aws/) framework.
+```
+cd source/portal
+npm install
+npm run build
+```
+The output assets will be located in `source/portal/build` directory.
+
+### CDK Synth & CDK Deploy
+_Note_: Please make sure Docker is running. 
+
+```
+cd ../constructs
+npm install 
+npm run build
+cdk synth
+cdk deploy AdminEmail=<your-email-address>
+```
+
+The only parameter you should specify is the default user's email address. It will serve as the username when login into the web portal.
+
+## Login into the Data Replication Hub Portal
+
+An email containing the temporary password will be sent to the provided email address. Copy and paste it somewhere.
+
+If you deploy via CloudFormation, check the output of the stack. The  `PortalUrl` is the link of the portal. If you are using AWS CDK, you can find a output in terminal named `AwsDataReplicationHub.PortalUrl`. 
+
+1. Open the portal in browser, it will be navigated to a login page. 
+1. Sign in with the **AdminEmail**, and the temporary password.
+1. You will be asked to set a new password.
+1. You will also be asked to verify your email address in order to turn on account recovery. You can skip if you need.
+1. The page will be redirected to the login page. 
+1. Input the **AdminEmail** and the new password.
+
+Now, you are all set. Start to create your first replication task. For the completed user guide, please visit
+[User Guide](docs/UserManual.md) for more information.
 
 ## File Structure
-
-Upon successfully cloning the repository into your local development environment but **prior** to running the initialization script, you will see the following file structure in your editor:
-
-```
-|- .github/ ...               - resources for open-source contributions.
-|- deployment/                - contains build scripts, deployment templates, and dist folders for staging assets.
-  |- .typescript/                - typescript-specific deployment assets.
-  |- .python/                   - python-specific deployment assets.
-  |- .java/                     - java-specific deployment assets.
-  |- .csharp/                   - csharp-specific deployment assets.
-|- source/                    - all source code, scripts, tests, etc.
-  |- .typescript/                - typescript-specific source assets.
-  |- .python/                   - python-specific source assets.
-  |- .java/                     - java-specific source assets.
-  |- .csharp/                   - csharp-specific source assets.
-|- .gitignore
-|- .viperlightignore          - Viperlight scan ignore configuration  (accepts file, path, or line item).
-|- .viperlightrc              - Viperlight scan configuration.
-|- buildspec.yml              - main build specification for CodeBuild to perform builds and execute unit tests.
-|- CHANGELOG.md               - required for every solution to include changes based on version to auto-build release notes.
-|- CODE_OF_CONDUCT.md         - standardized open source file for all solutions.
-|- CONTRIBUTING.md            - standardized open source file for all solutions.
-|- copy-repo.sh               - copies the baseline repo to another directory and optionally initializes it there.
-|- initialize-repo.sh         - initializes the repo.
-|- LICENSE.txt                - required open source file for all solutions - should contain the Apache 2.0 license.
-|- NOTICE.txt                 - required open source file for all solutions - should contain references to all 3rd party libraries.
-|- README.md                  - required file for all solutions.
-
-* Note: Not all languages are supported at this time. Actual appearance may vary depending on release.
-```
-
-**After** running the initialization script, you will see a language-specific directory in both the `/source` and `/deployment` folders expanded based on your CDK language choice. Example below after `./initialize-repo.sh` is run with `typescript` selected as the language of choice. Notice the removal of the language-specific directories after running the command. The repo is now ready for solution development.
 
 ```
 |- .github/ ...               - resources for open-source contributions.
@@ -57,24 +109,11 @@ Upon successfully cloning the repository into your local development environment
   |- cdk-solution-helper/     - helper function for converting CDK output to a format compatible with the AWS Solutions pipelines.
   |- build-open-source-dist.sh  - builds the open source package with cleaned assets and builds a .zip file in the /open-source folder for distribution to GitHub
   |- build-s3-dist.sh         - builds the solution and copies artifacts to the appropriate /global-s3-assets or /regional-s3-assets folders.
-  |- clean-dists.sh           - utility script for clearing distributables.
 |- source/                    - all source code, scripts, tests, etc.
-  |- bin/
-    |- cdk-solution.ts        - the CDK app that wraps your solution.
-  |- lambda/                  - example Lambda function with source code and test cases.
-    |- test/                   
-    |- index.js                 
-    |- package.json             
-  |- lib/
-    |- cdk-solution-stack.ts  - the main CDK stack for your solution.
-  |- test/
-    |- __snapshots__/
-    |- cdk-solution-test.ts   - example unit and snapshot tests for CDK project.
-  |- cdk.json                 - config file for CDK.
-  |- jest.config.js           - config file for unit tests.
-  |- package.json             - package file for the CDK project.
-  |- README.md                - doc file for the CDK project.
-  |- run-all-tests.sh         - runs all tests within the /source folder. Referenced in the buildspec and build scripts.
+  |- contructs/               - the CDK app
+  |- custom-resource/         - CloudFormation custom resource
+  |- portal/                  - The web portal of AWS data replication hub
+  |- schema/                  - The GraphQL API schema
 |- .gitignore
 |- .viperlightignore          - Viperlight scan ignore configuration  (accepts file, path, or line item).
 |- .viperlightrc              - Viperlight scan configuration.
@@ -87,84 +126,40 @@ Upon successfully cloning the repository into your local development environment
 |- README.md                  - required file for all solutions.
 ```
 
-***
+## Building Your Own Distributable
+If you are a user of this solution. You should simply use the hosted [CloudFormation Stack link](#deploy-via-cloudformation) 
+to deploy it. If you would like to contribute to this solution, or want to build your own CloudFormation distributable, please
+use th following steps to verify your code. 
 
-## Building your CDK Project
-
-After initializing the repository, make any desired code changes. As you work through the development process, the following commands might be useful for 
-periodic testing and/or formal testing once development is completed. These commands are CDK-related and should be run at the /source level of your project.
-
-CDK commands:
-- `cdk init` - creates a new, empty CDK project that can be used with your AWS account.
-- `cdk synth` - synthesizes and prints the CloudFormation template generated from your CDK project to the CLI.
-- `cdk deploy` - deploys your CDK project into your AWS account. Useful for validating a full build run as well as performing functional/integration testing
-of the solution architecture.
-
-Additional scripts related to building, testing, and cleaning-up assets may be found in the package.json file or in similar locations for your selected CDK language. You can also run `cdk -h` in the terminal for details on additional commands.
-
-***
-
-## Running Unit Tests
-
-The `/source/run-all-tests.sh` script is the centralized script for running all unit, integration, and snapshot tests for both the CDK project as well as any associated Lambda functions or other source code packages. 
-
-- Note: It is the developer's responsibility to ensure that all test commands are called in this script, and that it is kept up to date.
-
-This script is called from the solution build scripts to ensure that specified tests are passing while performing build, validation and publishing tasks via the pipeline.
-
-***
-
-## Building Project Distributable
 * Configure the bucket name of your target Amazon S3 distribution bucket
 ```
-export DIST_OUTPUT_BUCKET=my-bucket-name # bucket where customized code will reside
+export BUCKET_NAME=my-bucket-name # bucket where customized code will reside
 export SOLUTION_NAME=my-solution-name
 export VERSION=my-version # version number for the customized code
+export REGION=aws-region # the aws region where you are testing the customized solution
 ```
-_Note:_ You would have to create an S3 bucket with the prefix 'my-bucket-name-<aws_region>'; aws_region is where you are testing the customized solution. Also, the assets in bucket should be publicly accessible.
+_Note:_ You would have to create an S3 bucket with the prefix 'my-bucket-name-<aws_region>'; aws_region is where you 
+are testing the customized solution. Also, the assets in bucket should be publicly accessible.
+
+_Note:_ you must have the AWS Command Line Interface installed.
 
 * Now build the distributable:
 ```
-chmod +x ./build-s3-dist.sh \n
-./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION \n
+cd deployment/
+chmod +x ./build-s3-dist.sh
+./build-s3-dist.sh $BUCKET_NAME $SOLUTION_NAME $VERSION
 ```
 
-* Deploy the distributable to an Amazon S3 bucket in your account. _Note:_ you must have the AWS Command Line Interface installed.
+* Deploy the distributable assets to an Amazon S3 bucket in your account.
 ```
-aws s3 cp ./dist/ s3://my-bucket-name-<aws_region>/$SOLUTION_NAME/$VERSION/ --recursive --acl bucket-owner-full-control --profile aws-cred-profile-name \n
+aws s3 sync ./regional-s3-assets/ s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --delete --acl public-read --profile aws-cred-profile-name
+```
+
+* Copy the CloudFormation template to Amazon S3 bucket in your account.
+```
+aws s3 cp ./global-s3-assets/AwsDataReplicationHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control --profile aws-cred-profile-name
 ```
 
 * Get the link of the solution template uploaded to your Amazon S3 bucket.
 * Deploy the solution to your account by launching a new AWS CloudFormation stack using the link of the solution template in Amazon S3.
-
-***
-
-## Building Open-Source Distributable
-
-* Run the following command to build the open-source project:
-```
-chmod +x ./build-open-source-dist.sh \n
-./build-open-source-dist.sh $SOLUTION_NAME \n
-```
-
-* Validate that the assets within the output folder are accurate and that there are no missing files.
-
-***
-
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-Licensed under the Apache License Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-
-    http://www.apache.org/licenses/
-
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-## Deploy the Application
-
-```
-cdk deploy --parameters AdminEmail=qiaoshi@amazon.com
-cdk deploy --parameters AdminEmail=qiaoshi@amazon.com -c DryRun=True
-
-aws cognito-idp admin-set-user-password --user-pool-id us-west-2_gGtvk35qo --username qiaoshi@amazon.com --password 'Sq110966!@#' --permanent
-```
 
