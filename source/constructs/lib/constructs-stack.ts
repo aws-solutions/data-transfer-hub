@@ -82,12 +82,12 @@ export class ConstructsStack extends cdk.Stack {
       exportName: 'TaskVpcId',
       description: 'Task VPC ID',
       value: taskCluster.vpc.vpcId
-    })
+    }).overrideLogicalId('TaskClusterVpc')
     new cdk.CfnOutput(this, 'TaskClusterOutput', {
       exportName: 'TaskClusterName',
       description: 'Task Cluster Name',
       value: taskCluster.clusterName
-    })
+    }).overrideLogicalId('TaskClusterName')
     new cdk.CfnOutput(this, 'UserPoolIdOutput', {
       value: apiStack.userPool.userPoolId,
       description: 'User Pool Id'

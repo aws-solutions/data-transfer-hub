@@ -1,5 +1,8 @@
 # AWS Data Replication Hub
+
 A reliable, secure, scalable AWS solution that enabled structured and unstructured data replication from different sources to AWS.
+
+_Note_: If you have already deployed this solution. Please refer to [User Guide](docs/UserManual.md) for the web portal usage.
 
 ![](docs/images/homepage.png)
 
@@ -14,7 +17,7 @@ A reliable, secure, scalable AWS solution that enabled structured and unstructur
     - [x] Replication from Alibaba Cloud OSS to Amazon S3
     - [x] Replication from Tencent COS to Amazon S3
     - [x] Replication from Qiniu Kodo to Amazon S3
-    - [ ] Replication from Huawei
+    - [ ] Replication from Huawei Cloud OBS
     - [x] Support replication with Metadata
     - [x] Support One-time replication
     - [x] Support Incremental replication
@@ -115,9 +118,6 @@ Now, you are all set. Start to create your first replication task. For the compl
   |- portal/                  - The web portal of AWS data replication hub
   |- schema/                  - The GraphQL API schema
 |- .gitignore
-|- .viperlightignore          - Viperlight scan ignore configuration  (accepts file, path, or line item).
-|- .viperlightrc              - Viperlight scan configuration.
-|- buildspec.yml              - main build specification for CodeBuild to perform builds and execute unit tests.
 |- CHANGELOG.md               - required for every solution to include changes based on version to auto-build release notes.
 |- CODE_OF_CONDUCT.md         - standardized open source file for all solutions.
 |- CONTRIBUTING.md            - standardized open source file for all solutions.
