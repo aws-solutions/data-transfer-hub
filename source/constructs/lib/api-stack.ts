@@ -1,3 +1,16 @@
+/**
+ *  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
+ *  with the License. A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
+ *  and limitations under the License.
+ */
+
 import { Construct, CfnParameter, Duration, Stack } from '@aws-cdk/core';
 import * as ddb from '@aws-cdk/aws-dynamodb';
 import * as cognito from '@aws-cdk/aws-cognito';
@@ -9,11 +22,11 @@ import * as iam from '@aws-cdk/aws-iam';
 
 const PLUGIN_TEMPLATE_S3 = 'https://s3.amazonaws.com/solutions-reference/serverless-image-handler/latest/serverless-image-handler.template'
 
-export interface AwsDataReplicationHubProps {
+export interface ApiProps {
   readonly usernameParameter: CfnParameter
 }
 
-export class AwsDataReplicationHubStack extends Construct {
+export class ApiStack extends Construct {
 
   readonly taskTable: ddb.Table
   readonly userPool: cognito.UserPool
@@ -21,7 +34,7 @@ export class AwsDataReplicationHubStack extends Construct {
   readonly userPoolApiClient: cognito.UserPoolClient
   readonly userPoolDomain: cognito.UserPoolDomain
 
-  constructor(scope: Construct, id: string, props: AwsDataReplicationHubProps) {
+  constructor(scope: Construct, id: string, props: ApiProps) {
     super(scope, id);
 
     // Create the Progress DynamoDB Table
