@@ -65,6 +65,13 @@ Please install the following dependencies on your local machine.
 * AWS CDK CLI v1.64.1
 * Docker
 
+You need CDK bootstrap v4+ to deploy this application. To upgrade to latest CDK bootstrap version. Run 
+```
+cdk bootstrap --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess
+```
+
+Please make sure Docker is running on your local machine.
+
 ### Build the Web Portal assets
 
 The Web Portal is being built with React and [AWS Amplify](https://docs.amplify.aws/) framework.
@@ -83,7 +90,7 @@ cd ../constructs
 npm install 
 npm run build
 cdk synth
-cdk deploy AdminEmail=<your-email-address>
+cdk deploy --parameters AdminEmail=<your-email-address>
 ```
 
 The only parameter you should specify is the default user's email address. It will serve as the username when login into the web portal.

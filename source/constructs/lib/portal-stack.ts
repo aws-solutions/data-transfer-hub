@@ -33,7 +33,12 @@ interface CustomResourceConfig {
 export interface PortalStackProps {
   aws_user_pools_id: string,
   aws_user_pools_web_client_id: string,
-  aws_appsync_graphqlEndpoint: string
+  aws_appsync_graphqlEndpoint: string,
+  taskCluster?: {
+    publicSubnetIds: string[]
+    vpcId: string,
+    clusterName: string
+  }
 }
 
 export class PortalStack extends cdk.Construct {
@@ -137,11 +142,12 @@ export class PortalStack extends cdk.Construct {
             oauth: {},
             aws_appsync_graphqlEndpoint: props.aws_appsync_graphqlEndpoint,
             aws_appsync_region: cdk.Aws.REGION,
-            aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS'
+            aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+            taskCluster: props.taskCluster
           }
         },
         { path: 'destS3Bucket', value: websiteBucket.bucketName },
-        { path: 'destS3key', value: 'aws-exports.js' },
+        { path: 'destS3key', value: 'aws-exports.json' },
         { path: 'customAction', value: 'putConfigFile' }
       ],
       dependencies: [ cfnCustomResourceRole, cfnCustomResourcePolicy ]

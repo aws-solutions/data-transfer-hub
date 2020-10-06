@@ -75,24 +75,15 @@ class s3Helper {
         console.log(JSON.stringify(content));
 
         return new Promise((resolve, reject) => {
-            let _content = `'use strict';\n\nconst appVariables = {\n`;
-
-            let i = 0;
-            for (let key in content) {
-                if (i > 0) {
-                    _content += ', \n';
-                }
-                _content += `${key}: '${content[key]}'`;
-                i++;
-            }
-            _content += '\n};';
+            let _content = JSON.stringify(content, null, 2)
+            _content += '\n'
 
             let params = {
                 Bucket: destS3Bucket,
                 Key: destS3key,
                 Body: _content,
                 Metadata: {
-                    'Content-Type': 'text/javascript'
+                    'Content-Type': 'application/json'
                 }
             };
 
@@ -273,6 +264,8 @@ class s3Helper {
             _contentType = 'image/jpeg';
         } else if (file.endsWith('.js')) {
             _contentType = 'application/javascript';
+        } else if (file.endsWith('.json')) {
+            _contentType = 'application/json';
         }
 
         return _contentType;

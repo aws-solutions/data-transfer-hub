@@ -1,4 +1,17 @@
 {
-  "aws_appsync_graphqlEndpoint": "https://",
-  "aws_appsync_region": "us-west-2"
+  "taskCluster": {
+    "publicSubnetIds": [
+      "subnet-xxxx",
+      "subnet-xxxxx"
+    ],
+    "vpcId": "vpc-xxxxxxx",
+    "clusterName": "xxxxxxxx"
+  },
+  "aws_appsync_region": "region-code",
+  "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
+  "aws_user_pools_id": "us-west-2_xxxxx",
+  "aws_project_region": "region-code",
+  "aws_cognito_region": "region-code",
+  "aws_appsync_graphqlEndpoint": "https://xxxxx.appsync-api.region-code.amazonaws.com/graphql",
+  "aws_user_pools_web_client_id": "xxxxxxx"
 }

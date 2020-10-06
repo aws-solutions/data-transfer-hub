@@ -20,7 +20,7 @@ import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
 
-const PLUGIN_TEMPLATE_S3 = 'https://s3.amazonaws.com/solutions-reference/serverless-image-handler/latest/serverless-image-handler.template'
+const PLUGIN_TEMPLATE_S3 = 'https://drh-s3-plugin.s3-us-west-2.amazonaws.com/Aws-data-replication-component-s3/v1.0.0/Aws-data-replication-component-s3.ecs.template'
 
 export interface ApiProps {
   readonly usernameParameter: CfnParameter

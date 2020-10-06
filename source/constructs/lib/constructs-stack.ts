@@ -74,7 +74,12 @@ export class ConstructsStack extends cdk.Stack {
     const portal = new PortalStack(this, 'Portal', {
       aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
       aws_user_pools_id: apiStack.userPool.userPoolId,
-      aws_user_pools_web_client_id: apiStack.userPoolApiClient.userPoolClientId
+      aws_user_pools_web_client_id: apiStack.userPoolApiClient.userPoolClientId,
+      taskCluster: {
+        vpcId: taskCluster.vpc.vpcId,
+        publicSubnetIds: taskCluster.publicSubnets.map(subnet => subnet.subnetId),
+        clusterName: taskCluster.clusterName
+      }
     });
 
     // Outputs
