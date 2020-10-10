@@ -3,11 +3,35 @@
   "top": {
     "account": "Account"
   },
+  "leftBar": {
+    "title": "Data Replication Hub",
+    "taskList": "Tasks"
+  },
+  "breadCrumb": {
+    "home": "Data Replication Hub",
+    "create": "Create Task",
+    "list": "List"
+  },
+  "step": {
+    "oneTitle": "Step1",
+    "oneDesc": "Select engine type",
+    "twoTitle": "Step2",
+    "twoDesc": "Specify task details",
+    "threeTitle": "Step3",
+    "threeDesc": "Review and create"
+  },
   "home": {
     "title": {
       "createTitle": "Create Replication Task",
-      "quickStart": "快速开始",
-      "moreResouce": "更多资源"
+      "quickStart": "Quick Start",
+      "moreResouce": "More Resources",
+      "destinationType": "Destination Type"
+    }
+  },
+  "creation": {
+    "step1": {
+      "engineType": "Select engine type",
+      "engineOptions": "Engine options"
     }
   },
   "bottom": {
@@ -17,6 +41,7 @@
     "use": "Terms of Use"
   },
   "btn": {
-    "next": "Next Step"
+    "next": "Next Step",
+    "cancel": "Cancel"
   }
 }

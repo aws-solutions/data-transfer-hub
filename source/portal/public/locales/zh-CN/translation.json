@@ -3,11 +3,35 @@
   "top": {
     "account": "我的账户"
   },
+  "leftBar": {
+    "title": "数据复制中心",
+    "taskList": "任务列表"
+  },
+  "breadCrumb": {
+    "home": "数据复制中心",
+    "create": "创建任务",
+    "list": "任务列表"
+  },
+  "step": {
+    "oneTitle": "第一步",
+    "oneDesc": "选择引擎类型",
+    "twoTitle": "第二步",
+    "twoDesc": "填写任务信息",
+    "threeTitle": "第三步",
+    "threeDesc": "预览并创建"
+  },
   "home": {
     "title": {
       "createTitle": "创建任务",
       "quickStart": "快速开始",
-      "moreResouce": "更多资源"
+      "moreResouce": "更多资源",
+      "destinationType": "目标类型"
+    }
+  },
+  "creation": {
+    "step1": {
+      "engineType": "选择引擎类型",
+      "engineOptions": "引擎选项"
     }
   },
   "bottom": {
@@ -17,7 +41,8 @@
     "use": "使用条款"
   },
   "btn": {
-    "next": "下一步"
+    "next": "下一步",
+    "cancel": "取消"
   }
 }
 

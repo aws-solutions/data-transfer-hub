@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import classNames from "classnames";
 
@@ -17,10 +18,7 @@ const mapState = (state: IState) => ({
 
 const LeftMenu: React.FC = () => {
   const { isOpen } = useMappedState(mapState);
-
-  useEffect(() => {
-    console.info("isOpen");
-  }, [isOpen]);
+  const { t } = useTranslation();
 
   const dispatch = useDispatch();
   const openLeftMenu = React.useCallback(() => {
@@ -44,14 +42,14 @@ const LeftMenu: React.FC = () => {
         {isOpen ? (
           <div className="is-open">
             <div>
-              <div className="title">Data Replication Hub</div>
+              <div className="title"><a className="link" href="/#/">{t("leftBar.title")}</a></div>
               <div className="icon" onClick={closeLeftMenu}>
                 <ClearIcon />
               </div>
             </div>
             <div className="list-item">
               <div className="item">
-                <Link to="/task/list">Tasks</Link>
+                <Link to="/task/list">{t("leftBar.taskList")}</Link>
               </div>
             </div>
           </div>

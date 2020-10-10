@@ -3,13 +3,9 @@ import { withTranslation } from "react-i18next";
 import { HashRouter, Route } from "react-router-dom";
 
 import Amplify from "aws-amplify";
-import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
+import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react";
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
-// import awsconfig from "./aws-exports";
 import Axios from "axios";
-
-// import AWSAppSyncClient, { AUTH_TYPE } from "aws-appsync";
-// import { Rehydrated } from "aws-appsync-react";
 
 import DataLoading from "./common/Loading";
 import TopBar from "./common/TopBar";
@@ -30,8 +26,6 @@ const StepTwoS3Page = withTranslation()(StepTwoS3);
 const StepThreeS3Page = withTranslation()(StepThreeS3);
 const ListPage = withTranslation()(List);
 
-// Amplify.configure(awsconfig);
-
 // loading component for suspense fallback
 const Loader = () => (
   <div className="App">
@@ -51,18 +45,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const timeStamp = new Date().getTime();
-    Axios.get("/aws-exports.js?timeStamp=" + timeStamp).then((res) => {
-      console.info("res:", res);
-      // remove space and enter
-      const rawString = res.data.replace(/[\r\n']/g, "").trim()
-      const jsonString = rawString.split("=")[1].trim().substr(1, rawString.split("=")[1].length - 4);
-      const jsonStrArr = jsonString.split(",")
-      const ConfigObj: any = {}
-      console.info("jsonStrArr:",jsonStrArr)
-      jsonStrArr.forEach((element:any) => {
-        const paramObjArr: any = element.split(": ")
-        ConfigObj[paramObjArr[0].trim()] = paramObjArr[1].trim()
-      });
+    Axios.get("/aws-exports.json?timeStamp=" + timeStamp).then((res) => {
+      let ConfigObj = res.data
       Amplify.configure(ConfigObj);
       setLoadingConfig(false);
     });
@@ -101,7 +85,11 @@ const App: React.FC = () => {
     </div>
   ) : (
     <div className="login-wrap">
-      <AmplifyAuthenticator />
+        <AmplifyAuthenticator>
+          <AmplifySignIn slot="sign-in">
+            <div slot="secondary-footer-content"></div>
+          </AmplifySignIn>
+        </AmplifyAuthenticator>
     </div>
   );
 };

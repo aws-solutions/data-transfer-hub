@@ -63,9 +63,6 @@ const JOB_TYPE_MAP:any = {
 }
 
 const StepOne: React.FC = () => {
-  const handleClick = () => {
-    console.info("click");
-  };
 
   const { tmpTaskInfo } = useMappedState(mapState);
   const [paramsList, setParamList] = useState<any>([]);
@@ -179,7 +176,7 @@ const StepOne: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/" onClick={handleClick}>
+              <MLink color="inherit" href="/#/">
                 Data Replication Hub
               </MLink>
               <Typography color="textPrimary">Create Task</Typography>

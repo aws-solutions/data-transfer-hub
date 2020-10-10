@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useMappedState } from "redux-react-hook";
+import { useDispatch } from "redux-react-hook";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
+
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -17,27 +19,21 @@ import Step from "./comps/Step";
 import NextButton from "../../common/comp/PrimaryButton";
 import TextButton from "../../common/comp/TextButton";
 import StepOneS3Tips from "./s3/StepOneS3Tips";
+import StepOneS3TipsCN from "./s3/StepOneS3TipsCN";
 import StepOneDydbTips from "./dydb/StepOneDydbTips";
 
 import "./Creation.scss";
 
 import { TYPE_LIST, EnumTaskType } from "../../assets/types/index";
 
-import { IState } from "../../store/Store";
-
-const mapState = (state: IState) => ({
-  tmpTaskInfo: state.tmpTaskInfo,
-});
-
 const StepOne: React.FC = () => {
-  const [taskType, setTaskType] = useState(EnumTaskType.S3);
-  const { tmpTaskInfo } = useMappedState(mapState);
 
-  console.info("tmpTaskInfo:", tmpTaskInfo);
+  const { t, i18n } = useTranslation();
+
+  const [taskType, setTaskType] = useState(EnumTaskType.S3);
 
   const dispatch = useDispatch();
   const updateTmpTaskInfo = React.useCallback(() => {
-    console.info("INININININ?");
     dispatch({ type: "update task info", taskInfo: { type: taskType } });
   }, [dispatch, taskType]);
 
@@ -45,10 +41,6 @@ const StepOne: React.FC = () => {
   useEffect(() => {
     updateTmpTaskInfo();
   }, [taskType, updateTmpTaskInfo]);
-
-  const handleClick = () => {
-    console.info("click");
-  };
 
   const history = useHistory();
   const goToHomePage = () => {
@@ -79,10 +71,10 @@ const StepOne: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/" onClick={handleClick}>
-                Data Replication Hub
+              <MLink color="inherit" href="/#/">
+                {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">Create Task</Typography>
+              <Typography color="textPrimary">{t("breadCrumb.create")}</Typography>
             </Breadcrumbs>
           </div>
           <div className="creation-content">
@@ -91,11 +83,11 @@ const StepOne: React.FC = () => {
             </div>
             <div className="creation-info">
               <div className="creation-title">
-                Select engine type <InfoSpan />
+                {t("creation.step1.engineType")}<InfoSpan />
               </div>
               <div className="box-shadow">
                 <div className="option">
-                  <div className="option-title">Engine options</div>
+                  <div className="option-title">{t("creation.step1.engineOptions")}</div>
                   <div className="option-list">
                     {TYPE_LIST.map((item, index) => {
                       const optionClass = classNames({
@@ -125,32 +117,16 @@ const StepOne: React.FC = () => {
                       );
                     })}
                   </div>
-                  <div>{taskType === EnumTaskType.S3 && <StepOneS3Tips />}</div>
+                  <div>{taskType === EnumTaskType.S3 && i18n.language !== "zh-CN" && <StepOneS3Tips /> }</div>
+                  <div>{taskType === EnumTaskType.S3 && i18n.language === "zh-CN" && <StepOneS3TipsCN /> }</div>
                   <div>
                     {taskType === EnumTaskType.DynamoDB && <StepOneDydbTips />}
                   </div>
-                  {/* <div className="edition">
-                    <div className="edition-title">Edition</div>
-                    <div className="edition-item">
-                      <label>
-                        <input name="option-edition" type="radio" />
-                        Serverless
-                      </label>
-                      <InfoSpan />
-                    </div>
-                    <div className="edition-item">
-                      <label>
-                        <input name="option-edition" type="radio" />
-                        ECS Fargate Cluster
-                      </label>
-                      <InfoSpan />
-                    </div>
-                  </div> */}
                 </div>
               </div>
               <div className="buttons">
-                <TextButton onClick={goToHomePage}>Cancel</TextButton>
-                <NextButton onClick={goToStepTwo}>Next</NextButton>
+                <TextButton onClick={goToHomePage}>{t("btn.cancel")}</TextButton>
+                <NextButton onClick={goToStepTwo}>{t("btn.next")}</NextButton>
               </div>
             </div>
           </div>

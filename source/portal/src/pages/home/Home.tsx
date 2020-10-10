@@ -11,8 +11,6 @@ import NextButton from "../../common/comp/PrimaryButton";
 
 import "./Home.scss";
 
-import VideoImg from "../../assets/images/video.png";
-
 import { IState } from "../../store/Store";
 
 import {
@@ -23,7 +21,7 @@ import {
   RESOURCE_LINKS,
 } from "../../assets/config/content";
 
-import { CUR_SUPPORT_LANGS } from "../../assets/config/const";
+import { CUR_SUPPORT_LANGS, URL_YOUTUBE } from "../../assets/config/const";
 
 const mapState = (state: IState) => ({
   isOpen: state.isOpen,
@@ -57,9 +55,7 @@ const Home: React.FC = () => {
   const getStartLinks: any = GET_START_LINKS;
   const resourceLinks: any = RESOURCE_LINKS;
 
-  const { isOpen, todoCount } = useMappedState(mapState);
-  console.info("todoCount:", todoCount);
-  console.info("isOpen:", isOpen);
+  const { isOpen } = useMappedState(mapState);
 
   const history = useHistory();
   const startToCreate = () => {
@@ -95,7 +91,7 @@ const Home: React.FC = () => {
             <div className="left-info">
               <div className="title">{howItWorks[titleStr]}</div>
               <div className="video">
-                <img alt="video" src={VideoImg} />
+                <iframe title="video" width="560" height="315" src={URL_YOUTUBE} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
               </div>
               <div className="features box-info">
                 {howItWorks.list.map((element: any, index: any) => {
@@ -125,11 +121,10 @@ const Home: React.FC = () => {
             <div className="right-card">
               <div className="home-card start-item">
                 <div className="title">{t("home.title.createTitle")}</div>
-                <div className="dest">Destination Type</div>
+                <div className="dest">{t("home.title.destinationType")}</div>
                 <div className="select">
                   <select>
                     <option>Amazon S3</option>
-                    {/* <option>MySQL</option> */}
                   </select>
                 </div>
                 <div className="next-button">

@@ -30,7 +30,6 @@ const getCurrentLangObj = (id: string) => {
 
 const Bottom: React.FC = () => {
   const { t, i18n } = useTranslation();
-  // console.info("i18n.language:", i18n.language);
   const initLang = getCurrentLangObj(i18n.language);
   const [currentLang, setCurrentLang] = useState(initLang);
 
@@ -40,8 +39,6 @@ const Bottom: React.FC = () => {
     i18n.changeLanguage(newLang.id);
     setShowLang(false);
   };
-
-  // console.info("initLang:", initLang);
 
   const [showLang, setShowLang] = useState(false);
   const toggleShowLang = () => {

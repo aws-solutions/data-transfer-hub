@@ -5,6 +5,10 @@
     top: 0;
     right: 0;
     left: 0;
+    .link, .link:hover {
+      color: #222;
+      text-decoration: none;
+    }
   }
   .is-close {
     position: absolute;

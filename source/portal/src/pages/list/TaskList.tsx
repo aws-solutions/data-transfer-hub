@@ -119,13 +119,6 @@ const List: React.FC = () => {
     getTaskList(null, "next");
   }, []);
 
-  const goToHomePage = () => {
-    const toPath = "/";
-    history.push({
-      pathname: toPath,
-    });
-  };
-
   const goToStepOne = () => {
     const toPath = "/create/step1";
     history.push({
@@ -326,7 +319,7 @@ const List: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/" onClick={goToHomePage}>
+              <MLink color="inherit" href="/#/">
                 Data Replication Hub
               </MLink>
               <Typography color="textPrimary">Tasks</Typography>

@@ -6,7 +6,7 @@ const StepOneS3Tips: React.FC = () => {
       <div className="tips-title">Replication Engine for Amazon S3</div>
       <div className="tips-desc">
         Amazon S3 engine is used for replicating objects from different sources
-        into S3 Buckets.{" "}
+        into S3 Buckets.
       </div>
       <div className="tips-list">
         <ul>
@@ -27,7 +27,7 @@ const StepOneS3Tips: React.FC = () => {
             <span>•</span>Serverless architect, no minimun cost
           </li>
           <li>
-            <span>•</span>Parralel replication{" "}
+            <span>•</span>Parralel replication
           </li>
         </ul>
       </div>

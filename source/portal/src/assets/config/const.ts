@@ -1,6 +1,7 @@
 // URL to be done
 export const URL = "";
 export const URL_FEEDBACK = "https://github.com/aws-samples/aws-data-replication-hub/issues/new";
+export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
 export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
 
 export const S3_PARAMS_LIST_MAP:any = {

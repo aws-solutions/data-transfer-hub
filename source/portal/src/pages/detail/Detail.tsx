@@ -248,7 +248,7 @@ const Detail: React.FC = (props: any) => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/">
+              <MLink color="inherit" href="/#/">
                 Data Replication Hub
               </MLink>
               <MLink color="inherit" href="/#/task/list">

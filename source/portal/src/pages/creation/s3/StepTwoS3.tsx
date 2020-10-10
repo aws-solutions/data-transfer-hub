@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
@@ -47,6 +48,8 @@ const StepOne: React.FC = () => {
   const [bucketInAccount, setBucketInAccount] = useState("Destination");
   const [paramData, setParamData] = useState<any>();
   // const [formDefaultValue, setFormDefaultValue] = useState<any>({});
+  const { t } = useTranslation();
+
 
   const history = useHistory();
 
@@ -69,8 +72,6 @@ const StepOne: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.info("paramData:", paramData);
-    console.info("tmpTaskInfo:", tmpTaskInfo);
     if (tmpTaskInfo && tmpTaskInfo.parametersObj) {
       setSourceType(tmpTaskInfo.parametersObj.sourceType);
     }
@@ -102,10 +103,6 @@ const StepOne: React.FC = () => {
     // updateTmpTaskInfo();
   };
 
-  const handleClick = () => {
-    console.info("click");
-  };
-
   const goToHomePage = () => {
     const toPath = "/";
     history.push({
@@ -125,12 +122,10 @@ const StepOne: React.FC = () => {
   };
 
   const changeSourceType = (event: any) => {
-    console.info("event.target.value:", event.target.value);
     setSourceType(event.target.value);
   };
 
   const changeBucketInAccount = (event: any) => {
-    console.info("event.target.value:", event.target.value);
     setBucketInAccount(event.target.value);
   };
 
@@ -145,10 +140,10 @@ const StepOne: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/" onClick={handleClick}>
-                Data Replication Hub
+              <MLink color="inherit" href="/#/">
+                {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">Create Task</Typography>
+              <Typography color="textPrimary">{t("breadCrumb.create")}</Typography>
             </Breadcrumbs>
           </div>
           <div className="creation-content">
@@ -298,11 +293,11 @@ const StepOne: React.FC = () => {
                   </div>
                 </div>
 
-                {sourceType === EnumSourceType.S3 && (
-                  <div className="box-shadow card-list">
-                    <div className="option">
-                      <div className="option-title">AWS Credentials</div>
-                      <div className="option-content">
+                <div className="box-shadow card-list">
+                  <div className="option">
+                    <div className="option-title">AWS Credentials</div>
+                    <div className="option-content">
+                      {sourceType === EnumSourceType.S3 && (
                         <div className="form-items">
                           <div className="title">
                             Which bucket in current AWS account?
@@ -329,39 +324,39 @@ const StepOne: React.FC = () => {
                             </select>
                           </div>
                         </div>
+                      )}
 
-                        <div className="form-items">
-                          <div className="title">
-                            Parameter Store name for AWS Credentials{" "}
-                            <InfoSpan />
-                          </div>
-                          <div className="desc">
-                            Choose the SSM Parameter Store which holds the AWS
-                            credentials.
-                          </div>
-                          <div>
-                            <input
-                              defaultValue={
-                                tmpTaskInfo.parametersObj &&
-                                tmpTaskInfo.parametersObj
-                                  .credentialsParameterStore
-                                  ? tmpTaskInfo.parametersObj
-                                      .credentialsParameterStore
-                                  : "drh-credentials"
-                              }
-                              name="credentialsParameterStore"
-                              ref={register}
-                              className="option-input"
-                              // defaultValue="drh-credentials"
-                              placeholder="Parameter Store name for AWS Credentials"
-                              type="text"
-                            />
-                          </div>
+                      <div className="form-items">
+                        <div className="title">
+                          Parameter Store name for AWS Credentials
+                          <InfoSpan />
+                        </div>
+                        <div className="desc">
+                          Choose the SSM Parameter Store which holds the AWS
+                          credentials.
+                        </div>
+                        <div>
+                          <input
+                            defaultValue={
+                              tmpTaskInfo.parametersObj &&
+                              tmpTaskInfo.parametersObj
+                                .credentialsParameterStore
+                                ? tmpTaskInfo.parametersObj
+                                    .credentialsParameterStore
+                                : "drh-credentials"
+                            }
+                            name="credentialsParameterStore"
+                            ref={register}
+                            className="option-input"
+                            // defaultValue="drh-credentials"
+                            placeholder="Parameter Store name for AWS Credentials"
+                            type="text"
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
-                )}
+                </div>
 
                 <div className="box-shadow card-list">
                   <div className="option">
