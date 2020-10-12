@@ -47,6 +47,7 @@ const App: React.FC = () => {
     const timeStamp = new Date().getTime();
     Axios.get("/aws-exports.json?timeStamp=" + timeStamp).then((res) => {
       let ConfigObj = res.data
+      window.localStorage.setItem("configJson", JSON.stringify(ConfigObj));
       Amplify.configure(ConfigObj);
       setLoadingConfig(false);
     });

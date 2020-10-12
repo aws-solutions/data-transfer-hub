@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -29,7 +30,7 @@ import IMG_STATUS from "../../../assets/images/status.svg";
 import "../Creation.scss";
 import { EnumSourceType } from "../../../assets/types/index";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { S3_PARAMS_LIST_MAP } from "../../../assets/config/const";
+import { S3_PARAMS_LIST_MAP, CUR_SUPPORT_LANGS } from "../../../assets/config/const";
 
 interface IParameterType {
   ParameterKey: string;
@@ -46,15 +47,10 @@ const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
-const initCredentialJson = {
-  Version: "2012-10-17",
-  Statement: [
-    {
-      Action: [],
-      Effect: "Allow",
-      Resource: [],
-    },
-  ],
+const tmpJson = {
+  "access_key_id": "<Your Access Key ID>",
+  "secret_access_key": "<Your Access Key Secret>",
+  "region_name": "<Your Region>"
 };
 
 const JOB_TYPE_MAP:any = {
@@ -64,8 +60,18 @@ const JOB_TYPE_MAP:any = {
 
 const StepOne: React.FC = () => {
 
+  const { t, i18n } = useTranslation();
+  const [nameStr, setNameStr] = useState("en_name");
+
+  useEffect(() => {
+    if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
+      setNameStr(i18n.language + "_name");
+    }
+  }, [i18n.language]);
+
   const { tmpTaskInfo } = useMappedState(mapState);
   const [paramsList, setParamList] = useState<any>([]);
+  const [clusterListLength, setClusterListLength] = useState<number>(0);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -93,6 +99,17 @@ const StepOne: React.FC = () => {
         ParameterValue: parametersObj[key],
       });
     }
+    // Add New Params to Creat Task
+    const configJson:any = JSON.parse(window.localStorage.getItem("configJson") as string);
+    const clusterData = configJson.taskCluster;
+    setClusterListLength(Object.keys(clusterData).length);
+    for (const key in clusterData) {
+      tmpParamsArr.push({
+        ParameterKey: key,
+        ParameterValue: clusterData[key],
+      });
+    }
+    
     setParamList(tmpParamsArr);
     createTaskInfo.parameters = tmpParamsArr;
     setCreateTaskGQL(createTaskInfo);
@@ -116,35 +133,7 @@ const StepOne: React.FC = () => {
     });
   }
 
-  // const [credentialJson, setCredentialJson] = useState<any>(initCredentialJson);
-  const [credentialJsonString, setCredentialJsonString] = useState<any>();
   const [isCopied, setIsCopied] = useState(false);
-
-  useEffect(() => {
-    console.info("tmpTaskInfo:", tmpTaskInfo);
-    const tmpJson = JSON.parse(JSON.stringify(initCredentialJson));
-    if (tmpTaskInfo && tmpTaskInfo.parametersObj) {
-      const tmpJobType = tmpTaskInfo.parametersObj.jobType;
-      tmpJson.Statement[0].Action = ["s3:" + tmpJobType + "*", "s3:ListBucket"];
-      // if job type is GET, set source bucket
-      if (tmpTaskInfo.parametersObj.jobType === "GET") {
-        tmpJson.Statement[0].Resource = [
-          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.srcBucketName+"",
-          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.srcBucketName+"/*"
-        ]
-      }
-      // if job type is PUT, set destination bucket
-      if (tmpTaskInfo.parametersObj.jobType === "PUT") {
-        tmpJson.Statement[0].Resource = [
-          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.destBucketName+"",
-          "arn:aws-cn:s3:::"+tmpTaskInfo.parametersObj.destBucketName+"/*"
-        ]
-      }
-    }
-    console.info("tmpJson:", tmpJson);
-    // setCredentialJson(tmpJson);
-    setCredentialJsonString(JSON.stringify(tmpJson, null, 2));
-  }, [tmpTaskInfo]);
 
   const goToHomePage = () => {
     const toPath = "/";
@@ -161,7 +150,6 @@ const StepOne: React.FC = () => {
   };
 
   const goToTaskList = () => {
-    console.info("create task");
     createTask();
   };
 
@@ -177,9 +165,9 @@ const StepOne: React.FC = () => {
               aria-label="breadcrumb"
             >
               <MLink color="inherit" href="/#/">
-                Data Replication Hub
+                {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">Create Task</Typography>
+              <Typography color="textPrimary">{t("breadCrumb.create")}</Typography>
             </Breadcrumbs>
           </div>
           <div className="creation-content">
@@ -187,65 +175,59 @@ const StepOne: React.FC = () => {
               <Step curStep="three" />
             </div>
             <div className="creation-info">
-              <div className="creation-title">Review task</div>
-              <div className="creation-title">Step 1: Select engine type</div>
+              <div className="creation-title">{t("creation.step3.reviewTitle")}</div>
+              <div className="creation-title">{t("creation.step3.step1Title")}</div>
               <div className="box-shadow card-list">
                 <div className="option">
-                  <div className="option-title">Engine </div>
+                  <div className="option-title">{t("creation.step3.step1Engine")} </div>
                   <div className="option-content">
-                    <div className="step3-title">Engine</div>
+                    <div className="step3-title">{t("creation.step3.step1EngineSubEngine")}</div>
                     <div className="step3-desc">
-                      Amazon S3 Replication Engine V1.3
+                      {t("creation.step3.step1EngineSubEngineDesc")}
                     </div>
-                    <div className="step3-title">type</div>
+                    <div className="step3-title">{t("creation.step3.step1Type")}</div>
                     <div className="step3-desc">
-                      Serverless Edition. Serverless edition is ideal for
-                      real-time transfer, and you pay as you go.
+                      {t("creation.step3.step1TypeDesc")}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="creation-title">Step 2: Specify task details</div>
+              <div className="creation-title">{t("creation.step3.step2Detail")}</div>
               <div className="box-shadow card-list">
                 <div className="option">
                   <div className="option-title">
-                    Task Parameters <span>({paramsList.length})</span>
-                    {/* <div className="title-search">
-                      <input
-                        placeholder="Search parameters"
-                        className="option-input"
-                        type="text"
-                        
-                      />
-                    </div> */}
+                    {t("creation.step3.step2TaskParams")} <span>({paramsList.length - clusterListLength})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">
                       <div>
                         <div className="preview-row preview-header">
-                          <div className="table-th key">Parameter</div>
-                          <div className="table-th value">Value</div>
+                          <div className="table-th key">{t("creation.step3.step2Params")}</div>
+                          <div className="table-th value">{t("creation.step3.step2Value")}</div>
                         </div>
                         {paramsList.map((element: any, index: any) => {
                           return (
-                            <div
-                              className="preview-row preview-data"
-                              key={index}
-                            >
-                              <div className="table-td key">
-                                {S3_PARAMS_LIST_MAP[element.ParameterKey]&&S3_PARAMS_LIST_MAP[element.ParameterKey].name}
+                            S3_PARAMS_LIST_MAP[element.ParameterKey] && (
+                              <div
+                                className="preview-row preview-data"
+                                key={index}
+                              >
+                                <div className="table-td key">
+                                  {S3_PARAMS_LIST_MAP[element.ParameterKey]&&S3_PARAMS_LIST_MAP[element.ParameterKey][nameStr]}
+                                </div>
+                                <div className="table-td value">
+                                  {
+                                    element.ParameterKey === "jobType" ? (<span>
+                                      {JOB_TYPE_MAP[element.ParameterValue]}
+                                    </span> 
+                                    ) : (<span>{element.ParameterValue}</span>)
+                                  }
+                                  
+                                </div>
                               </div>
-                              <div className="table-td value">
-                                {
-                                  element.ParameterKey === "jobType" ? (<span>
-                                    {JOB_TYPE_MAP[element.ParameterValue]}
-                                  </span> 
-                                  ) : (<span>{element.ParameterValue}</span>)
-                                }
-                                
-                              </div>
-                            </div>
+                            )
+                            
                           );
                         })}
                       </div>
@@ -263,20 +245,18 @@ const StepOne: React.FC = () => {
                         <img alt="status" src={IMG_STATUS} />
                       </div>
                       <div className="status-desc">
-                        <div className="title">AWS Credentials</div>
+                        <div className="title">{t("creation.step3.credential")}</div>
                         <div className="desc">
-                          Please make sure the AWS credentials is store as
-                          Securtiy String in drh-credentials. And it at least
-                          have the following permissions.
+                          {t("creation.step3.credentialDesc")}
                         </div>
                       </div>
                       <div className="code-area">
                         <div className="code-info">
-                          <pre>{credentialJsonString}</pre>
+                          <pre>{JSON.stringify(tmpJson, null, 2)}</pre>
                         </div>
                         <div className="copy">
                           <CopyToClipboard
-                            text={credentialJsonString}
+                            text={JSON.stringify(tmpJson, null, 2)}
                             onCopy={() => setIsCopied(true)}
                           >
                             <Button
@@ -285,11 +265,11 @@ const StepOne: React.FC = () => {
                               color="default"
                               startIcon={<FileCopyIcon />}
                             >
-                              Copy
+                              {t("btn.copy")}
                             </Button>
                           </CopyToClipboard>
                           {isCopied ? (
-                            <b className="copy-tips">Copied.</b>
+                            <b className="copy-tips">{t("creation.step3.credentialCopied")}.</b>
                           ) : null}
                         </div>
                       </div>
@@ -298,14 +278,14 @@ const StepOne: React.FC = () => {
                 )}
 
               <div className="buttons">
-                <TextButton onClick={goToHomePage}>Cancel</TextButton>
-                <NormalButton onClick={goToStepTwo}>Previous</NormalButton>
+                <TextButton onClick={goToHomePage}>{t("btn.cancel")}</TextButton>
+                <NormalButton onClick={goToStepTwo}>{t("btn.prev")}</NormalButton>
                 {isCreating ? (
                   <CreateButtonLoading disabled={true}>
                     <Loader type="ThreeDots" color="#ffffff" height={10} />
                   </CreateButtonLoading>
                 ) : (
-                  <NextButton onClick={goToTaskList}>Create Task</NextButton>
+                  <NextButton onClick={goToTaskList}>{t("btn.createTask")}</NextButton>
                 )}
               </div>
             </div>

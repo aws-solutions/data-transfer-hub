@@ -6,27 +6,35 @@ export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
 
 export const S3_PARAMS_LIST_MAP:any = {
   "srcBucketName": {
-    "name":"Source Bucket Name"
+    "en_name": "Source Bucket Name",
+    "zh-CN_name": "源数据桶名称"
   },
   "srcBucketPrefix": {
-    "name": "Source Bucket Object Prefix"
+    "en_name": "Source Bucket Object Prefix",
+    "zh-CN_name": "源数据桶对象前缀"
   },
   "destBucketName": {
-    "name": "Destination Bucket Name"
+    "en_name": "Destination Bucket Name",
+    "zh-CN_name": "目标数据桶名称"
   },
   "destBucketPrefix": {
-    "name": "Destination Bucket Object Prefix"
+    "en_name": "Destination Bucket Object Prefix",
+    "zh-CN_name": "目标数据桶对象前缀"
   },
   "credentialsParameterStore": {
-    "name":"Parameter Store name for AWS Credentials"
+    "en_name": "Parameter Store name for Credentials",
+    "zh-CN_name":"凭证中的参数存储名称"
   },
   "alarmEmail": {
-    "name":"Alarm Email"
+    "en_name": "Alarm Email",
+    "zh-CN_name":"通知邮箱"
   },
   "sourceType": {
-    "name":"Source Type"
+    "en_name": "Source Type",
+    "zh-CN_name":"数据源类型"
   },
   "jobType": {
-    "name":"Which bucket in current AWS account?"
+    "en_name": "Which bucket in current AWS account?",
+    "zh-CN_name":"哪一个数据桶在当前的账户中?"
   },
 }

@@ -45,6 +45,12 @@ export default function reducer(
         createTaskFlag: true,
       };
     }
+    case "hide create task flag": {
+      return {
+        ...state,
+        createTaskFlag: false,
+      };
+    }
     case "add todo": {
       return {
         ...state,

@@ -35,9 +35,9 @@ export interface PortalStackProps {
   aws_user_pools_web_client_id: string,
   aws_appsync_graphqlEndpoint: string,
   taskCluster?: {
-    publicSubnetIds: string[]
-    vpcId: string,
-    clusterName: string
+    ecsSubnets: string[]
+    ecsVpcId: string,
+    ecsClusterName: string
   }
 }
 

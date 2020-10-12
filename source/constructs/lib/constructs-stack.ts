@@ -76,9 +76,9 @@ export class ConstructsStack extends cdk.Stack {
       aws_user_pools_id: apiStack.userPool.userPoolId,
       aws_user_pools_web_client_id: apiStack.userPoolApiClient.userPoolClientId,
       taskCluster: {
-        vpcId: taskCluster.vpc.vpcId,
-        publicSubnetIds: taskCluster.publicSubnets.map(subnet => subnet.subnetId),
-        clusterName: taskCluster.clusterName
+        ecsVpcId: taskCluster.vpc.vpcId,
+        ecsSubnets: taskCluster.publicSubnets.map(subnet => subnet.subnetId),
+        ecsClusterName: taskCluster.clusterName
       }
     });
 

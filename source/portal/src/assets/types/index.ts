@@ -62,10 +62,10 @@ export const TYPE_LIST = [
 
 // Task Tyep Enum
 export enum EnumSourceType {
-  S3 = "S3",
-  Qiniu = "Qiniu",
-  AliOSS = "AliOSS",
-  TencentCOS = "TencentCOS",
+  S3 = "Amazon_S3",
+  Qiniu = "Qiniu_Kodo",
+  AliOSS = "Aliyun_OSS",
+  TencentCOS = "Tencent_COS",
 }
 
 export enum EnumTaskStatus {
@@ -91,26 +91,34 @@ export const TASK_STATUS_MAP:any =  {
 export const SOURCE_TYPE = [
   {
     id: 1,
-    name: "Amazon S3",
+    en_name: "Amazon S3",
+    "zh-CN_name": "Amazon S3",
     value: EnumSourceType.S3,
-    desc: "Amazon S3 replication between AWS partitions.",
+    en_desc: "Amazon S3 replication between AWS partitions.",
+    "zh-CN_desc": "Amazon S3 的标准区和中国区之间的复制.",
   },
   {
     id: 2,
-    name: "Aliyun OSS",
+    en_name: "Aliyun OSS",
+    "zh-CN_name": "阿里云 OSS",
     value: EnumSourceType.AliOSS,
-    desc: "Migration Aliyun OSS objects into Amazon S3.",
+    en_desc: "Migration Aliyun OSS objects into Amazon S3.",
+    "zh-CN_desc": "从阿里云OSS复制数据到 Amazon S3.",
   },
   {
     id: 3,
-    name: "Qiniu Kodo",
+    en_name: "Qiniu Kodo",
+    "zh-CN_name": "七牛 Kodo",
     value: EnumSourceType.Qiniu,
-    desc: "Migration Qiniu Kodo objects into Amazon S3.",
+    en_desc: "Migration Qiniu Kodo objects into Amazon S3.",
+    "zh-CN_desc": "从七牛Kodo复制数据到 Amazon S3.",
   },
   {
     id: 4,
-    name: "Tencent COS",
+    en_name: "Tencent COS",
+    "zh-CN_name": "腾讯 COS",
     value: EnumSourceType.TencentCOS,
-    desc: "Migration Tencent COS objects into Amazon S3.",
+    en_desc: "Migration Tencent COS objects into Amazon S3.",
+    "zh-CN_desc": "从腾讯COS复制数据到 Amazon S3.",
   },
 ];

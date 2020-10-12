@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useMappedState } from "redux-react-hook";
+import { useDispatch, useMappedState } from "redux-react-hook";
 import { useHistory, Link } from "react-router-dom";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 import Loading from "../../common/Loading";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -61,6 +62,10 @@ const mapState = (state: IState) => ({
 });
 
 const List: React.FC = () => {
+
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+
   const { createTaskFlag } = useMappedState(mapState);
 
   const history = useHistory();
@@ -77,8 +82,9 @@ const List: React.FC = () => {
   const [messageOpen, setMessageOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertType, setAlertType] = useState("");
-
+  
   async function getTaskList(token: string | null, direction: string) {
+
     setIsLoading(true);
     const apiData: any = await API.graphql({
       query: listTasks,
@@ -119,6 +125,16 @@ const List: React.FC = () => {
     getTaskList(null, "next");
   }, []);
 
+  // Hide Create Flag in 3 seconds
+  useEffect(() => {
+    window.setTimeout(() => {
+      console.info("AAAA")
+      dispatch({
+        type: "hide create task flag",
+      });
+    }, 4000)
+  }, [dispatch])
+
   const goToStepOne = () => {
     const toPath = "/create/step1";
     history.push({
@@ -149,8 +165,8 @@ const List: React.FC = () => {
       });
       setIsStopLoading(false);
       setOpen(false);
-      console.info("stopResData:", stopResData);
       refreshData();
+      console.info("stopResData:",stopResData)
     } catch (error) {
       console.error("error:", error.errors[0].message.toString());
       const errorMsg = error.errors[0].message.toString();
@@ -187,8 +203,6 @@ const List: React.FC = () => {
   };
 
   const clickTaskInfo = (taskInfo: any, event:any) => {
-    console.info("taskInfo:", taskInfo);
-    console.info("event:", event);
     setCurSelectTask(taskInfo);
   };
 
@@ -252,8 +266,8 @@ const List: React.FC = () => {
         autoHideDuration={1500}
       >
         <Alert severity="warning">
-          {alertType === "detail" && <span>Please select a task</span>}
-          {alertType === "stop" && <span>Please select a task to stop</span>}
+          {alertType === "detail" && <span>{t("taskList.tips.selectTask")}</span>}
+          {alertType === "stop" && <span>{t("taskList.tips.selectTaskStop")}</span>}
         </Alert>
       </Snackbar>
       <Dialog
@@ -262,16 +276,16 @@ const List: React.FC = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Stop Task"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t("taskList.stopTask")}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to stop the Task <b>{ curSelectTask && curSelectTask.id }</b>
+            {t("taskList.tips.confimStop")} <b>{ curSelectTask && curSelectTask.id }</b>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <div className="padding-15">
             <NormalButton onClick={handleClose} color="primary">
-              Cancel
+              {t("btn.cancel")}
             </NormalButton>
             {isStopLoading ? (
               <StopButtonLoading disabled={true}>
@@ -283,7 +297,7 @@ const List: React.FC = () => {
                 color="primary"
                 autoFocus
               >
-                Confirm
+                {t("btn.confirm")}
               </PrimaryButton>
             )}
           </div>
@@ -308,7 +322,7 @@ const List: React.FC = () => {
           <div className="task-status">
             <div className="content">
               <img alt="success" src={STATUS_OK} />
-              Task created successfully
+              {t("taskList.tips.successMsg")}
             </div>
           </div>
         )}
@@ -320,9 +334,9 @@ const List: React.FC = () => {
               aria-label="breadcrumb"
             >
               <MLink color="inherit" href="/#/">
-                Data Replication Hub
+                {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">Tasks</Typography>
+              <Typography color="textPrimary">{t("breadCrumb.tasks")}</Typography>
             </Breadcrumbs>
           </div>
           <div className="table-data">
@@ -330,7 +344,7 @@ const List: React.FC = () => {
               <div className="title">
                 <div className="options">
                   <div className="task-count">
-                    Task
+                    {t("taskList.title")}
                     {/* <span className="info">(10)</span> */}
                   </div>
                   <div className="buttons">
@@ -338,11 +352,11 @@ const List: React.FC = () => {
                       <RefreshIcon width="10" />
                     </NormalButton>
                     <NormalButton disabled={curSelectTask===null} onClick={goToDetail}>
-                      View Details
+                      {t("btn.viewDetail")}
                     </NormalButton>
-                    <NormalButton disabled={curSelectTask===null || curSelectTask.progress === EnumTaskStatus.STOPPING || curSelectTask.progress === EnumTaskStatus.STOPPED } onClick={stopCurTask}>Stop</NormalButton>
+                    <NormalButton disabled={curSelectTask===null || curSelectTask.progress === EnumTaskStatus.STOPPING || curSelectTask.progress === EnumTaskStatus.STOPPED } onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
                     <PrimaryButton onClick={goToStepOne}>
-                      Create Task
+                      {t("btn.createTask")}
                     </PrimaryButton>
                   </div>
                 </div>
@@ -385,12 +399,12 @@ const List: React.FC = () => {
                   <div className="table-wrap">
                     <div className="table-header">
                       <div className="table-item check-item">&nbsp;</div>
-                      <div className="table-item item-id">Task ID</div>
-                      <div className="table-item header-item">Source</div>
-                      <div className="table-item header-item">Destination</div>
-                      <div className="table-item header-item">Engine Type</div>
-                      <div className="table-item header-item">Status</div>
-                      <div className="table-item create-time">Created time</div>
+                      <div className="table-item item-id">{t("taskList.table.taskId")}</div>
+                      <div className="table-item header-item">{t("taskList.table.source")}</div>
+                      <div className="table-item header-item">{t("taskList.table.destination")}</div>
+                      <div className="table-item header-item">{t("taskList.table.engineType")}</div>
+                      <div className="table-item header-item">{t("taskList.table.status")}</div>
+                      <div className="table-item create-time">{t("taskList.table.createdTime")}</div>
                     </div>
                     {taskListData.map((element: any, index: any) => {
                       const rowClass = classNames({

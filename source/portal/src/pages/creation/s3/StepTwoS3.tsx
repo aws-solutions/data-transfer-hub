@@ -24,6 +24,8 @@ import TextButton from "../../../common/comp/TextButton";
 import { IState } from "../../../store/Store";
 
 import { SOURCE_TYPE, EnumSourceType } from "../../../assets/types/index";
+import { CUR_SUPPORT_LANGS } from "../../../assets/config/const";
+
 
 import "../Creation.scss";
 
@@ -48,7 +50,17 @@ const StepOne: React.FC = () => {
   const [bucketInAccount, setBucketInAccount] = useState("Destination");
   const [paramData, setParamData] = useState<any>();
   // const [formDefaultValue, setFormDefaultValue] = useState<any>({});
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const [titleStr, setTitleStr] = useState("en_name");
+  const [descStr, setDescStr] = useState("en_desc");
+
+  useEffect(() => {
+    if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
+      setTitleStr(i18n.language + "_name");
+      setDescStr(i18n.language + "_desc");
+    }
+  }, [i18n.language]);
 
 
   const history = useHistory();
@@ -152,14 +164,14 @@ const StepOne: React.FC = () => {
             </div>
             <div className="creation-info">
               <div className="creation-title">
-                Specify task details
+                {t("creation.step2.taskDetail")}
                 <InfoSpan />
               </div>
               <div className="box-shadow card-list">
                 <div className="option">
-                  <div className="option-title">Source Type</div>
+                  <div className="option-title">{t("creation.step2.sourceType")}</div>
                   <div className="option-content">
-                    <div>Select a source type</div>
+                    <div>{t("creation.step2.selectSourceType")}</div>
                     <div>
                       {SOURCE_TYPE.map((item: any, index: any) => {
                         const stClass = classNames({
@@ -178,9 +190,9 @@ const StepOne: React.FC = () => {
                                   name="option-type"
                                   type="radio"
                                 />
-                                {item.name}
+                                {item[titleStr]}
                               </div>
-                              <div className="desc">{item.desc}</div>
+                              <div className="desc">{item[descStr]}</div>
                             </label>
                           </div>
                         );
@@ -193,11 +205,11 @@ const StepOne: React.FC = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="box-shadow card-list">
                   <div className="option">
-                    <div className="option-title">Source settings</div>
+                    <div className="option-title">{t("creation.step2.settings.source.title")}</div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">Bucket Name</div>
-                        <div className="desc">Input the bucket name.</div>
+                        <div className="title">{t("creation.step2.settings.source.bucketName")}</div>
+                        <div className="desc">{t("creation.step2.settings.source.bucketDesc")}</div>
                         <div>
                           <input
                             defaultValue={
@@ -207,22 +219,21 @@ const StepOne: React.FC = () => {
                             name="srcBucketName"
                             ref={register({ required: true })}
                             className="option-input"
-                            placeholder="Bucket Name"
+                            placeholder={t("creation.step2.settings.source.bucketName")}
                             type="text"
                           />
                           <div className="error">
                             {errors.srcBucketName &&
                               errors.srcBucketName.type === "required" &&
-                              "Source Bucket Name is Required"}
+                              t("tips.error.sourceBucketRequired")}
                           </div>
                         </div>
                       </div>
 
                       <div className="form-items">
-                        <div className="title">Bucket Object Prefix</div>
+                        <div className="title">{t("creation.step2.settings.source.objectPrefix")}</div>
                         <div className="desc">
-                          It will only replicate objects with the provided
-                          prefix.
+                          {t("creation.step2.settings.source.prefixDesc")}
                         </div>
                         <div>
                           <input
@@ -233,7 +244,7 @@ const StepOne: React.FC = () => {
                             name="srcBucketPrefix"
                             ref={register}
                             className="option-input"
-                            placeholder="Bucket Object Prefix"
+                            placeholder={t("creation.step2.settings.source.objectPrefix")}
                             type="text"
                           />
                         </div>
@@ -244,11 +255,11 @@ const StepOne: React.FC = () => {
 
                 <div className="box-shadow card-list">
                   <div className="option">
-                    <div className="option-title">Destination settings</div>
+                    <div className="option-title">{t("creation.step2.settings.dest.title")}</div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">Bucket Name</div>
-                        <div className="desc">Input the bucket name.</div>
+                        <div className="title">{t("creation.step2.settings.dest.bucketName")}</div>
+                        <div className="desc">{t("creation.step2.settings.dest.bucketDesc")}</div>
                         <div>
                           <input
                             defaultValue={
@@ -258,22 +269,21 @@ const StepOne: React.FC = () => {
                             name="destBucketName"
                             ref={register({ required: true })}
                             className="option-input"
-                            placeholder="Dest bucket name."
+                            placeholder={t("creation.step2.settings.dest.bucketName")}
                             type="text"
                           />
                           <div className="error">
                             {errors.destBucketName &&
                               errors.destBucketName.type === "required" &&
-                              "Source Bucket Name is Required"}
+                              t("tips.error.destBucketRequired")}
                           </div>
                         </div>
                       </div>
 
                       <div className="form-items">
-                        <div className="title">Bucket Object Prefix</div>
+                        <div className="title">{t("creation.step2.settings.dest.objectPrefix")}</div>
                         <div className="desc">
-                          It will only replicate objects with the provided
-                          prefix.
+                          {t("creation.step2.settings.dest.prefixDesc")}
                         </div>
                         <div>
                           <input
@@ -284,7 +294,7 @@ const StepOne: React.FC = () => {
                             name="destBucketPrefix"
                             ref={register}
                             className="option-input"
-                            placeholder="Bucket Object Prefix"
+                            placeholder={t("creation.step2.settings.dest.objectPrefix")}
                             type="text"
                           />
                         </div>
@@ -295,17 +305,15 @@ const StepOne: React.FC = () => {
 
                 <div className="box-shadow card-list">
                   <div className="option">
-                    <div className="option-title">AWS Credentials</div>
+                    <div className="option-title">{t("creation.step2.settings.credential.title")}</div>
                     <div className="option-content">
                       {sourceType === EnumSourceType.S3 && (
                         <div className="form-items">
                           <div className="title">
-                            Which bucket in current AWS account?
+                            {t("creation.step2.settings.credential.whitch")}
                           </div>
                           <div className="desc">
-                            Select Source if your source bucket is in the same
-                            account as Data Replication Hub. Otherwise, select
-                            Destination.
+                            {t("creation.step2.settings.credential.whitchDesc")}
                           </div>
                           <div>
                             <select
@@ -328,12 +336,11 @@ const StepOne: React.FC = () => {
 
                       <div className="form-items">
                         <div className="title">
-                          Parameter Store name for AWS Credentials
+                          {t("creation.step2.settings.credential.store")}
                           <InfoSpan />
                         </div>
                         <div className="desc">
-                          Choose the SSM Parameter Store which holds the AWS
-                          credentials.
+                          {t("creation.step2.settings.credential.storeDesc")}
                         </div>
                         <div>
                           <input
@@ -349,7 +356,7 @@ const StepOne: React.FC = () => {
                             ref={register}
                             className="option-input"
                             // defaultValue="drh-credentials"
-                            placeholder="Parameter Store name for AWS Credentials"
+                            placeholder="Parameter Store name for Credentials"
                             type="text"
                           />
                         </div>
@@ -360,32 +367,27 @@ const StepOne: React.FC = () => {
 
                 <div className="box-shadow card-list">
                   <div className="option">
-                    <div className="option-title">More</div>
+                    <div className="option-title">{t("creation.step2.settings.more.title")}</div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">Description</div>
-                        <div className="desc">Description about this task</div>
+                        <div className="title">{t("creation.step2.settings.more.description")}</div>
+                        <div className="desc">{t("creation.step2.settings.more.descriptionDesc")}</div>
                         <div>
                           <input
                             defaultValue={tmpTaskInfo.description}
                             name="description"
                             ref={register({ required: true })}
                             className="option-input"
-                            placeholder="description"
+                            placeholder={t("creation.step2.settings.more.description")}
                             type="text"
                           />
-                          <div className="error">
-                            {errors.description &&
-                              errors.description.type === "required" &&
-                              "Description is required"}
-                          </div>
                         </div>
                       </div>
 
                       <div className="form-items">
-                        <div className="title">Alarm Email</div>
+                        <div className="title">{t("creation.step2.settings.more.email")}</div>
                         <div className="desc">
-                          Notification will be sent to this email if any errors.
+                          {t("creation.step2.settings.more.emailDesc")}
                         </div>
                         <div>
                           <input
@@ -396,16 +398,16 @@ const StepOne: React.FC = () => {
                             name="alarmEmail"
                             ref={register({ required: true })}
                             className="option-input"
-                            placeholder="abc@example.come"
+                            placeholder="abc@example.com"
                             type="text"
                           />
                           <div className="error">
                             {errors.alarmEmail &&
                               errors.alarmEmail.type === "required" &&
-                              "Alarm Email is required"}
+                              t("tips.error.emailRequired")}
                             {errors.alarmEmail &&
                               errors.alarmEmail.type === "email" &&
-                              "Alarm Email must be validate"}
+                              t("tips.error.emailValidate")}
                           </div>
                         </div>
                       </div>
@@ -413,9 +415,9 @@ const StepOne: React.FC = () => {
                   </div>
                 </div>
                 <div className="buttons">
-                  <TextButton onClick={goToHomePage}>Cancel</TextButton>
-                  <NormalButton onClick={goToStepOne}>Previous</NormalButton>
-                  <NextButton onClick={goToStepThree}>Next</NextButton>
+                  <TextButton onClick={goToHomePage}>{t("btn.cancel")}</TextButton>
+                  <NormalButton onClick={goToStepOne}>{t("btn.prev")}</NormalButton>
+                  <NextButton onClick={goToStepThree}>{t("btn.next")}</NextButton>
                 </div>
               </form>
             </div>

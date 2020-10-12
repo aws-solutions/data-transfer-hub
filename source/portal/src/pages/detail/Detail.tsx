@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 import NumberFormat from "react-number-format";
 import Loader from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 import Loading from "../../common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -101,6 +102,8 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Detail: React.FC = (props: any) => {
+  const { t } = useTranslation();
+
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [curTaskInfo, setCurTaskInfo] = useState<any>({});
@@ -142,12 +145,12 @@ const Detail: React.FC = (props: any) => {
       });
     }
     if (tmpCurTask.jobType === "PUT") {
-      setAccountInSrc("Yes");
-      setAccountInDest("No");
+      setAccountInSrc("yes");
+      setAccountInDest("no");
     }
     if (tmpCurTask.jobType === "GET") {
-      setAccountInSrc("No");
-      setAccountInDest("Yes");
+      setAccountInSrc("no");
+      setAccountInDest("yes");
     }
     setCurTaskInfo(tmpCurTask);
     setIsLoading(false);
@@ -170,10 +173,10 @@ const Detail: React.FC = (props: any) => {
           id: taskId,
         },
       });
-      console.info(stopResData);
       setIsStopLoading(false);
       setOpen(false);
       fetchNotes(props.match.params.id);
+      console.info(stopResData);
     } catch (error) {
       console.error("error:", error.errors[0].message.toString());
     }
@@ -184,7 +187,6 @@ const Detail: React.FC = (props: any) => {
     const subscriber: any = API.graphql(graphqlOperation(updateTaskProgress));
     subscriber.subscribe({
       next: (data: any) => {
-        console.info(data);
         if (data.value.data.updateTaskProgress.id === props.match.params.id) {
           fetchNotes(props.match.params.id);
         }
@@ -212,16 +214,16 @@ const Detail: React.FC = (props: any) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Stop Task"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t("taskDetail.stopTask")}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to stop this Task?
+            {t("taskDetail.stopTaskTips")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <div className="padding-15">
             <NormalButton onClick={handleClose} color="primary">
-              Cancel
+              {t("btn.cancel")}
             </NormalButton>
             {isStopLoading ? (
               <StopButtonLoading disabled={true}>
@@ -233,7 +235,7 @@ const Detail: React.FC = (props: any) => {
                 color="primary"
                 autoFocus
               >
-                Confirm
+                {t("btn.confirm")}
               </PrimaryButton>
             )}
           </div>
@@ -249,10 +251,10 @@ const Detail: React.FC = (props: any) => {
               aria-label="breadcrumb"
             >
               <MLink color="inherit" href="/#/">
-                Data Replication Hub
+                {t("breadCrumb.home")}
               </MLink>
               <MLink color="inherit" href="/#/task/list">
-                Tasks
+                {t("breadCrumb.tasks")}
               </MLink>
               <Typography color="textPrimary">{curTaskInfo.id}</Typography>
             </Breadcrumbs>
@@ -269,24 +271,24 @@ const Detail: React.FC = (props: any) => {
                 </div>
                 <div className="buttons">
                   {/* <NormalButton>Edit</NormalButton> */}
-                  <NormalButton onClick={stopCurTask}>Stop</NormalButton>
+                  <NormalButton onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
                 </div>
               </div>
               <div className="general-info box-shadow">
                 <div className="title">
-                  General configuration <InfoSpan />
+                  {t("taskDetail.generalConfig")} <InfoSpan />
                 </div>
                 <div className="general-info-content">
                   <div className="split-item">
-                    <div className="sub-name">Engine</div>
-                    <div>S3 Replication Plugin v1.3</div>
+                    <div className="sub-name">{t("taskDetail.engine")}</div>
+                    <div>{t("taskDetail.plugin")}</div>
                   </div>
                   <div className="split-item">
-                    <div className="sub-name">Source Type</div>
+                    <div className="sub-name">{t("taskDetail.sourceType")}</div>
                     <div>{curTaskInfo.type}</div>
                   </div>
                   <div className="split-item">
-                    <div className="sub-name">Replication Status</div>
+                    <div className="sub-name">{t("taskDetail.repStatus")}</div>
                     <div>{curTaskInfo.progress}</div>
                   </div>
                 </div>
@@ -294,29 +296,29 @@ const Detail: React.FC = (props: any) => {
               <div className="tab-content">
                 <div>
                   <AntTabs value={value} onChange={handleChange}>
-                    <AntTab label="Details" />
-                    <AntTab label="Options" />
+                    <AntTab label={t("taskDetail.details")} />
+                    <AntTab label={t("taskDetail.option")} />
                     {/* <AntTab label="Tags" /> */}
                   </AntTabs>
                   <TabPanel value={value} index={0}>
                     <div className="general-info tab-padding box-shadow">
                       <div className="title">
-                        Details <InfoSpan />
+                        {t("taskDetail.details")} <InfoSpan />
                       </div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <div className="sub-name">Task ID</div>
+                          <div className="sub-name">{t("taskDetail.taskId")}</div>
                           <div>{curTaskInfo.id}</div>
                           <br />
-                          <div className="sub-name">Created At</div>
+                          <div className="sub-name">{t("taskDetail.createdAt")}</div>
                           <div>{curTaskInfo.createdAt}</div>
                           <br />
-                          <div className="sub-name">Status</div>
+                          <div className="sub-name">{t("taskDetail.status")}</div>
                           {curTaskInfo.progress ===
                           EnumTaskStatus.IN_PROGRESS ? (
                             <div>
                               <div className="status">
-                                Replicating in progress
+                                {t("taskDetail.inProgress")}
                               </div>
                               <div className="progress-bar">
                                 <div className="bar">
@@ -330,40 +332,40 @@ const Detail: React.FC = (props: any) => {
                           )}
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">Source Bucket Name</div>
+                          <div className="sub-name">{t("taskDetail.srcName")}</div>
                           <div>{curTaskInfo.srcBucketName}</div>
                           <br />
-                          <div className="sub-name">Source Bucket Prefix</div>
+                          <div className="sub-name">{t("taskDetail.srcPrefix")}</div>
                           <div>{curTaskInfo.srcBucketPrefix}</div>
                           <br />
                           <div className="sub-name">
-                            Bucket in This Account?
+                            {t("taskDetail.srcInThisAccount")}
                           </div>
                           <div>{accountInSrc}</div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
-                            Destination Bucket Name
+                            {t("taskDetail.destName")}
                           </div>
                           <div>{curTaskInfo.destBucketName}</div>
                           <br />
                           <div className="sub-name">
-                            Destination Bucket Prefix
+                            {t("taskDetail.destPrefix")}
                           </div>
                           <div>{curTaskInfo.destBucketPrefix}</div>
                           <br />
                           <div className="sub-name">
-                            Bucket in This Account?
+                            {t("taskDetail.destInThisAccount")}
                           </div>
                           <div>{accountInDest}</div>
                           <br />
                           <div className="sub-name">
-                            Paramete Store for AWS credentials
+                            {t("taskDetail.credentials")}
                           </div>
                           <div>{curTaskInfo.credentialsParameterStore}</div>
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">Total Objects</div>
+                          <div className="sub-name">{t("taskDetail.totalObjects")}</div>
                           <div>
                             {curTaskInfo.progressInfo ? (
                               <NumberFormat
@@ -377,7 +379,7 @@ const Detail: React.FC = (props: any) => {
                             )}
                           </div>
                           <br />
-                          <div className="sub-name">Replicated Objects</div>
+                          <div className="sub-name">{t("taskDetail.repObjects")}</div>
                           <div>
                             {curTaskInfo.progressInfo ? (
                               <NumberFormat
@@ -397,16 +399,16 @@ const Detail: React.FC = (props: any) => {
                   <TabPanel value={value} index={1}>
                     <div className="general-info tab-padding box-shadow">
                       <div className="title">
-                        Options <InfoSpan />
+                        {t("taskDetail.option")} <InfoSpan />
                       </div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <div className="sub-name">Description</div>
+                          <div className="sub-name">{t("taskDetail.description")}</div>
                           <div>{curTaskInfo.description}</div>
                           <br />
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">Alarm Email</div>
+                            <div className="sub-name">{t("taskDetail.alarmEmail")}</div>
                           <div>{curTaskInfo.alarmEmail}</div>
                         </div>
                       </div>

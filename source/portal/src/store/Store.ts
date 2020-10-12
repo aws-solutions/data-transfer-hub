@@ -31,6 +31,9 @@ export type Action =
       type: "set create task flag";
     }
   | {
+      type: "hide create task flag";
+    }
+  | {
       type: "add todo";
       todo: string;
     }
