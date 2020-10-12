@@ -104,10 +104,17 @@ const StepOne: React.FC = () => {
     const clusterData = configJson.taskCluster;
     setClusterListLength(Object.keys(clusterData).length);
     for (const key in clusterData) {
-      tmpParamsArr.push({
-        ParameterKey: key,
-        ParameterValue: clusterData[key],
-      });
+      if (key === "ecsSubnets") {
+        tmpParamsArr.push({
+          ParameterKey: key,
+          ParameterValue: clusterData[key].join(",")
+        })
+      } else {
+        tmpParamsArr.push({
+          ParameterKey: key,
+          ParameterValue: clusterData[key]
+        });
+      }
     }
     
     setParamList(tmpParamsArr);
