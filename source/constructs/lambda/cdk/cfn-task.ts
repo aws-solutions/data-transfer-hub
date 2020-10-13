@@ -30,7 +30,7 @@ interface QueryCfnTaskInput extends CfnTaskInput {
  * @param input
  * @param context
  */
-exports.createTaskCfn = async function(input: CfnTaskInput, context: Context) {
+exports.createTaskCfn = async function (input: CfnTaskInput, context: Context) {
   pprint('INPUT', input)
   pprint('CONTEXT', context)
   assert(process.env.TASK_TABLE !== undefined, 'No TASK_TABLE env')
@@ -80,7 +80,7 @@ exports.createTaskCfn = async function(input: CfnTaskInput, context: Context) {
  *
  * @param input
  */
-exports.stopTaskCfn = async function(input: StopTaskInput) {
+exports.stopTaskCfn = async function (input: StopTaskInput) {
   assert(process.env.TASK_TABLE !== undefined, 'NO TASK_TABLE env')
   pprint('INPUT', input)
 
@@ -116,7 +116,7 @@ exports.stopTaskCfn = async function(input: StopTaskInput) {
  *
  * @param input
  */
-exports.queryTaskCfn = async function(input: QueryCfnTaskInput) {
+exports.queryTaskCfn = async function (input: QueryCfnTaskInput) {
   assert(process.env.TASK_TABLE !== undefined, 'NO TASK_TABLE env')
   pprint('INPUT', input)
 
@@ -133,15 +133,22 @@ exports.queryTaskCfn = async function(input: QueryCfnTaskInput) {
       stackStatusReason: describeStackResult.Stacks[0].StackStatusReason
     }
 
+    const getProgress = () => {
+      if (queryResult.stackStatus === 'CREATE_IN_PROGRESS') return 'STARTING'
+      else if (queryResult.stackStatus === 'CREATE_COMPLETE') return 'IN_PROGRESS'
+      else return 'ERROR'
+    }
+
     const updatedTask = await ddb.update({
       TableName: process.env.TASK_TABLE,
       Key: {
         id: input.id
       },
-      UpdateExpression: 'set stackStatus = :stackStatus',
+      UpdateExpression: 'set stackStatus = :stackStatus, progress = :progress',
       ConditionExpression: `stackStatus <> ${queryResult.stackStatus}`,
       ExpressionAttributeValues: {
-        ':stackStatus': queryResult.stackStatus
+        ':stackStatus': queryResult.stackStatus,
+        ':progress': getProgress()
       },
       ReturnValues: "ALL_NEW"
     }).promise()
