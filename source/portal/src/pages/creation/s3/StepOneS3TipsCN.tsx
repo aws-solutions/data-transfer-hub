@@ -16,6 +16,12 @@ const StepOneS3Tips: React.FC = () => {
             <span>•</span>从阿里云OSS复制到S3
           </li>
           <li>
+            <span>•</span>从七牛云Kodo复制到S3
+          </li>
+          <li>
+            <span>•</span>从腾讯云COS复制到S3
+          </li>
+          <li>
             <span>•</span>支持大文件传输
           </li>
           <li>

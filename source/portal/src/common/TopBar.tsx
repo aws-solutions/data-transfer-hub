@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import "./TopBar.scss";
 // import { useTranslation } from "react-i18next";
 import { AmplifySignOut } from "@aws-amplify/ui-react";
+import { useTranslation } from "react-i18next";
 
 import Logo from "../assets/images/logo.svg";
 import AlertIcon from "../assets/images/alert-icon.svg";
 
 const TopBar: React.FC = () => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const [curUserEmail, setCurUserEmail] = useState("");
 
   React.useEffect(() => {
@@ -29,7 +30,7 @@ const TopBar: React.FC = () => {
           {curUserEmail}
         </div>
         <div className="logout-item">
-          <AmplifySignOut className="logout-btn-style" buttonText="Sign Out" />
+          <AmplifySignOut className="logout-btn-style" buttonText={t("signOut")} />
         </div>
       </div>
     </div>

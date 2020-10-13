@@ -18,6 +18,12 @@ const StepOneS3Tips: React.FC = () => {
             <span>•</span>Replcation from Aliyun OSS
           </li>
           <li>
+            <span>•</span>Replcation from Qiniu Kodo
+          </li>
+          <li>
+            <span>•</span>Replcation from Tencent COS
+          </li>
+          <li>
             <span>•</span>Large file support
           </li>
           <li>

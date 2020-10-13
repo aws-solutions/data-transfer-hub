@@ -1,14 +1,139 @@
 {
   "title": "AWS Data Replication Hub",
+  "yes": "是",
+  "no": "否",
+  "signOut": "退出登陆",
+  "info": "信息",
   "top": {
     "account": "我的账户"
+  },
+  "leftBar": {
+    "title": "Data Replication Hub",
+    "taskList": "任务"
+  },
+  "breadCrumb": {
+    "home": "Data Replication Hub",
+    "create": "创建任务",
+    "list": "任务",
+    "tasks": "任务"
+  },
+  "step": {
+    "oneTitle": "第一步",
+    "oneDesc": "选择引擎类型",
+    "twoTitle": "第二步",
+    "twoDesc": "填写任务信息",
+    "threeTitle": "第三步",
+    "threeDesc": "预览并创建"
   },
   "home": {
     "title": {
       "createTitle": "创建任务",
       "quickStart": "快速开始",
-      "moreResouce": "更多资源"
+      "moreResouce": "更多资源",
+      "destinationType": "目标类型"
     }
+  },
+  "creation": {
+    "step1": {
+      "engineType": "选择引擎类型",
+      "engineOptions": "引擎选项"
+    },
+    "step2": {
+      "taskDetail": "填写任务信息",
+      "sourceType": "数据源类型",
+      "selectSourceType": "选择数据源",
+      "settings": {
+        "source": {
+          "title": "数据源设置",
+          "bucketName": "数据桶名称",
+          "bucketDesc": "请输入数据桶名称.",
+          "objectPrefix": "数据桶对象前缀",
+          "prefixDesc": "只会复制指定的前缀的数据对象."
+        },
+        "dest": {
+          "title": "目标桶设置",
+          "bucketName": "数据桶名称",
+          "bucketDesc": "请输入数据桶名称.",
+          "objectPrefix": "数据桶对象前缀",
+          "prefixDesc": "只会复制指定的前缀的数据对象."
+        },
+        "credential": {
+          "title": "凭证",
+          "whitch": "哪一个数据桶在当前的账户中?",
+          "whitchDesc": "如果源数据桶和Data Replication Hub应用在同一个账户中，请选择Source，否则请选择Destination.",
+          "store": "凭证中的参数存储名称",
+          "storeDesc": "请填写在凭证中的SSM参数存储名称."
+        },
+        "more": {
+          "title": "更多",
+          "description": "描述",
+          "descriptionDesc": "关于这个任务的描述",
+          "email": "通知邮箱",
+          "emailDesc": "如果有错误将会及时发送到这个邮箱."
+        }
+      }
+    },
+    "step3": {
+      "reviewTitle": "任务预览",
+      "step1Title": "步骤一: 选择引擎类型",
+      "step1Engine": "引擎",
+      "step1EngineSubEngine": "引擎",
+      "step1EngineSubEngineDesc": "Amazon S3 复制引擎 V1.3",
+      "step1Type": "类型",
+      "step1TypeDesc": "无服务器版本. 无服务器版是实时传输的理想之选，只需要为您所使用的付费.",
+      "step2Detail": "步骤二: 任务详细信息",
+      "step2TaskParams": "任务参数",
+      "step2Params": "参数",
+      "step2Value": "值",
+      "credential": "凭证",
+      "credentialDesc": "请在AWS Systems Manager 的参数存储区创建一个参数，您可以使用默认名称drh-credentials（可选），选择 SecureString 作为其类型，然后按照以下格式提供相应的值。",
+      "credentialCopied": "已复制"
+    }
+  },
+  "taskList": {
+    "title": "任务",
+    "stopTask": "停止任务",
+    "tips": {
+      "selectTask": "请选择一个任务",
+      "selectTaskStop": "请选择需要停止的任务",
+      "confimStop": "您确定要停止任务",
+      "successMsg": "任务创建成功"
+    },
+    "table": {
+      "taskId": "任务编号",
+      "source": "源数据桶",
+      "destination": "目的数据桶",
+      "engineType": "引擎类型",
+      "status": "状态",
+      "createdTime": "创建时间"
+    }
+  },
+  "taskDetail": {
+    "title": "",
+    "stopTask": "停止任务",
+    "stopTaskTips": "您确定需要停止这个任务吗?",
+    "generalConfig": "基本配置",
+    "engine": "引擎",
+    "plugin": "S3 复制插件 v1.3",
+    "sourceType": "源数据类型",
+    "repStatus": "复制状态",
+    "details": "详细信息",
+    "taskId": "任务编号",
+    "createdAt": "创建于",
+    "status": "状态",
+    "inProgress": "数据复制中",
+    "totalObjects": "总对象数量",
+    "repObjects": "已复制对象数量",
+    "srcName": "源数据桶名称",
+    "srcPrefix": "源数据对象前缀",
+    "srcInThisAccount": "该数据桶在当前账户吗?",
+    "destName": "目标数据桶名称",
+    "destPrefix": "目标数据对象前缀",
+    "destInThisAccount": "该数据桶在当前账户吗?",
+    "credentials": "凭证参数存储名称",
+    "option": "其他选项",
+    "description": "描述",
+    "alarmEmail": "通知邮箱"
   },
   "bottom": {
     "copy":"© 2008 - 2020, Amazon Web Services, Inc. 或其子公司。保留所有权利。",
@@ -17,7 +142,22 @@
     "use": "使用条款"
   },
   "btn": {
-    "next": "下一步"
+    "next": "下一步",
+    "prev": "上一步",
+    "cancel": "取消",
+    "confirm": "确定",
+    "copy": "复制",
+    "stop": "停止",
+    "createTask": "创建任务",
+    "viewDetail": "查看详情"
+  },
+  "tips": {
+    "error": {
+      "sourceBucketRequired": "源数据桶名称必填",
+      "destBucketRequired": "目标数据桶名称必填",
+      "emailRequired": "通知邮箱必填",
+      "emailValidate": "请输入合法的通知邮箱地址"
+    }
   }
 }
 

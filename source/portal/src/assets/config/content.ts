@@ -6,7 +6,7 @@ export const TOP_TITLE_INFO = {
   en_desc:
     "AWS Data Replication Hub helps you create, monitor and manage data replications tasks. You can easily replicate data between AWS partitions, from on-premises or from other cloud providers to AWS.",
   "zh-CN_desc":
-    "AWSData Replication Hub帮助您创建，监控和管理数据复制任务，您可以很容易地在AWS上跨区域复制数据，也可以从其他云服务商中将数据复制到AWS",
+    "AWS Data Replication Hub帮助您创建，监控和管理数据复制任务，您可以很容易地在AWS上跨区域复制数据，也可以从其他云服务商中将数据复制到AWS",
 };
 
 export const HOW_IT_WORKS = {
@@ -60,7 +60,7 @@ export const BENIFITS_AND_FEATURES = {
       "zh-CN_title": "开源免费",
       en_content:
         "AWS Data Replication Hub is an open source solution published on Github. ",
-      "zh-CN_content": "AWSData Replication Hub是完全免费且开源的，源码已经发布在Github上，您可以根据需要进行使用。",
+      "zh-CN_content": "AWS Data Replication Hub是完全免费且开源的，源码已经发布在Github上，您可以根据需要进行使用。",
     },
   ],
 };
@@ -71,7 +71,7 @@ export const GET_START_LINKS = {
   list: [
     {
       en_name: "What is AWS Data Replication Hub?",
-      "zh-CN_name": "什么是AWSData Replication Hub?",
+      "zh-CN_name": "什么是AWS Data Replication Hub?",
       link: "/",
     },
     {

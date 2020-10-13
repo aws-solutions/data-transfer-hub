@@ -271,7 +271,7 @@ const Detail: React.FC = (props: any) => {
                 </div>
                 <div className="buttons">
                   {/* <NormalButton>Edit</NormalButton> */}
-                  <NormalButton onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
+                  <NormalButton disabled={curTaskInfo.progress===null || curTaskInfo.progress === EnumTaskStatus.STOPPING || curTaskInfo.progress === EnumTaskStatus.STOPPED  || curTaskInfo.progress === EnumTaskStatus.DONE } onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
                 </div>
               </div>
               <div className="general-info box-shadow">

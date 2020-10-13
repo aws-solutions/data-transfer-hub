@@ -2,6 +2,8 @@
   "title": "AWS Data Replication Hub",
   "yes": "Yes",
   "no": "No",
+  "signOut": "Sign Out",
+  "info": "Info",
   "top": {
     "account": "Account"
   },

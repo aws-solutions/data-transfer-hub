@@ -2,12 +2,14 @@
   "title": "AWS Data Replication Hub",
   "yes": "是",
   "no": "否",
+  "signOut": "退出登陆",
+  "info": "信息",
   "top": {
     "account": "我的账户"
   },
   "leftBar": {
     "title": "Data Replication Hub",
-    "taskList": "任务列表"
+    "taskList": "任务"
   },
   "breadCrumb": {
     "home": "Data Replication Hub",
@@ -89,7 +91,7 @@
     }
   },
   "taskList": {
-    "title": "任务列表",
+    "title": "任务",
     "stopTask": "停止任务",
     "tips": {
       "selectTask": "请选择一个任务",
