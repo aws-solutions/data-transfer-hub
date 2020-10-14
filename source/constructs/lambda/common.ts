@@ -94,4 +94,4 @@ function makeid(length: number) {
   return result;
 }
 
-export {Task, TaskType, Parameter, CreateTaskInput, UpdateTaskInput, CommonTaskProgress, assert, pprint, makeid }
+export {Task, TaskType, Parameter, CreateTaskInput, UpdateTaskInput, CommonTaskProgress, TaskProgress, assert, pprint, makeid }

@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { Context, } from 'aws-lambda';
-import { CreateTaskInput, pprint, assert, makeid } from '../common';
+import { CreateTaskInput, pprint, assert, makeid, TaskProgress } from '../common';
 
 interface QueryTaskCfnResponse {
   stackId: string,
@@ -134,9 +134,19 @@ exports.queryTaskCfn = async function (input: QueryCfnTaskInput) {
     }
 
     const getProgress = () => {
-      if (queryResult.stackStatus === 'CREATE_IN_PROGRESS') return 'STARTING'
-      else if (queryResult.stackStatus === 'CREATE_COMPLETE') return 'IN_PROGRESS'
-      else return 'ERROR'
+      const stackStatus = queryResult.stackStatus
+      switch (stackStatus) {
+        case 'CREATE_IN_PROGRESS':
+          return TaskProgress.STARTING
+        case 'CREATE_COMPLETE':
+          return TaskProgress.IN_PROGRESS
+        case 'DELETE_IN_PROGRESS':
+          return TaskProgress.STOPPING
+        case 'DELETE_COMPLETE':
+          return TaskProgress.STOPPED
+        default:
+          return 'ERROR'
+      }
     }
 
     const updatedTask = await ddb.update({
