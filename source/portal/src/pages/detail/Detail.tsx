@@ -4,9 +4,9 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
-import NumberFormat from "react-number-format";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import Moment from 'react-moment';
 
 import Loading from "../../common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -31,9 +31,8 @@ import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
 import InfoSpan from "../../common/InfoSpan";
-import ProgressBar from "../../common/comp/ProgressBar";
 
-import { EnumTaskStatus } from "../../assets/types/index";
+import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
 
 import "./Detail.scss";
 
@@ -107,7 +106,6 @@ const Detail: React.FC = (props: any) => {
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [curTaskInfo, setCurTaskInfo] = useState<any>({});
-  const [progress, setProgress] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [isStopLoading, setIsStopLoading] = useState(false);
   const [accountInSrc, setAccountInSrc] = useState("-");
@@ -122,21 +120,7 @@ const Detail: React.FC = (props: any) => {
       },
     });
     const tmpCurTask = apiData.data.getTask;
-    // Calculate the progress
-    if (
-      tmpCurTask.progressInfo &&
-      tmpCurTask.progressInfo.replicated &&
-      tmpCurTask.progressInfo.total
-    ) {
-      let progressValue = Math.floor(
-        (tmpCurTask.progressInfo.replicated / tmpCurTask.progressInfo.total) *
-          100
-      );
-      if (progressValue > 100) {
-        progressValue = 100;
-      }
-      setProgress(progressValue);
-    }
+    
     if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
       tmpCurTask.parameters.forEach((element: any) => {
         tmpCurTask[element.ParameterKey] = element.ParameterValue
@@ -289,7 +273,7 @@ const Detail: React.FC = (props: any) => {
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
-                    <div>{curTaskInfo.progress}</div>
+                    <div>{TASK_STATUS_MAP[curTaskInfo.progress].name}</div>
                   </div>
                 </div>
               </div>
@@ -311,25 +295,14 @@ const Detail: React.FC = (props: any) => {
                           <div>{curTaskInfo.id}</div>
                           <br />
                           <div className="sub-name">{t("taskDetail.createdAt")}</div>
-                          <div>{curTaskInfo.createdAt}</div>
+                            <div>
+                              <Moment format="YYYY-MM-DD HH:mm">
+                                {curTaskInfo.createdAt}
+                              </Moment>
+                            </div>
                           <br />
                           <div className="sub-name">{t("taskDetail.status")}</div>
-                          {curTaskInfo.progress ===
-                          EnumTaskStatus.IN_PROGRESS ? (
-                            <div>
-                              <div className="status">
-                                {t("taskDetail.inProgress")}
-                              </div>
-                              <div className="progress-bar">
-                                <div className="bar">
-                                  <ProgressBar value={progress} />
-                                </div>
-                                <div className="number">{progress}%</div>
-                              </div>
-                            </div>
-                          ) : (
-                            <div>{curTaskInfo.progress}</div>
-                          )}
+                          <div>{TASK_STATUS_MAP[curTaskInfo.progress].name}</div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">{t("taskDetail.srcName")}</div>
@@ -364,35 +337,7 @@ const Detail: React.FC = (props: any) => {
                           </div>
                           <div>{curTaskInfo.credentialsParameterStore}</div>
                         </div>
-                        <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.totalObjects")}</div>
-                          <div>
-                            {curTaskInfo.progressInfo ? (
-                              <NumberFormat
-                                value={curTaskInfo.progressInfo.total}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                renderText={(value) => <div>{value}</div>}
-                              />
-                            ) : (
-                              "-"
-                            )}
-                          </div>
-                          <br />
-                          <div className="sub-name">{t("taskDetail.repObjects")}</div>
-                          <div>
-                            {curTaskInfo.progressInfo ? (
-                              <NumberFormat
-                                value={curTaskInfo.progressInfo.replicated}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                renderText={(value) => <div>{value}</div>}
-                              />
-                            ) : (
-                              "-"
-                            )}
-                          </div>
-                        </div>
+                        
                       </div>
                     </div>
                   </TabPanel>

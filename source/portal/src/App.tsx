@@ -87,9 +87,28 @@ const App: React.FC = () => {
   ) : (
     <div className="login-wrap">
         <AmplifyAuthenticator>
-          <AmplifySignIn slot="sign-in">
-            <div slot="secondary-footer-content"></div>
-          </AmplifySignIn>
+        <AmplifySignIn
+          headerText='Sign in to AWS Data Replication Hub'
+          slot='sign-in'
+          usernameAlias='username'
+          formFields={[
+            {
+              type: 'username',
+              label: 'Email *',
+              placeholder: 'Enter your email',
+              required: true,
+              inputProps: { autoComplete: 'off' },
+            },
+            {
+              type: 'password',
+              label: 'Password *',
+              placeholder: 'Enter your password',
+              required: true,
+              inputProps: { autoComplete: 'off' },
+            },
+          ]}>
+          <div slot='secondary-footer-content'></div>
+        </AmplifySignIn>
         </AmplifyAuthenticator>
     </div>
   );

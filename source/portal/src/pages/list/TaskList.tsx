@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import Moment from 'react-moment';
 
 import Loading from "../../common/Loading";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -128,7 +129,6 @@ const List: React.FC = () => {
   // Hide Create Flag in 3 seconds
   useEffect(() => {
     window.setTimeout(() => {
-      console.info("AAAA")
       dispatch({
         type: "hide create task flag",
       });
@@ -467,7 +467,9 @@ const List: React.FC = () => {
                             </div>
                           </div>
                           <div className="table-item create-time">
-                            {element.createdAt}
+                            <Moment format="YYYY-MM-DD HH:mm">
+                              {element.createdAt}
+                            </Moment>
                           </div>
                         </div>
                       );
