@@ -9,7 +9,7 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
 ## Features
 
 - [x] Authentication
-- [x] Self-service Interface
+- [x] Self-service User Interface
 - [x] CDK Deployment
 - [x] CloudFormation Deployment
 - [x] S3 Plugin
@@ -31,9 +31,9 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
 
 ![](replication-hub-architect.jpg)
 
-A web portal will be launched in the customer's account. Through the web portal, customers can create replication tasks and manage them in a centralized place. 
+A web portal will be launched in the customer's AWS account. Through the web portal, customers can create replication tasks and manage them in a centralized place. 
 
-Each type of replication type is a plugin for this solution. You can also use the plugin alone without user interface. 
+Each type of replication is a plugin for this solution. You can also use the plugin independently without user interface. 
 
 Available Plugins:
 * [S3 Plugin](https://github.com/aws-samples/aws-data-replication-hub-s3-plugin)
@@ -48,7 +48,8 @@ Follow the step-by-step instructions in this section to configure and deploy the
 
 1. Make sure you have sign in AWS Console already.
 1. Click the following button to launch the CloudFormation Stack in your account.
-    [![](./launch-stack.png)](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/template?stackName=AwsDataReplicationHub&templateURL=https://joes-solutions-reference.s3-us-west-2.amazonaws.com/aws-data-replication-hub/beta/AwsDataReplicationHub.template)
+
+    [![](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-hub/v1.0.0/AwsDataReplicationHub.template)
 1. Input **AdminEmail** parameter
 1. Click **Next** and select **Create Stack**.
 
@@ -115,6 +116,7 @@ Now, you are all set. Start to create your first replication task. For the compl
 
 ```
 |- .github/ ...               - resources for open-source contributions.
+|- docs/ ...                  - documentation.
 |- deployment/                - contains build scripts, deployment templates, and dist folders for staging assets.
   |- cdk-solution-helper/     - helper function for converting CDK output to a format compatible with the AWS Solutions pipelines.
   |- build-open-source-dist.sh  - builds the open source package with cleaned assets and builds a .zip file in the /open-source folder for distribution to GitHub
@@ -159,12 +161,12 @@ chmod +x ./build-s3-dist.sh
 
 * Deploy the distributable assets to an Amazon S3 bucket in your account.
 ```
-aws s3 sync ./regional-s3-assets/ s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --delete --acl public-read --profile aws-cred-profile-name
+aws s3 sync ./regional-s3-assets/ s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --delete --acl bucket-owner-full-control
 ```
 
 * Copy the CloudFormation template to Amazon S3 bucket in your account.
 ```
-aws s3 cp ./global-s3-assets/AwsDataReplicationHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control --profile aws-cred-profile-name
+aws s3 cp ./global-s3-assets/AwsDataReplicationHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control
 ```
 
 * Get the link of the solution template uploaded to your Amazon S3 bucket.
