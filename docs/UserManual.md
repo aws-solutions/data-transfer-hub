@@ -29,6 +29,20 @@ your credentials in [AWS Systems Manager Parameter Store](https://docs.aws.amazo
 
 For other cloud providers, the credentials format should remain the same.
 
+## Login to Data Replication Hub Portal
+
+Once the cloudformation stack is created successfully, you will receive an email notification that contains a temporary password for login, the username is the AdminEmail you set while you launch the cloudformation.
+The portal url can be found in the outputs tab of the cloudformation stack, see below screenshot as an example:
+
+![portal](images/portal.jpg)
+
+### To login the portal.
+
+1. Open the portal URL in your browser
+1. Sign in with your username and the temporary password
+1. Change the temporary password
+1. Verify the email (optional)
+
 
 ### Create Task in Web Portal
 
