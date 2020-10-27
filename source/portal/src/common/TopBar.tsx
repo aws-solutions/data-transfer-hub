@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./TopBar.scss";
 
 import Logo from "../assets/images/logo.svg";
-import AlertIcon from "../assets/images/alert-icon.svg";
 import DRHSignOut from "./comp/SignOut"
 
 const TopBar: React.FC = () => {
@@ -18,12 +17,11 @@ const TopBar: React.FC = () => {
   return (
     <div className="drh-top-bar">
       <div className="logo">
-        <img alt="AWS Solutions" src={Logo} />
+        <img alt="AWS Solutions" src={Logo} /><span>AWS Solutions</span>
       </div>
       <div className="options">
         {/* <div className="item">Language</div> */}
         <div className="user-item">
-          <img alt="alert" src={AlertIcon} />
           {curUserEmail}
         </div>
         <div className="logout-item">

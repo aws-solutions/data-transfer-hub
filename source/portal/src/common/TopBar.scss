@@ -7,6 +7,12 @@
   font-size: 12px;
   .logo {
     padding: 8px 0 0 0;
+    span {
+      position: absolute;
+      margin: 3px 0 0 10px;
+      font-weight: bold;
+      font-size: 14px;
+    }
   }
   .options {
     position: absolute;

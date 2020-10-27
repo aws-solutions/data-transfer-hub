@@ -25,7 +25,8 @@ import NextButton from "../../../common/comp/PrimaryButton";
 import NormalButton from "../../../common/comp/NormalButton";
 import TextButton from "../../../common/comp/TextButton";
 
-import IMG_STATUS from "../../../assets/images/status.svg";
+// import IMG_STATUS from "../../../assets/images/status.svg";
+import IMG_STATUS from '@material-ui/icons/Info';
 
 import "../Creation.scss";
 import { EnumSourceType } from "../../../assets/types/index";
@@ -249,7 +250,7 @@ const StepOne: React.FC = () => {
                   <div className="aws-credential">
                     <div>
                       <div className="status-img">
-                        <img alt="status" src={IMG_STATUS} />
+                        <IMG_STATUS />
                       </div>
                       <div className="status-desc">
                         <div className="title">{t("creation.step3.credential")}</div>

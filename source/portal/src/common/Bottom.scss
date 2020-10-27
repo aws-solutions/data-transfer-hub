@@ -14,18 +14,23 @@
     margin-left: 25px;
     font-size: 14px;
     color: #fff;
-    padding-left: 20px;
+    padding-left: 23px;
     cursor: pointer;
-    img {
-      position: absolute;
-      margin: 6px 0 0 -25px;
-    }
+    // img {
+    //   position: absolute;
+    //   margin: 6px 0 0 -25px;
+    // }
+  }
+  .bottom-icon {
+    position: absolute;
+    margin: 5px 0 0 -22px;
   }
   .feedback {
     float: left;
   }
   .language {
     float: left;
+    
     .language-select {
       color: #444444;
       position: absolute;

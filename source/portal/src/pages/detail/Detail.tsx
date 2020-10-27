@@ -273,7 +273,7 @@ const Detail: React.FC = (props: any) => {
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
-                    <div>{TASK_STATUS_MAP[curTaskInfo.progress].name}</div>
+                    <div>{curTaskInfo.progress?TASK_STATUS_MAP[curTaskInfo.progress].name:"-"}</div>
                   </div>
                 </div>
               </div>
@@ -302,7 +302,7 @@ const Detail: React.FC = (props: any) => {
                             </div>
                           <br />
                           <div className="sub-name">{t("taskDetail.status")}</div>
-                          <div>{TASK_STATUS_MAP[curTaskInfo.progress].name}</div>
+                          <div>{curTaskInfo.progress?TASK_STATUS_MAP[curTaskInfo.progress].name:"-"}</div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">{t("taskDetail.srcName")}</div>

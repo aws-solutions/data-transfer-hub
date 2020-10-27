@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./Bottom.scss";
-import LanguageIcon from "../assets/images/language.png";
-import FeedbackIcon from "../assets/images/feedback.svg";
+import LanguageIcon from '@material-ui/icons/Language';
+import FeedbackIcon from '@material-ui/icons/Feedback';
 
 import { URL_FEEDBACK } from "../assets/config/const";
 
@@ -48,7 +48,7 @@ const Bottom: React.FC = () => {
     <div className="page-bottom">
       <a rel="noopener noreferrer" href={URL_FEEDBACK} target="_blank">
       <div className="item feedback">
-        <img alt="feedback" src={FeedbackIcon} />
+        <FeedbackIcon className="bottom-icon" fontSize="small" />
         {t("bottom.feedback")}
         </div>
       </a>
@@ -73,7 +73,7 @@ const Bottom: React.FC = () => {
           ""
         )}
         <span onClick={toggleShowLang}>
-          <img alt="language" src={LanguageIcon} />{" "}
+          <LanguageIcon  className="bottom-icon" fontSize="small" />{" "}
           <span>{currentLang.name}</span>
         </span>
       </div>

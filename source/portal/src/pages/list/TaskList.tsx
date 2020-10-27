@@ -35,20 +35,33 @@ import NormalButton from "../../common/comp/NormalButton";
 import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
+import STATUS_PENDING from '@material-ui/icons/Schedule';
+import STATUS_STOPED from '@material-ui/icons/RemoveCircleOutline';
+import STATUS_ERROR from '@material-ui/icons/HighlightOff';
+import STATUS_DONE from '@material-ui/icons/CheckCircleOutline';
+import STATUS_PROGRESS from '@material-ui/icons/FlipCameraAndroid';
+
 import "./TaskList.scss";
 
-import STATUS_OK from "../../assets/images/status-ok.svg";
-// import SETTING_ICON from "../../assets/images/setting-icon.svg";
+import STATUS_OK from '@material-ui/icons/CheckCircleOutline';
 
-
-import PAGE_PREV from "../../assets/images/page-prev.svg";
-import PAGE_PREV_DISABLED from "../../assets/images/page-prev-disable.svg";
-import PAGE_NEXT from "../../assets/images/page-next.svg";
-import PAGE_NEXT_DISABLED from "../../assets/images/page-next-disable.svg";
+import PAGE_PREV from '@material-ui/icons/NavigateBefore';
+import PAGE_PREV_DISABLED from '@material-ui/icons/NavigateBefore';
+import PAGE_NEXT from '@material-ui/icons/NavigateNext';
+import PAGE_NEXT_DISABLED from '@material-ui/icons/NavigateNext';
 
 // import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
+
+const STATUS_ICON_MAP:any = {
+  STARTING: <STATUS_PENDING fontSize="small" />,
+  STOPPING: <STATUS_PENDING fontSize="small" />,
+  ERROR: <STATUS_ERROR fontSize="small" />,
+  IN_PROGRESS: <STATUS_PROGRESS fontSize="small" />,
+  DONE: <STATUS_DONE fontSize="small" />,
+  STOPPED: <STATUS_STOPED fontSize="small" />,
+}
 
 export interface State extends SnackbarOrigin {
   open: boolean;
@@ -321,7 +334,7 @@ const List: React.FC = () => {
         {createTaskFlag && (
           <div className="task-status">
             <div className="content">
-              <img alt="success" src={STATUS_OK} />
+              <STATUS_OK className="icon" />
               {t("taskList.tips.successMsg")}
             </div>
           </div>
@@ -368,21 +381,21 @@ const List: React.FC = () => {
                     <div>
                       {curPage > 1 && !isLoading ? (
                         <span onClick={toPrevPage} className="item prev">
-                          <img alt="prev" src={PAGE_PREV} />
+                          <PAGE_PREV />
                         </span>
                       ) : (
                         <span className="item prev disabled">
-                          <img alt="prev" src={PAGE_PREV_DISABLED} />
+                          <PAGE_PREV_DISABLED color="disabled" />
                         </span>
                       )}
                       <span className="cur-page">{curPage}</span>
                       {isLastpage || isLoading ? (
                         <span className="item next disabled">
-                          <img alt="next" src={PAGE_NEXT_DISABLED} />
+                          <PAGE_NEXT_DISABLED color="disabled" />
                         </span>
                       ) : (
                         <span onClick={toNextPage} className="item next">
-                          <img alt="next" src={PAGE_NEXT} />
+                          <PAGE_NEXT />
                         </span>
                       )}
                     </div>
@@ -449,18 +462,7 @@ const List: React.FC = () => {
                                   : "status"
                               }
                             >
-                              <img
-                                alt={
-                                  element.progress
-                                    ? TASK_STATUS_MAP[element.progress].name
-                                    : ""
-                                }
-                                src={
-                                  element.progress
-                                    ? TASK_STATUS_MAP[element.progress].src
-                                    : ""
-                                }
-                              />
+                              <span className="icon">{element.progress?STATUS_ICON_MAP[element.progress]:""}</span>
                               {element.progress
                                 ? TASK_STATUS_MAP[element.progress].name
                                 : ""}

@@ -6,11 +6,10 @@ import ICON_S3 from "../images/icon-s3.png";
 // import ICON_MYSQL from "../images/icon-mysql.png";
 
 
-
-import STATUS_PENDING from "../images/icon-status-pending.svg";
-import STATUS_PROGRESS from "../images/icon-status-progress.svg";
-import STATUS_ERROR from "../images/icon-status-error.svg";
-import STATUS_DONE from "../images/icon-status-done.svg";
+import STATUS_PENDING from '@material-ui/icons/Schedule';
+import STATUS_PROGRESS from '@material-ui/icons/RemoveCircleOutline';
+import STATUS_ERROR from '@material-ui/icons/HighlightOff';
+import STATUS_DONE from '@material-ui/icons/CheckCircleOutline';
 
 // Task Tyep Enum
 export enum EnumTaskType {
