@@ -40,6 +40,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
         TASK_TABLE: props.taskTableName
       },
       layers: [ props.lambdaLayer ],
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
       description: 'AWS Data Replication Hub - Create Task'
     })
 
@@ -53,6 +55,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
         TASK_TABLE: props.taskTableName
       },
       layers: [ props.lambdaLayer ],
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
       description: 'AWS Data Replication Hub - Stop Task'
     })
 
@@ -84,6 +88,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
         TASK_TABLE: props.taskTableName
       },
       layers: [ props.lambdaLayer ],
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
       description: 'AWS Data Replication Hub - Query Task'
     })
     queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
