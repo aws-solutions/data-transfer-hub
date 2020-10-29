@@ -1,5 +1,5 @@
 AWS Data Replication Hub
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License Version 2.0 (the "License"). You may not use this file except
 in compliance with the License. A copy of the License is located at http://www.apache.org/licenses/
 or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
@@ -11,103 +11,8 @@ THIRD PARTY COMPONENTS
 **********************
 This software includes third party software subject to the following copyrights:
 
-**********************
-Apache 2.0 License
-**********************
-AWS SDK
-aws-sdk-mock
-aws-amplify
-aws-appsync
-typescript
 
 **********************
 MIT License
 **********************
-uuid 
-material-ui 
-browserslist
-react
-react-dom
-react-scripts
-react-splitter-layout
-react-copy-to-clipboard
-react-hook-form
-react-i18next
-react-loader-spinner
-react-moment
-react-number-format
-react-router-dom
-react-table
-redux
-redux-react-hook
-tsutils
-velocityjs
-babel
-jest
-react-test-renderer
-axios
-ramda
-ws
-chai
-mocha
-node-fetch
-npm-run-all
-ts-jest
-ts-node
-moment
-classnames
-i18next
-i18next-browser-languagedetector
-i18next-http-backend
-node-sass
-yup
-eslint
-eslint-config-prettier
-eslint-plugin-prettier
-prettier
-
-
-**********************
-BSD-3-Clause
-**********************
-eslint-plugin-flowtype
-sinon
-
-**********************
-BSD-2-Clause 
-**********************
-sinon-chai
-
-**********************
-CC0
-**********************
-randomcolor
-
-**********************
-ISC
-**********************
-rimraf
-nyc
-
-***********************************************
-Other Licenses found in Dependency Tree include
-***********************************************
-"(Apache-2.0 OR MPL-1.1)"
-"(BSD-2-Clause OR MIT OR Apache-2.0)"
-"(BSD-3-Clause OR GPL-2.0)"
-"(MIT AND BSD-3-Clause)"
-"(MIT AND Zlib)"
-"(MIT OR Apache-2.0)"
-"(MIT OR CC0-1.0)"
-"(WTFPL OR MIT)"
-"BSD"
-"BSD-2-Clause"
-"BSD-like"
-"CC-BY-3.0"
-"CC-BY-4.0"
-"CC0-1.0"
-"EPL-1.0"
-"GNU GPLv3"
-"MIT"
-"Public Domain"
-"WTFPL"
+creat-react-app
