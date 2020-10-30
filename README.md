@@ -35,9 +35,6 @@ A web portal will be launched in the customer's AWS account. Through the web por
 
 Each type of replication is a plugin for this solution. You can also use the plugin independently without user interface. 
 
-Available Plugins:
-* [S3 Plugin](https://github.com/aws-samples/aws-data-replication-hub-s3-plugin)
-
 ## Deploy via CloudFormation
 
 You can choose to [deploy via AWS CDK](#deploy-via-aws-cdk) or deploy via direct launch CloudFormation template.
