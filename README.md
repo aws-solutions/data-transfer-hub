@@ -46,7 +46,7 @@ Follow the step-by-step instructions in this section to configure and deploy the
 1. Make sure you have sign in AWS Console already.
 1. Click the following button to launch the CloudFormation Stack in your account.
 
-    [![](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-hub/v1.0.0/AwsDataReplicationHub.template)
+    [![](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-hub/v1.0.1/AwsDataReplicationHub.template)
 1. Input **AdminEmail** parameter
 1. Click **Next** and select **Create Stack**.
 
