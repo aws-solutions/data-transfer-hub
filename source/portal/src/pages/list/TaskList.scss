@@ -126,6 +126,9 @@
       }
       .table-item {
         padding: 12px 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         .icon {
           position: absolute;
           margin:-1px 0 0 -22px;

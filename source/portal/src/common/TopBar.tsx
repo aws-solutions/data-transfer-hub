@@ -8,10 +8,12 @@ const TopBar: React.FC = () => {
   const [curUserEmail, setCurUserEmail] = useState("");
 
   React.useEffect(() => {
-    const authDataEmail = localStorage.getItem("authDataEmail");
-    if (authDataEmail) {
-      setCurUserEmail(authDataEmail);
-    }
+    setTimeout(() => {
+      const authDataEmail = localStorage.getItem("authDataEmail");
+      if (authDataEmail) {
+        setCurUserEmail(authDataEmail);
+      }
+    }, 100)
   }, []);
 
   return (

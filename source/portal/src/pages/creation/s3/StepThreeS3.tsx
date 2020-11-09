@@ -26,12 +26,15 @@ import NormalButton from "../../../common/comp/NormalButton";
 import TextButton from "../../../common/comp/TextButton";
 
 // import IMG_STATUS from "../../../assets/images/status.svg";
-import IMG_STATUS from '@material-ui/icons/Info';
+import IMG_STATUS from "@material-ui/icons/Info";
 
 import "../Creation.scss";
 import { EnumSourceType } from "../../../assets/types/index";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { S3_PARAMS_LIST_MAP, CUR_SUPPORT_LANGS } from "../../../assets/config/const";
+import {
+  S3_PARAMS_LIST_MAP,
+  CUR_SUPPORT_LANGS,
+} from "../../../assets/config/const";
 
 interface IParameterType {
   ParameterKey: string;
@@ -49,18 +52,17 @@ const mapState = (state: IState) => ({
 });
 
 const tmpJson = {
-  "access_key_id": "<Your Access Key ID>",
-  "secret_access_key": "<Your Access Key Secret>",
-  "region_name": "<Your Region>"
+  access_key_id: "<Your Access Key ID>",
+  secret_access_key: "<Your Access Key Secret>",
+  region_name: "<Your Region>",
 };
 
-const JOB_TYPE_MAP:any = {
-  "PUT": "Source",
-  "GET": "Destination"
-}
+const JOB_TYPE_MAP: any = {
+  PUT: "Source",
+  GET: "Destination",
+};
 
 const StepOne: React.FC = () => {
-
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
 
@@ -101,23 +103,25 @@ const StepOne: React.FC = () => {
       });
     }
     // Add New Params to Creat Task
-    const configJson:any = JSON.parse(window.localStorage.getItem("configJson") as string);
+    const configJson: any = JSON.parse(
+      window.localStorage.getItem("configJson") as string
+    );
     const clusterData = configJson.taskCluster;
     setClusterListLength(Object.keys(clusterData).length);
     for (const key in clusterData) {
       if (key === "ecsSubnets") {
         tmpParamsArr.push({
           ParameterKey: key,
-          ParameterValue: clusterData[key].join(",")
-        })
+          ParameterValue: clusterData[key].join(","),
+        });
       } else {
         tmpParamsArr.push({
           ParameterKey: key,
-          ParameterValue: clusterData[key]
+          ParameterValue: clusterData[key],
         });
       }
     }
-    
+
     setParamList(tmpParamsArr);
     createTaskInfo.parameters = tmpParamsArr;
     setCreateTaskGQL(createTaskInfo);
@@ -175,7 +179,9 @@ const StepOne: React.FC = () => {
               <MLink color="inherit" href="/#/">
                 {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">{t("breadCrumb.create")}</Typography>
+              <Typography color="textPrimary">
+                {t("breadCrumb.create")}
+              </Typography>
             </Breadcrumbs>
           </div>
           <div className="creation-content">
@@ -183,17 +189,27 @@ const StepOne: React.FC = () => {
               <Step curStep="three" />
             </div>
             <div className="creation-info">
-              <div className="creation-title">{t("creation.step3.reviewTitle")}</div>
-              <div className="creation-title">{t("creation.step3.step1Title")}</div>
+              <div className="creation-title">
+                {t("creation.step3.reviewTitle")}
+              </div>
+              <div className="creation-title">
+                {t("creation.step3.step1Title")}
+              </div>
               <div className="box-shadow card-list">
                 <div className="option">
-                  <div className="option-title">{t("creation.step3.step1Engine")} </div>
+                  <div className="option-title">
+                    {t("creation.step3.step1Engine")}{" "}
+                  </div>
                   <div className="option-content">
-                    <div className="step3-title">{t("creation.step3.step1EngineSubEngine")}</div>
+                    <div className="step3-title">
+                      {t("creation.step3.step1EngineSubEngine")}
+                    </div>
                     <div className="step3-desc">
                       {t("creation.step3.step1EngineSubEngineDesc")}
                     </div>
-                    <div className="step3-title">{t("creation.step3.step1Type")}</div>
+                    <div className="step3-title">
+                      {t("creation.step3.step1Type")}
+                    </div>
                     <div className="step3-desc">
                       {t("creation.step3.step1TypeDesc")}
                     </div>
@@ -201,18 +217,25 @@ const StepOne: React.FC = () => {
                 </div>
               </div>
 
-              <div className="creation-title">{t("creation.step3.step2Detail")}</div>
+              <div className="creation-title">
+                {t("creation.step3.step2Detail")}
+              </div>
               <div className="box-shadow card-list">
                 <div className="option">
                   <div className="option-title">
-                    {t("creation.step3.step2TaskParams")} <span>({paramsList.length - clusterListLength})</span>
+                    {t("creation.step3.step2TaskParams")}{" "}
+                    <span>({paramsList.length - clusterListLength})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">
                       <div>
                         <div className="preview-row preview-header">
-                          <div className="table-th key">{t("creation.step3.step2Params")}</div>
-                          <div className="table-th value">{t("creation.step3.step2Value")}</div>
+                          <div className="table-th key">
+                            {t("creation.step3.step2Params")}
+                          </div>
+                          <div className="table-th value">
+                            {t("creation.step3.step2Value")}
+                          </div>
                         </div>
                         {paramsList.map((element: any, index: any) => {
                           return (
@@ -222,20 +245,22 @@ const StepOne: React.FC = () => {
                                 key={index}
                               >
                                 <div className="table-td key">
-                                  {S3_PARAMS_LIST_MAP[element.ParameterKey]&&S3_PARAMS_LIST_MAP[element.ParameterKey][nameStr]}
+                                  {S3_PARAMS_LIST_MAP[element.ParameterKey] &&
+                                    S3_PARAMS_LIST_MAP[element.ParameterKey][
+                                      nameStr
+                                    ]}
                                 </div>
                                 <div className="table-td value">
-                                  {
-                                    element.ParameterKey === "jobType" ? (<span>
+                                  {element.ParameterKey === "jobType" ? (
+                                    <span>
                                       {JOB_TYPE_MAP[element.ParameterValue]}
-                                    </span> 
-                                    ) : (<span>{element.ParameterValue}</span>)
-                                  }
-                                  
+                                    </span>
+                                  ) : (
+                                    <span>{element.ParameterValue}</span>
+                                  )}
                                 </div>
                               </div>
                             )
-                            
                           );
                         })}
                       </div>
@@ -253,7 +278,9 @@ const StepOne: React.FC = () => {
                         <IMG_STATUS />
                       </div>
                       <div className="status-desc">
-                        <div className="title">{t("creation.step3.credential")}</div>
+                        <div className="title">
+                          {t("creation.step3.credential")}
+                        </div>
                         <div className="desc">
                           {t("creation.step3.credentialDesc")}
                         </div>
@@ -277,7 +304,9 @@ const StepOne: React.FC = () => {
                             </Button>
                           </CopyToClipboard>
                           {isCopied ? (
-                            <b className="copy-tips">{t("creation.step3.credentialCopied")}.</b>
+                            <b className="copy-tips">
+                              {t("creation.step3.credentialCopied")}.
+                            </b>
                           ) : null}
                         </div>
                       </div>
@@ -286,14 +315,20 @@ const StepOne: React.FC = () => {
                 )}
 
               <div className="buttons">
-                <TextButton onClick={goToHomePage}>{t("btn.cancel")}</TextButton>
-                <NormalButton onClick={goToStepTwo}>{t("btn.prev")}</NormalButton>
+                <TextButton onClick={goToHomePage}>
+                  {t("btn.cancel")}
+                </TextButton>
+                <NormalButton onClick={goToStepTwo}>
+                  {t("btn.prev")}
+                </NormalButton>
                 {isCreating ? (
                   <CreateButtonLoading disabled={true}>
                     <Loader type="ThreeDots" color="#ffffff" height={10} />
                   </CreateButtonLoading>
                 ) : (
-                  <NextButton onClick={goToTaskList}>{t("btn.createTask")}</NextButton>
+                  <NextButton onClick={goToTaskList}>
+                    {t("btn.createTask")}
+                  </NextButton>
                 )}
               </div>
             </div>

@@ -444,10 +444,10 @@ const List: React.FC = () => {
                               {element.id}
                             </Link>
                           </div>
-                          <div className="table-item body-item">
+                          <div className="table-item body-item" title={element.srcName}>
                             {element.srcName}
                           </div>
-                          <div className="table-item body-item">
+                          <div className="table-item body-item" title={element.destName}>
                             {element.destName}
                           </div>
                           <div className="table-item body-item">
