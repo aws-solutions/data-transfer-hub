@@ -4,7 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
 import Loading from "../../common/Loading";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -35,33 +35,33 @@ import NormalButton from "../../common/comp/NormalButton";
 import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
-import STATUS_PENDING from '@material-ui/icons/Schedule';
-import STATUS_STOPED from '@material-ui/icons/RemoveCircleOutline';
-import STATUS_ERROR from '@material-ui/icons/HighlightOff';
-import STATUS_DONE from '@material-ui/icons/CheckCircleOutline';
-import STATUS_PROGRESS from '@material-ui/icons/FlipCameraAndroid';
+import STATUS_PENDING from "@material-ui/icons/Schedule";
+import STATUS_STOPED from "@material-ui/icons/RemoveCircleOutline";
+import STATUS_ERROR from "@material-ui/icons/HighlightOff";
+import STATUS_DONE from "@material-ui/icons/CheckCircleOutline";
+import STATUS_PROGRESS from "@material-ui/icons/FlipCameraAndroid";
 
 import "./TaskList.scss";
 
-import STATUS_OK from '@material-ui/icons/CheckCircleOutline';
+import STATUS_OK from "@material-ui/icons/CheckCircleOutline";
 
-import PAGE_PREV from '@material-ui/icons/NavigateBefore';
-import PAGE_PREV_DISABLED from '@material-ui/icons/NavigateBefore';
-import PAGE_NEXT from '@material-ui/icons/NavigateNext';
-import PAGE_NEXT_DISABLED from '@material-ui/icons/NavigateNext';
+import PAGE_PREV from "@material-ui/icons/NavigateBefore";
+import PAGE_PREV_DISABLED from "@material-ui/icons/NavigateBefore";
+import PAGE_NEXT from "@material-ui/icons/NavigateNext";
+import PAGE_NEXT_DISABLED from "@material-ui/icons/NavigateNext";
 
 // import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
 
-const STATUS_ICON_MAP:any = {
+const STATUS_ICON_MAP: any = {
   STARTING: <STATUS_PENDING fontSize="small" />,
   STOPPING: <STATUS_PENDING fontSize="small" />,
   ERROR: <STATUS_ERROR fontSize="small" />,
   IN_PROGRESS: <STATUS_PROGRESS fontSize="small" />,
   DONE: <STATUS_DONE fontSize="small" />,
   STOPPED: <STATUS_STOPED fontSize="small" />,
-}
+};
 
 export interface State extends SnackbarOrigin {
   open: boolean;
@@ -76,7 +76,6 @@ const mapState = (state: IState) => ({
 });
 
 const List: React.FC = () => {
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -96,9 +95,8 @@ const List: React.FC = () => {
   const [messageOpen, setMessageOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertType, setAlertType] = useState("");
-  
-  async function getTaskList(token: string | null, direction: string) {
 
+  async function getTaskList(token: string | null, direction: string) {
     setIsLoading(true);
     const apiData: any = await API.graphql({
       query: listTasks,
@@ -145,8 +143,8 @@ const List: React.FC = () => {
       dispatch({
         type: "hide create task flag",
       });
-    }, 4000)
-  }, [dispatch])
+    }, 4000);
+  }, [dispatch]);
 
   const goToStepOne = () => {
     const toPath = "/create/step1";
@@ -179,7 +177,7 @@ const List: React.FC = () => {
       setIsStopLoading(false);
       setOpen(false);
       refreshData();
-      console.info("stopResData:",stopResData)
+      console.info("stopResData:", stopResData);
     } catch (error) {
       console.error("error:", error.errors[0].message.toString());
       const errorMsg = error.errors[0].message.toString();
@@ -209,13 +207,11 @@ const List: React.FC = () => {
     [key: string]: StatusType;
   }
 
-  
-
-  const changeRadioSelect = (event:any) => {
-    console.info("event:",event);
+  const changeRadioSelect = (event: any) => {
+    console.info("event:", event);
   };
 
-  const clickTaskInfo = (taskInfo: any, event:any) => {
+  const clickTaskInfo = (taskInfo: any, event: any) => {
     setCurSelectTask(taskInfo);
   };
 
@@ -268,7 +264,7 @@ const List: React.FC = () => {
 
   const handleCloseMessage = () => {
     setMessageOpen(false);
-  }
+  };
 
   return (
     <div className="drh-page">
@@ -279,8 +275,12 @@ const List: React.FC = () => {
         autoHideDuration={1500}
       >
         <Alert severity="warning">
-          {alertType === "detail" && <span>{t("taskList.tips.selectTask")}</span>}
-          {alertType === "stop" && <span>{t("taskList.tips.selectTaskStop")}</span>}
+          {alertType === "detail" && (
+            <span>{t("taskList.tips.selectTask")}</span>
+          )}
+          {alertType === "stop" && (
+            <span>{t("taskList.tips.selectTaskStop")}</span>
+          )}
         </Alert>
       </Snackbar>
       <Dialog
@@ -289,10 +289,13 @@ const List: React.FC = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{t("taskList.stopTask")}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {t("taskList.stopTask")}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {t("taskList.tips.confimStop")} <b>{ curSelectTask && curSelectTask.id }</b>
+            {t("taskList.tips.confimStop")}{" "}
+            <b>{curSelectTask && curSelectTask.id}</b>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -323,9 +326,7 @@ const List: React.FC = () => {
           onClose={handleCloseMessage}
           autoHideDuration={1500}
         >
-          <Alert severity="error">
-            {errorMessage}
-          </Alert>
+          <Alert severity="error">{errorMessage}</Alert>
         </Snackbar>
       )}
       <LeftMenu />
@@ -349,7 +350,9 @@ const List: React.FC = () => {
               <MLink color="inherit" href="/#/">
                 {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">{t("breadCrumb.tasks")}</Typography>
+              <Typography color="textPrimary">
+                {t("breadCrumb.tasks")}
+              </Typography>
             </Breadcrumbs>
           </div>
           <div className="table-data">
@@ -364,10 +367,22 @@ const List: React.FC = () => {
                     <NormalButton onClick={refreshData}>
                       <RefreshIcon width="10" />
                     </NormalButton>
-                    <NormalButton disabled={curSelectTask===null} onClick={goToDetail}>
+                    <NormalButton
+                      disabled={curSelectTask === null}
+                      onClick={goToDetail}
+                    >
                       {t("btn.viewDetail")}
                     </NormalButton>
-                    <NormalButton disabled={curSelectTask===null || curSelectTask.progress === EnumTaskStatus.STOPPING || curSelectTask.progress === EnumTaskStatus.STOPPED } onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
+                    <NormalButton
+                      disabled={
+                        curSelectTask === null ||
+                        curSelectTask.progress === EnumTaskStatus.STOPPING ||
+                        curSelectTask.progress === EnumTaskStatus.STOPPED
+                      }
+                      onClick={stopCurTask}
+                    >
+                      {t("btn.stop")}
+                    </NormalButton>
                     <PrimaryButton onClick={goToStepOne}>
                       {t("btn.createTask")}
                     </PrimaryButton>
@@ -412,29 +427,50 @@ const List: React.FC = () => {
                   <div className="table-wrap">
                     <div className="table-header">
                       <div className="table-item check-item">&nbsp;</div>
-                      <div className="table-item item-id">{t("taskList.table.taskId")}</div>
-                      <div className="table-item header-item">{t("taskList.table.source")}</div>
-                      <div className="table-item header-item">{t("taskList.table.destination")}</div>
-                      <div className="table-item header-item">{t("taskList.table.engineType")}</div>
-                      <div className="table-item header-item">{t("taskList.table.status")}</div>
-                      <div className="table-item create-time">{t("taskList.table.createdTime")}</div>
+                      <div className="table-item item-id">
+                        {t("taskList.table.taskId")}
+                      </div>
+                      <div className="table-item header-item">
+                        {t("taskList.table.source")}
+                      </div>
+                      <div className="table-item header-item">
+                        {t("taskList.table.destination")}
+                      </div>
+                      <div className="table-item header-item">
+                        {t("taskList.table.engineType")}
+                      </div>
+                      <div className="table-item header-item">
+                        {t("taskList.table.status")}
+                      </div>
+                      <div className="table-item create-time">
+                        {t("taskList.table.createdTime")}
+                      </div>
                     </div>
                     {taskListData.map((element: any, index: any) => {
                       const rowClass = classNames({
                         "table-row": true,
-                        active: curSelectTask&&curSelectTask.id === element.id,
+                        active:
+                          curSelectTask && curSelectTask.id === element.id,
                       });
                       return (
                         <div
-                          onClick={(event)=>{clickTaskInfo(element, event)}}
+                          onClick={(event) => {
+                            clickTaskInfo(element, event);
+                          }}
                           data-uuid={element.id}
                           key={index}
                           className={rowClass}
                         >
                           <div className="table-item check-item center">
                             <input
-                              onChange={(event)=>{changeRadioSelect(event)}}
-                              checked={curSelectTask?(curSelectTask.id === element.id):false}
+                              onChange={(event) => {
+                                changeRadioSelect(event);
+                              }}
+                              checked={
+                                curSelectTask
+                                  ? curSelectTask.id === element.id
+                                  : false
+                              }
                               type="radio"
                               name="taskList"
                             />
@@ -444,10 +480,16 @@ const List: React.FC = () => {
                               {element.id}
                             </Link>
                           </div>
-                          <div className="table-item body-item" title={element.srcName}>
+                          <div
+                            className="table-item body-item"
+                            title={element.srcName}
+                          >
                             {element.srcName}
                           </div>
-                          <div className="table-item body-item" title={element.destName}>
+                          <div
+                            className="table-item body-item"
+                            title={element.destName}
+                          >
                             {element.destName}
                           </div>
                           <div className="table-item body-item">
@@ -462,7 +504,11 @@ const List: React.FC = () => {
                                   : "status"
                               }
                             >
-                              <span className="icon">{element.progress?STATUS_ICON_MAP[element.progress]:""}</span>
+                              <span className="icon">
+                                {element.progress
+                                  ? STATUS_ICON_MAP[element.progress]
+                                  : ""}
+                              </span>
                               {element.progress
                                 ? TASK_STATUS_MAP[element.progress].name
                                 : ""}

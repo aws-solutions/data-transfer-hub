@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
 import Loading from "../../common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -120,7 +120,7 @@ const Detail: React.FC = (props: any) => {
       },
     });
     const tmpCurTask = apiData.data.getTask;
-    
+
     if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
       tmpCurTask.parameters.forEach((element: any) => {
         tmpCurTask[element.ParameterKey] = element.ParameterValue
@@ -198,7 +198,9 @@ const Detail: React.FC = (props: any) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{t("taskDetail.stopTask")}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {t("taskDetail.stopTask")}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {t("taskDetail.stopTaskTips")}
@@ -255,7 +257,17 @@ const Detail: React.FC = (props: any) => {
                 </div>
                 <div className="buttons">
                   {/* <NormalButton>Edit</NormalButton> */}
-                  <NormalButton disabled={curTaskInfo.progress===null || curTaskInfo.progress === EnumTaskStatus.STOPPING || curTaskInfo.progress === EnumTaskStatus.STOPPED  || curTaskInfo.progress === EnumTaskStatus.DONE } onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
+                  <NormalButton
+                    disabled={
+                      curTaskInfo.progress === null ||
+                      curTaskInfo.progress === EnumTaskStatus.STOPPING ||
+                      curTaskInfo.progress === EnumTaskStatus.STOPPED ||
+                      curTaskInfo.progress === EnumTaskStatus.DONE
+                    }
+                    onClick={stopCurTask}
+                  >
+                    {t("btn.stop")}
+                  </NormalButton>
                 </div>
               </div>
               <div className="general-info box-shadow">
@@ -273,7 +285,11 @@ const Detail: React.FC = (props: any) => {
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
-                    <div>{curTaskInfo.progress?TASK_STATUS_MAP[curTaskInfo.progress].name:"-"}</div>
+                    <div>
+                      {curTaskInfo.progress
+                        ? TASK_STATUS_MAP[curTaskInfo.progress].name
+                        : "-"}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -291,24 +307,38 @@ const Detail: React.FC = (props: any) => {
                       </div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.taskId")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.taskId")}
+                          </div>
                           <div>{curTaskInfo.id}</div>
                           <br />
-                          <div className="sub-name">{t("taskDetail.createdAt")}</div>
-                            <div>
-                              <Moment format="YYYY-MM-DD HH:mm">
-                                {curTaskInfo.createdAt}
-                              </Moment>
-                            </div>
+                          <div className="sub-name">
+                            {t("taskDetail.createdAt")}
+                          </div>
+                          <div>
+                            <Moment format="YYYY-MM-DD HH:mm">
+                              {curTaskInfo.createdAt}
+                            </Moment>
+                          </div>
                           <br />
-                          <div className="sub-name">{t("taskDetail.status")}</div>
-                          <div>{curTaskInfo.progress?TASK_STATUS_MAP[curTaskInfo.progress].name:"-"}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.status")}
+                          </div>
+                          <div>
+                            {curTaskInfo.progress
+                              ? TASK_STATUS_MAP[curTaskInfo.progress].name
+                              : "-"}
+                          </div>
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.srcName")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.srcName")}
+                          </div>
                           <div>{curTaskInfo.srcBucketName}</div>
                           <br />
-                          <div className="sub-name">{t("taskDetail.srcPrefix")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.srcPrefix")}
+                          </div>
                           <div>{curTaskInfo.srcBucketPrefix}</div>
                           <br />
                           <div className="sub-name">
@@ -337,7 +367,6 @@ const Detail: React.FC = (props: any) => {
                           </div>
                           <div>{curTaskInfo.credentialsParameterStore}</div>
                         </div>
-                        
                       </div>
                     </div>
                   </TabPanel>
@@ -348,12 +377,16 @@ const Detail: React.FC = (props: any) => {
                       </div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.description")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.description")}
+                          </div>
                           <div>{curTaskInfo.description}</div>
                           <br />
                         </div>
                         <div className="split-item">
-                            <div className="sub-name">{t("taskDetail.alarmEmail")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.alarmEmail")}
+                          </div>
                           <div>{curTaskInfo.alarmEmail}</div>
                         </div>
                       </div>
