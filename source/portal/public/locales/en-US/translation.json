@@ -55,7 +55,7 @@
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
           "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "It will only replicate objects with the provided prefix."
+          "prefixDesc": "It will replicate source objects to the provided prefix."
         },
         "credential": {
           "title": "Credentials",

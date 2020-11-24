@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { withTranslation } from "react-i18next";
 import { HashRouter, Route } from "react-router-dom";
 
@@ -11,19 +11,26 @@ import DataLoading from "./common/Loading";
 import TopBar from "./common/TopBar";
 
 import Home from "./pages/home/Home";
-import Detail from "./pages/detail/Detail";
+import DetailS3 from "./pages/detail/DetailS3";
+import DetailECR from "./pages/detail/DetailECR";
 import StepOne from "./pages/creation/StepOne";
 import StepTwoS3 from "./pages/creation/s3/StepTwoS3";
 import StepThreeS3 from "./pages/creation/s3/StepThreeS3";
+import StepTwoECR from "./pages/creation/ecr/StepTwoECR";
+import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
+import { EnumTaskType } from "./assets/types/index";
 
 import "./App.scss";
 
 const HomePage = withTranslation()(Home);
-const DetailPage = withTranslation()(Detail);
+const DetailPageS3 = withTranslation()(DetailS3);
+const DetailPageECR = withTranslation()(DetailECR);
 const StepOnePage = withTranslation()(StepOne);
 const StepTwoS3Page = withTranslation()(StepTwoS3);
 const StepThreeS3Page = withTranslation()(StepThreeS3);
+const StepTwoECRPage = withTranslation()(StepTwoECR);
+const StepThreeECRPage = withTranslation()(StepThreeECR);
 const ListPage = withTranslation()(List);
 
 // loading component for suspense fallback
@@ -37,23 +44,24 @@ const Loader = () => (
 );
 
 const App: React.FC = () => {
-  const [authState, setAuthState] = React.useState<AuthState>();
-  const [user, setUser] = React.useState<any | undefined>();
-  const [loadingConfig, setLoadingConfig] = React.useState<boolean>(true);
+  const [authState, setAuthState] = useState<AuthState>();
+  const [user, setUser] = useState<any | undefined>();
+  const [loadingConfig, setLoadingConfig] = useState<boolean>(true);
 
   // Amplify.configure(awsconfig);
 
   useEffect(() => {
     const timeStamp = new Date().getTime();
     Axios.get("/aws-exports.json?timeStamp=" + timeStamp).then((res) => {
-      let ConfigObj = res.data
+      const ConfigObj = res.data;
       window.localStorage.setItem("configJson", JSON.stringify(ConfigObj));
+      window.localStorage.setItem("cur-region", ConfigObj.aws_project_region);
       Amplify.configure(ConfigObj);
       setLoadingConfig(false);
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authData: any) => {
       setAuthState(nextAuthState);
       setUser(authData);
@@ -73,43 +81,67 @@ const App: React.FC = () => {
       <HashRouter>
         <Route path="/" exact component={HomePage}></Route>
         <Route path="/home" exact component={HomePage}></Route>
-        <Route path="/create/step1" exact component={StepOnePage}></Route>
-        <Route path="/create/step2/s3" exact component={StepTwoS3Page}></Route>
+        <Route path="/create/step1/:type" exact component={StepOnePage}></Route>
         <Route
-          path="/create/step3/s3"
+          path={`/create/step2/${EnumTaskType.S3}`}
+          exact
+          component={StepTwoS3Page}
+        ></Route>
+        <Route
+          path={`/create/step2/${EnumTaskType.ECR}`}
+          exact
+          component={StepTwoECRPage}
+        ></Route>
+        <Route
+          path={`/create/step3/${EnumTaskType.S3}`}
           exact
           component={StepThreeS3Page}
         ></Route>
+        <Route
+          path={`/create/step3/${EnumTaskType.ECR}`}
+          exact
+          component={StepThreeECRPage}
+        ></Route>
         <Route path="/task/list" exact component={ListPage}></Route>
-        <Route path="/task/detail/:id" exact component={DetailPage}></Route>
+        <Route
+          path={`/task/detail/${EnumTaskType.S3}/:id`}
+          exact
+          component={DetailPageS3}
+        ></Route>
+        <Route
+          path={`/task/detail/${EnumTaskType.ECR}/:id`}
+          exact
+          component={DetailPageECR}
+        ></Route>
       </HashRouter>
     </div>
   ) : (
     <div className="login-wrap">
-        <AmplifyAuthenticator>
+      <AmplifyAuthenticator>
         <AmplifySignIn
-          headerText='Sign in to AWS Data Replication Hub'
-          slot='sign-in'
-          usernameAlias='username'
+          headerText="Sign in to AWS Data Replication Hub"
+          slot="sign-in"
+          usernameAlias="username"
           formFields={[
             {
-              type: 'username',
-              label: 'Email *',
-              placeholder: 'Enter your email',
+              type: "username",
+              label: "Email *",
+              placeholder: "Enter your email",
               required: true,
-              inputProps: { autoComplete: 'off' },
+              inputProps: { autoComplete: "off" },
             },
             {
-              type: 'password',
-              label: 'Password *',
-              placeholder: 'Enter your password',
+              type: "password",
+              label: "Password *",
+              placeholder: "Enter your password",
               required: true,
-              inputProps: { autoComplete: 'off' },
+              inputProps: { autoComplete: "off" },
             },
-          ]}>
-          <div slot='secondary-footer-content'></div>
+          ]}
+        >
+          <div slot="secondary-footer-content"></div>
         </AmplifySignIn>
-        </AmplifyAuthenticator>
+      </AmplifyAuthenticator>
     </div>
   );
 };

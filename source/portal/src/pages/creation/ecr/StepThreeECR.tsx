@@ -27,7 +27,7 @@ import TextButton from "../../../common/comp/TextButton";
 import "../Creation.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
-  S3_PARAMS_LIST_MAP,
+  ECR_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
 } from "../../../assets/config/const";
@@ -75,7 +75,7 @@ const StepOne: React.FC = () => {
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
     if (!tmpTaskInfo.hasOwnProperty("type")) {
-      const toPath = "/create/step1/S3";
+      const toPath = "/create/step1/ECR";
       history.push({
         pathname: toPath,
       });
@@ -85,13 +85,16 @@ const StepOne: React.FC = () => {
   // Build  Task  Info  Data
   useEffect(() => {
     console.info("tmpTaskInfo:", tmpTaskInfo);
+    const NOT_PARAMS: Array<string> = ["srcRegionDefault", "destRegionDefault"];
     const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
     const tmpParamsArr = [];
     for (const key in parametersObj) {
-      tmpParamsArr.push({
-        ParameterKey: key,
-        ParameterValue: parametersObj[key],
-      });
+      if (NOT_PARAMS.indexOf(key) < 0) {
+        tmpParamsArr.push({
+          ParameterKey: key,
+          ParameterValue: parametersObj[key],
+        });
+      }
     }
     // Add New Params to Creat Task
     const configJson: any = JSON.parse(
@@ -102,8 +105,12 @@ const StepOne: React.FC = () => {
     for (const key in clusterData) {
       if (key === "ecsSubnets") {
         tmpParamsArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key].join(","),
+          ParameterKey: "ecsSubnetA",
+          ParameterValue: clusterData[key][0],
+        });
+        tmpParamsArr.push({
+          ParameterKey: "ecsSubnetB",
+          ParameterValue: clusterData[key][1],
         });
       } else {
         tmpParamsArr.push({
@@ -126,7 +133,7 @@ const StepOne: React.FC = () => {
 
   async function createTask() {
     setIsCreating(true);
-    // if (!formData.name || !formData.description) return;
+    console.info("createTaskGQL:", createTaskGQL);
     const createTaskData = await API.graphql({
       query: createTaskMutaion,
       variables: { input: createTaskGQL },
@@ -150,7 +157,7 @@ const StepOne: React.FC = () => {
   };
 
   const goToStepTwo = () => {
-    const toPath = "/create/step2/s3";
+    const toPath = "/create/step2/ECR";
     history.push({
       pathname: toPath,
     });
@@ -158,6 +165,20 @@ const StepOne: React.FC = () => {
 
   const goToTaskList = () => {
     createTask();
+  };
+
+  const buildParamValue = (key: string, value: string) => {
+    if (key === "jobType") {
+      return JOB_TYPE_MAP[key];
+    } else if (key === "srcImageList") {
+      const imageArr: Array<string> = value.split(",");
+      if (imageArr.length > 3) {
+        return `${imageArr[0]} and other ${imageArr.length - 1} images.`;
+      }
+      return value;
+    } else {
+      return value || "-";
+    }
   };
 
   return (
@@ -200,7 +221,7 @@ const StepOne: React.FC = () => {
                       {t("creation.step3.step1EngineSubEngine")}
                     </div>
                     <div className="step3-desc">
-                      {t("creation.step3.step1EngineSubEngineDesc")}
+                      Amazon ECR Replication Engine v1.0
                     </div>
                     <div className="step3-title">
                       {t("creation.step3.step1Type")}
@@ -219,7 +240,7 @@ const StepOne: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - clusterListLength})</span>
+                    <span>({paramsList.length - clusterListLength - 2})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">
@@ -234,25 +255,29 @@ const StepOne: React.FC = () => {
                         </div>
                         {paramsList.map((element: any, index: any) => {
                           return (
-                            S3_PARAMS_LIST_MAP[element.ParameterKey] && (
+                            ECR_PARAMS_LIST_MAP[element.ParameterKey] && (
                               <div
                                 className="preview-row preview-data"
                                 key={index}
                               >
                                 <div className="table-td key">
-                                  {S3_PARAMS_LIST_MAP[element.ParameterKey] &&
-                                    S3_PARAMS_LIST_MAP[element.ParameterKey][
+                                  {ECR_PARAMS_LIST_MAP[element.ParameterKey] &&
+                                    ECR_PARAMS_LIST_MAP[element.ParameterKey][
                                       nameStr
                                     ]}
                                 </div>
                                 <div className="table-td value">
-                                  {element.ParameterKey === "jobType" ? (
+                                  {buildParamValue(
+                                    element.ParameterKey,
+                                    element.ParameterValue
+                                  )}
+                                  {/* {element.ParameterKey === "jobType" ? (
                                     <span>
                                       {JOB_TYPE_MAP[element.ParameterValue]}
                                     </span>
                                   ) : (
-                                    <span>{element.ParameterValue}</span>
-                                  )}
+                                    <span>{element.ParameterValue || "-"}</span>
+                                  )} */}
                                 </div>
                               </div>
                             )

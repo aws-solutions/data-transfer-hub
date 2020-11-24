@@ -59,6 +59,13 @@ export default function reducer(
       };
     }
 
+    case "set info span type": {
+      return {
+        ...state,
+        infoSpanType: action.spanType,
+      };
+    }
+
     case "delete todo": {
       const todos = state.todos.slice();
       todos.splice(action.index, 1);

@@ -4,7 +4,6 @@ import { useDispatch } from "redux-react-hook";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 
-
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
@@ -12,7 +11,6 @@ import MLink from "@material-ui/core/Link";
 
 import LeftMenu from "../../common/LeftMenu";
 import InfoBar from "../../common/InfoBar";
-import InfoSpan from "../../common/InfoSpan";
 
 import Bottom from "../../common/Bottom";
 import Step from "./comps/Step";
@@ -20,17 +18,17 @@ import NextButton from "../../common/comp/PrimaryButton";
 import TextButton from "../../common/comp/TextButton";
 import StepOneS3Tips from "./s3/StepOneS3Tips";
 import StepOneS3TipsCN from "./s3/StepOneS3TipsCN";
-import StepOneDydbTips from "./dydb/StepOneDydbTips";
+import StepOneECRTips from "./ecr/StepOneECRTips";
+import StepOneECRTipsCN from "./ecr/StepOneECRTipsCN";
 
 import "./Creation.scss";
 
 import { TYPE_LIST, EnumTaskType } from "../../assets/types/index";
 
-const StepOne: React.FC = () => {
-
+const StepOne: React.FC = (props: any) => {
   const { t, i18n } = useTranslation();
 
-  const [taskType, setTaskType] = useState(EnumTaskType.S3);
+  const [taskType, setTaskType] = useState(props.match.params.type);
 
   const dispatch = useDispatch();
   const updateTmpTaskInfo = React.useCallback(() => {
@@ -50,13 +48,14 @@ const StepOne: React.FC = () => {
     });
   };
   const goToStepTwo = () => {
-    const toPath = "/create/step2/s3";
+    const toPath = "/create/step2/" + taskType;
     history.push({
       pathname: toPath,
     });
   };
 
   const changeDataType = (event: any) => {
+    window.history.pushState({}, "", "/#/create/step1/" + event.target.value);
     setTaskType(event.target.value);
   };
 
@@ -74,7 +73,9 @@ const StepOne: React.FC = () => {
               <MLink color="inherit" href="/#/">
                 {t("breadCrumb.home")}
               </MLink>
-              <Typography color="textPrimary">{t("breadCrumb.create")}</Typography>
+              <Typography color="textPrimary">
+                {t("breadCrumb.create")}
+              </Typography>
             </Breadcrumbs>
           </div>
           <div className="creation-content">
@@ -83,11 +84,13 @@ const StepOne: React.FC = () => {
             </div>
             <div className="creation-info">
               <div className="creation-title">
-                {t("creation.step1.engineType")}<InfoSpan />
+                {t("creation.step1.engineType")}
               </div>
               <div className="box-shadow">
                 <div className="option">
-                  <div className="option-title">{t("creation.step1.engineOptions")}</div>
+                  <div className="option-title">
+                    {t("creation.step1.engineOptions")}
+                  </div>
                   <div className="option-list">
                     {TYPE_LIST.map((item, index) => {
                       const optionClass = classNames({
@@ -117,15 +120,28 @@ const StepOne: React.FC = () => {
                       );
                     })}
                   </div>
-                  <div>{taskType === EnumTaskType.S3 && i18n.language !== "zh-CN" && <StepOneS3Tips /> }</div>
-                  <div>{taskType === EnumTaskType.S3 && i18n.language === "zh-CN" && <StepOneS3TipsCN /> }</div>
                   <div>
-                    {taskType === EnumTaskType.DynamoDB && <StepOneDydbTips />}
+                    {taskType === EnumTaskType.S3 &&
+                      i18n.language !== "zh-CN" && <StepOneS3Tips />}
+                  </div>
+                  <div>
+                    {taskType === EnumTaskType.S3 &&
+                      i18n.language === "zh-CN" && <StepOneS3TipsCN />}
+                  </div>
+                  <div>
+                    {taskType === EnumTaskType.ECR &&
+                      i18n.language !== "zh-CN" && <StepOneECRTips />}
+                  </div>
+                  <div>
+                    {taskType === EnumTaskType.ECR &&
+                      i18n.language === "zh-CN" && <StepOneECRTipsCN />}
                   </div>
                 </div>
               </div>
               <div className="buttons">
-                <TextButton onClick={goToHomePage}>{t("btn.cancel")}</TextButton>
+                <TextButton onClick={goToHomePage}>
+                  {t("btn.cancel")}
+                </TextButton>
                 <NextButton onClick={goToStepTwo}>{t("btn.next")}</NextButton>
               </div>
             </div>

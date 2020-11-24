@@ -55,3 +55,12 @@ export const getTask = /* GraphQL */ `
     }
   }
 `;
+export const listParameters = /* GraphQL */ `
+  query ListParameters {
+    listParameters {
+      name
+      type
+      description
+    }
+  }
+`;

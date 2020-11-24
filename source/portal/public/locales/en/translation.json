@@ -55,7 +55,7 @@
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
           "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "It will only replicate objects with the provided prefix."
+          "prefixDesc": "It will replicate source objects to the provided prefix."
         },
         "credential": {
           "title": "Credentials",
@@ -156,7 +156,8 @@
       "sourceBucketRequired": "Source Bucket Name is Required",
       "destBucketRequired": "Source Bucket Name is Required",
       "emailRequired": "Alarm Email is required",
-      "emailValidate": "Alarm Email must be validate"
+      "emailValidate": "Alarm Email must be validate",
+      "credentialRequired": "Parameter Store Credential is Required"
     }
   }
 }

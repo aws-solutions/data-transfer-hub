@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
 import Loading from "../../common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -29,8 +29,6 @@ import Bottom from "../../common/Bottom";
 import NormalButton from "../../common/comp/NormalButton";
 import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
-
-import InfoSpan from "../../common/InfoSpan";
 
 import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
 
@@ -108,8 +106,6 @@ const Detail: React.FC = (props: any) => {
   const [curTaskInfo, setCurTaskInfo] = useState<any>({});
   const [open, setOpen] = useState(false);
   const [isStopLoading, setIsStopLoading] = useState(false);
-  const [accountInSrc, setAccountInSrc] = useState("-");
-  const [accountInDest, setAccountInDest] = useState("-");
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
@@ -120,21 +116,13 @@ const Detail: React.FC = (props: any) => {
       },
     });
     const tmpCurTask = apiData.data.getTask;
-    
+
     if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
       tmpCurTask.parameters.forEach((element: any) => {
         tmpCurTask[element.ParameterKey] = element.ParameterValue
           ? element.ParameterValue
           : "-";
       });
-    }
-    if (tmpCurTask.jobType === "PUT") {
-      setAccountInSrc("yes");
-      setAccountInDest("no");
-    }
-    if (tmpCurTask.jobType === "GET") {
-      setAccountInSrc("no");
-      setAccountInDest("yes");
     }
     setCurTaskInfo(tmpCurTask);
     setIsLoading(false);
@@ -198,7 +186,9 @@ const Detail: React.FC = (props: any) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{t("taskDetail.stopTask")}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {t("taskDetail.stopTask")}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {t("taskDetail.stopTaskTips")}
@@ -250,30 +240,40 @@ const Detail: React.FC = (props: any) => {
           ) : (
             <div className="general-content">
               <div className="top-title-button">
-                <div className="top-title">
-                  {curTaskInfo.id} <InfoSpan />
-                </div>
+                <div className="top-title">{curTaskInfo.id}</div>
                 <div className="buttons">
                   {/* <NormalButton>Edit</NormalButton> */}
-                  <NormalButton disabled={curTaskInfo.progress===null || curTaskInfo.progress === EnumTaskStatus.STOPPING || curTaskInfo.progress === EnumTaskStatus.STOPPED  || curTaskInfo.progress === EnumTaskStatus.DONE } onClick={stopCurTask}>{t("btn.stop")}</NormalButton>
+                  <NormalButton
+                    disabled={
+                      curTaskInfo.progress === null ||
+                      curTaskInfo.progress === EnumTaskStatus.STOPPING ||
+                      curTaskInfo.progress === EnumTaskStatus.STOPPED ||
+                      curTaskInfo.progress === EnumTaskStatus.DONE
+                    }
+                    onClick={stopCurTask}
+                  >
+                    {t("btn.stop")}
+                  </NormalButton>
                 </div>
               </div>
               <div className="general-info box-shadow">
-                <div className="title">
-                  {t("taskDetail.generalConfig")} <InfoSpan />
-                </div>
+                <div className="title">{t("taskDetail.generalConfig")}</div>
                 <div className="general-info-content">
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.engine")}</div>
-                    <div>{t("taskDetail.plugin")}</div>
+                    <div>Amazon ECR Plugin v1.0</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.sourceType")}</div>
-                    <div>{curTaskInfo.type}</div>
+                    <div>{curTaskInfo.sourceType}</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
-                    <div>{curTaskInfo.progress?TASK_STATUS_MAP[curTaskInfo.progress].name:"-"}</div>
+                    <div>
+                      {curTaskInfo.progress
+                        ? TASK_STATUS_MAP[curTaskInfo.progress].name
+                        : "-"}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -281,94 +281,112 @@ const Detail: React.FC = (props: any) => {
                 <div>
                   <AntTabs value={value} onChange={handleChange}>
                     <AntTab label={t("taskDetail.details")} />
+                    <AntTab label="Images" />
                     <AntTab label={t("taskDetail.option")} />
                     {/* <AntTab label="Tags" /> */}
                   </AntTabs>
                   <TabPanel value={value} index={0}>
                     <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        {t("taskDetail.details")} <InfoSpan />
-                      </div>
+                      <div className="title">{t("taskDetail.details")}</div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.taskId")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.taskId")}
+                          </div>
                           <div>{curTaskInfo.id}</div>
                           <br />
-                          <div className="sub-name">{t("taskDetail.createdAt")}</div>
-                            <div>
-                              <Moment format="YYYY-MM-DD HH:mm">
-                                {curTaskInfo.createdAt}
-                              </Moment>
-                            </div>
+                          <div className="sub-name">
+                            {t("taskDetail.createdAt")}
+                          </div>
+                          <div>
+                            <Moment format="YYYY-MM-DD HH:mm">
+                              {curTaskInfo.createdAt}
+                            </Moment>
+                          </div>
                           <br />
-                          <div className="sub-name">{t("taskDetail.status")}</div>
-                          <div>{curTaskInfo.progress?TASK_STATUS_MAP[curTaskInfo.progress].name:"-"}</div>
+                          {/* <div className="sub-name">
+                            {t("taskDetail.status")}
+                          </div>
+                          <div>
+                            {curTaskInfo.progress
+                              ? TASK_STATUS_MAP[curTaskInfo.progress].name
+                              : "-"}
+                          </div> */}
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.srcName")}</div>
-                          <div>{curTaskInfo.srcBucketName}</div>
-                          <br />
-                          <div className="sub-name">{t("taskDetail.srcPrefix")}</div>
-                          <div>{curTaskInfo.srcBucketPrefix}</div>
+                          <div className="sub-name">Source Region</div>
+                          <div>{curTaskInfo.srcRegion}</div>
                           <br />
                           <div className="sub-name">
-                            {t("taskDetail.srcInThisAccount")}
+                            Is Source in current account?
                           </div>
-                          <div>{accountInSrc}</div>
+                          <div>
+                            {curTaskInfo.srcAccountId === "-" ? "Yes" : "No"}
+                          </div>
+                          <br />
+                          <div className="sub-name">Source Account Id</div>
+                          <div>{curTaskInfo.srcAccountId}</div>
+                          <br />
+                          <div className="sub-name">Source Credential</div>
+                          <div>{curTaskInfo.srcCredential}</div>
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">
-                            {t("taskDetail.destName")}
-                          </div>
-                          <div>{curTaskInfo.destBucketName}</div>
+                          <div className="sub-name">Destination Region</div>
+                          <div>{curTaskInfo.destRegion}</div>
                           <br />
                           <div className="sub-name">
-                            {t("taskDetail.destPrefix")}
+                            Is Destination in current account?
                           </div>
-                          <div>{curTaskInfo.destBucketPrefix}</div>
+                          <div>
+                            {curTaskInfo.destAccountId === "-" ? "Yes" : "No"}
+                          </div>
                           <br />
-                          <div className="sub-name">
-                            {t("taskDetail.destInThisAccount")}
-                          </div>
-                          <div>{accountInDest}</div>
+                          <div className="sub-name">AWS Account ID</div>
+                          <div>{curTaskInfo.destAccountId}</div>
                           <br />
-                          <div className="sub-name">
-                            {t("taskDetail.credentials")}
-                          </div>
-                          <div>{curTaskInfo.credentialsParameterStore}</div>
+                          <div className="sub-name">Credential Store</div>
+                          <div>{curTaskInfo.destCredential}</div>
+                          <br />
+                          <div className="sub-name">Prefix</div>
+                          <div>{curTaskInfo.destPrefix}</div>
                         </div>
-                        
                       </div>
                     </div>
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        {t("taskDetail.option")} <InfoSpan />
-                      </div>
+                      <div className="title">Images</div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <div className="sub-name">{t("taskDetail.description")}</div>
+                          <textarea
+                            defaultValue={curTaskInfo.srcImageList}
+                            rows={8}
+                            className="image-list"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                    <div className="general-info tab-padding box-shadow">
+                      <div className="title">{t("taskDetail.option")}</div>
+                      <div className="general-info-content">
+                        <div className="split-item">
+                          <div className="sub-name">
+                            {t("taskDetail.description")}
+                          </div>
                           <div>{curTaskInfo.description}</div>
                           <br />
                         </div>
                         <div className="split-item">
-                            <div className="sub-name">{t("taskDetail.alarmEmail")}</div>
+                          <div className="sub-name">
+                            {t("taskDetail.alarmEmail")}
+                          </div>
                           <div>{curTaskInfo.alarmEmail}</div>
                         </div>
                       </div>
                     </div>
                   </TabPanel>
-                  {/* <TabPanel value={value} index={2}>
-                    <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        Tags <InfoSpan />
-                      </div>
-                      <div className="general-info-content">
-                        <div style={{ padding: "20px" }}>Tags</div>
-                      </div>
-                    </div>
-                  </TabPanel> */}
                 </div>
               </div>
             </div>

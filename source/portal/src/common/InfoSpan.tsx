@@ -2,17 +2,19 @@ import React from "react";
 import { useDispatch } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
 
-const InfoSpan: React.FC = (props) => {
-  const NO_SHOW = true
+interface spanInfo {
+  spanType: string;
+}
+
+const InfoSpan: React.FC<spanInfo> = (props) => {
+  const { spanType } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const openInfoBar = React.useCallback(() => {
     dispatch({ type: "open info bar" });
+    dispatch({ type: "set info span type", spanType: spanType });
     localStorage.setItem("drhInfoOpen", "open");
-  }, [dispatch]);
-  if (NO_SHOW) {
-    return <span></span>
-  }
+  }, [dispatch, spanType]);
   return (
     <span className="info-span" onClick={openInfoBar}>
       {t("info")}
