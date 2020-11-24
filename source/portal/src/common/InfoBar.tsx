@@ -20,6 +20,7 @@ interface InfoType {
 }
 
 const InfoBar: React.FC<InfoType> = (props: InfoType) => {
+  console.info("props:", props);
   const { infoIsOpen, infoSpanType } = useMappedState(mapState);
 
   const infoClass = classNames({
