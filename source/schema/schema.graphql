@@ -28,6 +28,11 @@ type Query {
     Get a task object by ID.
     """
     getTask(id: ID!): Task
+
+    """
+    Get a list of parameters in System Manager
+    """
+    listParameters: [Parameter]
 }
 
 type Mutation {
@@ -41,6 +46,23 @@ type Mutation {
 input UpdateTaskProgressInput {
     total: Int
     replicated: Int
+}
+
+
+
+"""
+Parameter in System Manager Parameter Store
+"""
+type Parameter @aws_iam @aws_cognito_user_pools{
+    "Parameter Name."
+    name: String!
+
+    "Parameter Type"
+    type: String!
+
+    "Parameter Description"
+    description: String
+
 }
 
 """

@@ -20,8 +20,8 @@ import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
 
-// const PLUGIN_TEMPLATE_S3 = 'https://drh-s3-plugin.s3-us-west-2.amazonaws.com/Aws-data-replication-component-s3/v1.0.0/Aws-data-replication-component-s3.ecs.template'
 const PLUGIN_TEMPLATE_S3 = 'https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-component-s3/v1.0.0/Aws-data-replication-component-s3.template';
+const PLUGIN_TEMPLATE_ECR = 'https://drh-solution.s3-us-west-2.amazonaws.com/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template';
 
 export interface ApiProps {
   readonly usernameParameter: CfnParameter
@@ -175,7 +175,7 @@ export class ApiStack extends Construct {
     const isDryRun = this.node.tryGetContext('DRY_RUN')
     const taskHandlerFn = new lambda.Function(this, 'TaskHandlerFn', {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: [ 'cdk/*', 'layer/*' ]
+        exclude: ['cdk/*', 'layer/*']
       }),
       runtime: lambda.Runtime.NODEJS_12_X,
       handler: 'api/api-task.handler',
@@ -185,7 +185,8 @@ export class ApiStack extends Construct {
         STATE_MACHINE_ARN: stateMachine.stateMachineArn,
         TASK_TABLE: this.taskTable.tableName,
         PLUGIN_TEMPLATE_S3: PLUGIN_TEMPLATE_S3,
-        DRY_RUN: isDryRun? 'True': 'False'
+        PLUGIN_TEMPLATE_ECR: PLUGIN_TEMPLATE_ECR,
+        DRY_RUN: isDryRun ? 'True' : 'False'
       },
       layers: [lambdaLayer]
     })
@@ -220,6 +221,38 @@ export class ApiStack extends Construct {
     lambdaDS.createResolver({
       typeName: 'Mutation',
       fieldName: 'updateTaskProgress',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
+
+
+    // Create Lambda Data Source
+    const ssmHandlerFn = new lambda.Function(this, 'SSMHandlerFn', {
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: ['cdk/*', 'layer/*']
+      }),
+      runtime: lambda.Runtime.NODEJS_12_X,
+      handler: 'api/api-ssm-param.handler',
+      timeout: Duration.seconds(60),
+      memorySize: 128,
+    })
+
+    // this.taskTable.grantReadWriteData(taskHandlerFn)
+    ssmHandlerFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ['*'],
+      actions: [
+        "ssm:DescribeParameters",
+      ]
+    }))
+
+    const ssmLambdaDS = this.api.addLambdaDataSource('ssmLambdaDS', ssmHandlerFn, {
+      description: 'Lambda Resolver Datasource for SSM parameters'
+    });
+
+    ssmLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'listParameters',
       requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })
