@@ -58,6 +58,11 @@ export const TYPE_LIST = [
   // },
 ];
 
+export enum EnumBucketType {
+  Source = "Source",
+  Destination = "Destination",
+}
+
 // Task Tyep Enum
 export enum EnumSourceType {
   S3 = "Amazon_S3",
@@ -69,7 +74,7 @@ export enum EnumSourceType {
 // Task Tyep Enum
 export enum ECREnumSourceType {
   ECR = "Amazon_ECR",
-  PUBLIC = "PUBLIC",
+  PUBLIC = "Public",
 }
 
 // Docker Image Type

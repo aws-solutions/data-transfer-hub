@@ -11,7 +11,6 @@ import MLink from "@material-ui/core/Link";
 
 import LeftMenu from "../../common/LeftMenu";
 import InfoBar from "../../common/InfoBar";
-import InfoSpan from "../../common/InfoSpan";
 
 import Bottom from "../../common/Bottom";
 import Step from "./comps/Step";
@@ -86,7 +85,6 @@ const StepOne: React.FC = (props: any) => {
             <div className="creation-info">
               <div className="creation-title">
                 {t("creation.step1.engineType")}
-                <InfoSpan />
               </div>
               <div className="box-shadow">
                 <div className="option">

@@ -6,15 +6,21 @@ import { useDispatch, useMappedState } from "redux-react-hook";
 import ClearIcon from "@material-ui/icons/Clear";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import "./InfoBar.scss";
+import CredentialInfo from "./info/CredentialInfo";
 
 import { IState } from "../store/Store";
 
 const mapState = (state: IState) => ({
   infoIsOpen: state.infoIsOpen,
+  infoSpanType: state.infoSpanType,
 });
 
-const InfoBar: React.FC = () => {
-  const { infoIsOpen } = useMappedState(mapState);
+interface InfoType {
+  page?: string | undefined;
+}
+
+const InfoBar: React.FC<InfoType> = (props: InfoType) => {
+  const { infoIsOpen, infoSpanType } = useMappedState(mapState);
 
   const infoClass = classNames({
     "info-bar": true,
@@ -33,13 +39,17 @@ const InfoBar: React.FC = () => {
         {infoIsOpen ? (
           <div className="is-open">
             <div>
-              <div className="title">Info Title</div>
+              <div className="title">
+                {infoSpanType === "CREDENTIAL" && "Credentials Store"}
+              </div>
               <div className="icon" onClick={closeInfoBar}>
                 <ClearIcon />
               </div>
             </div>
             <div className="info-content">
-              <p>This is Info Content</p>
+              {infoSpanType === "CREDENTIAL" && (
+                <CredentialInfo name={props.page} />
+              )}
             </div>
           </div>
         ) : (

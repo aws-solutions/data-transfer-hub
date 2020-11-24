@@ -30,8 +30,6 @@ import NormalButton from "../../common/comp/NormalButton";
 import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
-import InfoSpan from "../../common/InfoSpan";
-
 import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
 
 import "./Detail.scss";
@@ -108,8 +106,6 @@ const Detail: React.FC = (props: any) => {
   const [curTaskInfo, setCurTaskInfo] = useState<any>({});
   const [open, setOpen] = useState(false);
   const [isStopLoading, setIsStopLoading] = useState(false);
-  const [accountInSrc, setAccountInSrc] = useState("-");
-  const [accountInDest, setAccountInDest] = useState("-");
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
@@ -127,14 +123,6 @@ const Detail: React.FC = (props: any) => {
           ? element.ParameterValue
           : "-";
       });
-    }
-    if (tmpCurTask.jobType === "PUT") {
-      setAccountInSrc("yes");
-      setAccountInDest("no");
-    }
-    if (tmpCurTask.jobType === "GET") {
-      setAccountInSrc("no");
-      setAccountInDest("yes");
     }
     setCurTaskInfo(tmpCurTask);
     setIsLoading(false);
@@ -252,9 +240,7 @@ const Detail: React.FC = (props: any) => {
           ) : (
             <div className="general-content">
               <div className="top-title-button">
-                <div className="top-title">
-                  {curTaskInfo.id} <InfoSpan />
-                </div>
+                <div className="top-title">{curTaskInfo.id}</div>
                 <div className="buttons">
                   {/* <NormalButton>Edit</NormalButton> */}
                   <NormalButton
@@ -271,17 +257,15 @@ const Detail: React.FC = (props: any) => {
                 </div>
               </div>
               <div className="general-info box-shadow">
-                <div className="title">
-                  {t("taskDetail.generalConfig")} <InfoSpan />
-                </div>
+                <div className="title">{t("taskDetail.generalConfig")}</div>
                 <div className="general-info-content">
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.engine")}</div>
-                    <div>{t("taskDetail.plugin")}</div>
+                    <div>Amazon ECR Plugin v1.0</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.sourceType")}</div>
-                    <div>{curTaskInfo.type}</div>
+                    <div>{curTaskInfo.sourceType}</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
@@ -297,14 +281,13 @@ const Detail: React.FC = (props: any) => {
                 <div>
                   <AntTabs value={value} onChange={handleChange}>
                     <AntTab label={t("taskDetail.details")} />
+                    <AntTab label="Images" />
                     <AntTab label={t("taskDetail.option")} />
                     {/* <AntTab label="Tags" /> */}
                   </AntTabs>
                   <TabPanel value={value} index={0}>
                     <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        {t("taskDetail.details")} <InfoSpan />
-                      </div>
+                      <div className="title">{t("taskDetail.details")}</div>
                       <div className="general-info-content">
                         <div className="split-item">
                           <div className="sub-name">
@@ -321,60 +304,72 @@ const Detail: React.FC = (props: any) => {
                             </Moment>
                           </div>
                           <br />
-                          <div className="sub-name">
+                          {/* <div className="sub-name">
                             {t("taskDetail.status")}
                           </div>
                           <div>
                             {curTaskInfo.progress
                               ? TASK_STATUS_MAP[curTaskInfo.progress].name
                               : "-"}
-                          </div>
+                          </div> */}
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">
-                            {t("taskDetail.srcName")}
-                          </div>
-                          <div>{curTaskInfo.srcBucketName}</div>
+                          <div className="sub-name">Source Region</div>
+                          <div>{curTaskInfo.srcRegion}</div>
                           <br />
                           <div className="sub-name">
-                            {t("taskDetail.srcPrefix")}
+                            Is Source in current account?
                           </div>
-                          <div>{curTaskInfo.srcBucketPrefix}</div>
+                          <div>
+                            {curTaskInfo.srcAccountId === "-" ? "Yes" : "No"}
+                          </div>
                           <br />
-                          <div className="sub-name">
-                            {t("taskDetail.srcInThisAccount")}
-                          </div>
-                          <div>{accountInSrc}</div>
+                          <div className="sub-name">Source Account Id</div>
+                          <div>{curTaskInfo.srcAccountId}</div>
+                          <br />
+                          <div className="sub-name">Source Credential</div>
+                          <div>{curTaskInfo.srcCredential}</div>
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">
-                            {t("taskDetail.destName")}
-                          </div>
-                          <div>{curTaskInfo.destBucketName}</div>
+                          <div className="sub-name">Destination Region</div>
+                          <div>{curTaskInfo.destRegion}</div>
                           <br />
                           <div className="sub-name">
-                            {t("taskDetail.destPrefix")}
+                            Is Destination in current account?
                           </div>
-                          <div>{curTaskInfo.destBucketPrefix}</div>
+                          <div>
+                            {curTaskInfo.destAccountId === "-" ? "Yes" : "No"}
+                          </div>
                           <br />
-                          <div className="sub-name">
-                            {t("taskDetail.destInThisAccount")}
-                          </div>
-                          <div>{accountInDest}</div>
+                          <div className="sub-name">AWS Account ID</div>
+                          <div>{curTaskInfo.destAccountId}</div>
                           <br />
-                          <div className="sub-name">
-                            {t("taskDetail.credentials")}
-                          </div>
-                          <div>{curTaskInfo.credentialsParameterStore}</div>
+                          <div className="sub-name">Credential Store</div>
+                          <div>{curTaskInfo.destCredential}</div>
+                          <br />
+                          <div className="sub-name">Prefix</div>
+                          <div>{curTaskInfo.destPrefix}</div>
                         </div>
                       </div>
                     </div>
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        {t("taskDetail.option")} <InfoSpan />
+                      <div className="title">Images</div>
+                      <div className="general-info-content">
+                        <div className="split-item">
+                          <textarea
+                            defaultValue={curTaskInfo.srcImageList}
+                            rows={8}
+                            className="image-list"
+                          />
+                        </div>
                       </div>
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                    <div className="general-info tab-padding box-shadow">
+                      <div className="title">{t("taskDetail.option")}</div>
                       <div className="general-info-content">
                         <div className="split-item">
                           <div className="sub-name">
@@ -392,16 +387,6 @@ const Detail: React.FC = (props: any) => {
                       </div>
                     </div>
                   </TabPanel>
-                  {/* <TabPanel value={value} index={2}>
-                    <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        Tags <InfoSpan />
-                      </div>
-                      <div className="general-info-content">
-                        <div style={{ padding: "20px" }}>Tags</div>
-                      </div>
-                    </div>
-                  </TabPanel> */}
                 </div>
               </div>
             </div>

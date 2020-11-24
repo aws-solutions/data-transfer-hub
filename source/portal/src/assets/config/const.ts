@@ -3,7 +3,20 @@ export const URL = "";
 export const URL_FEEDBACK =
   "https://github.com/aws-samples/aws-data-replication-hub/issues/new";
 export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
+export const SSM_LINK =
+  "https://console.aws.amazon.com/systems-manager/parameters/";
+export const SSM_PARASTORE_HELP_LINK =
+  "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html";
+
 export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
+
+export const MenuProps: any = {
+  getContentAnchorEl: null,
+  anchorOrigin: {
+    vertical: "bottom",
+    horizontal: "left",
+  },
+};
 
 export const S3_PARAMS_LIST_MAP: any = {
   srcBucketName: {
@@ -37,6 +50,73 @@ export const S3_PARAMS_LIST_MAP: any = {
   jobType: {
     en_name: "Which bucket in current AWS account?",
     "zh-CN_name": "哪一个数据桶在当前的账户中?",
+  },
+  lambdaMemory: {
+    en_name: "Lambda Memory",
+    "zh-CN_name": "Lambda 内存",
+  },
+  multipartThreshold: {
+    en_name: "Multipart Threshold",
+    "zh-CN_name": "大文件分段阈值",
+  },
+  chunkSize: {
+    en_name: "Chunk Size",
+    "zh-CN_name": "分段大小",
+  },
+  maxThreads: {
+    en_name: "Max Threads",
+    "zh-CN_name": "最大线程数",
+  },
+};
+
+export const ECR_PARAMS_LIST_MAP: any = {
+  srcRegion: {
+    en_name: "Source region",
+    "zh-CN_name": "Source region",
+  },
+  srcAccountId: {
+    en_name: "Source AWS Account ID",
+    "zh-CN_name": "Source AWS Account ID",
+  },
+  srcList: {
+    en_name: "Type of Source Image List",
+    "zh-CN_name": "Type of Source Image List",
+  },
+  srcImageList: {
+    en_name: "Source Image List",
+    "zh-CN_name": "Source Image List",
+  },
+  srcCredential: {
+    en_name: "Source Credential Parameter Name",
+    "zh-CN_name": "Source Credential Parameter Name",
+  },
+  sourceInAccount: {
+    en_name: "Source In Account",
+    "zh-CN_name": "数据源在当前账户吗？",
+  },
+  destRegion: {
+    en_name: "Destination AWS Region",
+    "zh-CN_name": "Destination AWS Region",
+  },
+  destInAccount: {
+    en_name: "Destination In Account",
+    "zh-CN_name": "目的仓库在当前账户吗？",
+  },
+  destAccountId: {
+    en_name: "Destination AWS Account ID",
+    "zh-CN_name": "Destination AWS Account ID",
+  },
+  sourceType: {
+    en_name: "Source Type",
+    "zh-CN_name": "镜像源类型",
+  },
+  destPrefix: {
+    en_name: "Destination Image Prefix",
+    "zh-CN_name": "Destination Image Prefix",
+  },
+  destCredential: {
+    en_name: "Destination Credential Parameter Name",
+    "zh-CN_name": "Destination Credential Parameter Name",
   },
 };
 
@@ -74,4 +154,45 @@ export const AWS_REGION_LIST = [
   { value: "eu-north-1", name: "Stockholm(eu-north-1)" },
   { value: "me-south-1", name: "Bahrain(me-south-1)" },
   { value: "sa-east-1", name: "São Paulo(sa-east-1)" },
+];
+
+export const LAMBDA_OPTIONS = [
+  { name: 128, value: 128 },
+  { name: 256, value: 256 },
+  { name: 512, value: 512 },
+  { name: 1024, value: 1024 },
+];
+
+export const MUTLTIPART_OPTIONS = [
+  { name: 10, value: 10 },
+  { name: 15, value: 15 },
+  { name: 20, value: 20 },
+  { name: 50, value: 50 },
+  { name: 100, value: 100 },
+];
+
+export const CHUNKSIZE_OPTIONS = [
+  { name: 5, value: 5 },
+  { name: 10, value: 10 },
+];
+
+export const MAXTHREADS_OPTIONS = [
+  { name: 5, value: 5 },
+  { name: 10, value: 10 },
+  { name: 20, value: 20 },
+  { name: 50, value: 50 },
+];
+
+// Clone task useless property
+export const CREATE_USE_LESS_PROPERTY = [
+  "id",
+  "createdAt",
+  "executionArn",
+  "progress",
+  "progressInfo",
+  "stackId",
+  "stackStatus",
+  "stackStatusReason",
+  "stoppedAt",
+  "templateUrl",
 ];

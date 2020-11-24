@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useMappedState } from "redux-react-hook";
+import { useDispatch, useMappedState } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
@@ -9,12 +9,16 @@ import classNames from "classnames";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import SearchIcon from "@material-ui/icons/Search";
+import { API } from "aws-amplify";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
+import RefreshIcon from "@material-ui/icons/Refresh";
 
+import { listParameters } from "../../../graphql/queries";
 import InfoSpan from "../../../common/InfoSpan";
 import InfoBar from "../../../common/InfoBar";
 import LeftMenu from "../../../common/LeftMenu";
@@ -32,6 +36,8 @@ import {
   AWS_REGION_LIST,
   YES_NO_LIST,
   YES_NO,
+  MenuProps,
+  SSM_LINK,
 } from "../../../assets/config/const";
 import {
   ECR_SOURCE_TYPE,
@@ -47,24 +53,126 @@ const mapState = (state: IState) => ({
 });
 
 const schema = yup.object().shape({
-  // srcBucketName: yup.string().required(),
-  // destBucketName: yup.string().required(),
-  // // description: yup.string().required(),
-  // alarmEmail: yup.string().email().required(),
+  destRegion: yup.string().required(),
 });
 
-const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest\n,mysql";
+const region = window.localStorage.getItem("cur-region");
+
+const MAX_LENGTH = 4096;
+
+const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
 
 const StepOne: React.FC = () => {
   const { tmpTaskInfo } = useMappedState(mapState);
   const { t, i18n } = useTranslation();
   const [titleStr, setTitleStr] = useState("en_name");
   const [descStr, setDescStr] = useState("en_desc");
-  const [sourceType, setSourceType] = useState(ECREnumSourceType.ECR);
-  const [sourceInAccount, setSouceInAccount] = useState(YES_NO.NO);
-  const [dockerImageType, setDockerIamgeType] = useState(
-    EnumDockerImageType.ALL
+
+  const [ssmParamList, setSSMParamList] = useState([]);
+  const [curLength, setCurLength] = useState(0);
+  // ECR Task Params
+  const [paramData, setParamData] = useState<any>();
+  const [sourceType, setSourceType] = useState(
+    tmpTaskInfo.parametersObj?.sourceType || ECREnumSourceType.ECR
   );
+  const [srcRegion, setSrcRegion] = useState(
+    tmpTaskInfo.parametersObj?.srcRegion || ""
+  );
+  const [srcRegionDefault, setSrcRegionDefault] = useState(
+    tmpTaskInfo.parametersObj?.srcRegionDefault || null
+  );
+  const [sourceInAccount, setSouceInAccount] = useState(
+    tmpTaskInfo.parametersObj?.sourceInAccount || YES_NO.NO
+  );
+  const [srcAccountId, setSrcAccountId] = useState(
+    tmpTaskInfo.parametersObj?.srcAccountId || ""
+  );
+  const [srcCredential, setSrcCredential] = useState(
+    tmpTaskInfo.parametersObj?.srcCredential || ""
+  );
+  const [srcList, setSrcList] = useState(
+    tmpTaskInfo.parametersObj?.srcList || EnumDockerImageType.ALL
+  );
+  const [srcImageList, setSrcImageList] = useState(
+    tmpTaskInfo.parametersObj?.srcImageList || ""
+  );
+  const [destRegion, setDestRegion] = useState(
+    tmpTaskInfo.parametersObj?.destRegion || ""
+  );
+  const [destRegionDefault, setDestRegionDefault] = useState(
+    tmpTaskInfo.parametersObj?.destRegionDefault || null
+  );
+  const [destInAccount, setDestInAccount] = useState(
+    tmpTaskInfo.parametersObj?.destInAccount || YES_NO.NO
+  );
+  const [destAccountId, setDestAccountId] = useState(
+    tmpTaskInfo.parametersObj?.destAccountId || ""
+  );
+  const [destCredential, setDestCredential] = useState(
+    tmpTaskInfo.parametersObj?.destCredential || ""
+  );
+  const [destPrefix, setDestPrefix] = useState(
+    tmpTaskInfo.parametersObj?.destPrefix || ""
+  );
+  const [alarmEmail, setAlarmEmail] = useState(
+    tmpTaskInfo.parametersObj?.alarmEmail || ""
+  );
+
+  // Show Hidden Class
+  const [classSourceRegion, setClassSourceRegion] = useState("form-items");
+  const [classIsSourceInAccount, setClassIsSourceAccount] = useState(
+    "form-items"
+  );
+  const [classSrcAccountId, setClassSrcAccountId] = useState("form-items");
+  const [classSrcCredential, setClassSrcCredential] = useState("form-items");
+  const [classDockerImage, setClassDockerImage] = useState("form-items");
+  const [classImageList, setClassImageList] = useState("form-items");
+  const [classDestAccountId, setClassDestAccountId] = useState("form-items");
+  const [classDestCredential, setClassDestCredential] = useState("form-items");
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (sourceType === ECREnumSourceType.ECR) {
+      setClassSourceRegion("form-items");
+      setClassIsSourceAccount("form-items");
+      setClassSrcAccountId("form-items");
+      setClassSrcCredential("form-items");
+      setClassDockerImage("form-items");
+      if (sourceInAccount === YES_NO.YES) {
+        setClassSrcAccountId("hidden");
+        setClassSrcCredential("hidden");
+      }
+      if (sourceInAccount === YES_NO.NO) {
+        setClassSrcAccountId("form-items");
+        setClassSrcCredential("form-items");
+      }
+      if (srcList === EnumDockerImageType.ALL) {
+        setClassImageList("hidden");
+      }
+      if (srcList === EnumDockerImageType.SELECTED) {
+        setClassImageList("form-items");
+      }
+    }
+    if (sourceType === ECREnumSourceType.PUBLIC) {
+      setSrcList(EnumDockerImageType.SELECTED);
+      setClassSourceRegion("hidden");
+      setClassIsSourceAccount("hidden");
+      setClassSrcAccountId("hidden");
+      setClassSrcCredential("hidden");
+      setClassDockerImage("hidden");
+      setClassImageList("form-items");
+    }
+    if (destInAccount === YES_NO.YES) {
+      setClassDestAccountId("hidden");
+      setClassDestCredential("hidden");
+    }
+    if (destInAccount === YES_NO.NO) {
+      setClassDestAccountId("form-items");
+      setClassDestCredential("form-items");
+    }
+  }, [sourceType, sourceInAccount, destInAccount, srcList]);
 
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
@@ -73,25 +181,106 @@ const StepOne: React.FC = () => {
     }
   }, [i18n.language]);
 
-  const history = useHistory();
+  useEffect(() => {
+    if (paramData) {
+      // build New Data
+      const { description, ...parameters } = paramData;
+      tmpTaskInfo.description = description;
+      parameters.sourceType = sourceType;
+      if (sourceType === ECREnumSourceType.ECR) {
+        parameters.srcRegion = srcRegion;
+        parameters.srcAccountId = srcAccountId;
+        parameters.srcCredential = srcCredential;
+        parameters.sourceInAccount = sourceInAccount;
+        parameters.srcRegionDefault = srcRegionDefault;
+      } else {
+        parameters.srcRegion = "";
+        parameters.srcAccountId = "";
+        parameters.srcCredential = "";
+        parameters.sourceInAccount = "";
+        parameters.srcRegionDefault = null;
+      }
+      parameters.srcList = srcList;
+      if (srcList === EnumDockerImageType.SELECTED) {
+        parameters.srcImageList = srcImageList;
+      } else {
+        parameters.srcImageList = "";
+      }
+      parameters.destInAccount = destInAccount;
+      if (destInAccount === YES_NO.NO) {
+        parameters.destAccountId = destAccountId;
+        parameters.destCredential = destCredential;
+      } else {
+        parameters.destAccountId = "";
+        parameters.destCredential = "";
+      }
+      parameters.destRegion = destRegion;
+      parameters.destRegionDefault = destRegionDefault;
+      dispatch({
+        type: "update task info",
+        taskInfo: Object.assign(tmpTaskInfo, { parametersObj: parameters }),
+      });
+      const toPath = "/create/step3/ECR";
+      history.push({
+        pathname: toPath,
+      });
+    }
+  }, [
+    tmpTaskInfo,
+    paramData,
+    dispatch,
+    srcList,
+    history,
+    srcAccountId,
+    destAccountId,
+    sourceInAccount,
+    destInAccount,
+    srcRegionDefault,
+    destRegionDefault,
+    srcRegion,
+    destRegion,
+    srcImageList,
+    srcCredential,
+    destCredential,
+    sourceType,
+  ]);
 
-  // useEffect(() => {
-  //   // if the taskInfo has no taskType, redirect to Step one
-  //   if (!tmpTaskInfo.hasOwnProperty("type")) {
-  //     const toPath = "/create/step1/ECR";
-  //     history.push({
-  //       pathname: toPath,
-  //     });
-  //   }
-  // }, [history, tmpTaskInfo]);
+  // Get Parameter List
+  async function getSSMParamsList() {
+    const apiData: any = await API.graphql({
+      query: listParameters,
+      variables: {},
+    });
+    if (
+      apiData &&
+      apiData.data &&
+      apiData.data.listParameters &&
+      apiData.data.listParameters.length > 0
+    ) {
+      setSSMParamList(apiData.data.listParameters);
+    }
+  }
+
+  useEffect(() => {
+    getSSMParamsList();
+  }, []);
+
+  useEffect(() => {
+    // if the taskInfo has no taskType, redirect to Step one
+    if (!tmpTaskInfo.hasOwnProperty("type")) {
+      const toPath = "/create/step1/ECR";
+      history.push({
+        pathname: toPath,
+      });
+    }
+  }, [history, tmpTaskInfo]);
+
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
 
   const onSubmit = (data: any) => {
-    console.info("data:", data);
-    // build the jobType
-    // Choose GET if source bucket is not in current account. Otherwise, choose PUT.
+    setParamData(data);
   };
 
   const goToHomePage = () => {
@@ -112,23 +301,38 @@ const StepOne: React.FC = () => {
     handleSubmit(onSubmit)();
   };
 
-  const changeSourceType = (event: any) => {
-    setSourceType(event.target.value);
+  const changeSrcRegion = (event: any, data: any) => {
+    if (data && data.value) {
+      setSrcRegionDefault(data);
+      setSrcRegion(data.value);
+    } else {
+      setSrcRegion("");
+    }
   };
 
-  const changeSourceInAccount = (event: any) => {
-    setSouceInAccount(event.target.value);
+  const changeDestRegion = (event: any, data: any) => {
+    if (data && data.value) {
+      setDestRegionDefault(data);
+      setDestRegion(data.value);
+    } else {
+      setDestRegion("");
+    }
   };
 
-  const changeDockerImageType = (event: any) => {
-    setDockerIamgeType(event.target.value);
+  const changeSrcImageList = (event: any) => {
+    setCurLength(event.target.value.length);
+    if (event.target.value.length >= MAX_LENGTH) {
+      setSrcImageList(event.target.value.substr(0, MAX_LENGTH - 1));
+    } else {
+      setSrcImageList(event.target.value);
+    }
   };
 
   return (
     <div className="drh-page">
       <LeftMenu />
       <div className="right">
-        <InfoBar />
+        <InfoBar page="ECR" />
         <div className="padding-left-40">
           <div className="page-breadcrumb">
             <Breadcrumbs
@@ -150,7 +354,6 @@ const StepOne: React.FC = () => {
             <div className="creation-info">
               <div className="creation-title">
                 {t("creation.step2.taskDetail")}
-                <InfoSpan />
               </div>
               <div className="box-shadow card-list">
                 <div className="option">
@@ -170,8 +373,9 @@ const StepOne: React.FC = () => {
                             <label>
                               <div>
                                 <input
-                                  // defaultValue={formDefaultValue.sourceType}
-                                  onChange={changeSourceType}
+                                  onChange={(event: any) => {
+                                    setSourceType(event.target.value);
+                                  }}
                                   value={item.value}
                                   checked={sourceType === item.value}
                                   name="option-type"
@@ -196,30 +400,41 @@ const StepOne: React.FC = () => {
                       {t("creation.step2.settings.source.title")}
                     </div>
                     <div className="option-content">
-                      <div className="form-items">
+                      <div className={classSourceRegion}>
                         <div className="title">Source Region</div>
                         <div className="desc">
                           You can enter region name or region code.
                         </div>
                         <div className="select">
+                          <input
+                            name="srcRegion"
+                            defaultValue={srcRegion}
+                            ref={register}
+                            className="hidden"
+                            type="text"
+                          />
+                          <SearchIcon className="input-icon" />
                           <Autocomplete
-                            id="combo-box-demo"
                             options={AWS_REGION_LIST}
+                            value={srcRegionDefault}
+                            onChange={changeSrcRegion}
                             getOptionLabel={(option) => option.name}
-                            style={{ width: 300 }}
+                            style={{ width: 565 }}
+                            // getOptionSelected={(option, value) =>
+                            //   option.value === value.value
+                            // }
                             renderInput={(params) => (
                               <div ref={params.InputProps.ref}>
                                 <input
                                   type="search"
                                   autoComplete="off"
-                                  name="srcBucketName"
                                   style={{
-                                    width: 300,
+                                    width: 565,
                                     height: 32,
                                     border: "1px solid #aab7b8",
                                     background: "#fff",
                                     lineHeight: "32px",
-                                    padding: "0 5px",
+                                    padding: "0 5px 0 32px",
                                   }}
                                   {...params.inputProps}
                                 />
@@ -227,25 +442,26 @@ const StepOne: React.FC = () => {
                             )}
                           />
                         </div>
+                        <div className="error">
+                          {errors.srcRegion &&
+                            errors.srcRegion.type === "required" &&
+                            "Source region Required"}
+                        </div>
                       </div>
 
-                      <div className="form-items">
+                      <div className={classIsSourceInAccount}>
                         <div className="title">Is source in this account?</div>
                         <div className="desc">
                           Select YES, if the Amazon ECR is in current account.
                         </div>
                         <div className="select">
                           <Select
-                            MenuProps={{
-                              getContentAnchorEl: null,
-                              anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left",
-                              },
-                            }}
+                            MenuProps={MenuProps}
                             value={sourceInAccount}
-                            onChange={changeSourceInAccount}
-                            input={<SelectInput />}
+                            onChange={(event: any) => {
+                              setSouceInAccount(event.target.value);
+                            }}
+                            input={<SelectInput style={{ width: 565 }} />}
                           >
                             {YES_NO_LIST.map((element, index) => {
                               return (
@@ -260,63 +476,102 @@ const StepOne: React.FC = () => {
                             })}
                           </Select>
                         </div>
+                        <div className="error"></div>
                       </div>
 
-                      <div className="form-items">
+                      <div className={classSrcAccountId}>
                         <div className="title">AWS Account ID</div>
                         <div className="desc">
-                          Enter the AWS Account ID (11 digits).
+                          Enter the AWS Account ID (12 digits).
                         </div>
                         <div>
                           <input
-                            defaultValue={
-                              tmpTaskInfo.parametersObj &&
-                              tmpTaskInfo.parametersObj.srcBucketPrefix
-                            }
-                            name="awsAccountId"
+                            name="srcAccountId"
+                            value={srcAccountId}
+                            onChange={(event: any) => {
+                              setSrcAccountId(event.target.value);
+                            }}
                             ref={register}
                             className="option-input"
-                            placeholder="11 digits Account ID"
+                            placeholder="12 digits Account ID"
                             type="text"
                           />
                         </div>
+                        <div className="error"></div>
                       </div>
 
-                      <div className="form-items">
-                        <div className="title">Credentials Store</div>
+                      <div className={classSrcCredential}>
+                        <div className="title">
+                          Credentials Store <InfoSpan spanType="CREDENTIAL" />
+                        </div>
                         <div className="desc">
-                          Select the <a href="/#/">Parameter Store</a> which
-                          stores the credentials.
+                          Select the{" "}
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="a-link"
+                            href={SSM_LINK + "?region=" + region}
+                          >
+                            Parameter Store
+                          </a>{" "}
+                          which stores the credentials.
                         </div>
                         <div>
+                          <input
+                            name="srcCredential"
+                            defaultValue={srcCredential}
+                            ref={register}
+                            className="hidden"
+                            type="text"
+                          />
                           <Select
-                            MenuProps={{
-                              getContentAnchorEl: null,
-                              anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left",
-                              },
+                            MenuProps={MenuProps}
+                            value={srcCredential}
+                            displayEmpty
+                            renderValue={
+                              srcCredential !== ""
+                                ? undefined
+                                : () => (
+                                    <div className="gray">
+                                      Please select a parameter store
+                                    </div>
+                                  )
+                            }
+                            onChange={(event: any) => {
+                              setSrcCredential(event.target.value);
                             }}
-                            value={sourceInAccount}
-                            onChange={changeSourceInAccount}
-                            input={<SelectInput />}
+                            input={<SelectInput style={{ width: 490 }} />}
                           >
-                            {YES_NO_LIST.map((element, index) => {
+                            {ssmParamList.map((param: any, index: number) => {
                               return (
                                 <MenuItem
-                                  className="font14px"
                                   key={index}
-                                  value={element.value}
+                                  className="font14px"
+                                  value={param.name}
                                 >
-                                  {element.name}
+                                  {param.name}
                                 </MenuItem>
                               );
                             })}
                           </Select>
+                          <NormalButton
+                            style={{ height: 32 }}
+                            className="margin-left-10"
+                            onClick={() => {
+                              getSSMParamsList();
+                            }}
+                          >
+                            <RefreshIcon width="10" />
+                          </NormalButton>
+                        </div>
+                        <div className="error">
+                          {errors.srcCredential &&
+                            errors.srcCredential.type === "required" &&
+                            "Source Credential is required"}
                         </div>
                       </div>
 
-                      <div className="form-items">
+                      <div className={classDockerImage}>
                         <div className="title">Docker Images</div>
                         <div className="desc">
                           Select the docker images to replicate.
@@ -325,7 +580,7 @@ const StepOne: React.FC = () => {
                           {DOCKER_IMAGE_TYPE.map((item: any, index: any) => {
                             const stClass = classNames({
                               "st-item": true,
-                              active: dockerImageType === item.value,
+                              active: srcList === item.value,
                             });
                             return (
                               <div key={index} className={stClass}>
@@ -333,9 +588,11 @@ const StepOne: React.FC = () => {
                                   <div>
                                     <input
                                       // defaultValue={formDefaultValue.sourceType}
-                                      onChange={changeDockerImageType}
+                                      onChange={(event: any) => {
+                                        setSrcList(event.target.value);
+                                      }}
                                       value={item.value}
-                                      checked={dockerImageType === item.value}
+                                      checked={srcList === item.value}
                                       name="option-type"
                                       type="radio"
                                     />
@@ -347,19 +604,28 @@ const StepOne: React.FC = () => {
                             );
                           })}
                         </div>
+                      </div>
+
+                      <div className={classImageList}>
                         <div>
-                          <div>Image List</div>
-                          <div>
+                          <div className="title">Image List</div>
+                          <div className="desc">
                             Enter all images in format of
                             &lt;image-name&gt;:&lt;tag&gt;, delimited by comma.
                             If tag is ommited, the latest tag will be used.
                           </div>
                           <div>
                             <textarea
-                              defaultValue={defaultTxtValue}
-                              rows={10}
-                              style={{ width: "100%" }}
+                              className="option-textarea"
+                              ref={register}
+                              name="srcImageList"
+                              value={srcImageList}
+                              onChange={changeSrcImageList}
+                              placeholder={defaultTxtValue}
+                              rows={7}
+                              // defaultValue={}
                             ></textarea>
+                            <div className="max-tips">{`${curLength}/${MAX_LENGTH}`}</div>
                           </div>
                         </div>
                       </div>
@@ -374,55 +640,69 @@ const StepOne: React.FC = () => {
                     </div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">Source Region</div>
+                        <div className="title">Destination Region</div>
                         <div className="desc">
                           You can enter region name or region code.
                         </div>
                         <div className="select">
+                          <input
+                            name="destRegion"
+                            defaultValue={destRegion}
+                            ref={register}
+                            className="hidden"
+                            type="text"
+                          />
+                          <SearchIcon className="input-icon" />
                           <Autocomplete
-                            id="combo-box-demo"
                             options={AWS_REGION_LIST}
+                            value={destRegionDefault}
+                            // getOptionSelected={(option, value) =>
+                            //   option.value === value.value
+                            // }
+                            onChange={changeDestRegion}
                             getOptionLabel={(option) => option.name}
-                            style={{ width: 300 }}
+                            style={{ width: 565 }}
                             renderInput={(params) => (
                               <div ref={params.InputProps.ref}>
                                 <input
-                                  name="srcBucketName"
+                                  type="search"
                                   autoComplete="off"
                                   style={{
-                                    width: 300,
+                                    width: 565,
                                     height: 32,
                                     border: "1px solid #aab7b8",
                                     background: "#fff",
                                     lineHeight: "32px",
-                                    padding: "0 5px",
+                                    padding: "0 5px 0 32px",
                                   }}
-                                  type="text"
                                   {...params.inputProps}
                                 />
                               </div>
                             )}
                           />
                         </div>
+                        <div className="error">
+                          {errors.destRegion &&
+                            errors.destRegion.type === "required" &&
+                            "Destination region required"}
+                        </div>
                       </div>
 
                       <div className="form-items">
-                        <div className="title">Is source in this account?</div>
+                        <div className="title">
+                          Is destination in this account?
+                        </div>
                         <div className="desc">
                           Select YES, if the Amazon ECR is in current account.
                         </div>
                         <div className="select">
                           <Select
-                            MenuProps={{
-                              getContentAnchorEl: null,
-                              anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left",
-                              },
+                            MenuProps={MenuProps}
+                            value={destInAccount}
+                            onChange={(event: any) => {
+                              setDestInAccount(event.target.value);
                             }}
-                            value={sourceInAccount}
-                            onChange={changeSourceInAccount}
-                            input={<SelectInput />}
+                            input={<SelectInput style={{ width: 565 }} />}
                           >
                             {YES_NO_LIST.map((element, index) => {
                               return (
@@ -439,57 +719,94 @@ const StepOne: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="form-items">
+                      <div className={classDestAccountId}>
                         <div className="title">AWS Account ID</div>
                         <div className="desc">
-                          Enter the AWS Account ID (11 digits).
+                          Enter the AWS Account ID (12 digits).
                         </div>
                         <div>
                           <input
-                            defaultValue={
-                              tmpTaskInfo.parametersObj &&
-                              tmpTaskInfo.parametersObj.srcBucketPrefix
-                            }
-                            name="awsAccountId"
+                            name="destAccountId"
+                            value={destAccountId}
+                            onChange={(event: any) => {
+                              setDestAccountId(event.target.value);
+                            }}
                             ref={register}
                             className="option-input"
-                            placeholder="11 digits Account ID"
+                            placeholder="12 digits Account ID"
                             type="text"
                           />
                         </div>
                       </div>
 
-                      <div className="form-items">
-                        <div className="title">Credentials Store</div>
+                      <div className={classDestCredential}>
+                        <div className="title">
+                          Credentials Store <InfoSpan spanType="CREDENTIAL" />
+                        </div>
                         <div className="desc">
-                          Select the <a href="/#/">Parameter Store</a> which
-                          stores the credentials.
+                          Select the{" "}
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="a-link"
+                            href={SSM_LINK + "?region=" + region}
+                          >
+                            Parameter Store
+                          </a>{" "}
+                          which stores the credentials.
                         </div>
                         <div>
+                          <input
+                            name="destCredential"
+                            defaultValue={destCredential}
+                            ref={register}
+                            className="hidden"
+                            type="text"
+                          />
                           <Select
-                            MenuProps={{
-                              getContentAnchorEl: null,
-                              anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left",
-                              },
+                            MenuProps={MenuProps}
+                            value={destCredential}
+                            displayEmpty
+                            renderValue={
+                              destCredential !== ""
+                                ? undefined
+                                : () => (
+                                    <div className="gray">
+                                      Please select a parameter store
+                                    </div>
+                                  )
+                            }
+                            onChange={(event: any) => {
+                              setDestCredential(event.target.value);
                             }}
-                            value={sourceInAccount}
-                            onChange={changeSourceInAccount}
-                            input={<SelectInput />}
+                            input={<SelectInput style={{ width: 490 }} />}
                           >
-                            {YES_NO_LIST.map((element, index) => {
+                            {ssmParamList.map((param: any, index: number) => {
                               return (
                                 <MenuItem
-                                  className="font14px"
                                   key={index}
-                                  value={element.value}
+                                  className="font14px"
+                                  value={param.name}
                                 >
-                                  {element.name}
+                                  {param.name}
                                 </MenuItem>
                               );
                             })}
                           </Select>
+                          <NormalButton
+                            style={{ height: 32 }}
+                            className="margin-left-10"
+                            onClick={() => {
+                              getSSMParamsList();
+                            }}
+                          >
+                            <RefreshIcon width="10" />
+                          </NormalButton>
+                        </div>
+                        <div className="error">
+                          {errors.destCredential &&
+                            errors.destCredential.type === "required" &&
+                            "Source Credential is required"}
                         </div>
                       </div>
 
@@ -502,7 +819,11 @@ const StepOne: React.FC = () => {
                         </div>
                         <div>
                           <input
-                            name="imagePrefix"
+                            name="destPrefix"
+                            value={destPrefix}
+                            onChange={(event: any) => {
+                              setDestPrefix(event.target.value);
+                            }}
                             ref={register}
                             className="option-input"
                             placeholder="Prefix"
@@ -516,8 +837,29 @@ const StepOne: React.FC = () => {
 
                 <div className="box-shadow card-list">
                   <div className="option">
-                    <div className="option-title">Advanced Settings</div>
+                    <div className="option-title">More</div>
                     <div className="option-content">
+                      <div className="form-items">
+                        <div className="title">
+                          {t("creation.step2.settings.more.description")}
+                        </div>
+                        <div className="desc">
+                          {t("creation.step2.settings.more.descriptionDesc")}
+                        </div>
+                        <div>
+                          <input
+                            defaultValue={tmpTaskInfo.description}
+                            name="description"
+                            ref={register({ required: true })}
+                            className="option-input"
+                            placeholder={t(
+                              "creation.step2.settings.more.description"
+                            )}
+                            type="text"
+                          />
+                        </div>
+                      </div>
+
                       <div className="form-items">
                         <div className="title">
                           Alarm Notification - <i>optional</i>
@@ -528,6 +870,10 @@ const StepOne: React.FC = () => {
                         <div>
                           <input
                             name="alarmEmail"
+                            value={alarmEmail}
+                            onChange={(event: any) => {
+                              setAlarmEmail(event.target.value);
+                            }}
                             ref={register}
                             className="option-input"
                             placeholder="abc@example.com"

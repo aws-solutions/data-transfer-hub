@@ -55,7 +55,7 @@
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
           "objectPrefix": "数据桶对象前缀",
-          "prefixDesc": "只会复制指定的前缀的数据对象."
+          "prefixDesc": "对象将会复制到指定的前缀目录."
         },
         "credential": {
           "title": "凭证",

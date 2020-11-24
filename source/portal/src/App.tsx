@@ -11,22 +11,26 @@ import DataLoading from "./common/Loading";
 import TopBar from "./common/TopBar";
 
 import Home from "./pages/home/Home";
-import Detail from "./pages/detail/Detail";
+import DetailS3 from "./pages/detail/DetailS3";
+import DetailECR from "./pages/detail/DetailECR";
 import StepOne from "./pages/creation/StepOne";
 import StepTwoS3 from "./pages/creation/s3/StepTwoS3";
 import StepThreeS3 from "./pages/creation/s3/StepThreeS3";
 import StepTwoECR from "./pages/creation/ecr/StepTwoECR";
+import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
 import { EnumTaskType } from "./assets/types/index";
 
 import "./App.scss";
 
 const HomePage = withTranslation()(Home);
-const DetailPage = withTranslation()(Detail);
+const DetailPageS3 = withTranslation()(DetailS3);
+const DetailPageECR = withTranslation()(DetailECR);
 const StepOnePage = withTranslation()(StepOne);
 const StepTwoS3Page = withTranslation()(StepTwoS3);
 const StepThreeS3Page = withTranslation()(StepThreeS3);
 const StepTwoECRPage = withTranslation()(StepTwoECR);
+const StepThreeECRPage = withTranslation()(StepThreeECR);
 const ListPage = withTranslation()(List);
 
 // loading component for suspense fallback
@@ -51,6 +55,7 @@ const App: React.FC = () => {
     Axios.get("/aws-exports.json?timeStamp=" + timeStamp).then((res) => {
       const ConfigObj = res.data;
       window.localStorage.setItem("configJson", JSON.stringify(ConfigObj));
+      window.localStorage.setItem("cur-region", ConfigObj.aws_project_region);
       Amplify.configure(ConfigObj);
       setLoadingConfig(false);
     });
@@ -88,12 +93,26 @@ const App: React.FC = () => {
           component={StepTwoECRPage}
         ></Route>
         <Route
-          path="/create/step3/s3"
+          path={`/create/step3/${EnumTaskType.S3}`}
           exact
           component={StepThreeS3Page}
         ></Route>
+        <Route
+          path={`/create/step3/${EnumTaskType.ECR}`}
+          exact
+          component={StepThreeECRPage}
+        ></Route>
         <Route path="/task/list" exact component={ListPage}></Route>
-        <Route path="/task/detail/:id" exact component={DetailPage}></Route>
+        <Route
+          path={`/task/detail/${EnumTaskType.S3}/:id`}
+          exact
+          component={DetailPageS3}
+        ></Route>
+        <Route
+          path={`/task/detail/${EnumTaskType.ECR}/:id`}
+          exact
+          component={DetailPageECR}
+        ></Route>
       </HashRouter>
     </div>
   ) : (

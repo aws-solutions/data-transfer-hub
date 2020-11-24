@@ -13,6 +13,7 @@ import Card from "./comps/Card";
 import NextButton from "../../common/comp/PrimaryButton";
 import SelectInput from "../../common/comp/SelectInput";
 import { TYPE_LIST, EnumTaskType } from "../../assets/types/index";
+import { MenuProps } from "../../assets/config/const";
 
 import "./Home.scss";
 
@@ -140,13 +141,7 @@ const Home: React.FC = () => {
                 <div className="dest">{t("home.title.destinationType")}</div>
                 <div className="select">
                   <Select
-                    MenuProps={{
-                      getContentAnchorEl: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "left",
-                      },
-                    }}
+                    MenuProps={MenuProps}
                     value={taskType}
                     onChange={handleChange}
                     input={<SelectInput style={{ width: 300 }} />}

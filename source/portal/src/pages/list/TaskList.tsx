@@ -20,6 +20,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 // import Pagination from "@material-ui/lab/Pagination";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { withStyles } from "@material-ui/core/styles";
+import Menu, { MenuProps } from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 import { API } from "aws-amplify";
 import { listTasks } from "../../graphql/queries";
@@ -50,9 +54,46 @@ import PAGE_PREV_DISABLED from "@material-ui/icons/NavigateBefore";
 import PAGE_NEXT from "@material-ui/icons/NavigateNext";
 import PAGE_NEXT_DISABLED from "@material-ui/icons/NavigateNext";
 
+import {
+  TASK_STATUS_MAP,
+  EnumBucketType,
+  EnumTaskStatus,
+  EnumTaskType,
+  ECREnumSourceType,
+} from "../../assets/types/index";
+import { YES_NO, AWS_REGION_LIST } from "../../assets/config/const";
+
 // import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
-import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props: MenuProps) => (
+  <Menu
+    style={{ borderRadius: 0 }}
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "left",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "left",
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    width: 130,
+    "& .MuiTypography-body1": {
+      fontSize: 14,
+    },
+  },
+}))(MenuItem);
 
 const STATUS_ICON_MAP: any = {
   STARTING: <STATUS_PENDING fontSize="small" />,
@@ -79,6 +120,16 @@ const List: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   const { createTaskFlag } = useMappedState(mapState);
 
   const history = useHistory();
@@ -93,8 +144,6 @@ const List: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [alertType, setAlertType] = useState("");
 
   async function getTaskList(token: string | null, direction: string) {
     setIsLoading(true);
@@ -107,7 +156,7 @@ const List: React.FC = () => {
     });
     // Build Pagination Data
     // First build Table Data
-    const dataListArr: any = [];
+    // const dataListArr: any = [];
     // If click the next, set New Next token
     if (direction === "next") {
       if (apiData.data.listTasks.nextToken) {
@@ -116,20 +165,7 @@ const List: React.FC = () => {
         setIsLast(true);
       }
     }
-    apiData.data.listTasks.items.forEach((element: any) => {
-      if (element.parameters && element.parameters.length > 0) {
-        element.parameters.forEach((item: any) => {
-          if (item.ParameterKey === "srcBucketName") {
-            element.srcName = item.ParameterValue;
-          }
-          if (item.ParameterKey === "destBucketName") {
-            element.destName = item.ParameterValue;
-          }
-        });
-      }
-      dataListArr.push(element);
-    });
-    setTaskListData(dataListArr);
+    setTaskListData(apiData?.data?.listTasks?.items || []);
     setIsLoading(false);
   }
 
@@ -147,19 +183,14 @@ const List: React.FC = () => {
   }, [dispatch]);
 
   const goToStepOne = () => {
-    const toPath = "/create/step1";
+    const toPath = "/create/step1/S3";
     history.push({
       pathname: toPath,
     });
   };
 
   const goToDetail = () => {
-    if (curSelectTask === null) {
-      setAlertType("detail");
-      setOpenAlert(true);
-      return;
-    }
-    const toPath = `/task/detail/${curSelectTask.id}`;
+    const toPath = `/task/detail/${curSelectTask.type}/${curSelectTask.id}`;
     history.push({
       pathname: toPath,
     });
@@ -179,8 +210,8 @@ const List: React.FC = () => {
       refreshData();
       console.info("stopResData:", stopResData);
     } catch (error) {
-      console.error("error:", error.errors[0].message.toString());
-      const errorMsg = error.errors[0].message.toString();
+      console.error("error:", error?.errors[0]?.message?.toString() || "Error");
+      const errorMsg = error?.errors[0]?.message?.toString() || "Error";
       setIsStopLoading(false);
       setMessageOpen(true);
       setErrorMessage(errorMsg);
@@ -189,12 +220,85 @@ const List: React.FC = () => {
   }
 
   const stopCurTask = () => {
-    if (curSelectTask !== null) {
-      setOpen(true);
-    } else {
-      setAlertType("stop");
-      setOpenAlert(true);
+    setAnchorEl(null);
+    setOpen(true);
+  };
+
+  const cloneCurTask = () => {
+    setAnchorEl(null);
+    console.info("curSelectTask:", curSelectTask);
+    const tmpTaskInfo = curSelectTask;
+    tmpTaskInfo.parametersObj = {};
+    // when need to clone task type is S3
+    if (curSelectTask.type === EnumTaskType.S3) {
+      if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
+        curSelectTask.parameters.forEach((element: any) => {
+          if (element.ParameterKey === "jobType") {
+            if (element.ParameterValue === "PUT") {
+              tmpTaskInfo.parametersObj.bucketInAccount = EnumBucketType.Source;
+            } else {
+              tmpTaskInfo.parametersObj.bucketInAccount =
+                EnumBucketType.Destination;
+            }
+          }
+          tmpTaskInfo.parametersObj[element.ParameterKey] =
+            element.ParameterValue;
+        });
+      }
     }
+    if (curSelectTask.type === EnumTaskType.ECR) {
+      if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
+        curSelectTask.parameters.forEach((element: any) => {
+          if (element.ParameterKey === "srcAccountId") {
+            if (element.ParameterValue === "") {
+              tmpTaskInfo.parametersObj.sourceInAccount = YES_NO.YES;
+            } else {
+              tmpTaskInfo.parametersObj.sourceInAccount = YES_NO.NO;
+            }
+          }
+          if (element.ParameterKey === "destAccountId") {
+            if (element.ParameterValue === "") {
+              tmpTaskInfo.parametersObj.destInAccount = YES_NO.YES;
+            } else {
+              tmpTaskInfo.parametersObj.destInAccount = YES_NO.NO;
+            }
+          }
+          if (element.ParameterKey === "srcRegion") {
+            const srcRegionName = AWS_REGION_LIST.find(
+              (ele) => ele.value === element.ParameterValue
+            )?.name;
+            if (srcRegionName) {
+              tmpTaskInfo.parametersObj.srcRegionDefault = {
+                name: srcRegionName,
+                value: element.ParameterValue,
+              };
+            }
+          }
+          if (element.ParameterKey === "destRegion") {
+            const destRegionName = AWS_REGION_LIST.find(
+              (ele) => ele.value === element.ParameterValue
+            )?.name;
+            if (destRegionName) {
+              tmpTaskInfo.parametersObj.destRegionDefault = {
+                name: destRegionName,
+                value: element.ParameterValue,
+              };
+            }
+          }
+          tmpTaskInfo.parametersObj[element.ParameterKey] =
+            element.ParameterValue;
+        });
+      }
+    }
+    dispatch({
+      type: "update task info",
+      taskInfo: tmpTaskInfo,
+    });
+    // Redirect to Create S3 Task Step two
+    const toPath = "/create/step2/" + curSelectTask.type;
+    history.push({
+      pathname: toPath,
+    });
   };
 
   type StatusType = {
@@ -258,31 +362,52 @@ const List: React.FC = () => {
     stopTaskFunc(curSelectTask.id);
   };
 
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
-
   const handleCloseMessage = () => {
     setMessageOpen(false);
   };
 
+  const getParamsValueByName = (name: string, paramList: any) => {
+    return paramList.find((item: any) => item.ParameterKey === name)
+      .ParameterValue;
+  };
+
+  const buildTaskSource = (item: any) => {
+    if (item.type === EnumTaskType.S3) {
+      return (
+        getParamsValueByName("sourceType", item.parameters) +
+        "/" +
+        getParamsValueByName("srcBucketName", item.parameters)
+      );
+    }
+    if (item.type === EnumTaskType.ECR) {
+      if (
+        getParamsValueByName("sourceType", item.parameters) ===
+        ECREnumSourceType.PUBLIC
+      ) {
+        return getParamsValueByName("sourceType", item.parameters);
+      }
+      if (
+        getParamsValueByName("sourceType", item.parameters) ===
+        ECREnumSourceType.ECR
+      ) {
+        return getParamsValueByName("srcRegion", item.parameters);
+      }
+    }
+    return "";
+  };
+
+  const buildTaskDestination = (item: any) => {
+    if (item.type === EnumTaskType.S3) {
+      return getParamsValueByName("destBucketName", item.parameters);
+    }
+    if (item.type === EnumTaskType.ECR) {
+      return getParamsValueByName("destRegion", item.parameters);
+    }
+    return "";
+  };
+
   return (
     <div className="drh-page">
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openAlert}
-        onClose={handleCloseAlert}
-        autoHideDuration={1500}
-      >
-        <Alert severity="warning">
-          {alertType === "detail" && (
-            <span>{t("taskList.tips.selectTask")}</span>
-          )}
-          {alertType === "stop" && (
-            <span>{t("taskList.tips.selectTaskStop")}</span>
-          )}
-        </Alert>
-      </Snackbar>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -373,7 +498,43 @@ const List: React.FC = () => {
                     >
                       {t("btn.viewDetail")}
                     </NormalButton>
-                    <NormalButton
+                    <div style={{ display: "inline-block" }}>
+                      <NormalButton
+                        disabled={curSelectTask === null}
+                        aria-controls="customized-menu"
+                        onClick={handleClick}
+                      >
+                        Task Action <span style={{ marginLeft: 3 }}>▼</span>
+                      </NormalButton>
+                      <StyledMenu
+                        id="customized-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleCloseMenu}
+                      >
+                        {!(
+                          curSelectTask === null ||
+                          curSelectTask.progress === EnumTaskStatus.STOPPING ||
+                          curSelectTask.progress === EnumTaskStatus.STOPPED
+                        ) && (
+                          <StyledMenuItem>
+                            <ListItemText
+                              onClick={stopCurTask}
+                              primary="Stop Task"
+                            />
+                          </StyledMenuItem>
+                        )}
+                        <StyledMenuItem>
+                          <ListItemText
+                            onClick={cloneCurTask}
+                            primary="Clone Task"
+                          />
+                        </StyledMenuItem>
+                      </StyledMenu>
+                    </div>
+
+                    {/* <NormalButton
                       disabled={
                         curSelectTask === null ||
                         curSelectTask.progress === EnumTaskStatus.STOPPING ||
@@ -382,7 +543,7 @@ const List: React.FC = () => {
                       onClick={stopCurTask}
                     >
                       {t("btn.stop")}
-                    </NormalButton>
+                    </NormalButton> */}
                     <PrimaryButton onClick={goToStepOne}>
                       {t("btn.createTask")}
                     </PrimaryButton>
@@ -476,21 +637,23 @@ const List: React.FC = () => {
                             />
                           </div>
                           <div className="table-item item-id">
-                            <Link to={`/task/detail/${element.id}`}>
+                            <Link
+                              to={`/task/detail/${element.type}/${element.id}`}
+                            >
                               {element.id}
                             </Link>
                           </div>
                           <div
                             className="table-item body-item"
-                            title={element.srcName}
+                            title={buildTaskSource(element)}
                           >
-                            {element.srcName}
+                            {buildTaskSource(element)}
                           </div>
                           <div
                             className="table-item body-item"
-                            title={element.destName}
+                            title={buildTaskDestination(element)}
                           >
-                            {element.destName}
+                            {buildTaskDestination(element)}
                           </div>
                           <div className="table-item body-item">
                             {element.type}
