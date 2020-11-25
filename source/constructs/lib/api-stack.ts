@@ -20,7 +20,7 @@ import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
 
-const PLUGIN_TEMPLATE_S3 = 'https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-component-s3/v1.0.0/Aws-data-replication-component-s3.template';
+const PLUGIN_TEMPLATE_S3 = 'https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-component-s3/v1.0.1/Aws-data-replication-component-s3.template';
 const PLUGIN_TEMPLATE_ECR = 'https://drh-solution.s3-us-west-2.amazonaws.com/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template';
 
 export interface ApiProps {

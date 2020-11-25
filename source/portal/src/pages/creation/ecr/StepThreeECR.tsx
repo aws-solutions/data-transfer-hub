@@ -64,7 +64,6 @@ const StepOne: React.FC = () => {
 
   const { tmpTaskInfo } = useMappedState(mapState);
   const [paramsList, setParamList] = useState<any>([]);
-  const [clusterListLength, setClusterListLength] = useState<number>(0);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -86,11 +85,24 @@ const StepOne: React.FC = () => {
   useEffect(() => {
     console.info("tmpTaskInfo:", tmpTaskInfo);
     const NOT_PARAMS: Array<string> = ["srcRegionDefault", "destRegionDefault"];
+    const NOT_PARAMS_TASK: Array<string> = [
+      "sourceInAccount",
+      "srcRegionDefault",
+      "destInAccount",
+      "destRegionDefault",
+    ];
     const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
     const tmpParamsArr = [];
+    const taskParamArr = [];
     for (const key in parametersObj) {
       if (NOT_PARAMS.indexOf(key) < 0) {
         tmpParamsArr.push({
+          ParameterKey: key,
+          ParameterValue: parametersObj[key],
+        });
+      }
+      if (NOT_PARAMS_TASK.indexOf(key) < 0) {
+        taskParamArr.push({
           ParameterKey: key,
           ParameterValue: parametersObj[key],
         });
@@ -101,19 +113,18 @@ const StepOne: React.FC = () => {
       window.localStorage.getItem("configJson") as string
     );
     const clusterData = configJson.taskCluster;
-    setClusterListLength(Object.keys(clusterData).length);
     for (const key in clusterData) {
       if (key === "ecsSubnets") {
-        tmpParamsArr.push({
+        taskParamArr.push({
           ParameterKey: "ecsSubnetA",
           ParameterValue: clusterData[key][0],
         });
-        tmpParamsArr.push({
+        taskParamArr.push({
           ParameterKey: "ecsSubnetB",
           ParameterValue: clusterData[key][1],
         });
       } else {
-        tmpParamsArr.push({
+        taskParamArr.push({
           ParameterKey: key,
           ParameterValue: clusterData[key],
         });
@@ -127,13 +138,14 @@ const StepOne: React.FC = () => {
         delete createTaskInfo[key];
       }
     }
-    createTaskInfo.parameters = tmpParamsArr;
+    createTaskInfo.parameters = taskParamArr;
     setCreateTaskGQL(createTaskInfo);
   }, [tmpTaskInfo]);
 
   async function createTask() {
     setIsCreating(true);
     console.info("createTaskGQL:", createTaskGQL);
+    // remove srcInAccount and destInAccount
     const createTaskData = await API.graphql({
       query: createTaskMutaion,
       variables: { input: createTaskGQL },
@@ -240,7 +252,7 @@ const StepOne: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - clusterListLength - 2})</span>
+                    <span>({paramsList.length - 2})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">
