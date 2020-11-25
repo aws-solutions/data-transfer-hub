@@ -440,16 +440,16 @@ const StepOne: React.FC = () => {
                           <InfoSpan spanType="CREDENTIAL" />
                         </div>
                         <div className="desc">
-                          Select the{" "}
+                          {t("creation.tips.store1")}{" "}
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
                             href={SSM_LINK + "?region=" + region}
                           >
-                            Parameter Store
+                            {t("creation.tips.store2")}
                           </a>{" "}
-                          which stores the credentials.
+                          {t("creation.tips.store3")}
                         </div>
                         <div>
                           <div>
@@ -469,7 +469,7 @@ const StepOne: React.FC = () => {
                                   ? undefined
                                   : () => (
                                       <div className="gray">
-                                        Please select a parameter store
+                                        {t("creation.tips.requiredCredential")}
                                       </div>
                                     )
                               }
@@ -535,14 +535,18 @@ const StepOne: React.FC = () => {
                           fontSize="large"
                         />
                       )}
-                      Advanced Options
+                      {t("creation.step2.settings.advance.title")}
                     </div>
                     {advancedShow && (
                       <div className="option-content">
                         <div className="form-items">
-                          <div className="title">Lambda Memory</div>
+                          <div className="title">
+                            {t("creation.step2.settings.advance.lambdaMemory")}
+                          </div>
                           <div className="desc">
-                            Lambda Memory, default to 256 MB
+                            {t(
+                              "creation.step2.settings.advance.LambdaMemoryDesc"
+                            )}
                           </div>
                           <div>
                             <Select
@@ -569,10 +573,15 @@ const StepOne: React.FC = () => {
                         </div>
 
                         <div className="form-items">
-                          <div className="title">Multipart Threshold</div>
+                          <div className="title">
+                            {t(
+                              "creation.step2.settings.advance.multipartThreshold"
+                            )}
+                          </div>
                           <div className="desc">
-                            Threshold Size for multipart upload in MB, default
-                            to 10 (MB)
+                            {t(
+                              "creation.step2.settings.advance.multipartThresholdDesc"
+                            )}
                           </div>
                           <div>
                             <Select
@@ -599,10 +608,11 @@ const StepOne: React.FC = () => {
                         </div>
 
                         <div className="form-items">
-                          <div className="title">Chunk Size</div>
+                          <div className="title">
+                            {t("creation.step2.settings.advance.chunkSize")}
+                          </div>
                           <div className="desc">
-                            Chunk Size for multipart upload in MB, default to 5
-                            (MB)
+                            {t("creation.step2.settings.advance.chunkSizeDesc")}
                           </div>
                           <div>
                             <Select
@@ -629,10 +639,13 @@ const StepOne: React.FC = () => {
                         </div>
 
                         <div className="form-items">
-                          <div className="title">Max Threads</div>
+                          <div className="title">
+                            {t("creation.step2.settings.advance.maxThreads")}
+                          </div>
                           <div className="desc">
-                            Max Theads to run multipart upload in lambda,
-                            default to 10
+                            {t(
+                              "creation.step2.settings.advance.maxThreadsDesc"
+                            )}
                           </div>
                           <div>
                             <Select

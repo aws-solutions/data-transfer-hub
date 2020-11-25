@@ -221,7 +221,7 @@ const StepOne: React.FC = () => {
                       {t("creation.step3.step1EngineSubEngine")}
                     </div>
                     <div className="step3-desc">
-                      Amazon ECR Replication Engine v1.0
+                      {t("creation.step3.step1EngineSubEngineECRDesc")}
                     </div>
                     <div className="step3-title">
                       {t("creation.step3.step1Type")}
@@ -271,13 +271,6 @@ const StepOne: React.FC = () => {
                                     element.ParameterKey,
                                     element.ParameterValue
                                   )}
-                                  {/* {element.ParameterKey === "jobType" ? (
-                                    <span>
-                                      {JOB_TYPE_MAP[element.ParameterValue]}
-                                    </span>
-                                  ) : (
-                                    <span>{element.ParameterValue || "-"}</span>
-                                  )} */}
                                 </div>
                               </div>
                             )

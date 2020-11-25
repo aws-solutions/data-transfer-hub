@@ -34,6 +34,12 @@
     }
   },
   "creation": {
+    "tips": {
+      "requiredCredential": "Please select a parameter store",
+      "store1": "Select the",
+      "store2": "Parameter Store",
+      "store3": "which stores the credentials."
+    },
     "step1": {
       "engineType": "Select engine type",
       "engineOptions": "Engine options"
@@ -64,6 +70,17 @@
           "store": "Parameter Store name for Credentials",
           "storeDesc": "Choose the SSM Parameter Store which holds the credentials."
         },
+        "advance": {
+          "title": "Advanced Options",
+          "lambdaMemory": "Lambda Memory",
+          "LambdaMemoryDesc": "Lambda Memory, default to 256 MB",
+          "multipartThreshold": "Multipart Threshold",
+          "multipartThresholdDesc": "Threshold Size for multipart upload in MB, default to 10 (MB)",
+          "chunkSize": "Chunk Size",
+          "chunkSizeDesc": "Chunk Size for multipart upload in MB, default to 5 (MB)",
+          "maxThreads": "Max Threads",
+          "maxThreadsDesc":"Max Theads to run multipart upload in lambda, default to 10"
+        },
         "more": {
           "title": "More",
           "description": "Description",
@@ -73,12 +90,60 @@
         }
       }
     },
+    "step2ECR": {
+      "taskDetail": "Specify task details",
+      "sourceType": "Source Type",
+      "selectContainerType": "Select container registry type",
+      "settings": {
+        "source": {
+          "title": "Source settings",
+          "sourceRegion": "Source Region",
+          "sourceRegionDesc": "You can enter region name or region code.",
+          "sourceInAccount": "Is source in this account?",
+          "sourceInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
+          "accountId": "AWS Account ID",
+          "accountIdTips": "Enter the AWS Account ID (12 digits).",
+          "accountIdPlaceholder": "12 digits Account ID",
+          "credentialsStore": "Credentials Store ",
+          "tips": "Please select a parameter store",
+          "dockerImages": "Docker Images",
+          "dockerImagesDesc": "Select the docker images to replicate.",
+          "imageList": "Image List",
+          "image1": "Enter all images in format of",
+          "image2": "image-name",
+          "image3": "tag",
+          "image4": "delimited by comma. If tag is ommited, the latest tag will be used."
+        },
+        "dest": {
+          "title": "Destination settings",
+          "destinationRegion": "Destination Region",
+          "destinationRegionDesc": "You can enter region name or region code.",
+          "regionRequired": "Destination region required",
+          "destInAccount": "Is destination in this account?",
+          "destInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
+          "credentialsStore": "Credentials Store ",
+          "tips": "Please select a parameter store",
+          "prefix": "Prefix",
+          "optional": "optional",
+          "prefixDesc": "Append the prefix to all images. Default is none."
+        },
+        "more": {
+          "title": "More",
+          "description": "Description",
+          "descriptionDesc": "Description about this task",
+          "email": "Alarm Notification",
+          "optional": "optional",
+          "emailDesc": "Receive notificaiton when replication failed."
+        }
+      }
+    },
     "step3": {
       "reviewTitle": "Review task",
       "step1Title": "Step 1: Select engine type",
       "step1Engine": "Engine",
       "step1EngineSubEngine": "Engine",
       "step1EngineSubEngineDesc": "Amazon S3 Replication Engine V1.3",
+      "step1EngineSubEngineECRDesc": "Amazon ECR Replication Engine v1.0",
       "step1Type": "type",
       "step1TypeDesc": "Serverless Edition. Serverless edition is ideal for real-time transfer, and you pay as you go.",
       "step2Detail": "Step 2: Specify task details",
@@ -115,6 +180,7 @@
     "generalConfig": "General configuration",
     "engine": "Engine",
     "plugin": "S3 Replication Plugin v1.3",
+    "pluginECR": "Amazon ECR Plugin v1.0",
     "sourceType": "Source Type",
     "repStatus": "Replication Status",
     "details": "Details",
@@ -131,9 +197,22 @@
     "destPrefix": "Destination Bucket Prefix",
     "destInThisAccount": "Bucket in This Account?",
     "credentials": "Paramete Store for credentials",
+    "images": "Images",
     "option": "Options",
     "description": "Description",
-    "alarmEmail": "Alarm Email"
+    "alarmEmail": "Alarm Email",
+    "alarmEmailECR": "Alarm Notification",
+    "sourceRegion": "Source Region",
+    "sourceInAccount": "Is Source in current account?",
+    "srcAccountId": "Source Account Id",
+    "srcCredential": "Source Credential",
+    "destRegion": "Destination Region",
+    "destInAccount": "Is Destination in current account?",
+    "accountId": "AWS Account ID",
+    "credentialStore": "Credential Store",
+    "prefix": "Prefix",
+    "taskMetrics": "Task Metrics",
+    "dashboard": "CloudWatch Dashboard"
   },
   "bottom": {
     "copy": "© 2008 - 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
@@ -149,7 +228,10 @@
     "copy": "Copy",
     "stop": "Stop",
     "createTask": "Create Task",
-    "viewDetail": " View Details"
+    "viewDetail": "View Details",
+    "taskAction": "Task Action",
+    "stopTask": "Stop Task",
+    "cloneTask": "Clone Task"
   },
   "tips": {
     "error": {
@@ -158,6 +240,19 @@
       "emailRequired": "Alarm Email is required",
       "emailValidate": "Alarm Email must be validate",
       "credentialRequired": "Parameter Store Credential is Required"
+    }
+  },
+  "comps": {
+    "credential": {
+      "create": "Create a",
+      "store": "Parameter Store",
+      "save1": "to save your credentials. Select ",
+      "save2": "SecureString",
+      "save3": " as the type.",
+      "format": "Format",
+      "formatDesc": "Copy the following credential, and replace with your own value.",
+      "learnMore": "Learn more ",
+      "createStore": "Create a Credential Store"
     }
   }
 }

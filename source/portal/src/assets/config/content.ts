@@ -19,13 +19,11 @@ export const HOW_IT_WORKS = {
       "zh-CN_name": "使用用户界面创建、监控和管理数据复制任务",
     },
     {
-      en_name:
-        "Provision AWS resources via AWS CloudFormation automatically.",
+      en_name: "Provision AWS resources via AWS CloudFormation automatically.",
       "zh-CN_name": "通过AWS CloudFormation自动分配所需AWS资源",
     },
     {
-      en_name:
-        "Manage your data replication tasks in a centralized portal.",
+      en_name: "Manage your data replication tasks in a centralized portal.",
       "zh-CN_name": "在统一平台管理您的数据复制任务",
     },
   ],
@@ -45,8 +43,10 @@ export const BENIFITS_AND_FEATURES = {
     {
       en_title: "Replicate data from other cloud providers",
       "zh-CN_title": "从其他云服务商中将数据复制至AWS",
-      en_content: "Replicate data from other cloud providers, e.g. replicate objects from Alibaba Cloud OSS or Qiniu Cloud KODO to Amazon S3.",
-      "zh-CN_content": "从其他云服务商中将数据复制至AWS，如支持将阿里云OSS, 七牛KODO的文件对象复制到Amazon S3",
+      en_content:
+        "Replicate data from other cloud providers, e.g. replicate objects from Alibaba Cloud OSS or Qiniu Cloud KODO to Amazon S3.",
+      "zh-CN_content":
+        "从其他云服务商中将数据复制至AWS，如支持将阿里云OSS, 七牛KODO的文件对象复制到Amazon S3",
     },
     {
       en_title: "Replicate data across AWS partitions",
@@ -60,7 +60,8 @@ export const BENIFITS_AND_FEATURES = {
       "zh-CN_title": "开源免费",
       en_content:
         "AWS Data Replication Hub is an open source solution published on Github. ",
-      "zh-CN_content": "AWS Data Replication Hub是完全免费且开源的，源码已经发布在Github上，您可以根据需要进行使用。",
+      "zh-CN_content":
+        "AWS Data Replication Hub是完全免费且开源的，源码已经发布在Github上，您可以根据需要进行使用。",
     },
   ],
 };

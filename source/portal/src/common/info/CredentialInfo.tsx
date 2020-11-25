@@ -45,21 +45,21 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
   return (
     <div className="credential">
       <div className="top-tips">
-        Create a{" "}
+        {t("comps.credential.create")}{" "}
         <a
           className="a-link"
           rel="noopener noreferrer"
           target="_blank"
           href={SSM_LINK + "?region=" + region}
         >
-          Parameter Store
+          {t("comps.credential.store")}
         </a>{" "}
-        to save your credentials. Select <i>SecureString</i> as the type.
+        {t("comps.credential.save1")}
+        <i>{t("comps.credential.save2")}</i>
+        {t("comps.credential.save3")}
       </div>
-      <div className="tips-title">Format</div>
-      <div className="top-tips">
-        Copy the following credential, and replace with your own value.
-      </div>
+      <div className="tips-title">{t("comps.credential.format")}</div>
+      <div className="top-tips">{t("comps.credential.formatDesc")}</div>
       <div>
         <div className="code-area">
           <div className="code-info">
@@ -90,7 +90,8 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
       </div>
       <div className="more">
         <div className="more-title">
-          Learn more <OpenInNewIcon fontSize="small" className="open-icon" />
+          {t("comps.credential.learnMore")}
+          <OpenInNewIcon fontSize="small" className="open-icon" />
         </div>
         <div>
           <a
@@ -99,7 +100,7 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
             target="_blank"
             href={SSM_PARASTORE_HELP_LINK}
           >
-            Create a Credential Store
+            {t("comps.credential.createStore")}
           </a>
         </div>
       </div>

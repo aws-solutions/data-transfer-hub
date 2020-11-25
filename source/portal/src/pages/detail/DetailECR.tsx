@@ -261,7 +261,7 @@ const Detail: React.FC = (props: any) => {
                 <div className="general-info-content">
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.engine")}</div>
-                    <div>Amazon ECR Plugin v1.0</div>
+                    <div>{t("taskDetail.pluginECR")}</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.sourceType")}</div>
@@ -281,9 +281,8 @@ const Detail: React.FC = (props: any) => {
                 <div>
                   <AntTabs value={value} onChange={handleChange}>
                     <AntTab label={t("taskDetail.details")} />
-                    <AntTab label="Images" />
+                    <AntTab label={t("taskDetail.images")} />
                     <AntTab label={t("taskDetail.option")} />
-                    {/* <AntTab label="Tags" /> */}
                   </AntTabs>
                   <TabPanel value={value} index={0}>
                     <div className="general-info tab-padding box-shadow">
@@ -303,51 +302,56 @@ const Detail: React.FC = (props: any) => {
                               {curTaskInfo.createdAt}
                             </Moment>
                           </div>
-                          <br />
-                          {/* <div className="sub-name">
-                            {t("taskDetail.status")}
-                          </div>
-                          <div>
-                            {curTaskInfo.progress
-                              ? TASK_STATUS_MAP[curTaskInfo.progress].name
-                              : "-"}
-                          </div> */}
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">Source Region</div>
+                          <div className="sub-name">
+                            {t("taskDetail.sourceRegion")}
+                          </div>
                           <div>{curTaskInfo.srcRegion}</div>
                           <br />
                           <div className="sub-name">
-                            Is Source in current account?
+                            {t("taskDetail.sourceInAccount")}
                           </div>
                           <div>
                             {curTaskInfo.srcAccountId === "-" ? "Yes" : "No"}
                           </div>
                           <br />
-                          <div className="sub-name">Source Account Id</div>
+                          <div className="sub-name">
+                            {t("taskDetail.srcAccountId")}
+                          </div>
                           <div>{curTaskInfo.srcAccountId}</div>
                           <br />
-                          <div className="sub-name">Source Credential</div>
+                          <div className="sub-name">
+                            {t("taskDetail.srcCredential")}
+                          </div>
                           <div>{curTaskInfo.srcCredential}</div>
                         </div>
                         <div className="split-item">
-                          <div className="sub-name">Destination Region</div>
+                          <div className="sub-name">
+                            {t("taskDetail.destRegion")}
+                          </div>
                           <div>{curTaskInfo.destRegion}</div>
                           <br />
                           <div className="sub-name">
-                            Is Destination in current account?
+                            {t("taskDetail.destInAccount")}
                           </div>
                           <div>
                             {curTaskInfo.destAccountId === "-" ? "Yes" : "No"}
                           </div>
                           <br />
-                          <div className="sub-name">AWS Account ID</div>
+                          <div className="sub-name">
+                            {t("taskDetail.accountId")}
+                          </div>
                           <div>{curTaskInfo.destAccountId}</div>
                           <br />
-                          <div className="sub-name">Credential Store</div>
+                          <div className="sub-name">
+                            {t("taskDetail.credentialStore")}
+                          </div>
                           <div>{curTaskInfo.destCredential}</div>
                           <br />
-                          <div className="sub-name">Prefix</div>
+                          <div className="sub-name">
+                            {t("taskDetail.prefix")}
+                          </div>
                           <div>{curTaskInfo.destPrefix}</div>
                         </div>
                       </div>
@@ -355,7 +359,7 @@ const Detail: React.FC = (props: any) => {
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     <div className="general-info tab-padding box-shadow">
-                      <div className="title">Images</div>
+                      <div className="title">{t("taskDetail.images")}</div>
                       <div className="general-info-content">
                         <div className="split-item">
                           <textarea
@@ -380,7 +384,7 @@ const Detail: React.FC = (props: any) => {
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
-                            {t("taskDetail.alarmEmail")}
+                            {t("taskDetail.alarmEmailECR")}
                           </div>
                           <div>{curTaskInfo.alarmEmail}</div>
                         </div>

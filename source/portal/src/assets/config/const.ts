@@ -8,6 +8,8 @@ export const SSM_LINK =
 export const SSM_PARASTORE_HELP_LINK =
   "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html";
 
+export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
+
 export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
 
 export const MenuProps: any = {
@@ -72,51 +74,51 @@ export const S3_PARAMS_LIST_MAP: any = {
 export const ECR_PARAMS_LIST_MAP: any = {
   srcRegion: {
     en_name: "Source region",
-    "zh-CN_name": "Source region",
+    "zh-CN_name": "源仓库区域",
   },
   srcAccountId: {
     en_name: "Source AWS Account ID",
-    "zh-CN_name": "Source AWS Account ID",
+    "zh-CN_name": "源AWS账户ID",
   },
   srcList: {
     en_name: "Type of Source Image List",
-    "zh-CN_name": "Type of Source Image List",
+    "zh-CN_name": "源镜像类型",
   },
   srcImageList: {
     en_name: "Source Image List",
-    "zh-CN_name": "Source Image List",
+    "zh-CN_name": "镜像列表",
   },
   srcCredential: {
     en_name: "Source Credential Parameter Name",
-    "zh-CN_name": "Source Credential Parameter Name",
+    "zh-CN_name": "源仓库凭证参数名称",
   },
   sourceInAccount: {
-    en_name: "Source In Account",
+    en_name: "Source In Account?",
     "zh-CN_name": "数据源在当前账户吗？",
   },
   destRegion: {
     en_name: "Destination AWS Region",
-    "zh-CN_name": "Destination AWS Region",
+    "zh-CN_name": "目的仓库AWS区域",
   },
   destInAccount: {
-    en_name: "Destination In Account",
+    en_name: "Destination In Account?",
     "zh-CN_name": "目的仓库在当前账户吗？",
   },
   destAccountId: {
     en_name: "Destination AWS Account ID",
-    "zh-CN_name": "Destination AWS Account ID",
+    "zh-CN_name": "目的仓库AWS账户ID",
   },
   sourceType: {
     en_name: "Source Type",
-    "zh-CN_name": "镜像源类型",
+    "zh-CN_name": "源仓库类型",
   },
   destPrefix: {
     en_name: "Destination Image Prefix",
-    "zh-CN_name": "Destination Image Prefix",
+    "zh-CN_name": "目标镜像前缀",
   },
   destCredential: {
     en_name: "Destination Credential Parameter Name",
-    "zh-CN_name": "Destination Credential Parameter Name",
+    "zh-CN_name": "目的仓库凭证参数名称",
   },
 };
 

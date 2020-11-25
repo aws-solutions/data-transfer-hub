@@ -353,15 +353,15 @@ const StepOne: React.FC = () => {
             </div>
             <div className="creation-info">
               <div className="creation-title">
-                {t("creation.step2.taskDetail")}
+                {t("creation.step2ECR.taskDetail")}
               </div>
               <div className="box-shadow card-list">
                 <div className="option">
                   <div className="option-title">
-                    {t("creation.step2.sourceType")}
+                    {t("creation.step2ECR.sourceType")}
                   </div>
                   <div className="option-content">
-                    <div>Select container registry type</div>
+                    <div> {t("creation.step2ECR.selectContainerType")}</div>
                     <div>
                       {ECR_SOURCE_TYPE.map((item: any, index: any) => {
                         const stClass = classNames({
@@ -397,13 +397,17 @@ const StepOne: React.FC = () => {
                 <div className="box-shadow card-list">
                   <div className="option">
                     <div className="option-title">
-                      {t("creation.step2.settings.source.title")}
+                      {t("creation.step2ECR.settings.source.title")}
                     </div>
                     <div className="option-content">
                       <div className={classSourceRegion}>
-                        <div className="title">Source Region</div>
+                        <div className="title">
+                          {t("creation.step2ECR.settings.source.sourceRegion")}
+                        </div>
                         <div className="desc">
-                          You can enter region name or region code.
+                          {t(
+                            "creation.step2ECR.settings.source.sourceRegionDesc"
+                          )}
                         </div>
                         <div className="select">
                           <input
@@ -420,9 +424,6 @@ const StepOne: React.FC = () => {
                             onChange={changeSrcRegion}
                             getOptionLabel={(option) => option.name}
                             style={{ width: 565 }}
-                            // getOptionSelected={(option, value) =>
-                            //   option.value === value.value
-                            // }
                             renderInput={(params) => (
                               <div ref={params.InputProps.ref}>
                                 <input
@@ -450,9 +451,15 @@ const StepOne: React.FC = () => {
                       </div>
 
                       <div className={classIsSourceInAccount}>
-                        <div className="title">Is source in this account?</div>
+                        <div className="title">
+                          {t(
+                            "creation.step2ECR.settings.source.sourceInAccount"
+                          )}
+                        </div>
                         <div className="desc">
-                          Select YES, if the Amazon ECR is in current account.
+                          {t(
+                            "creation.step2ECR.settings.source.sourceInAccountDesc"
+                          )}
                         </div>
                         <div className="select">
                           <Select
@@ -480,9 +487,11 @@ const StepOne: React.FC = () => {
                       </div>
 
                       <div className={classSrcAccountId}>
-                        <div className="title">AWS Account ID</div>
+                        <div className="title">
+                          {t("creation.step2ECR.settings.source.accountId")}
+                        </div>
                         <div className="desc">
-                          Enter the AWS Account ID (12 digits).
+                          {t("creation.step2ECR.settings.source.accountIdTips")}
                         </div>
                         <div>
                           <input
@@ -493,7 +502,9 @@ const StepOne: React.FC = () => {
                             }}
                             ref={register}
                             className="option-input"
-                            placeholder="12 digits Account ID"
+                            placeholder={t(
+                              "creation.step2ECR.settings.source.accountIdPlaceholder"
+                            )}
                             type="text"
                           />
                         </div>
@@ -502,19 +513,22 @@ const StepOne: React.FC = () => {
 
                       <div className={classSrcCredential}>
                         <div className="title">
-                          Credentials Store <InfoSpan spanType="CREDENTIAL" />
+                          {t(
+                            "creation.step2ECR.settings.source.credentialsStore"
+                          )}{" "}
+                          <InfoSpan spanType="CREDENTIAL" />
                         </div>
                         <div className="desc">
-                          Select the{" "}
+                          {t("creation.tips.store1")}{" "}
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
                             href={SSM_LINK + "?region=" + region}
                           >
-                            Parameter Store
+                            {t("creation.tips.store2")}
                           </a>{" "}
-                          which stores the credentials.
+                          {t("creation.tips.store3")}
                         </div>
                         <div>
                           <input
@@ -533,7 +547,9 @@ const StepOne: React.FC = () => {
                                 ? undefined
                                 : () => (
                                     <div className="gray">
-                                      Please select a parameter store
+                                      {t(
+                                        "creation.step2ECR.settings.source.tips"
+                                      )}
                                     </div>
                                   )
                             }
@@ -564,17 +580,16 @@ const StepOne: React.FC = () => {
                             <RefreshIcon width="10" />
                           </NormalButton>
                         </div>
-                        <div className="error">
-                          {errors.srcCredential &&
-                            errors.srcCredential.type === "required" &&
-                            "Source Credential is required"}
-                        </div>
                       </div>
 
                       <div className={classDockerImage}>
-                        <div className="title">Docker Images</div>
+                        <div className="title">
+                          {t("creation.step2ECR.settings.source.dockerImages")}
+                        </div>
                         <div className="desc">
-                          Select the docker images to replicate.
+                          {t(
+                            "creation.step2ECR.settings.source.dockerImagesDesc"
+                          )}
                         </div>
                         <div className="select">
                           {DOCKER_IMAGE_TYPE.map((item: any, index: any) => {
@@ -587,7 +602,6 @@ const StepOne: React.FC = () => {
                                 <label>
                                   <div>
                                     <input
-                                      // defaultValue={formDefaultValue.sourceType}
                                       onChange={(event: any) => {
                                         setSrcList(event.target.value);
                                       }}
@@ -608,11 +622,15 @@ const StepOne: React.FC = () => {
 
                       <div className={classImageList}>
                         <div>
-                          <div className="title">Image List</div>
+                          <div className="title">
+                            {t("creation.step2ECR.settings.source.imageList")}
+                          </div>
                           <div className="desc">
-                            Enter all images in format of
-                            &lt;image-name&gt;:&lt;tag&gt;, delimited by comma.
-                            If tag is ommited, the latest tag will be used.
+                            {t("creation.step2ECR.settings.source.image1")}
+                            &lt;{t("creation.step2ECR.settings.source.image2")}
+                            &gt;:&lt;
+                            {t("creation.step2ECR.settings.source.image3")}&gt;,
+                            {t("creation.step2ECR.settings.source.image4")}
                           </div>
                           <div>
                             <textarea
@@ -636,13 +654,19 @@ const StepOne: React.FC = () => {
                 <div className="box-shadow card-list">
                   <div className="option">
                     <div className="option-title">
-                      {t("creation.step2.settings.dest.title")}
+                      {t("creation.step2ECR.settings.dest.title")}
                     </div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">Destination Region</div>
+                        <div className="title">
+                          {t(
+                            "creation.step2ECR.settings.dest.destinationRegion"
+                          )}
+                        </div>
                         <div className="desc">
-                          You can enter region name or region code.
+                          {t(
+                            "creation.step2ECR.settings.dest.destinationRegionDesc"
+                          )}
                         </div>
                         <div className="select">
                           <input
@@ -684,16 +708,18 @@ const StepOne: React.FC = () => {
                         <div className="error">
                           {errors.destRegion &&
                             errors.destRegion.type === "required" &&
-                            "Destination region required"}
+                            t("creation.step2ECR.settings.dest.regionRequired")}
                         </div>
                       </div>
 
                       <div className="form-items">
                         <div className="title">
-                          Is destination in this account?
+                          {t("creation.step2ECR.settings.dest.destInAccount")}
                         </div>
                         <div className="desc">
-                          Select YES, if the Amazon ECR is in current account.
+                          {t(
+                            "creation.step2ECR.settings.dest.destInAccountDesc"
+                          )}
                         </div>
                         <div className="select">
                           <Select
@@ -720,9 +746,12 @@ const StepOne: React.FC = () => {
                       </div>
 
                       <div className={classDestAccountId}>
-                        <div className="title">AWS Account ID</div>
+                        <div className="title">
+                          {" "}
+                          {t("creation.step2ECR.settings.source.accountId")}
+                        </div>
                         <div className="desc">
-                          Enter the AWS Account ID (12 digits).
+                          {t("creation.step2ECR.settings.source.accountIdTips")}
                         </div>
                         <div>
                           <input
@@ -733,7 +762,9 @@ const StepOne: React.FC = () => {
                             }}
                             ref={register}
                             className="option-input"
-                            placeholder="12 digits Account ID"
+                            placeholder={t(
+                              "creation.step2ECR.settings.source.accountIdPlaceholder"
+                            )}
                             type="text"
                           />
                         </div>
@@ -741,19 +772,22 @@ const StepOne: React.FC = () => {
 
                       <div className={classDestCredential}>
                         <div className="title">
-                          Credentials Store <InfoSpan spanType="CREDENTIAL" />
+                          {t(
+                            "creation.step2ECR.settings.dest.credentialsStore"
+                          )}{" "}
+                          <InfoSpan spanType="CREDENTIAL" />
                         </div>
                         <div className="desc">
-                          Select the{" "}
+                          {t("creation.step2ECR.settings.dest.store1")}{" "}
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
                             href={SSM_LINK + "?region=" + region}
                           >
-                            Parameter Store
+                            {t("creation.step2ECR.settings.dest.store2")}
                           </a>{" "}
-                          which stores the credentials.
+                          {t("creation.step2ECR.settings.dest.store3")}
                         </div>
                         <div>
                           <input
@@ -772,7 +806,9 @@ const StepOne: React.FC = () => {
                                 ? undefined
                                 : () => (
                                     <div className="gray">
-                                      Please select a parameter store
+                                      {t(
+                                        "creation.step2ECR.settings.dest.tips"
+                                      )}
                                     </div>
                                   )
                             }
@@ -812,10 +848,11 @@ const StepOne: React.FC = () => {
 
                       <div className="form-items">
                         <div className="title">
-                          Prefix - <i>optional</i>
+                          {t("creation.step2ECR.settings.dest.prefix")} -{" "}
+                          <i>{t("creation.step2ECR.settings.dest.optional")}</i>
                         </div>
                         <div className="desc">
-                          Append the prefix to all images. Default is none.
+                          {t("creation.step2ECR.settings.dest.prefixDesc")}
                         </div>
                         <div>
                           <input
@@ -837,14 +874,16 @@ const StepOne: React.FC = () => {
 
                 <div className="box-shadow card-list">
                   <div className="option">
-                    <div className="option-title">More</div>
+                    <div className="option-title">
+                      {t("creation.step2ECR.settings.more.title")}
+                    </div>
                     <div className="option-content">
                       <div className="form-items">
                         <div className="title">
-                          {t("creation.step2.settings.more.description")}
+                          {t("creation.step2ECR.settings.more.description")}
                         </div>
                         <div className="desc">
-                          {t("creation.step2.settings.more.descriptionDesc")}
+                          {t("creation.step2ECR.settings.more.descriptionDesc")}
                         </div>
                         <div>
                           <input
@@ -853,7 +892,7 @@ const StepOne: React.FC = () => {
                             ref={register({ required: true })}
                             className="option-input"
                             placeholder={t(
-                              "creation.step2.settings.more.description"
+                              "creation.step2ECR.settings.more.description"
                             )}
                             type="text"
                           />
@@ -862,10 +901,11 @@ const StepOne: React.FC = () => {
 
                       <div className="form-items">
                         <div className="title">
-                          Alarm Notification - <i>optional</i>
+                          {t("creation.step2ECR.settings.more.email")} -{" "}
+                          <i>{t("creation.step2ECR.settings.more.optional")}</i>
                         </div>
                         <div className="desc">
-                          Receive notificaiton when replication failed.
+                          {t("creation.step2ECR.settings.more.emailDesc")}
                         </div>
                         <div>
                           <input

@@ -17,6 +17,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 import { API, graphqlOperation } from "aws-amplify";
 import { getTask } from "../../graphql/queries";
@@ -31,6 +32,8 @@ import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
 import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
+
+import { S3_BUCKET_URL } from "../../assets/config/const";
 
 import "./Detail.scss";
 
@@ -97,6 +100,8 @@ function TabPanel(props: TabPanelProps) {
     </div>
   );
 }
+
+const region = window.localStorage.getItem("cur-region");
 
 const Detail: React.FC = (props: any) => {
   const { t } = useTranslation();
@@ -313,14 +318,23 @@ const Detail: React.FC = (props: any) => {
                             </Moment>
                           </div>
                           <br />
-                          {/* <div className="sub-name">
-                            {t("taskDetail.status")}
+                          <div className="sub-name">
+                            {t("taskDetail.taskMetrics")}
                           </div>
                           <div>
-                            {curTaskInfo.progress
-                              ? TASK_STATUS_MAP[curTaskInfo.progress].name
-                              : "-"}
-                          </div> */}
+                            <a
+                              className="a-link"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              href={`https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:`}
+                            >
+                              {t("taskDetail.dashboard")}{" "}
+                              <OpenInNewIcon
+                                fontSize="small"
+                                className="open-icon"
+                              />
+                            </a>
+                          </div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
@@ -342,7 +356,20 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.destName")}
                           </div>
-                          <div>{curTaskInfo.destBucketName}</div>
+                          <div>
+                            <a
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              className="a-link"
+                              href={`${S3_BUCKET_URL}${curTaskInfo.destBucketName}`}
+                            >
+                              {curTaskInfo.destBucketName}
+                              <OpenInNewIcon
+                                fontSize="small"
+                                className="open-icon"
+                              />
+                            </a>
+                          </div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.destPrefix")}

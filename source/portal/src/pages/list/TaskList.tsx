@@ -63,8 +63,6 @@ import {
 } from "../../assets/types/index";
 import { YES_NO, AWS_REGION_LIST } from "../../assets/config/const";
 
-// import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-
 const StyledMenu = withStyles({
   paper: {
     border: "1px solid #d3d4d5",
@@ -504,7 +502,8 @@ const List: React.FC = () => {
                         aria-controls="customized-menu"
                         onClick={handleClick}
                       >
-                        Task Action <span style={{ marginLeft: 3 }}>▼</span>
+                        {t("btn.taskAction")}
+                        <span style={{ marginLeft: 3 }}>▼</span>
                       </NormalButton>
                       <StyledMenu
                         id="customized-menu"
@@ -521,29 +520,19 @@ const List: React.FC = () => {
                           <StyledMenuItem>
                             <ListItemText
                               onClick={stopCurTask}
-                              primary="Stop Task"
+                              primary={t("btn.stopTask")}
                             />
                           </StyledMenuItem>
                         )}
                         <StyledMenuItem>
                           <ListItemText
                             onClick={cloneCurTask}
-                            primary="Clone Task"
+                            primary={t("btn.cloneTask")}
                           />
                         </StyledMenuItem>
                       </StyledMenu>
                     </div>
 
-                    {/* <NormalButton
-                      disabled={
-                        curSelectTask === null ||
-                        curSelectTask.progress === EnumTaskStatus.STOPPING ||
-                        curSelectTask.progress === EnumTaskStatus.STOPPED
-                      }
-                      onClick={stopCurTask}
-                    >
-                      {t("btn.stop")}
-                    </NormalButton> */}
                     <PrimaryButton onClick={goToStepOne}>
                       {t("btn.createTask")}
                     </PrimaryButton>
