@@ -363,6 +363,7 @@ const Detail: React.FC = (props: any) => {
                       <div className="general-info-content">
                         <div className="split-item">
                           <textarea
+                            readOnly={true}
                             defaultValue={curTaskInfo.srcImageList}
                             rows={8}
                             className="image-list"
