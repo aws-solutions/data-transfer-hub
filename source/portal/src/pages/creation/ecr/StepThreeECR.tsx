@@ -149,7 +149,7 @@ const StepThreeECR: React.FC = () => {
     tmpParamsArr.sort(function (a, b) {
       const keyA = a.sortId;
       const keyB = b.sortId;
-      // Compare the 2 dates
+      // Compare the 2 sortId
       if (keyA < keyB) return -1;
       if (keyA > keyB) return 1;
       return 0;
