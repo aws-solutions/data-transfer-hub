@@ -146,14 +146,7 @@ const StepThreeECR: React.FC = () => {
         });
       }
     }
-    tmpParamsArr.sort(function (a, b) {
-      const keyA = a.sortId;
-      const keyB = b.sortId;
-      // Compare the 2 sortId
-      if (keyA < keyB) return -1;
-      if (keyA > keyB) return 1;
-      return 0;
-    });
+    tmpParamsArr.sort((a, b) => (a.sortId > b.sortId ? 1 : -1));
     setParamList(tmpParamsArr);
     // Remove uesless property when clone task
     for (const key in createTaskInfo) {
