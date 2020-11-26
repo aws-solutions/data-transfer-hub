@@ -54,6 +54,7 @@ const mapState = (state: IState) => ({
 
 const schema = yup.object().shape({
   destRegion: yup.string().required(),
+  alarmEmail: yup.string().email().required(),
 });
 
 const region = window.localStorage.getItem("cur-region");
@@ -113,9 +114,6 @@ const StepTwoECR: React.FC = () => {
   );
   const [destPrefix, setDestPrefix] = useState(
     tmpTaskInfo.parametersObj?.destPrefix || ""
-  );
-  const [alarmEmail, setAlarmEmail] = useState(
-    tmpTaskInfo.parametersObj?.alarmEmail || ""
   );
 
   // Show Hidden Class
@@ -902,24 +900,31 @@ const StepTwoECR: React.FC = () => {
 
                       <div className="form-items">
                         <div className="title">
-                          {t("creation.step2ECR.settings.more.email")} -{" "}
-                          <i>{t("creation.step2ECR.settings.more.optional")}</i>
+                          {t("creation.step2ECR.settings.more.email")}
                         </div>
                         <div className="desc">
                           {t("creation.step2ECR.settings.more.emailDesc")}
                         </div>
                         <div>
                           <input
+                            defaultValue={
+                              tmpTaskInfo.parametersObj &&
+                              tmpTaskInfo.parametersObj.alarmEmail
+                            }
                             name="alarmEmail"
-                            value={alarmEmail}
-                            onChange={(event: any) => {
-                              setAlarmEmail(event.target.value);
-                            }}
-                            ref={register}
+                            ref={register({ required: true })}
                             className="option-input"
                             placeholder="abc@example.com"
                             type="text"
                           />
+                          <div className="error">
+                            {errors.alarmEmail &&
+                              errors.alarmEmail.type === "required" &&
+                              t("tips.error.emailRequired")}
+                            {errors.alarmEmail &&
+                              errors.alarmEmail.type === "email" &&
+                              t("tips.error.emailValidate")}
+                          </div>
                         </div>
                       </div>
                     </div>
