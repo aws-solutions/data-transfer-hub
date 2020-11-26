@@ -16,13 +16,10 @@ const StepOneECRTipsCN: React.FC = () => {
             <span>•</span>从Docker Hub, GCR.io, Quay.io复制到ECR
           </li>
           <li>
-            <span>•</span>从Azure, GCP, 阿里云, 腾讯云复制到ECR
-          </li>
-          <li>
             <span>•</span>并行复制
           </li>
           <li>
-            <span>•</span>支持公共Docker镜像和私有Docker镜像
+            <span>•</span>支持公共Docker镜像
           </li>
           <li>
             <span>•</span>支持选择性Docker镜像复制

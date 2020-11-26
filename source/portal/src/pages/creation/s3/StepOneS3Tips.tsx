@@ -30,7 +30,7 @@ const StepOneS3Tips: React.FC = () => {
             <span>•</span>Versioning support
           </li>
           <li>
-            <span>•</span>Serverless architect, no minimun cost
+            <span>•</span>Serverless architect, no minimum cost
           </li>
           <li>
             <span>•</span>Parralel replication
