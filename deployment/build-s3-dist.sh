@@ -88,8 +88,8 @@ echo "npm install"
 npm install
 echo "npm run build"
 npm run build
-echo "cdk synth --output=$staging_dist_dir"
-cdk synth --output=$staging_dist_dir
+echo "npx cdk synth --output=$staging_dist_dir"
+npx cdk synth --output=$staging_dist_dir
 
 # Remove unnecessary output files
 echo "cd $staging_dist_dir"
