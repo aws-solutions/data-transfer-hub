@@ -61,7 +61,7 @@ const mapState = (state: IState) => ({
 
 const region = window.localStorage.getItem("cur-region");
 
-const StepOne: React.FC = () => {
+const StepTwoS3: React.FC = () => {
   const { tmpTaskInfo } = useMappedState(mapState);
 
   const [paramData, setParamData] = useState<any>();
@@ -758,4 +758,4 @@ const StepOne: React.FC = () => {
   );
 };
 
-export default StepOne;
+export default StepTwoS3;

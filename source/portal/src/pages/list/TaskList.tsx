@@ -181,6 +181,7 @@ const List: React.FC = () => {
   }, [dispatch]);
 
   const goToStepOne = () => {
+    dispatch({ type: "close side bar" });
     const toPath = "/create/step1/S3";
     history.push({
       pathname: toPath,

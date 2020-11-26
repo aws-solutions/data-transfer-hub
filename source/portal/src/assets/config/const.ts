@@ -158,6 +158,14 @@ export const AWS_REGION_LIST = [
   { value: "sa-east-1", name: "São Paulo(sa-east-1)" },
 ];
 
+export const getRegionNameById = (id: string): any => {
+  if (id && id !== "-") {
+    return AWS_REGION_LIST.find((item) => item.value === id)?.name;
+  } else {
+    return "-";
+  }
+};
+
 export const LAMBDA_OPTIONS = [
   { name: 128, value: 128 },
   { name: 256, value: 256 },

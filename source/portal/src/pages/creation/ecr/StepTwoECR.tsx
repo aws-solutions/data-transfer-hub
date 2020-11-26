@@ -62,7 +62,7 @@ const MAX_LENGTH = 4096;
 
 const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
 
-const StepOne: React.FC = () => {
+const StepTwoECR: React.FC = () => {
   const { tmpTaskInfo } = useMappedState(mapState);
   const { t, i18n } = useTranslation();
   const [titleStr, setTitleStr] = useState("en_name");
@@ -189,15 +189,15 @@ const StepOne: React.FC = () => {
       parameters.sourceType = sourceType;
       if (sourceType === ECREnumSourceType.ECR) {
         parameters.srcRegion = srcRegion;
+        parameters.sourceInAccount = sourceInAccount;
         parameters.srcAccountId = srcAccountId;
         parameters.srcCredential = srcCredential;
-        parameters.sourceInAccount = sourceInAccount;
         parameters.srcRegionDefault = srcRegionDefault;
       } else {
         parameters.srcRegion = "";
+        parameters.sourceInAccount = "";
         parameters.srcAccountId = "";
         parameters.srcCredential = "";
-        parameters.sourceInAccount = "";
         parameters.srcRegionDefault = null;
       }
       parameters.srcList = srcList;
@@ -778,16 +778,16 @@ const StepOne: React.FC = () => {
                           <InfoSpan spanType="CREDENTIAL" />
                         </div>
                         <div className="desc">
-                          {t("creation.step2ECR.settings.dest.store1")}{" "}
+                          {t("creation.tips.store1")}{" "}
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
                             href={SSM_LINK + "?region=" + region}
                           >
-                            {t("creation.step2ECR.settings.dest.store2")}
+                            {t("creation.tips.store2")}
                           </a>{" "}
-                          {t("creation.step2ECR.settings.dest.store3")}
+                          {t("creation.tips.store3")}
                         </div>
                         <div>
                           <input
@@ -880,7 +880,8 @@ const StepOne: React.FC = () => {
                     <div className="option-content">
                       <div className="form-items">
                         <div className="title">
-                          {t("creation.step2ECR.settings.more.description")}
+                          {t("creation.step2ECR.settings.more.description")} -{" "}
+                          <i>{t("creation.step2ECR.settings.more.optional")}</i>
                         </div>
                         <div className="desc">
                           {t("creation.step2ECR.settings.more.descriptionDesc")}
@@ -948,4 +949,4 @@ const StepOne: React.FC = () => {
   );
 };
 
-export default StepOne;
+export default StepTwoECR;

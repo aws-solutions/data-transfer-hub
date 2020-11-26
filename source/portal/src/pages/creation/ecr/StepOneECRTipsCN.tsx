@@ -1,6 +1,6 @@
 import React from "react";
 
-const StepOneS3Tips: React.FC = () => {
+const StepOneECRTipsCN: React.FC = () => {
   return (
     <div className="tips">
       <div className="tips-title">Amazon ECR 复制引擎</div>
@@ -36,4 +36,4 @@ const StepOneS3Tips: React.FC = () => {
   );
 };
 
-export default StepOneS3Tips;
+export default StepOneECRTipsCN;

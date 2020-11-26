@@ -10,7 +10,7 @@ import { EnumTaskType } from "../../assets/types/index";
 
 import "./info.scss";
 
-const region = window.localStorage.getItem("cur-region");
+const region = window.localStorage.getItem("cur-region") || "";
 
 interface Page {
   name: string | undefined;

@@ -30,7 +30,14 @@ import NormalButton from "../../common/comp/NormalButton";
 import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
-import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
+import {
+  TASK_STATUS_MAP,
+  ECREnumSourceType,
+  EnumTaskStatus,
+  EnumDockerImageType,
+} from "../../assets/types/index";
+
+import { getRegionNameById } from "../../assets/config/const";
 
 import "./Detail.scss";
 
@@ -307,13 +314,16 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.sourceRegion")}
                           </div>
-                          <div>{curTaskInfo.srcRegion}</div>
+                          <div>{getRegionNameById(curTaskInfo.srcRegion)}</div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.sourceInAccount")}
                           </div>
                           <div>
-                            {curTaskInfo.srcAccountId === "-" ? "Yes" : "No"}
+                            {curTaskInfo.sourceType === ECREnumSourceType.ECR &&
+                              (curTaskInfo.srcAccountId === "-" ? "Yes" : "No")}
+                            {curTaskInfo.sourceType ===
+                              ECREnumSourceType.PUBLIC && "-"}
                           </div>
                           <br />
                           <div className="sub-name">
@@ -330,7 +340,7 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.destRegion")}
                           </div>
-                          <div>{curTaskInfo.destRegion}</div>
+                          <div>{getRegionNameById(curTaskInfo.destRegion)}</div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.destInAccount")}
@@ -362,12 +372,16 @@ const Detail: React.FC = (props: any) => {
                       <div className="title">{t("taskDetail.images")}</div>
                       <div className="general-info-content">
                         <div className="split-item">
-                          <textarea
-                            readOnly={true}
-                            defaultValue={curTaskInfo.srcImageList}
-                            rows={8}
-                            className="image-list"
-                          />
+                          {curTaskInfo.srcList === EnumDockerImageType.ALL ? (
+                            "ALL"
+                          ) : (
+                            <textarea
+                              readOnly={true}
+                              defaultValue={curTaskInfo.srcImageList}
+                              rows={8}
+                              className="image-list"
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -380,7 +394,7 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.description")}
                           </div>
-                          <div>{curTaskInfo.description}</div>
+                          <div>{curTaskInfo.description || "-"}</div>
                           <br />
                         </div>
                         <div className="split-item">

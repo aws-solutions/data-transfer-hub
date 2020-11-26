@@ -30,6 +30,7 @@ import {
   ECR_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
+  getRegionNameById,
 } from "../../../assets/config/const";
 
 interface IParameterType {
@@ -47,12 +48,26 @@ const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
+const ParamShowIndexMap: any = {
+  sourceType: 1,
+  srcRegion: 2,
+  sourceInAccount: 3,
+  srcAccountId: 4,
+  srcCredential: 5,
+  srcList: 6,
+  srcImageList: 7,
+  destRegion: 8,
+  destInAccount: 9,
+  destAccountId: 10,
+  destCredential: 11,
+};
+
 const JOB_TYPE_MAP: any = {
   PUT: "Source",
   GET: "Destination",
 };
 
-const StepOne: React.FC = () => {
+const StepThreeECR: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
 
@@ -99,6 +114,7 @@ const StepOne: React.FC = () => {
         tmpParamsArr.push({
           ParameterKey: key,
           ParameterValue: parametersObj[key],
+          sortId: ParamShowIndexMap[key] || 100,
         });
       }
       if (NOT_PARAMS_TASK.indexOf(key) < 0) {
@@ -131,6 +147,17 @@ const StepOne: React.FC = () => {
       }
     }
 
+    console.info("tmpParamsArr:", tmpParamsArr);
+    tmpParamsArr.sort(function (a, b) {
+      const keyA = a.sortId;
+      const keyB = b.sortId;
+      console.info(keyA, keyB);
+      // Compare the 2 dates
+      if (keyA < keyB) return -1;
+      if (keyA > keyB) return 1;
+      return 0;
+    });
+    console.info("AFTER tmpParamsArr:", tmpParamsArr);
     setParamList(tmpParamsArr);
     // Remove uesless property when clone task
     for (const key in createTaskInfo) {
@@ -188,6 +215,10 @@ const StepOne: React.FC = () => {
         return `${imageArr[0]} and other ${imageArr.length - 1} images.`;
       }
       return value;
+    } else if (key === "srcRegion") {
+      return getRegionNameById(value);
+    } else if (key === "destRegion") {
+      return getRegionNameById(value);
     } else {
       return value || "-";
     }
@@ -322,4 +353,4 @@ const StepOne: React.FC = () => {
   );
 };
 
-export default StepOne;
+export default StepThreeECR;

@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useMappedState } from "redux-react-hook";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "redux-react-hook";
 
 import LeftMenu from "../../common/LeftMenu";
 import Bottom from "../../common/Bottom";
@@ -66,8 +67,10 @@ const Home: React.FC = () => {
 
   const { isOpen } = useMappedState(mapState);
 
+  const dispatch = useDispatch();
   const history = useHistory();
   const startToCreate = () => {
+    dispatch({ type: "close side bar" });
     const toPath = "/create/step1/" + taskType;
     history.push({
       pathname: toPath,

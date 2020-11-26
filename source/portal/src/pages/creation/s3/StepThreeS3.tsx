@@ -52,7 +52,7 @@ const JOB_TYPE_MAP: any = {
   GET: "Destination",
 };
 
-const StepOne: React.FC = () => {
+const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
 
@@ -292,4 +292,4 @@ const StepOne: React.FC = () => {
   );
 };
 
-export default StepOne;
+export default StepThreeS3;
