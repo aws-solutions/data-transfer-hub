@@ -125,7 +125,7 @@
           "tips": "Please select a parameter store",
           "prefix": "Prefix",
           "optional": "optional",
-          "prefixDesc": "Append the prefix to all images. Default is none."
+          "prefixDesc": "Add the prefix to all images. Default is none."
         },
         "more": {
           "title": "More",
