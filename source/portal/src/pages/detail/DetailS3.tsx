@@ -357,18 +357,7 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.destName")}
                           </div>
                           <div>
-                            <a
-                              rel="noopener noreferrer"
-                              target="_blank"
-                              className="a-link"
-                              href={`${S3_BUCKET_URL}${curTaskInfo.destBucketName}`}
-                            >
-                              {curTaskInfo.destBucketName}
-                              <OpenInNewIcon
-                                fontSize="small"
-                                className="open-icon"
-                              />
-                            </a>
+                            {curTaskInfo.destBucketName}
                           </div>
                           <br />
                           <div className="sub-name">
