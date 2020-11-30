@@ -33,8 +33,6 @@ import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
 import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
 
-import { S3_BUCKET_URL } from "../../assets/config/const";
-
 import "./Detail.scss";
 
 interface StyledTabProps {
@@ -356,9 +354,7 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.destName")}
                           </div>
-                          <div>
-                            {curTaskInfo.destBucketName}
-                          </div>
+                          <div>{curTaskInfo.destBucketName}</div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.destPrefix")}

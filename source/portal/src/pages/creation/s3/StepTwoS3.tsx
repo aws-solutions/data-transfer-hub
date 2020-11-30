@@ -307,7 +307,8 @@ const StepTwoS3: React.FC = () => {
 
                       <div className="form-items">
                         <div className="title">
-                          {t("creation.step2.settings.source.objectPrefix")}
+                          {t("creation.step2.settings.source.objectPrefix")} -{" "}
+                          <i>{t("optional")}</i>
                         </div>
                         <div className="desc">
                           {t("creation.step2.settings.source.prefixDesc")}
@@ -369,7 +370,8 @@ const StepTwoS3: React.FC = () => {
 
                       <div className="form-items">
                         <div className="title">
-                          {t("creation.step2.settings.dest.objectPrefix")}
+                          {t("creation.step2.settings.dest.objectPrefix")} -{" "}
+                          <i>{t("optional")}</i>
                         </div>
                         <div className="desc">
                           {t("creation.step2.settings.dest.prefixDesc")}
@@ -683,7 +685,8 @@ const StepTwoS3: React.FC = () => {
                     <div className="option-content">
                       <div className="form-items">
                         <div className="title">
-                          {t("creation.step2.settings.more.description")}
+                          {t("creation.step2.settings.more.description")} -{" "}
+                          <i>{t("optional")}</i>
                         </div>
                         <div className="desc">
                           {t("creation.step2.settings.more.descriptionDesc")}

@@ -4,6 +4,7 @@
   "no": "No",
   "signOut": "Sign Out",
   "info": "Info",
+  "optional": "optional",
   "top": {
     "account": "Account"
   },
@@ -61,7 +62,7 @@
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
           "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "It will replicate source objects to the provided prefix."
+          "prefixDesc": "Add Prefix to all the replicated objects."
         },
         "credential": {
           "title": "Credentials",

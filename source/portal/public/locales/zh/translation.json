@@ -4,6 +4,7 @@
   "no": "否",
   "signOut": "退出登录",
   "info": "信息",
+  "optional": "可选",
   "top": {
     "account": "我的账户"
   },
@@ -61,7 +62,7 @@
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
           "objectPrefix": "数据桶对象前缀",
-          "prefixDesc": "对象将会复制到指定的前缀目录."
+          "prefixDesc": "在复制的对象前添加前缀."
         },
         "credential": {
           "title": "凭证",

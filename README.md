@@ -21,10 +21,10 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
     - [x] Support replication with Metadata
     - [x] Support One-time replication
     - [x] Support Incremental replication
-- [ ] ECR Plugin
-    - [ ] Image replication between AWS Standard partition and AWS CN partition
-    - [ ] Image replication from Docker Hub to ECR
-    - [ ] Image replication from gcr.io to ECR
+- [x] ECR Plugin
+    - [x] Image replication between AWS Standard partition and AWS CN partition
+    - [x] Image replication from Docker Hub to ECR
+    - [x] Image replication from gcr.io to ECR
 - [ ] DynamoDB Plugin
 
 ## Architecture
@@ -37,6 +37,8 @@ Each type of replication is a plugin for this solution. You can also use the plu
 
 Available Plugins:
 * [S3 Plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin)
+
+* [ECR Plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
 
 ## Deploy via CloudFormation
 
