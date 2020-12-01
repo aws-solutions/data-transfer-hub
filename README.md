@@ -22,9 +22,13 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
     - [x] Support One-time replication
     - [x] Support Incremental replication
 - [x] ECR Plugin
-    - [x] Image replication between AWS Standard partition and AWS CN partition
-    - [x] Image replication from Docker Hub to ECR
-    - [x] Image replication from gcr.io to ECR
+    - [x] Amazon ECR replication between AWS accounts or regions
+    - [x] Amazon ECR replication between AWS Standard partition and AWS CN partition
+    - [x] Public docker registry to AWS ECR replication
+    - [ ] Private docker registry to AWS ECR replication
+    - [x] Replicate all images or only selected Images
+    - [x] Support One-time replication
+    - [x] Support Incremental replication
 - [ ] DynamoDB Plugin
 
 ## Architecture
