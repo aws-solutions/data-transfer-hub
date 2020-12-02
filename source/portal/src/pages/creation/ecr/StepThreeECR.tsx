@@ -31,6 +31,7 @@ import {
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
   getRegionNameById,
+  DRH_API_HEADER,
 } from "../../../assets/config/const";
 
 interface IParameterType {
@@ -160,12 +161,18 @@ const StepThreeECR: React.FC = () => {
 
   async function createTask() {
     setIsCreating(true);
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
     console.info("createTaskGQL:", createTaskGQL);
     // remove srcInAccount and destInAccount
-    const createTaskData = await API.graphql({
-      query: createTaskMutaion,
-      variables: { input: createTaskGQL },
-    });
+    const createTaskData = await API.graphql(
+      {
+        query: createTaskMutaion,
+        variables: { input: createTaskGQL },
+      },
+      addtionHeader
+    );
     console.info("createTaskData:", createTaskData);
     dispatch({
       type: "set create task flag",

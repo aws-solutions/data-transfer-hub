@@ -20,6 +20,7 @@ import StepTwoECR from "./pages/creation/ecr/StepTwoECR";
 import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
 import { EnumTaskType } from "./assets/types/index";
+import { DRH_API_HEADER } from "./assets/config/const";
 
 import "./App.scss";
 
@@ -47,15 +48,28 @@ const App: React.FC = () => {
   const [authState, setAuthState] = useState<AuthState>();
   const [user, setUser] = useState<any | undefined>();
   const [loadingConfig, setLoadingConfig] = useState<boolean>(true);
+  const [authType, setAuthType] = useState<string>("");
+  const [loginUrl, setLoginUrl] = useState<string>("");
 
   // Amplify.configure(awsconfig);
+
+  const getUrlToken = (name: string, str: string) => {
+    const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`);
+    const r = str.substr(1).match(reg);
+    if (r != null) return decodeURIComponent(r[2]);
+    return "";
+  };
 
   useEffect(() => {
     const timeStamp = new Date().getTime();
     Axios.get("/aws-exports.json?timeStamp=" + timeStamp).then((res) => {
       const ConfigObj = res.data;
+      const AuthType = ConfigObj.aws_appsync_authenticationType;
+      setAuthType(AuthType);
+      setLoginUrl(ConfigObj.aws_oidc_login_url);
       window.localStorage.setItem("configJson", JSON.stringify(ConfigObj));
       window.localStorage.setItem("cur-region", ConfigObj.aws_project_region);
+      window.localStorage.setItem("auth-type", AuthType);
       Amplify.configure(ConfigObj);
       setLoadingConfig(false);
     });
@@ -73,6 +87,71 @@ const App: React.FC = () => {
 
   if (loadingConfig) {
     return <Loader />;
+  }
+
+  const validateToken = (token: string) => {
+    if (token === "") {
+      return false;
+    }
+    return true;
+  };
+
+  if (authType === "OPENID") {
+    const curToken = localStorage.getItem(DRH_API_HEADER) || "";
+    if (!validateToken(curToken)) {
+      window.location.href = loginUrl;
+    }
+    const token = getUrlToken("access_token", window.location.hash);
+    if (token) {
+      localStorage.setItem(DRH_API_HEADER, token);
+      window.location.href = "/";
+    }
+    console.info("token:", token);
+    return (
+      <div className="bp3-dark">
+        <TopBar />
+        <HashRouter>
+          <Route path="/" exact component={HomePage}></Route>
+          <Route path="/home" exact component={HomePage}></Route>
+          <Route
+            path="/create/step1/:type"
+            exact
+            component={StepOnePage}
+          ></Route>
+          <Route
+            path={`/create/step2/${EnumTaskType.S3}`}
+            exact
+            component={StepTwoS3Page}
+          ></Route>
+          <Route
+            path={`/create/step2/${EnumTaskType.ECR}`}
+            exact
+            component={StepTwoECRPage}
+          ></Route>
+          <Route
+            path={`/create/step3/${EnumTaskType.S3}`}
+            exact
+            component={StepThreeS3Page}
+          ></Route>
+          <Route
+            path={`/create/step3/${EnumTaskType.ECR}`}
+            exact
+            component={StepThreeECRPage}
+          ></Route>
+          <Route path="/task/list" exact component={ListPage}></Route>
+          <Route
+            path={`/task/detail/${EnumTaskType.S3}/:id`}
+            exact
+            component={DetailPageS3}
+          ></Route>
+          <Route
+            path={`/task/detail/${EnumTaskType.ECR}/:id`}
+            exact
+            component={DetailPageECR}
+          ></Route>
+        </HashRouter>
+      </div>
+    );
   }
 
   return authState === AuthState.SignedIn && user ? (

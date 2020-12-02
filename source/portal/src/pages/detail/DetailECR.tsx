@@ -18,10 +18,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { getTask } from "../../graphql/queries";
 import { stopTask } from "../../graphql/mutations";
-import { updateTaskProgress } from "../../graphql/subscriptions";
+// import { updateTaskProgress } from "../../graphql/subscriptions";
 
 import InfoBar from "../../common/InfoBar";
 import LeftMenu from "../../common/LeftMenu";
@@ -37,7 +37,7 @@ import {
   EnumDockerImageType,
 } from "../../assets/types/index";
 
-import { getRegionNameById } from "../../assets/config/const";
+import { getRegionNameById, DRH_API_HEADER } from "../../assets/config/const";
 
 import "./Detail.scss";
 
@@ -116,12 +116,18 @@ const Detail: React.FC = (props: any) => {
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
-    const apiData: any = await API.graphql({
-      query: getTask,
-      variables: {
-        id: taskId,
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
+    const apiData: any = await API.graphql(
+      {
+        query: getTask,
+        variables: {
+          id: taskId,
+        },
       },
-    });
+      addtionHeader
+    );
     const tmpCurTask = apiData.data.getTask;
 
     if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
@@ -145,13 +151,19 @@ const Detail: React.FC = (props: any) => {
 
   async function stopTaskFunc(taskId: string) {
     setIsStopLoading(true);
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
     try {
-      const stopResData: any = await API.graphql({
-        query: stopTask,
-        variables: {
-          id: taskId,
+      const stopResData: any = await API.graphql(
+        {
+          query: stopTask,
+          variables: {
+            id: taskId,
+          },
         },
-      });
+        addtionHeader
+      );
       setIsStopLoading(false);
       setOpen(false);
       fetchNotes(props.match.params.id);
@@ -162,16 +174,22 @@ const Detail: React.FC = (props: any) => {
   }
 
   // Subscribtion Progress Data
-  useEffect(() => {
-    const subscriber: any = API.graphql(graphqlOperation(updateTaskProgress));
-    subscriber.subscribe({
-      next: (data: any) => {
-        if (data.value.data.updateTaskProgress.id === props.match.params.id) {
-          fetchNotes(props.match.params.id);
-        }
-      },
-    });
-  }, [props.match.params.id]);
+  // useEffect(() => {
+  //   const addtionHeader = {
+  //     Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+  //   };
+  //   const subscriber: any = API.graphql(
+  //     graphqlOperation(updateTaskProgress),
+  //     addtionHeader
+  //   );
+  //   subscriber.subscribe({
+  //     next: (data: any) => {
+  //       if (data.value.data.updateTaskProgress.id === props.match.params.id) {
+  //         fetchNotes(props.match.params.id);
+  //       }
+  //     },
+  //   });
+  // }, [props.match.params.id]);
 
   const handleClose = () => {
     setOpen(false);

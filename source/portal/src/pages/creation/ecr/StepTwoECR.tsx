@@ -38,6 +38,7 @@ import {
   YES_NO,
   MenuProps,
   SSM_LINK,
+  DRH_API_HEADER,
 } from "../../../assets/config/const";
 import {
   ECR_SOURCE_TYPE,
@@ -245,10 +246,16 @@ const StepTwoECR: React.FC = () => {
 
   // Get Parameter List
   async function getSSMParamsList() {
-    const apiData: any = await API.graphql({
-      query: listParameters,
-      variables: {},
-    });
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
+    const apiData: any = await API.graphql(
+      {
+        query: listParameters,
+        variables: {},
+      },
+      addtionHeader
+    );
     if (
       apiData &&
       apiData.data &&

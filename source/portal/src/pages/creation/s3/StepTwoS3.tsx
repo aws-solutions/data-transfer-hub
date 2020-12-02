@@ -44,6 +44,7 @@ import {
   CHUNKSIZE_OPTIONS,
   MAXTHREADS_OPTIONS,
   SSM_LINK,
+  DRH_API_HEADER,
 } from "../../../assets/config/const";
 
 import "../Creation.scss";
@@ -99,10 +100,16 @@ const StepTwoS3: React.FC = () => {
 
   // Get Parameter List
   async function getSSMParamsList() {
-    const apiData: any = await API.graphql({
-      query: listParameters,
-      variables: {},
-    });
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
+    const apiData: any = await API.graphql(
+      {
+        query: listParameters,
+        variables: {},
+      },
+      addtionHeader
+    );
     if (
       apiData?.data?.listParameters &&
       apiData.data.listParameters.length > 0

@@ -19,6 +19,11 @@ import { TaskCluster } from "./task-cluster";
 
 const { VERSION } = process.env;
 
+export const enum AuthType {
+  COGNITO = "cognito",
+  OPENID = "openid"
+}
+
 /**
  * @class ConstructsStack
  */
@@ -26,11 +31,37 @@ export class ConstructsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const authType = this.node.tryGetContext('authType') || AuthType.COGNITO
+    
     // CFN parameters
     const usernameParameter = new CfnParameter(this, 'AdminEmail', {
       type: 'String',
       description: 'The email of Admin user',
       allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
+    });
+
+    const oidcProvider = new CfnParameter(this, 'OidcProvider', {
+      type: 'String',
+      description: 'OIDC Provider',
+      default: ''
+    });
+
+    const oidcLoginUrl = new CfnParameter(this, 'OidcLoginUrl', {
+      type: 'String',
+      description: 'OIDC Login URL',
+      default: '',
+    });
+
+    const oidcLogoutUrl = new CfnParameter(this, 'OidcLogoutUrl', {
+      type: 'String',
+      description: 'OIDC Logout URL',
+      default: '',
+    });
+
+    const odicTokenValidationUrl = new CfnParameter(this, 'OdicTokenValidationUrl', {
+      type: 'String',
+      description: 'OIDC Token Validation URL',
+      default: '',
     });
 
     // CFN description
@@ -45,7 +76,11 @@ export class ConstructsStack extends cdk.Stack {
         ParameterGroups: [
           {
             Label: { default: 'User Pool' },
-            Parameters: [ usernameParameter.logicalId]
+            Parameters: [ usernameParameter.logicalId ]
+          },
+          {
+            Label: { default: authType===AuthType.OPENID?'OIDC Settings - Required':'Leave Below Parameters Blank' },
+            Parameters: [ oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, odicTokenValidationUrl.logicalId ]
           }
         ]
       }
@@ -65,6 +100,8 @@ export class ConstructsStack extends cdk.Stack {
 
     // API props
     const drhProps: ApiProps = {
+      authType,
+      oidcProvider,
       usernameParameter
     }
     // API Stack
@@ -72,9 +109,14 @@ export class ConstructsStack extends cdk.Stack {
 
     // Portal - S3 Static Website
     const portal = new PortalStack(this, 'Portal', {
+      auth_type: authType,
+      aws_oidc_provider: oidcProvider.valueAsString,
+      aws_oidc_login_url: oidcLoginUrl.valueAsString,
+      aws_oidc_logout_url: oidcLogoutUrl.valueAsString,
+      aws_oidc_token_validation_url: odicTokenValidationUrl.valueAsString,  
       aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
-      aws_user_pools_id: apiStack.userPool.userPoolId,
-      aws_user_pools_web_client_id: apiStack.userPoolApiClient.userPoolClientId,
+      aws_user_pools_id: apiStack.userPool?.userPoolId || '',
+      aws_user_pools_web_client_id: apiStack.userPoolApiClient?.userPoolClientId || '',
       taskCluster: {
         ecsVpcId: taskCluster.vpc.vpcId,
         ecsSubnets: taskCluster.publicSubnets.map(subnet => subnet.subnetId),
@@ -94,15 +136,15 @@ export class ConstructsStack extends cdk.Stack {
       value: taskCluster.clusterName
     }).overrideLogicalId('TaskClusterName')
     new cdk.CfnOutput(this, 'UserPoolIdOutput', {
-      value: apiStack.userPool.userPoolId,
+      value: apiStack.userPool?.userPoolId || '',
       description: 'User Pool Id'
     }).overrideLogicalId('UserPoolId')
     new cdk.CfnOutput(this, 'UserPoolApiClientIdOutput', {
-      value: apiStack.userPoolApiClient.userPoolClientId,
+      value: apiStack.userPoolApiClient?.userPoolClientId || '',
       description: 'API Client Id'
     }).overrideLogicalId('UserPoolApiClientId')
     new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
-      value: apiStack.userPoolDomain.domainName,
+      value: apiStack.userPoolDomain?.domainName || '',
       description: 'User pool domain'
     }).overrideLogicalId('UserPoolDomain')
     new cdk.CfnOutput(this, 'AdminUsernameOutput', {

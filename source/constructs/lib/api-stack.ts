@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { Construct, CfnParameter, Duration, Stack } from '@aws-cdk/core';
+import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws } from '@aws-cdk/core';
 import * as ddb from '@aws-cdk/aws-dynamodb';
 import * as cognito from '@aws-cdk/aws-cognito';
 import * as appsync from '@aws-cdk/aws-appsync';
@@ -19,24 +19,36 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
-
-const PLUGIN_TEMPLATE_S3 = 'https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-component-s3/v1.0.1/Aws-data-replication-component-s3.template';
-const PLUGIN_TEMPLATE_ECR = 'https://drh-solution.s3-us-west-2.amazonaws.com/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template';
+import { AuthType } from './constructs-stack';
 
 export interface ApiProps {
+  readonly authType: string,
+  readonly oidcProvider: CfnParameter,
   readonly usernameParameter: CfnParameter
 }
 
 export class ApiStack extends Construct {
 
+  readonly authDefaultConfig: any
   readonly taskTable: ddb.Table
-  readonly userPool: cognito.UserPool
+  readonly userPool?: cognito.UserPool
   readonly api: appsync.GraphqlApi
-  readonly userPoolApiClient: cognito.UserPoolClient
-  readonly userPoolDomain: cognito.UserPoolDomain
+  readonly userPoolApiClient?: cognito.UserPoolClient
+  readonly userPoolDomain?: cognito.UserPoolDomain
 
   constructor(scope: Construct, id: string, props: ApiProps) {
     super(scope, id);
+
+    const isCN = new CfnCondition(this, 'IsCN', {
+      expression: Fn.conditionOr(
+        Fn.conditionNot(Fn.conditionEquals('cn-north-1', Aws.REGION)),
+        Fn.conditionNot(Fn.conditionEquals('cn-northwest-1', Aws.REGION)),
+      ),
+    });
+    
+    const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
+    const PLUGIN_TEMPLATE_S3 = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-s3/v1.0.1/Aws-data-replication-component-s3.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template`;
 
     // Create the Progress DynamoDB Table
     this.taskTable = new ddb.Table(this, 'TaskTable', {
@@ -83,74 +95,85 @@ export class ApiStack extends Construct {
       lambdaLayer: lambdaLayer
     })
 
-    // Create Cognito User Pool
-    this.userPool = new cognito.UserPool(this, 'UserPool', {
-      selfSignUpEnabled: false,
-      signInCaseSensitive: false,
-      signInAliases: {
-        email: true,
-        username: false,
-        phone: true
-      }
-    })
-
-    // Create User Pool Client
-    this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolApiClient', {
-      userPool: this.userPool,
-      userPoolClientName: 'ReplicationHubPortal',
-      preventUserExistenceErrors: true
-    })
-
-    // Create an Admin User
-    // TODO: The user can be created, however, the state is FORCE_PASSWORD_CHANGE, the customer still cannot use the account yet.
-    // https://stackoverflow.com/questions/40287012/how-to-change-user-status-force-change-password
-    // resolution: create a custom lambda to set user password
-    new cognito.CfnUserPoolUser(this, 'AdminUser', {
-      userPoolId: this.userPool.userPoolId,
-      username: props.usernameParameter.valueAsString,
-      userAttributes: [
-        {
-          name: 'email',
-          value: props.usernameParameter.valueAsString
+    if (props.authType === AuthType.COGNITO) {
+      // Create Cognito User Pool
+      this.userPool = new cognito.UserPool(this, 'UserPool', {
+        selfSignUpEnabled: false,
+        signInCaseSensitive: false,
+        signInAliases: {
+          email: true,
+          username: false,
+          phone: true
         }
-      ]
-    })
+      })
 
-    this.userPoolDomain = new cognito.UserPoolDomain(this, 'UserPoolDomain', {
-      userPool: this.userPool,
-      cognitoDomain: {
-        domainPrefix: `drh-portal-${Stack.of(this).account}`
+      // Create User Pool Client
+      this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolApiClient', {
+        userPool: this.userPool,
+        userPoolClientName: 'ReplicationHubPortal',
+        preventUserExistenceErrors: true
+      })
+
+      // Create an Admin User
+      // TODO: The user can be created, however, the state is FORCE_PASSWORD_CHANGE, the customer still cannot use the account yet.
+      // https://stackoverflow.com/questions/40287012/how-to-change-user-status-force-change-password
+      // resolution: create a custom lambda to set user password
+      new cognito.CfnUserPoolUser(this, 'AdminUser', {
+        userPoolId: this.userPool.userPoolId,
+        username: props.usernameParameter.valueAsString,
+        userAttributes: [
+          {
+            name: 'email',
+            value: props.usernameParameter.valueAsString
+          }
+        ]
+      })
+
+      this.userPoolDomain = new cognito.UserPoolDomain(this, 'UserPoolDomain', {
+        userPool: this.userPool,
+        cognitoDomain: {
+          domainPrefix: `drh-portal-${Stack.of(this).account}`
+        }
+      })
+
+      // const userPoolDomainOutput = new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
+      //   exportName: 'UserPoolDomain',
+      //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
+      //   description: 'Cognito Hosted UI domain name'
+      // })
+      this.authDefaultConfig = {
+        authorizationType: appsync.AuthorizationType.USER_POOL,
+        userPoolConfig: {
+          userPool: this.userPool,
+          appIdClientRegex: this.userPoolApiClient.userPoolClientId,
+          defaultAction: appsync.UserPoolDefaultAction.ALLOW
+        }
       }
-    })
-
-    // const userPoolDomainOutput = new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
-    //   exportName: 'UserPoolDomain',
-    //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
-    //   description: 'Cognito Hosted UI domain name'
-    // })
+    } else {
+      this.authDefaultConfig = {
+        authorizationType: appsync.AuthorizationType.OIDC,
+        openIdConnectConfig: {
+          oidcProvider: props.oidcProvider.valueAsString
+        }
+      }
+    }
+    
 
     // Create the GraphQL API Endpoint, enable Cognito User Pool Auth and IAM Auth.
     this.api = new appsync.GraphqlApi(this, 'ApiEndpoint', {
       name: 'ReplicationHubAPI',
       schema: appsync.Schema.fromAsset(path.join(__dirname, '../../schema/schema.graphql')),
       authorizationConfig: {
-        defaultAuthorization: {
-          authorizationType: appsync.AuthorizationType.USER_POOL,
-          userPoolConfig: {
-            userPool: this.userPool,
-            appIdClientRegex: this.userPoolApiClient.userPoolClientId,
-            defaultAction: appsync.UserPoolDefaultAction.ALLOW
-          }
-        },
+        defaultAuthorization: this.authDefaultConfig,
         additionalAuthorizationModes: [
           {
-            authorizationType: appsync.AuthorizationType.IAM,
+            authorizationType: appsync.AuthorizationType.IAM
           }
         ]
       },
-      logConfig: {
-        fieldLogLevel: appsync.FieldLogLevel.ALL
-      },
+      // logConfig: {
+      //   fieldLogLevel: appsync.FieldLogLevel.ALL
+      // },
       xrayEnabled: true
     })
 

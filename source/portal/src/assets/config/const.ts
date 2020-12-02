@@ -12,6 +12,8 @@ export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
 
 export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
 
+export const DRH_API_HEADER = "drh-api-header";
+
 export const MenuProps: any = {
   getContentAnchorEl: null,
   anchorOrigin: {

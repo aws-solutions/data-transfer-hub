@@ -61,7 +61,11 @@ import {
   EnumTaskType,
   ECREnumSourceType,
 } from "../../assets/types/index";
-import { YES_NO, AWS_REGION_LIST } from "../../assets/config/const";
+import {
+  YES_NO,
+  AWS_REGION_LIST,
+  DRH_API_HEADER,
+} from "../../assets/config/const";
 
 const StyledMenu = withStyles({
   paper: {
@@ -145,13 +149,19 @@ const List: React.FC = () => {
 
   async function getTaskList(token: string | null, direction: string) {
     setIsLoading(true);
-    const apiData: any = await API.graphql({
-      query: listTasks,
-      variables: {
-        limit: 10,
-        nextToken: token,
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
+    const apiData: any = await API.graphql(
+      {
+        query: listTasks,
+        variables: {
+          limit: 10,
+          nextToken: token,
+        },
       },
-    });
+      addtionHeader
+    );
     // Build Pagination Data
     // First build Table Data
     // const dataListArr: any = [];
@@ -366,8 +376,10 @@ const List: React.FC = () => {
   };
 
   const getParamsValueByName = (name: string, paramList: any) => {
-    return paramList.find((item: any) => item.ParameterKey === name)
-      .ParameterValue;
+    return (
+      paramList.find((item: any) => item.ParameterKey === name)
+        ?.ParameterValue || ""
+    );
   };
 
   const buildTaskSource = (item: any) => {

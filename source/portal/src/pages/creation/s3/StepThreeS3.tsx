@@ -30,6 +30,7 @@ import {
   S3_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
+  DRH_API_HEADER,
 } from "../../../assets/config/const";
 
 interface IParameterType {
@@ -125,12 +126,18 @@ const StepThreeS3: React.FC = () => {
   }, [tmpTaskInfo]);
 
   async function createTask() {
+    const addtionHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
     setIsCreating(true);
     // if (!formData.name || !formData.description) return;
-    const createTaskData = await API.graphql({
-      query: createTaskMutaion,
-      variables: { input: createTaskGQL },
-    });
+    const createTaskData = await API.graphql(
+      {
+        query: createTaskMutaion,
+        variables: { input: createTaskGQL },
+      },
+      addtionHeader
+    );
     console.info("createTaskData:", createTaskData);
     dispatch({
       type: "set create task flag",
