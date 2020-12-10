@@ -23,7 +23,7 @@
 set -e
 
 run() {
-    echo ::$*
+    >&2 echo ::$*
     $*
 }
 
@@ -99,12 +99,11 @@ echo "npm install"
 npm install
 echo "npm run build"
 npm run build
-echo "npx cdk synth --output=$staging_dist_dir"
-# npx cdk synth --output=$staging_dist_dir
-npx cdk synth --asset-metadata false --path-metadata false --json true > $staging_dist_dir/AwsDataReplicationHub-cognito.template.json
-npx cdk synth -c authType=openid --asset-metadata false --path-metadata false --json true > $staging_dist_dir/AwsDataReplicationHub-openid.template.json
 
-ls -l $staging_dist_dir
+run npx cdk synth --output=$staging_dist_dir --json true > $template_dist_dir/AwsDataReplicationHub-cognito.template
+run npx cdk synth -c authType=openid --output=$staging_dist_dir --json true > $template_dist_dir/AwsDataReplicationHub-openid.template
+
+ls -l $template_dist_dir
 
 # Remove unnecessary output files
 echo "cd $staging_dist_dir"
@@ -115,19 +114,6 @@ rm tree.json manifest.json cdk.out
 echo "------------------------------------------------------------------------------"
 echo "[Packing] Template artifacts"
 echo "------------------------------------------------------------------------------"
-
-# Move outputs from staging to template_dist_dir
-echo "Move outputs from staging to template_dist_dir"
-echo "cp $template_dir/*.template $template_dist_dir/"
-cp $staging_dist_dir/*.template.json $template_dist_dir/
-rm *.template.json
-
-# Rename all *.template.json files to *.template
-echo "Rename all *.template.json to *.template"
-echo "copy templates and rename"
-for f in $template_dist_dir/*.template.json; do
-    mv -- "$f" "${f%.template.json}.template"
-done
 
 # Run the helper to clean-up the templates and remove unnecessary CDK elements
 cd $template_dir/cdk-solution-helper
