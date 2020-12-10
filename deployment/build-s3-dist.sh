@@ -89,7 +89,9 @@ npm install
 echo "npm run build"
 npm run build
 echo "npx cdk synth --output=$staging_dist_dir"
-npx cdk synth --output=$staging_dist_dir
+# npx cdk synth --output=$staging_dist_dir
+npx cdk synth --asset-metadata false --path-metadata false --json true > $staging_dist_dir/AwsDataReplicationHub-cognito.template.json
+npx cdk synth -c authType=openid --asset-metadata false --path-metadata false --json true > $staging_dist_dir/AwsDataReplicationHub-openid.template.json
 
 # Remove unnecessary output files
 echo "cd $staging_dist_dir"
