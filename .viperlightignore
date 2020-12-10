@@ -1,0 +1,13 @@
+# Ignore Config used with code.amazon.com
+Config
+
+^dist/
+node_modules/
+package-lock.json
+
+docs/UserManual.md
+source/portal/src/common/info/CredentialInfo.tsx
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+source/portal/src/pages/creation/ecr/StepTwoECR.tsx
+source/portal/src/pages/creation/s3/StepTwoS3.tsx
