@@ -20,6 +20,17 @@
 #    The template will then expect the source code to be located in the solutions-[region_name] bucket
 #  - solution-name: name of the solution for consistency
 #  - version-code: version of the package
+set -e
+
+run() {
+    echo ::$*
+    $*
+}
+
+sedi() {
+    # cross-platform for sed -i
+    sed -i $* 2>/dev/null || sed -i "" $*
+}
 
 ## Important: CDK global version number
 cdk_version=1.64.1
@@ -93,6 +104,8 @@ echo "npx cdk synth --output=$staging_dist_dir"
 npx cdk synth --asset-metadata false --path-metadata false --json true > $staging_dist_dir/AwsDataReplicationHub-cognito.template.json
 npx cdk synth -c authType=openid --asset-metadata false --path-metadata false --json true > $staging_dist_dir/AwsDataReplicationHub-openid.template.json
 
+ls -l $staging_dist_dir
+
 # Remove unnecessary output files
 echo "cd $staging_dist_dir"
 cd $staging_dist_dir
@@ -131,14 +144,11 @@ echo "Find and replace bucket_name, solution_name, and version"
 cd $template_dist_dir
 echo "Updating code source bucket in template with $1"
 replace="s/%%BUCKET_NAME%%/$1/g"
-echo "sed -i '' -e $replace $template_dist_dir/*.template"
-sed -i '' -e $replace $template_dist_dir/*.template
+run sedi $replace $template_dist_dir/*.template
 replace="s/%%SOLUTION_NAME%%/$2/g"
-echo "sed -i '' -e $replace $template_dist_dir/*.template"
-sed -i '' -e $replace $template_dist_dir/*.template
+run sedi $replace $template_dist_dir/*.template
 replace="s/%%VERSION%%/$3/g"
-echo "sed -i '' -e $replace $template_dist_dir/*.template"
-sed -i '' -e $replace $template_dist_dir/*.template
+run sedi $replace $template_dist_dir/*.template
 
 
 echo "------------------------------------------------------------------------------"
