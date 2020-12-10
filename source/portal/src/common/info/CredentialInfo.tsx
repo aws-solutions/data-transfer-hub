@@ -34,7 +34,6 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
   const [tmpJson, setTmpJson] = useState(S3_JSON);
 
   useEffect(() => {
-    console.info(props);
     if (props.name === EnumTaskType.ECR) {
       setTmpJson(ECR_JSON);
     } else {

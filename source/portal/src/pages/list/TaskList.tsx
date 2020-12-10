@@ -65,6 +65,8 @@ import {
   YES_NO,
   AWS_REGION_LIST,
   DRH_API_HEADER,
+  AUTH_TYPE_NAME,
+  OPEN_ID_TYPE,
 } from "../../assets/config/const";
 
 const StyledMenu = withStyles({
@@ -149,7 +151,8 @@ const List: React.FC = () => {
 
   async function getTaskList(token: string | null, direction: string) {
     setIsLoading(true);
-    const addtionHeader = {
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
     const apiData: any = await API.graphql(
@@ -160,7 +163,7 @@ const List: React.FC = () => {
           nextToken: token,
         },
       },
-      addtionHeader
+      authType === OPEN_ID_TYPE ? openIdHeader : undefined
     );
     // Build Pagination Data
     // First build Table Data
@@ -206,14 +209,20 @@ const List: React.FC = () => {
   };
 
   async function stopTaskFunc(taskId: string) {
-    setIsStopLoading(true);
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
+      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
+    };
     try {
-      const stopResData: any = await API.graphql({
-        query: stopTask,
-        variables: {
-          id: taskId,
+      const stopResData: any = await API.graphql(
+        {
+          query: stopTask,
+          variables: {
+            id: taskId,
+          },
         },
-      });
+        authType === OPEN_ID_TYPE ? openIdHeader : undefined
+      );
       setIsStopLoading(false);
       setOpen(false);
       refreshData();

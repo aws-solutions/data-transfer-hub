@@ -3,6 +3,8 @@
   "yes": "是",
   "no": "否",
   "signOut": "退出登录",
+  "reLogin": "重新登录",
+  "reLoignTips": "本次回话已过期。再次登录 AWS Data Replication Hub，请点击“重新登录”.",
   "info": "信息",
   "optional": "可选",
   "top": {
@@ -232,7 +234,8 @@
     "viewDetail": "查看详情",
     "taskAction": "操作",
     "stopTask": "停止任务",
-    "cloneTask": "复制任务"
+    "cloneTask": "复制任务",
+    "reLogin": "重新登录"
   },
   "tips": {
     "error": {

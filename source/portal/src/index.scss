@@ -59,6 +59,34 @@ code {
   }
 }
 
+.over-mask {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($color: #000000, $alpha: 0.2);
+  .card {
+    width: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -100px 0 0 -150px;
+    .relogin-botton {
+      margin: 20px;
+    }
+  }
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
 .login-wrap {
   width: 460px;
   margin: 100px auto 0;

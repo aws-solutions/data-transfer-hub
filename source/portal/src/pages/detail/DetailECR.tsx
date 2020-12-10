@@ -37,7 +37,12 @@ import {
   EnumDockerImageType,
 } from "../../assets/types/index";
 
-import { getRegionNameById, DRH_API_HEADER } from "../../assets/config/const";
+import {
+  getRegionNameById,
+  DRH_API_HEADER,
+  AUTH_TYPE_NAME,
+  OPEN_ID_TYPE,
+} from "../../assets/config/const";
 
 import "./Detail.scss";
 
@@ -116,7 +121,8 @@ const Detail: React.FC = (props: any) => {
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
-    const addtionHeader = {
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
     const apiData: any = await API.graphql(
@@ -126,7 +132,7 @@ const Detail: React.FC = (props: any) => {
           id: taskId,
         },
       },
-      addtionHeader
+      authType === OPEN_ID_TYPE ? openIdHeader : undefined
     );
     const tmpCurTask = apiData.data.getTask;
 
@@ -151,7 +157,8 @@ const Detail: React.FC = (props: any) => {
 
   async function stopTaskFunc(taskId: string) {
     setIsStopLoading(true);
-    const addtionHeader = {
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
     try {
@@ -162,7 +169,7 @@ const Detail: React.FC = (props: any) => {
             id: taskId,
           },
         },
-        addtionHeader
+        authType === OPEN_ID_TYPE ? openIdHeader : undefined
       );
       setIsStopLoading(false);
       setOpen(false);
@@ -172,24 +179,6 @@ const Detail: React.FC = (props: any) => {
       console.error("error:", error.errors[0].message.toString());
     }
   }
-
-  // Subscribtion Progress Data
-  // useEffect(() => {
-  //   const addtionHeader = {
-  //     Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-  //   };
-  //   const subscriber: any = API.graphql(
-  //     graphqlOperation(updateTaskProgress),
-  //     addtionHeader
-  //   );
-  //   subscriber.subscribe({
-  //     next: (data: any) => {
-  //       if (data.value.data.updateTaskProgress.id === props.match.params.id) {
-  //         fetchNotes(props.match.params.id);
-  //       }
-  //     },
-  //   });
-  // }, [props.match.params.id]);
 
   const handleClose = () => {
     setOpen(false);

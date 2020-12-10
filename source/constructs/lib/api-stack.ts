@@ -23,7 +23,7 @@ import { AuthType } from './constructs-stack';
 
 export interface ApiProps {
   readonly authType: string,
-  readonly oidcProvider: CfnParameter,
+  readonly oidcProvider: CfnParameter | null,
   readonly usernameParameter: CfnParameter
 }
 
@@ -89,13 +89,23 @@ export class ApiStack extends Construct {
       description: 'AWS Data Replication Hub - Lambda Layer'
     })
 
-
     const stateMachine = new cfnSate.CloudFormationStateMachine(this, 'CfnWorkflow', {
       taskTableName: this.taskTable.tableName,
       lambdaLayer: lambdaLayer
     })
 
-    if (props.authType === AuthType.COGNITO) {
+    if (props.authType === AuthType.OPENID) {
+
+      // Open Id Auth Config
+      this.authDefaultConfig = {
+        authorizationType: appsync.AuthorizationType.OIDC,
+        openIdConnectConfig: {
+          oidcProvider: props.oidcProvider?.valueAsString
+        }
+      }
+      
+    } else {
+      
       // Create Cognito User Pool
       this.userPool = new cognito.UserPool(this, 'UserPool', {
         selfSignUpEnabled: false,
@@ -147,13 +157,6 @@ export class ApiStack extends Construct {
           userPool: this.userPool,
           appIdClientRegex: this.userPoolApiClient.userPoolClientId,
           defaultAction: appsync.UserPoolDefaultAction.ALLOW
-        }
-      }
-    } else {
-      this.authDefaultConfig = {
-        authorizationType: appsync.AuthorizationType.OIDC,
-        openIdConnectConfig: {
-          oidcProvider: props.oidcProvider.valueAsString
         }
       }
     }

@@ -32,6 +32,8 @@ import {
   CREATE_USE_LESS_PROPERTY,
   getRegionNameById,
   DRH_API_HEADER,
+  AUTH_TYPE_NAME,
+  OPEN_ID_TYPE,
 } from "../../../assets/config/const";
 
 interface IParameterType {
@@ -99,7 +101,6 @@ const StepThreeECR: React.FC = () => {
 
   // Build  Task  Info  Data
   useEffect(() => {
-    console.info("tmpTaskInfo:", tmpTaskInfo);
     const NOT_PARAMS: Array<string> = ["srcRegionDefault", "destRegionDefault"];
     const NOT_PARAMS_TASK: Array<string> = [
       "sourceInAccount",
@@ -161,7 +162,8 @@ const StepThreeECR: React.FC = () => {
 
   async function createTask() {
     setIsCreating(true);
-    const addtionHeader = {
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
     console.info("createTaskGQL:", createTaskGQL);
@@ -171,7 +173,7 @@ const StepThreeECR: React.FC = () => {
         query: createTaskMutaion,
         variables: { input: createTaskGQL },
       },
-      addtionHeader
+      authType === OPEN_ID_TYPE ? openIdHeader : undefined
     );
     console.info("createTaskData:", createTaskData);
     dispatch({

@@ -8,7 +8,6 @@ interface spanInfo {
 
 const InfoSpan: React.FC<spanInfo> = (props) => {
   const { spanType } = props;
-  console.info("spanType:", spanType);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const openInfoBar = React.useCallback(() => {

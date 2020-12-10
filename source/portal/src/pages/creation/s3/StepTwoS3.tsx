@@ -45,6 +45,8 @@ import {
   MAXTHREADS_OPTIONS,
   SSM_LINK,
   DRH_API_HEADER,
+  AUTH_TYPE_NAME,
+  OPEN_ID_TYPE,
 } from "../../../assets/config/const";
 
 import "../Creation.scss";
@@ -100,7 +102,8 @@ const StepTwoS3: React.FC = () => {
 
   // Get Parameter List
   async function getSSMParamsList() {
-    const addtionHeader = {
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
     const apiData: any = await API.graphql(
@@ -108,7 +111,7 @@ const StepTwoS3: React.FC = () => {
         query: listParameters,
         variables: {},
       },
-      addtionHeader
+      authType === OPEN_ID_TYPE ? openIdHeader : undefined
     );
     if (
       apiData?.data?.listParameters &&

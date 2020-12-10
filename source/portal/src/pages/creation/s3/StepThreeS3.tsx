@@ -31,6 +31,8 @@ import {
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
   DRH_API_HEADER,
+  AUTH_TYPE_NAME,
+  OPEN_ID_TYPE,
 } from "../../../assets/config/const";
 
 interface IParameterType {
@@ -126,17 +128,18 @@ const StepThreeS3: React.FC = () => {
   }, [tmpTaskInfo]);
 
   async function createTask() {
-    const addtionHeader = {
+    setIsCreating(true);
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
+    const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
-    setIsCreating(true);
     // if (!formData.name || !formData.description) return;
     const createTaskData = await API.graphql(
       {
         query: createTaskMutaion,
         variables: { input: createTaskGQL },
       },
-      addtionHeader
+      authType === OPEN_ID_TYPE ? openIdHeader : undefined
     );
     console.info("createTaskData:", createTaskData);
     dispatch({

@@ -3,6 +3,8 @@
   "yes": "Yes",
   "no": "No",
   "signOut": "Sign Out",
+  "reLogin": "Login Again",
+  "reLoignTips": "This session has expired. To log in to AWS Data Replication Hub again, please click Login Again.",
   "info": "Info",
   "optional": "optional",
   "top": {
@@ -232,7 +234,8 @@
     "viewDetail": "View Details",
     "taskAction": "Task Action",
     "stopTask": "Stop Task",
-    "cloneTask": "Clone Task"
+    "cloneTask": "Clone Task",
+    "reLogin": "Login Again"
   },
   "tips": {
     "error": {

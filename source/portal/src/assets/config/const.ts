@@ -13,6 +13,11 @@ export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
 export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
 
 export const DRH_API_HEADER = "drh-api-header";
+export const DRH_ID_TOKEN = "drh-id-token";
+export const AUTH_TYPE_NAME = "auth-type";
+export const OPEN_ID_TYPE = "OPENID";
+export const OPENID_SIGNIN_URL = "DRH_OPENID_SIGNIN_URL";
+export const OPENID_SIGNOUT_URL = "DRH_OPENID_SIGNOUT_URL";
 
 export const MenuProps: any = {
   getContentAnchorEl: null,
