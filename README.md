@@ -59,6 +59,10 @@ Follow the step-by-step instructions in this section to configure and deploy the
 1. Input **AdminEmail** parameter
 1. Click **Next** and select **Create Stack**.
 
+## Deploy in China Region
+
+[Deploy in China Region](docs/DeployInChinaWithAuthing_CN.md)
+
 ## Deploy via AWS CDK
 
 _Note_: You should choose either [Deploy via CloudFormation](#deploy-via-cloudformation) or [Deploy via AWS CDK](#deploy-via-aws-cdk). If you are don't want to install the dependencies on your local machine. Please choose [Deploy via CloudFormation](#deploy-via-cloudformation).
