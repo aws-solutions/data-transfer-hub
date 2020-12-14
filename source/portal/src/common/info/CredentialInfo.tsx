@@ -5,13 +5,16 @@ import Button from "@material-ui/core/Button";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import CopyToClipboard from "react-copy-to-clipboard";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { SSM_LINK, SSM_PARASTORE_HELP_LINK } from "../../assets/config/const";
+import {
+  SSM_LINK_MAP,
+  SSM_PARASTORE_HELP_LINK_MAP,
+  DRH_REGION_TYPE_NAME,
+  DRH_REGION_NAME,
+  GLOBAL_STR,
+} from "../../assets/config/const";
 import { EnumTaskType } from "../../assets/types/index";
 
 import "./info.scss";
-
-const region = window.localStorage.getItem("cur-region") || "";
-
 interface Page {
   name: string | undefined;
 }
@@ -32,6 +35,8 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
   const { t } = useTranslation();
 
   const [tmpJson, setTmpJson] = useState(S3_JSON);
+  const [curRegionType, setCurRegionType] = useState("");
+  const [curRegion, setCurRegion] = useState("");
 
   useEffect(() => {
     if (props.name === EnumTaskType.ECR) {
@@ -41,6 +46,15 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
     }
   }, [props]);
 
+  // Get Region and Region Type
+  useEffect(() => {
+    const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
+    const curRegionType: string =
+      localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
+    setCurRegion(curRegion);
+    setCurRegionType(curRegionType);
+  }, []);
+
   return (
     <div className="credential">
       <div className="top-tips">
@@ -49,7 +63,7 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
           className="a-link"
           rel="noopener noreferrer"
           target="_blank"
-          href={SSM_LINK + "?region=" + region}
+          href={SSM_LINK_MAP[curRegionType] + "?region=" + curRegion}
         >
           {t("comps.credential.store")}
         </a>{" "}
@@ -97,7 +111,7 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
             className="a-link"
             rel="noopener noreferrer"
             target="_blank"
-            href={SSM_PARASTORE_HELP_LINK}
+            href={SSM_PARASTORE_HELP_LINK_MAP[curRegionType]}
           >
             {t("comps.credential.createStore")}
           </a>

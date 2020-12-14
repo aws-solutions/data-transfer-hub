@@ -36,6 +36,10 @@ import {
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
+  DRH_REGION_TYPE_NAME,
+  DRH_REGION_NAME,
+  GLOBAL_STR,
+  CLOUD_WATCH_DASHBOARD_LINK_MAP,
 } from "../../assets/config/const";
 
 import "./Detail.scss";
@@ -104,8 +108,6 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const region = window.localStorage.getItem("cur-region");
-
 const Detail: React.FC = (props: any) => {
   const { t } = useTranslation();
 
@@ -116,6 +118,8 @@ const Detail: React.FC = (props: any) => {
   const [isStopLoading, setIsStopLoading] = useState(false);
   const [accountInSrc, setAccountInSrc] = useState("-");
   const [accountInDest, setAccountInDest] = useState("-");
+  const [curRegionType, setCurRegionType] = useState("");
+  const [curRegion, setCurRegion] = useState("");
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
@@ -156,6 +160,15 @@ const Detail: React.FC = (props: any) => {
   useEffect(() => {
     fetchNotes(props.match.params.id);
   }, [props.match.params.id]);
+
+  // Get Cur Region and Region Type
+  useEffect(() => {
+    const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
+    const curRegionType: string =
+      localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
+    setCurRegion(curRegion);
+    setCurRegionType(curRegionType);
+  }, []);
 
   const handleChange: any = (event: React.ChangeEvent, newValue: number) => {
     setValue(newValue);
@@ -331,7 +344,7 @@ const Detail: React.FC = (props: any) => {
                               className="a-link"
                               rel="noopener noreferrer"
                               target="_blank"
-                              href={`https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:`}
+                              href={`${CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]}?region=${curRegion}#dashboards:`}
                             >
                               {t("taskDetail.dashboard")}{" "}
                               <OpenInNewIcon

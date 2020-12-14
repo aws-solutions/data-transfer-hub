@@ -3,15 +3,32 @@ export const URL = "";
 export const URL_FEEDBACK =
   "https://github.com/aws-samples/aws-data-replication-hub/issues/new";
 export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
-export const SSM_LINK =
-  "https://console.aws.amazon.com/systems-manager/parameters/";
-export const SSM_PARASTORE_HELP_LINK =
-  "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html";
+export const SSM_LINK_MAP: any = {
+  china: "https://console.amazonaws.cn/systems-manager/parameters",
+  global: "https://console.aws.amazon.com/systems-manager/parameters",
+};
+
+export const CLOUD_WATCH_DASHBOARD_LINK_MAP: any = {
+  china: "https://console.amazonaws.cn/cloudwatch/home",
+  global: "https://console.aws.amazon.com/cloudwatch/home",
+};
+
+export const SSM_PARASTORE_HELP_LINK_MAP: any = {
+  china:
+    "https://docs.aws.amazon.com/zh_cn/systems-manager/latest/userguide/systems-manager-parameter-store.html",
+  global:
+    "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html",
+};
 
 export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
 
 export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
 
+export const GLOBAL_STR = "global";
+export const CHINA_STR = "china";
+export const DRH_REGION_TYPE_NAME = "drh-region-type";
+export const DRH_CONFIG_JSON_NAME = "drh-config-json";
+export const DRH_REGION_NAME = "drh-cur-region";
 export const DRH_API_HEADER = "drh-api-header";
 export const DRH_ID_TOKEN = "drh-id-token";
 export const AUTH_TYPE_NAME = "auth-type";

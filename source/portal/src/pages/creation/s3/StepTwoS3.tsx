@@ -43,10 +43,13 @@ import {
   MUTLTIPART_OPTIONS,
   CHUNKSIZE_OPTIONS,
   MAXTHREADS_OPTIONS,
-  SSM_LINK,
+  SSM_LINK_MAP,
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
+  DRH_REGION_TYPE_NAME,
+  DRH_REGION_NAME,
+  GLOBAL_STR,
 } from "../../../assets/config/const";
 
 import "../Creation.scss";
@@ -62,8 +65,6 @@ const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
-const region = window.localStorage.getItem("cur-region");
-
 const StepTwoS3: React.FC = () => {
   const { tmpTaskInfo } = useMappedState(mapState);
 
@@ -73,6 +74,8 @@ const StepTwoS3: React.FC = () => {
 
   const [titleStr, setTitleStr] = useState("en_name");
   const [descStr, setDescStr] = useState("en_desc");
+  const [curRegionType, setCurRegionType] = useState("");
+  const [curRegion, setCurRegion] = useState("");
 
   const [ssmParamList, setSSMParamList] = useState([]);
   const initCredential =
@@ -120,6 +123,15 @@ const StepTwoS3: React.FC = () => {
       setSSMParamList(apiData.data.listParameters);
     }
   }
+
+  // Get Cur Region and Region Type
+  useEffect(() => {
+    const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
+    const curRegionType: string =
+      localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
+    setCurRegion(curRegion);
+    setCurRegionType(curRegionType);
+  }, []);
 
   useEffect(() => {
     getSSMParamsList();
@@ -457,7 +469,11 @@ const StepTwoS3: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
-                            href={SSM_LINK + "?region=" + region}
+                            href={
+                              SSM_LINK_MAP[curRegionType] +
+                              "?region=" +
+                              curRegion
+                            }
                           >
                             {t("creation.tips.store2")}
                           </a>{" "}

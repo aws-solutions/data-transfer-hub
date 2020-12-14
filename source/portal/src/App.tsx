@@ -33,6 +33,9 @@ import {
   OPENID_SIGNIN_URL,
   OPENID_SIGNOUT_URL,
   AUTH_TYPE_NAME,
+  DRH_REGION_NAME,
+  DRH_CONFIG_JSON_NAME,
+  DRH_REGION_TYPE_NAME,
 } from "./assets/config/const";
 
 import "./App.scss";
@@ -74,7 +77,7 @@ const App: React.FC = () => {
   };
 
   const redirectToLogin = useCallback(() => {
-    // setLoadingConfig(false);
+    setLoadingConfig(false);
     window.location.href = loginUrl;
   }, [loginUrl]);
 
@@ -84,8 +87,13 @@ const App: React.FC = () => {
       const ConfigObj = res.data;
       const AuthType = ConfigObj.aws_appsync_authenticationType;
       setAuthType(AuthType);
-      window.localStorage.setItem("configJson", JSON.stringify(ConfigObj));
-      window.localStorage.setItem(AUTH_TYPE_NAME, AuthType);
+      localStorage.setItem(DRH_CONFIG_JSON_NAME, JSON.stringify(ConfigObj));
+      localStorage.setItem(AUTH_TYPE_NAME, AuthType);
+      localStorage.setItem(DRH_REGION_NAME, ConfigObj.aws_project_region);
+      localStorage.setItem(
+        DRH_REGION_TYPE_NAME,
+        ConfigObj.aws_project_region?.startsWith("cn") ? "china" : "global"
+      );
       if (AuthType === OPEN_ID_TYPE) {
         Amplify.configure(ConfigObj);
         const oidcLoginUrl = ConfigObj.aws_oidc_login_url;
@@ -142,10 +150,10 @@ const App: React.FC = () => {
 
   // Check Token Expire when OPENID
   useEffect(() => {
-    const authType = window.localStorage.getItem(AUTH_TYPE_NAME);
+    const authType = localStorage.getItem(AUTH_TYPE_NAME);
     if (authType === OPEN_ID_TYPE) {
       const interval = setInterval(() => {
-        const curToken = window.localStorage.getItem(DRH_API_HEADER);
+        const curToken = localStorage.getItem(DRH_API_HEADER);
         if (curToken) {
           const myDecodedToken: any = jwt_decode(curToken);
           if (myDecodedToken.exp * 1000 < new Date().getTime()) {

@@ -34,6 +34,7 @@ import {
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
+  DRH_CONFIG_JSON_NAME,
 } from "../../../assets/config/const";
 
 interface IParameterType {
@@ -128,7 +129,7 @@ const StepThreeECR: React.FC = () => {
     }
     // Add New Params to Creat Task
     const configJson: any = JSON.parse(
-      window.localStorage.getItem("configJson") as string
+      localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
     );
     const clusterData = configJson.taskCluster;
     for (const key in clusterData) {

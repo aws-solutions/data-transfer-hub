@@ -37,10 +37,13 @@ import {
   YES_NO_LIST,
   YES_NO,
   MenuProps,
-  SSM_LINK,
+  SSM_LINK_MAP,
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
+  DRH_REGION_TYPE_NAME,
+  DRH_REGION_NAME,
+  GLOBAL_STR,
 } from "../../../assets/config/const";
 import {
   ECR_SOURCE_TYPE,
@@ -60,8 +63,6 @@ const schema = yup.object().shape({
   alarmEmail: yup.string().email().required(),
 });
 
-const region = window.localStorage.getItem("cur-region");
-
 const MAX_LENGTH = 4096;
 
 const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
@@ -71,6 +72,8 @@ const StepTwoECR: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [titleStr, setTitleStr] = useState("en_name");
   const [descStr, setDescStr] = useState("en_desc");
+  const [curRegionType, setCurRegionType] = useState("");
+  const [curRegion, setCurRegion] = useState("");
 
   const [ssmParamList, setSSMParamList] = useState([]);
   const [curLength, setCurLength] = useState(0);
@@ -181,6 +184,15 @@ const StepTwoECR: React.FC = () => {
       setDescStr(i18n.language + "_desc");
     }
   }, [i18n.language]);
+
+  // Get Region and Region Type
+  useEffect(() => {
+    const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
+    const curRegionType: string =
+      localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
+    setCurRegion(curRegion);
+    setCurRegionType(curRegionType);
+  }, []);
 
   useEffect(() => {
     if (paramData) {
@@ -532,7 +544,11 @@ const StepTwoECR: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
-                            href={SSM_LINK + "?region=" + region}
+                            href={
+                              SSM_LINK_MAP[curRegionType] +
+                              "?region=" +
+                              curRegion
+                            }
                           >
                             {t("creation.tips.store2")}
                           </a>{" "}
@@ -791,7 +807,11 @@ const StepTwoECR: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="a-link"
-                            href={SSM_LINK + "?region=" + region}
+                            href={
+                              SSM_LINK_MAP[curRegionType] +
+                              "?region=" +
+                              curRegion
+                            }
                           >
                             {t("creation.tips.store2")}
                           </a>{" "}
