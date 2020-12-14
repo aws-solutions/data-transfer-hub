@@ -34,7 +34,7 @@
 1. 确保您已经登陆到AWS中国区的[控制台](https://console.amazonaws.cn/console/home).
 
 1. 单击以下按钮以在您的AWS帐户中启动CloudFormation堆栈.
-  [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/v1.1.1/AwsDataReplicationHub-openid.template)
+  [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/v1.1.2/AwsDataReplicationHub-openid.template)
 
 1. 点击 **下一步**
 
