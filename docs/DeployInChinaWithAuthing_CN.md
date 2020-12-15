@@ -1,4 +1,4 @@
-# 在中国区部署 Data Replication Hub
+# 在AWS中国区部署 Data Replication Hub
 
 **部署时间:** 大约需要20分钟.
 
@@ -7,12 +7,12 @@
 
 ## OpenId认证配置
 
-中国区目前暂时没有上线Cognito User Pool服务，如果要将AWS Data Replication Hub部署在中国区使用，我们目前支持使用 [Authing](http://authing.cn/) 作为OpenId的认证服务商提供的认证服务。
+中国区目前暂时没有上线Cognito User Pool服务，如果要将AWS Data Replication Hub部署在中国区使用，我们目前支持使用[Authing](http://authing.cn/)作为OpenId的认证服务商提供的认证服务。
 
 ### 注册Authing.cn开发者账号
 [点击注册](https://docs.authing.cn/quickstart/create-authing-account.html)
 
-### 在Authing.cn中创建OIDC应用
+### 在Authing.cn中创建OIDC应用
 [点击了解如何创建](https://docs.authing.cn/authentication/oidc/create-oidc.html)
 
 **在创建应用的时候的请参考以下配置**
@@ -34,6 +34,7 @@
 1. 确保您已经登陆到AWS中国区的[控制台](https://console.amazonaws.cn/console/home).
 
 1. 单击以下按钮以在您的AWS帐户中启动CloudFormation堆栈.
+
   [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/v1.1.2/AwsDataReplicationHub-openid.template)
 
 1. 点击 **下一步**
