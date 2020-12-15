@@ -1,4 +1,4 @@
-# 在AWS中国区部署 Data Replication Hub
+# 在AWS中国区部署 Data Replication Hub
 
 **部署时间:** 大约需要20分钟.
 
