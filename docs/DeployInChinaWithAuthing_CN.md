@@ -21,11 +21,11 @@
 
   ![应用配置](./images/oidc-app-setting.jpg)
 
-1. 配置登陆表单:
+2. 配置登陆表单:
 
   ![配置登陆表单](./images/oidc-app-setting-mail.jpg)
 
-1. 其他参数根据您的项目需要进行配置或者默认即可
+3. 其他参数根据您的项目需要进行配置或者默认即可
 
 ### 部署Data Replication Hub
 
@@ -33,22 +33,22 @@
 
 1. 确保您已经登陆到AWS中国区的[控制台](https://console.amazonaws.cn/console/home).
 
-1. 单击以下按钮以在您的AWS帐户中启动CloudFormation堆栈.
+2. 单击以下按钮以在您的AWS帐户中启动CloudFormation堆栈.
 
-  [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/v1.1.2/AwsDataReplicationHub-openid.template)
+    [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/v1.1.2/AwsDataReplicationHub-openid.template)
 
-1. 点击 **下一步**
+3. 点击 **下一步**
 
-1. 填写 **AdminEmail** 参数
+4. 填写 **AdminEmail** 参数
 
-1. 打开[Authing控制台](https://console.authing.cn/console)并打开应用配置信息按照下图所示填写在Cloudformation中的OIDC Settings中的参数:
+5. 打开[Authing控制台](https://console.authing.cn/console)并打开应用配置信息按照下图所示填写在Cloudformation中的OIDC Settings中的参数:
 
   ![URL](./images/oidc-app-setting-url.jpg)
 
-1. 填写**OdicTokenValidationUrl**，该URL为 https://<你的应用名>.authing.cn/api/v2/oidc/validate_token ，请查看[文档说明](https://docs.authing.cn/user/token.html#%E5%9C%A8%E7%BA%BF%E9%AA%8C%E8%AF%81-oidc-idtoken)
+6. 填写**OdicTokenValidationUrl**，该URL为 https://<你的应用名>.authing.cn/api/v2/oidc/validate_token ，请查看[文档说明](https://docs.authing.cn/user/token.html#%E5%9C%A8%E7%BA%BF%E9%AA%8C%E8%AF%81-oidc-idtoken)
    
     
-1. 点击 **下一步** 然后点击 **创建堆栈**.
+7. 点击 **下一步** 然后点击 **创建堆栈**.
 
 ### 在Route53中配置域名指向CloudFront
 
@@ -58,11 +58,11 @@
 
    ![Portal Url](./images/oidc-app-setting-output.jpg)
 
-1. 在[CloudFront](https://console.amazonaws.cn/cloudfront/home)中配置您已备案的域名
+2. 在[CloudFront](https://console.amazonaws.cn/cloudfront/home)中配置您已备案的域名
 
    ![CloudFront Setting](./images/oidc-app-setting-cfn.jpg)
 
-1. 在[Route 53](https://console.amazonaws.cn/route53/home)中将您的域名指向CloudFront
+3. 在[Route 53](https://console.amazonaws.cn/route53/home)中将您的域名指向CloudFront
 
    ![Portal Url](./images/oidc-app-setting-r53.jpg)
 
