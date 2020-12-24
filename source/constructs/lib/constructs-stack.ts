@@ -35,7 +35,7 @@ export class ConstructsStack extends cdk.Stack {
     let oidcProvider: CfnParameter | null = null;
     let oidcLoginUrl: CfnParameter | null = null;
     let oidcLogoutUrl: CfnParameter | null = null;
-    let odicTokenValidationUrl: CfnParameter | null = null;
+    let oidcTokenValidationUrl: CfnParameter | null = null;
     
     // CFN parameters
     const usernameParameter = new CfnParameter(this, 'AdminEmail', {
@@ -63,7 +63,7 @@ export class ConstructsStack extends cdk.Stack {
         default: '',
       });
   
-      odicTokenValidationUrl = new CfnParameter(this, 'OdicTokenValidationUrl', {
+      oidcTokenValidationUrl = new CfnParameter(this, 'OidcTokenValidationUrl', {
         type: 'String',
         description: 'OIDC Token Validation URL',
         default: '',
@@ -78,7 +78,7 @@ export class ConstructsStack extends cdk.Stack {
             },
             {
               Label: { default: 'OIDC Settings' },
-              Parameters: [ oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, odicTokenValidationUrl.logicalId ]
+              Parameters: [ oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, oidcTokenValidationUrl.logicalId ]
             }
           ]
         }
@@ -130,7 +130,7 @@ export class ConstructsStack extends cdk.Stack {
       aws_oidc_provider: oidcProvider?.valueAsString || '',
       aws_oidc_login_url: oidcLoginUrl?.valueAsString || '',
       aws_oidc_logout_url: oidcLogoutUrl?.valueAsString || '',
-      aws_oidc_token_validation_url: odicTokenValidationUrl?.valueAsString || '',  
+      aws_oidc_token_validation_url: oidcTokenValidationUrl?.valueAsString || '',  
       aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
       aws_user_pools_id: apiStack.userPool?.userPoolId || '',
       aws_user_pools_web_client_id: apiStack.userPoolApiClient?.userPoolClientId || '',

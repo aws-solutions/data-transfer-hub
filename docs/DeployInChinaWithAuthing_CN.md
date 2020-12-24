@@ -35,7 +35,7 @@
 
 2. 单击以下按钮以在您的AWS帐户中启动CloudFormation堆栈.
 
-    [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/v1.1.2/AwsDataReplicationHub-openid.template)
+    [![Launch Stack](../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataReplicationHubStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-data-replication-hub/latest/AwsDataReplicationHub-openid.template)
 
 3. 点击 **下一步**
 
@@ -45,7 +45,7 @@
 
   ![URL](./images/oidc-app-setting-url.jpg)
 
-6. 填写**OdicTokenValidationUrl**，该URL为 https://<你的应用名>.authing.cn/api/v2/oidc/validate_token ，请查看[文档说明](https://docs.authing.cn/user/token.html#%E5%9C%A8%E7%BA%BF%E9%AA%8C%E8%AF%81-oidc-idtoken)
+6. 填写**OidcTokenValidationUrl**，该URL为 https://<你的应用名>.authing.cn/api/v2/oidc/validate_token ，请查看[文档说明](https://docs.authing.cn/user/token.html#%E5%9C%A8%E7%BA%BF%E9%AA%8C%E8%AF%81-oidc-idtoken)
    
     
 7. 点击 **下一步** 然后点击 **创建堆栈**.

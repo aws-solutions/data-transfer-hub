@@ -169,8 +169,8 @@
     },
     "table": {
       "taskId": "任务编号",
-      "source": "源数据桶",
-      "destination": "目的数据桶",
+      "source": "数据源",
+      "destination": "数据目的地",
       "engineType": "引擎类型",
       "status": "状态",
       "createdTime": "创建时间"
