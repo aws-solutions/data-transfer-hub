@@ -39,11 +39,8 @@ export class ApiStack extends Construct {
   constructor(scope: Construct, id: string, props: ApiProps) {
     super(scope, id);
 
-    const isCN = new CfnCondition(this, 'IsCN', {
-      expression: Fn.conditionOr(
-        Fn.conditionNot(Fn.conditionEquals('cn-north-1', Aws.REGION)),
-        Fn.conditionNot(Fn.conditionEquals('cn-northwest-1', Aws.REGION)),
-      ),
+    const isCN = new CfnCondition(this, 'IsChinaRegionCondition', {
+      expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn')
     });
     
     const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
