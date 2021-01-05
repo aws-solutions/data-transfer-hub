@@ -44,6 +44,11 @@ export const MenuProps: any = {
   },
 };
 
+export interface IRegionType {
+  name: string;
+  value: string;
+}
+
 export const S3_PARAMS_LIST_MAP: any = {
   srcBucketName: {
     en_name: "Source Bucket Name",
@@ -61,6 +66,14 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Destination Bucket Object Prefix",
     "zh-CN_name": "目标数据桶对象前缀",
   },
+  enableS3Event: {
+    en_name: "Enable S3 Event",
+    "zh-CN_name": "启用S3事件",
+  },
+  regionName: {
+    en_name: "Region Name",
+    "zh-CN_name": "区域名称",
+  },
   credentialsParameterStore: {
     en_name: "Parameter Store name for Credentials",
     "zh-CN_name": "凭证中的参数存储名称",
@@ -73,10 +86,10 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Source Type",
     "zh-CN_name": "数据源类型",
   },
-  jobType: {
-    en_name: "Which bucket in current AWS account?",
-    "zh-CN_name": "哪一个数据桶在当前的账户中?",
-  },
+  // jobType: {
+  //   en_name: "Which bucket in current AWS account?",
+  //   "zh-CN_name": "哪一个数据桶在当前的账户中?",
+  // },
   lambdaMemory: {
     en_name: "Lambda Memory",
     "zh-CN_name": "Lambda 内存",
@@ -151,10 +164,12 @@ export enum YES_NO {
   NO = "No",
 }
 
-export const YES_NO_LIST = [
-  { name: "Yes", value: "Yes" },
-  { name: "No", value: "No" },
-];
+export enum S3_EVENT_TYPE {
+  NO = "No",
+  CREATE_ONLY = "Create_Only",
+  DELETE_ONLY = "Delete_Only",
+  CREATE_AND_DELETE = "Create_And_Delete",
+}
 
 export const AWS_REGION_LIST = [
   { value: "us-east-2", name: "Ohio(us-east-2)" },
@@ -182,6 +197,60 @@ export const AWS_REGION_LIST = [
   { value: "sa-east-1", name: "São Paulo(sa-east-1)" },
 ];
 
+export const ALICLOUD_REGION_LIST = [
+  { value: "cn-qingdao", name: "Qingdao(cn-qingdao)" },
+  { value: "cn-beijing", name: "Beijing(cn-beijing)" },
+  { value: "cn-chengdu", name: "Chengdu(cn-chengdu)" },
+  { value: "cn-hangzhou", name: "Hangzhou(cn-hangzhou)" },
+  { value: "cn-shanghai", name: "Shanghai(cn-shanghai)" },
+  { value: "cn-zhangjiakou", name: "Zhangjiakou(cn-zhangjiakou)" },
+  { value: "cn-huhehaote", name: "Hohhot(cn-huhehaote)" },
+  { value: "cn-shenzhen", name: "Shenzhen(cn-shenzhen)" },
+  { value: "cn-heyuan", name: "Heyuan(cn-heyuan)" },
+  { value: "cn-guangzhou", name: "Guangzhou(cn-guangzhou)" },
+  { value: "cn-wulanchabu", name: "Ulanqab(cn-wulanchabu)" },
+  { value: "cn-hongkong", name: "Hong Kong(cn-hongkong)" },
+  { value: "ap-southeast-1", name: "Singapore(ap-southeast-1)" },
+  { value: "ap-southeast-2", name: "Sydney(ap-southeast-2)" },
+  { value: "ap-southeast-3", name: "Kuala Lumpur(ap-southeast-3)" },
+  { value: "ap-southeast-5", name: "Jakarta(ap-southeast-5)" },
+  { value: "ap-northeast-1", name: "Tokyo(ap-northeast-1)" },
+  { value: "eu-west-1", name: "London(eu-west-1)" },
+  { value: "eu-central-1", name: "Frankfurt(eu-central-1)" },
+  { value: "us-west-1", name: "Silicon Valley(us-west-1)" },
+  { value: "us-east-1", name: "Virginia(us-east-1)" },
+  { value: "me-east-1", name: "Dubai(me-east-1)" },
+  { value: "ap-south-1", name: "Mumbai(ap-south-1)" },
+];
+
+export const TENCENT_REGION_LIST = [
+  { name: "Beijing(ap-beijing)", value: "ap-beijing" },
+  { name: "Nanjing(ap-nanjing)", value: "ap-nanjing" },
+  { name: "Shanghai(ap-shanghai)", value: "ap-shanghai" },
+  { name: "Guangzhou(ap-guangzhou)", value: "ap-guangzhou" },
+  { name: "Chengdu(ap-chengdu)", value: "ap-chengdu" },
+  { name: "Chongqing(ap-chongqing)", value: "ap-chongqing" },
+  { name: "Hong Kong(ap-hongkong)", value: "ap-hongkong" },
+  { name: "Singapore(ap-singapore)", value: "ap-singapore" },
+  { name: "Mumbai(ap-mumbai)", value: "ap-mumbai" },
+  { name: "Seoul(ap-seoul)", value: "ap-seoul" },
+  { name: "Bangkok(ap-bangkok)", value: "ap-bangkok" },
+  { name: "Tokyo(ap-tokyo)", value: "ap-tokyo" },
+  { name: "Silicon Valley(na-siliconvalley)", value: "na-siliconvalley" },
+  { name: "Virginia(na-ashburn)", value: "na-ashburn" },
+  { name: "Toronto(na-toronto)", value: "na-toronto" },
+  { name: "Frankfurt(eu-frankfurt)", value: "eu-frankfurt" },
+  { name: "Moscow(eu-moscowcom)", value: "eu-moscowcom" },
+];
+
+export const QINIU_REGION_LIST = [
+  { name: "East China(cn-east-1)", value: "cn-east-1" },
+  { name: "North China(cn-north-1)", value: "cn-north-1" },
+  { name: "South China(cn-south-1)", value: "cn-south-1" },
+  { name: "North America(us-north-1)", value: "us-north-1" },
+  { name: "South East Asia(ap-southeast-1)", value: "ap-southeast-1" },
+];
+
 export const getRegionNameById = (id: string): any => {
   if (id && id !== "-") {
     return AWS_REGION_LIST.find((item) => item.value === id)?.name;
@@ -189,6 +258,11 @@ export const getRegionNameById = (id: string): any => {
     return "-";
   }
 };
+
+export const YES_NO_LIST = [
+  { name: "Yes", value: YES_NO.YES },
+  { name: "No", value: YES_NO.NO },
+];
 
 export const LAMBDA_OPTIONS = [
   { name: 128, value: 128 },
@@ -217,6 +291,13 @@ export const MAXTHREADS_OPTIONS = [
   { name: 50, value: 50 },
 ];
 
+export const S3_EVENT_OPTIONS = [
+  { name: "No", value: S3_EVENT_TYPE.NO },
+  { name: "Create Only", value: S3_EVENT_TYPE.CREATE_ONLY },
+  { name: "Delete Only", value: S3_EVENT_TYPE.DELETE_ONLY },
+  { name: "Create and Delete", value: S3_EVENT_TYPE.CREATE_AND_DELETE },
+];
+
 // Clone task useless property
 export const CREATE_USE_LESS_PROPERTY = [
   "id",
@@ -230,3 +311,7 @@ export const CREATE_USE_LESS_PROPERTY = [
   "stoppedAt",
   "templateUrl",
 ];
+
+export const emailIsValid = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};

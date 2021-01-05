@@ -15,13 +15,16 @@ const StepOneS3Tips: React.FC = () => {
             paritition
           </li>
           <li>
-            <span>•</span>Replcation from Aliyun OSS
+            <span>•</span>Replcate objects from Aliyun OSS to S3
           </li>
           <li>
-            <span>•</span>Replcation from Qiniu Kodo
+            <span>•</span>Replcate objects from Qiniu Kodo to S3
           </li>
           <li>
-            <span>•</span>Replcation from Tencent COS
+            <span>•</span>Replcate objects from Tencent COS to S3
+          </li>
+          <li>
+            <span>•</span>Replcate objects from Google GCS to S3
           </li>
           <li>
             <span>•</span>Large file support

@@ -56,6 +56,23 @@ const JOB_TYPE_MAP: any = {
   GET: "Destination",
 };
 
+const ParamShowIndexMap: any = {
+  sourceType: 1,
+  jobType: 2,
+  srcBucketName: 3,
+  srcBucketPrefix: 4,
+  enableS3Event: 5,
+  destBucketName: 6,
+  destBucketPrefix: 7,
+  credentialsParameterStore: 8,
+  regionName: 9,
+  lambdaMemory: 10,
+  multipartThreshold: 11,
+  chunkSize: 12,
+  maxThreads: 13,
+  alarmEmail: 14,
+};
+
 const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
@@ -68,7 +85,6 @@ const StepThreeS3: React.FC = () => {
 
   const { tmpTaskInfo } = useMappedState(mapState);
   const [paramsList, setParamList] = useState<any>([]);
-  const [clusterListLength, setClusterListLength] = useState<number>(0);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -88,35 +104,55 @@ const StepThreeS3: React.FC = () => {
 
   // Build  Task  Info  Data
   useEffect(() => {
-    console.info("tmpTaskInfo:", tmpTaskInfo);
+    // console.info("tmpTaskInfo:", tmpTaskInfo);
+    // const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
+    // const tmpParamsArr = [];
+    // for (const key in parametersObj) {
+    //   tmpParamsArr.push({
+    //     ParameterKey: key,
+    //     ParameterValue: parametersObj[key],
+    //   });
+    // }
+    const NOT_PARAMS: Array<string> = ["regionObj", "sourceInAccount"];
+    const NOT_PARAMS_TASK: Array<string> = ["sourceInAccount", "regionObj"];
     const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
     const tmpParamsArr = [];
+    const taskParamArr = [];
     for (const key in parametersObj) {
-      tmpParamsArr.push({
-        ParameterKey: key,
-        ParameterValue: parametersObj[key],
-      });
+      if (NOT_PARAMS.indexOf(key) < 0) {
+        tmpParamsArr.push({
+          ParameterKey: key,
+          ParameterValue: parametersObj[key],
+          sortId: ParamShowIndexMap[key] || 100,
+        });
+      }
+      if (NOT_PARAMS_TASK.indexOf(key) < 0) {
+        taskParamArr.push({
+          ParameterKey: key,
+          ParameterValue: parametersObj[key],
+        });
+      }
     }
     // Add New Params to Creat Task
     const configJson: any = JSON.parse(
       localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
     );
     const clusterData = configJson.taskCluster;
-    setClusterListLength(Object.keys(clusterData).length);
     for (const key in clusterData) {
       if (key === "ecsSubnets") {
-        tmpParamsArr.push({
+        taskParamArr.push({
           ParameterKey: key,
           ParameterValue: clusterData[key].join(","),
         });
       } else {
-        tmpParamsArr.push({
+        taskParamArr.push({
           ParameterKey: key,
           ParameterValue: clusterData[key],
         });
       }
     }
 
+    tmpParamsArr.sort((a, b) => (a.sortId > b.sortId ? 1 : -1));
     setParamList(tmpParamsArr);
     // Remove uesless property when clone task
     for (const key in createTaskInfo) {
@@ -124,7 +160,7 @@ const StepThreeS3: React.FC = () => {
         delete createTaskInfo[key];
       }
     }
-    createTaskInfo.parameters = tmpParamsArr;
+    createTaskInfo.parameters = taskParamArr;
     setCreateTaskGQL(createTaskInfo);
   }, [tmpTaskInfo]);
 
@@ -230,7 +266,7 @@ const StepThreeS3: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - clusterListLength})</span>
+                    <span>({paramsList.length - 1})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">

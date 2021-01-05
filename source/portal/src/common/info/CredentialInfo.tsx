@@ -12,20 +12,13 @@ import {
   DRH_REGION_NAME,
   GLOBAL_STR,
 } from "../../assets/config/const";
-import { EnumTaskType } from "../../assets/types/index";
 
 import "./info.scss";
 interface Page {
   name: string | undefined;
 }
 
-const S3_JSON: any = {
-  access_key_id: "xxxx",
-  secret_access_key: "xxxxx",
-  region_name: "xxx",
-};
-
-const ECR_JSON: any = {
+const CREDENTIAL_JSON = {
   access_key_id: "xxxx",
   secret_access_key: "xxxxx",
 };
@@ -34,17 +27,8 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
   const [isCopied, setIsCopied] = useState(false);
   const { t } = useTranslation();
 
-  const [tmpJson, setTmpJson] = useState(S3_JSON);
   const [curRegionType, setCurRegionType] = useState("");
   const [curRegion, setCurRegion] = useState("");
-
-  useEffect(() => {
-    if (props.name === EnumTaskType.ECR) {
-      setTmpJson(ECR_JSON);
-    } else {
-      setTmpJson(S3_JSON);
-    }
-  }, [props]);
 
   // Get Region and Region Type
   useEffect(() => {
@@ -76,11 +60,11 @@ const CredentialInfo: React.FC<Page> = (props: Page) => {
       <div>
         <div className="code-area">
           <div className="code-info">
-            <pre>{JSON.stringify(tmpJson, null, 2)}</pre>
+            <pre>{JSON.stringify(CREDENTIAL_JSON, null, 2)}</pre>
           </div>
           <div className="copy">
             <CopyToClipboard
-              text={JSON.stringify(tmpJson, null, 2)}
+              text={JSON.stringify(CREDENTIAL_JSON, null, 2)}
               onCopy={() => setIsCopied(true)}
             >
               <Button

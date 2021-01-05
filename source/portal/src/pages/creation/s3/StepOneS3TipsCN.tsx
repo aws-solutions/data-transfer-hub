@@ -22,6 +22,9 @@ const StepOneS3TipsCN: React.FC = () => {
             <span>•</span>从腾讯云COS复制到S3
           </li>
           <li>
+            <span>•</span>从Google GCS复制到S3
+          </li>
+          <li>
             <span>•</span>支持大文件传输
           </li>
           <li>

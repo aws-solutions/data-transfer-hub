@@ -41,7 +41,7 @@
       "requiredCredential": "Please select a parameter store",
       "store1": "Select the",
       "store2": "Parameter Store",
-      "store3": "which stores the credentials."
+      "store3": "which stores the credentials. Leave it blank for open bucket."
     },
     "step1": {
       "engineType": "Select engine type",
@@ -56,6 +56,12 @@
           "title": "Source settings",
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
+          "srcInAccount": "Is Bucket in this account?",
+          "srcInAccountDesc": "Select YES, if the source bucket is in the same account as Data Replication Hub.",
+          "srcRegionName": "Region Name",
+          "srcRegionNameDesc": "Select Region Name",
+          "enableS3Event": "Enable S3 Event?",
+          "enableS3EventDesc": "Whether to enable S3 Event to trigger the replication.",
           "objectPrefix": "Bucket Object Prefix",
           "prefixDesc": "It will only replicate objects with the provided prefix."
         },
@@ -64,7 +70,9 @@
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
           "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "Add Prefix to all the replicated objects."
+          "prefixDesc": "Add Prefix to all the replicated objects.",
+          "destRegionName": "Region Name",
+          "destRegionNameDesc": "Select Region Name"
         },
         "credential": {
           "title": "Credentials",

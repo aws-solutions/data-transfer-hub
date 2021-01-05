@@ -69,6 +69,7 @@ export enum EnumSourceType {
   Qiniu = "Qiniu_Kodo",
   AliOSS = "Aliyun_OSS",
   TencentCOS = "Tencent_COS",
+  GoogleGCS = "Google_GCS",
 }
 
 // Task Tyep Enum
@@ -101,10 +102,20 @@ export const TASK_STATUS_MAP: any = {
   STOPPED: { name: "Stopped", src: STATUS_PENDING, class: "gray" },
 };
 
+export interface ISouceType {
+  id: string;
+  en_name: string;
+  "zh-CN_name": string;
+  value: string;
+  en_desc: string;
+  "zh-CN_desc": string;
+  [key: string]: string;
+}
+
 // Task Source Type List
 export const SOURCE_TYPE = [
   {
-    id: 1,
+    id: "1",
     en_name: "Amazon S3",
     "zh-CN_name": "Amazon S3",
     value: EnumSourceType.S3,
@@ -112,35 +123,43 @@ export const SOURCE_TYPE = [
     "zh-CN_desc": "Amazon S3 的标准区和中国区之间的复制.",
   },
   {
-    id: 2,
+    id: "2",
     en_name: "Aliyun OSS",
     "zh-CN_name": "阿里云 OSS",
     value: EnumSourceType.AliOSS,
-    en_desc: "Migration Aliyun OSS objects into Amazon S3.",
+    en_desc: "Replicate objects from Aliyun OSS to Amazon S3.",
     "zh-CN_desc": "从阿里云OSS复制数据到 Amazon S3.",
   },
   {
-    id: 3,
+    id: "3",
     en_name: "Qiniu Kodo",
     "zh-CN_name": "七牛 Kodo",
     value: EnumSourceType.Qiniu,
-    en_desc: "Migration Qiniu Kodo objects into Amazon S3.",
+    en_desc: "Replicate objects from Qiniu Kodo to Amazon S3.",
     "zh-CN_desc": "从七牛Kodo复制数据到 Amazon S3.",
   },
   {
-    id: 4,
+    id: "4",
     en_name: "Tencent COS",
     "zh-CN_name": "腾讯 COS",
     value: EnumSourceType.TencentCOS,
-    en_desc: "Migration Tencent COS objects into Amazon S3.",
+    en_desc: "Replicate objects from Tencent COS to Amazon S3.",
     "zh-CN_desc": "从腾讯COS复制数据到 Amazon S3.",
+  },
+  {
+    id: "5",
+    en_name: "Google GCS",
+    "zh-CN_name": "Google GCS",
+    value: EnumSourceType.GoogleGCS,
+    en_desc: "Replicate objects from Google GCS to Amazon S3.",
+    "zh-CN_desc": "从Google GCS复制数据到 Amazon S3.",
   },
 ];
 
 // ECR Task Source Type List
 export const ECR_SOURCE_TYPE = [
   {
-    id: 1,
+    id: "1",
     en_name: "Amazon ECR",
     "zh-CN_name": "Amazon ECR",
     value: ECREnumSourceType.ECR,
@@ -148,7 +167,7 @@ export const ECR_SOURCE_TYPE = [
     "zh-CN_desc": "Amazon ECR的标准区和中国区之间的复制.",
   },
   {
-    id: 2,
+    id: "2",
     en_name: "Public Container Registry",
     "zh-CN_name": "公共容器仓库",
     value: ECREnumSourceType.PUBLIC,

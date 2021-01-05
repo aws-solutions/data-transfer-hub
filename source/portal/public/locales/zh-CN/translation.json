@@ -39,9 +39,9 @@
   "creation": {
     "tips": {
       "requiredCredential": "请选择凭证参数",
-      "store1": "选择",
+      "store1": "选择存储在参数仓库中的",
       "store2": "凭据",
-      "store3": "存储在参数仓库中."
+      "store3": ". 如果源数据桶是公开数据桶则可以为空"
     },
     "step1": {
       "engineType": "选择引擎类型",
@@ -56,6 +56,12 @@
           "title": "数据源设置",
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
+          "srcInAccount": "源数据桶在当前账户吗?",
+          "srcInAccountDesc": "如果Data Replication Hub部署在源数据桶的账号，请选择YES",
+          "srcRegionName": "区域名称",
+          "srcRegionNameDesc": "请选择数据桶的区域",
+          "enableS3Event": "是否启用S3事件?",
+          "enableS3EventDesc": "启用S3事件来触发数据的实时复制.",
           "objectPrefix": "数据桶对象前缀",
           "prefixDesc": "只会复制指定的前缀的数据对象."
         },
@@ -64,7 +70,9 @@
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
           "objectPrefix": "数据桶对象前缀",
-          "prefixDesc": "在复制的对象前添加前缀."
+          "prefixDesc": "在复制的对象前添加前缀.",
+          "destRegionName": "区域名称",
+          "destRegionNameDesc": "请选择数据桶的区域"
         },
         "credential": {
           "title": "凭证",
