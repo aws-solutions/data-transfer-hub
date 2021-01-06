@@ -71,6 +71,8 @@
           "bucketDesc": "请输入数据桶名称.",
           "objectPrefix": "数据桶对象前缀",
           "prefixDesc": "在复制的对象前添加前缀.",
+          "storageClass": "存储类型",
+          "storageClassDesc": "对象将会复制到您所选择的存储类型.",
           "destRegionName": "区域名称",
           "destRegionNameDesc": "请选择数据桶的区域"
         },

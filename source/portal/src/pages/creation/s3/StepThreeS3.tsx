@@ -64,13 +64,14 @@ const ParamShowIndexMap: any = {
   enableS3Event: 5,
   destBucketName: 6,
   destBucketPrefix: 7,
-  credentialsParameterStore: 8,
-  regionName: 9,
-  lambdaMemory: 10,
-  multipartThreshold: 11,
-  chunkSize: 12,
-  maxThreads: 13,
-  alarmEmail: 14,
+  destStorageClass: 8,
+  credentialsParameterStore: 9,
+  regionName: 10,
+  lambdaMemory: 11,
+  multipartThreshold: 12,
+  chunkSize: 13,
+  maxThreads: 14,
+  alarmEmail: 15,
 };
 
 const StepThreeS3: React.FC = () => {

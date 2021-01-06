@@ -43,6 +43,8 @@ import {
   MAXTHREADS_OPTIONS,
   S3_EVENT_TYPE,
   S3_EVENT_OPTIONS,
+  S3_STORAGE_CLASS_TYPE,
+  S3_STORAGE_CLASS_OPTIONS,
   AWS_REGION_LIST,
   ALICLOUD_REGION_LIST,
   TENCENT_REGION_LIST,
@@ -64,6 +66,7 @@ interface IS3TastType {
   enableS3Event: string;
   destBucketName: string;
   destBucketPrefix: string;
+  destStorageClass: string;
   credentialsParameterStore: string;
   regionName: string;
   lambdaMemory: string;
@@ -110,6 +113,11 @@ const StepTwoS3: React.FC = () => {
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
   const [destBucketPrefix, setDestBucketPrefix] = useState(
     tmpTaskInfo.parametersObj?.destBucketPrefix || ""
+  );
+
+  const [destStorageClass, setDestStorageClass] = useState(
+    tmpTaskInfo.parametersObj?.destStorageClass ||
+      S3_STORAGE_CLASS_TYPE.STANDARD
   );
 
   const [sourceInAccount, setSourceInAccount] = useState<string>(
@@ -221,6 +229,7 @@ const StepTwoS3: React.FC = () => {
         enableS3Event: enableS3Event,
         destBucketName: destBucketName,
         destBucketPrefix: destBucketPrefix,
+        destStorageClass: destStorageClass,
         credentialsParameterStore: credentialsParameterStore,
         regionName: regionName,
         lambdaMemory: lambdaMemory,
@@ -547,6 +556,24 @@ const StepTwoS3: React.FC = () => {
                           placeholder={t(
                             "creation.step2.settings.dest.objectPrefix"
                           )}
+                        />
+                      </div>
+
+                      <div className="form-items">
+                        <DrhSelect
+                          optionTitle={t(
+                            "creation.step2.settings.dest.storageClass"
+                          )}
+                          optionDesc={t(
+                            "creation.step2.settings.dest.storageClassDesc"
+                          )}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setDestStorageClass(event.target.value);
+                          }}
+                          selectValue={destStorageClass}
+                          optionList={S3_STORAGE_CLASS_OPTIONS}
                         />
                       </div>
 

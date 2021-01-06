@@ -71,6 +71,8 @@
           "bucketDesc": "Input the bucket name.",
           "objectPrefix": "Bucket Object Prefix",
           "prefixDesc": "Add Prefix to all the replicated objects.",
+          "storageClass": "Storage Class",
+          "storageClassDesc": "Objects will be stored with the selected storage class.",
           "destRegionName": "Region Name",
           "destRegionNameDesc": "Select Region Name"
         },

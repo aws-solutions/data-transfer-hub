@@ -86,10 +86,10 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Source Type",
     "zh-CN_name": "数据源类型",
   },
-  // jobType: {
-  //   en_name: "Which bucket in current AWS account?",
-  //   "zh-CN_name": "哪一个数据桶在当前的账户中?",
-  // },
+  destStorageClass: {
+    en_name: "Destination Object Storage Class",
+    "zh-CN_name": "目标S3存储类型",
+  },
   lambdaMemory: {
     en_name: "Lambda Memory",
     "zh-CN_name": "Lambda 内存",
@@ -169,6 +169,13 @@ export enum S3_EVENT_TYPE {
   CREATE_ONLY = "Create_Only",
   DELETE_ONLY = "Delete_Only",
   CREATE_AND_DELETE = "Create_And_Delete",
+}
+
+export enum S3_STORAGE_CLASS_TYPE {
+  STANDARD = "STANDARD",
+  STANDARD_IA = "STANDARD_IA",
+  ONEZONE_IA = "ONEZONE_IA",
+  INTELLIGENT_TIERING = "INTELLIGENT_TIERING",
 }
 
 export const AWS_REGION_LIST = [
@@ -289,6 +296,16 @@ export const MAXTHREADS_OPTIONS = [
   { name: 10, value: 10 },
   { name: 20, value: 20 },
   { name: 50, value: 50 },
+];
+
+export const S3_STORAGE_CLASS_OPTIONS = [
+  { name: "Standard", value: S3_STORAGE_CLASS_TYPE.STANDARD },
+  { name: "Standard-IA", value: S3_STORAGE_CLASS_TYPE.STANDARD_IA },
+  { name: "One Zone-IA", value: S3_STORAGE_CLASS_TYPE.ONEZONE_IA },
+  {
+    name: "Intelligent-Tiering",
+    value: S3_STORAGE_CLASS_TYPE.INTELLIGENT_TIERING,
+  },
 ];
 
 export const S3_EVENT_OPTIONS = [
