@@ -225,7 +225,9 @@
     "credentialStore": "Credential Store",
     "prefix": "Prefix",
     "taskMetrics": "Task Metrics",
-    "dashboard": "CloudWatch Dashboard"
+    "dashboard": "CloudWatch Dashboard",
+    "enableS3Event": "Enable S3 Event?",
+    "storageClass": "Storage Class"
   },
   "bottom": {
     "copy": "© 2008 - 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.",

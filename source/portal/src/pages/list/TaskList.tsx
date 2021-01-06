@@ -159,7 +159,7 @@ const List: React.FC = () => {
       {
         query: listTasks,
         variables: {
-          limit: 10,
+          limit: 15,
           nextToken: token,
         },
       },
@@ -176,7 +176,19 @@ const List: React.FC = () => {
         setIsLast(true);
       }
     }
-    setTaskListData(apiData?.data?.listTasks?.items || []);
+    if (
+      apiData &&
+      apiData.data &&
+      apiData.data.listTasks &&
+      apiData.data.listTasks.items
+    ) {
+      const orderedList = apiData.data.listTasks.items;
+      orderedList.sort((a: any, b: any) =>
+        a.createdAt < b.createdAt ? 1 : -1
+      );
+      setTaskListData(orderedList);
+    }
+
     setIsLoading(false);
   }
 

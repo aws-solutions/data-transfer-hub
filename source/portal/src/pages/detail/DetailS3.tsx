@@ -31,7 +31,11 @@ import NormalButton from "../../common/comp/NormalButton";
 import PrimaryButton from "../../common/comp/PrimaryButton";
 import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
 
-import { TASK_STATUS_MAP, EnumTaskStatus } from "../../assets/types/index";
+import {
+  TASK_STATUS_MAP,
+  EnumTaskStatus,
+  EnumSourceType,
+} from "../../assets/types/index";
 import {
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
@@ -40,9 +44,14 @@ import {
   DRH_REGION_NAME,
   GLOBAL_STR,
   CLOUD_WATCH_DASHBOARD_LINK_MAP,
+  S3_EVENT_OPTIONS,
+  S3_STORAGE_CLASS_OPTIONS,
+  YES_NO,
 } from "../../assets/config/const";
 
 import "./Detail.scss";
+
+// const S3_EVENT_OPTIONS_MAP = ConverListToMap(S3_EVENT_OPTIONS);
 
 interface StyledTabProps {
   label: string;
@@ -108,6 +117,26 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
+type ItemType = {
+  name: string;
+  value: string;
+};
+
+type ObjectType = {
+  [key: string]: string;
+};
+
+const converListToMap = (list: ItemType[]): ObjectType => {
+  const tmpMap: ObjectType = {};
+  list.forEach((element: ItemType) => {
+    tmpMap[element.value] = element.name;
+  });
+  return tmpMap;
+};
+
+const S3_EVENT_OPTIONS_MAP = converListToMap(S3_EVENT_OPTIONS);
+const S3_STORAGE_CLASS_OPTIONS_MAP = converListToMap(S3_STORAGE_CLASS_OPTIONS);
+
 const Detail: React.FC = (props: any) => {
   const { t } = useTranslation();
 
@@ -146,12 +175,12 @@ const Detail: React.FC = (props: any) => {
       });
     }
     if (tmpCurTask.jobType === "PUT") {
-      setAccountInSrc("yes");
-      setAccountInDest("no");
+      setAccountInSrc(YES_NO.YES);
+      setAccountInDest(YES_NO.NO);
     }
     if (tmpCurTask.jobType === "GET") {
-      setAccountInSrc("no");
-      setAccountInDest("yes");
+      setAccountInSrc(YES_NO.NO);
+      setAccountInDest(YES_NO.YES);
     }
     setCurTaskInfo(tmpCurTask);
     setIsLoading(false);
@@ -344,7 +373,11 @@ const Detail: React.FC = (props: any) => {
                               className="a-link"
                               rel="noopener noreferrer"
                               target="_blank"
-                              href={`${CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]}?region=${curRegion}#dashboards:`}
+                              href={`${
+                                CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
+                              }?region=${curRegion}#dashboards:name=${
+                                curTaskInfo.stackId.split("/")[1]
+                              }-Dashboard`}
                             >
                               {t("taskDetail.dashboard")}{" "}
                               <OpenInNewIcon
@@ -369,6 +402,31 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.srcInThisAccount")}
                           </div>
                           <div>{accountInSrc}</div>
+                          {accountInSrc === YES_NO.NO && (
+                            <div>
+                              <br />
+                              <div className="sub-name">
+                                {t("taskDetail.credentials")}
+                              </div>
+                              <div>{curTaskInfo.credentialsParameterStore}</div>
+                            </div>
+                          )}
+                          {accountInSrc === YES_NO.YES &&
+                            curTaskInfo.sourceType === EnumSourceType.S3 && (
+                              <div>
+                                <br />
+                                <div className="sub-name">
+                                  {t("taskDetail.enableS3Event")}
+                                </div>
+                                <div>
+                                  {
+                                    S3_EVENT_OPTIONS_MAP[
+                                      curTaskInfo.enableS3Event
+                                    ]
+                                  }
+                                </div>
+                              </div>
+                            )}
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
@@ -385,11 +443,26 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.destInThisAccount")}
                           </div>
                           <div>{accountInDest}</div>
+                          {accountInDest === YES_NO.NO && (
+                            <div>
+                              <br />
+                              <div className="sub-name">
+                                {t("taskDetail.credentials")}
+                              </div>
+                              <div>{curTaskInfo.credentialsParameterStore}</div>
+                            </div>
+                          )}
                           <br />
                           <div className="sub-name">
-                            {t("taskDetail.credentials")}
+                            {t("taskDetail.storageClass")}
                           </div>
-                          <div>{curTaskInfo.credentialsParameterStore}</div>
+                          <div>
+                            {
+                              S3_STORAGE_CLASS_OPTIONS_MAP[
+                                curTaskInfo.destStorageClass
+                              ]
+                            }
+                          </div>
                         </div>
                       </div>
                     </div>

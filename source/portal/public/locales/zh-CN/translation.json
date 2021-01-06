@@ -225,7 +225,9 @@
     "credentialStore": "参数仓库",
     "prefix": "前缀",
     "taskMetrics": "任务指标",
-    "dashboard": "CloudWatch 仪表盘"
+    "dashboard": "CloudWatch 仪表盘",
+    "enableS3Event": "启用S3事件?",
+    "storageClass": "存储类型"
   },
   "bottom": {
     "copy":"© 2008 - 2020, Amazon Web Services, Inc. 或其子公司。保留所有权利。",
