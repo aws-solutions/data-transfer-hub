@@ -23,7 +23,7 @@
     "@types/yup": "^0.29.6",
     "aws-amplify": "^3.0.24",
     "aws-appsync": "^4.0.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "i18next": "^19.6.3",
     "i18next-browser-languagedetector": "^6.0.0",
