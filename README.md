@@ -17,10 +17,12 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
     - [x] Replication from Alibaba Cloud OSS to Amazon S3
     - [x] Replication from Tencent COS to Amazon S3
     - [x] Replication from Qiniu Kodo to Amazon S3
+    - [x] Replication from Google Cloud Storage to Amazon S3 (Global)
     - [ ] Replication from Huawei Cloud OBS
     - [x] Support replication with Metadata
     - [x] Support One-time replication
     - [x] Support Incremental replication
+    - [x] Support S3 Events to trigger replication
 - [x] ECR Plugin
     - [x] Amazon ECR replication between AWS accounts or regions
     - [x] Amazon ECR replication between AWS Standard partition and AWS CN partition
