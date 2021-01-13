@@ -20,6 +20,8 @@ import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
 import { AuthType } from './constructs-stack';
+import { addCfnNagSuppressRules } from "./constructs-stack";
+
 
 export interface ApiProps {
   readonly authType: string,
@@ -42,7 +44,7 @@ export class ApiStack extends Construct {
     const isCN = new CfnCondition(this, 'IsChinaRegionCondition', {
       expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn')
     });
-    
+
     const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
     const PLUGIN_TEMPLATE_S3 = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-s3/v1.3.0/Aws-data-replication-component-s3.template`;
     const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template`;
@@ -66,6 +68,14 @@ export class ApiStack extends Construct {
       nonKeyAttributes: ['id', 'status', 'stackStatus']
     })
 
+    const cfnTable = this.taskTable.node.defaultChild as ddb.CfnTable
+    addCfnNagSuppressRules(cfnTable, [
+      {
+        id: 'W74',
+        reason: 'No sensitve data, therefore no need to use encryption'
+      }
+    ])
+
     const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
         bundling: {
@@ -88,6 +98,7 @@ export class ApiStack extends Construct {
 
     const stateMachine = new cfnSate.CloudFormationStateMachine(this, 'CfnWorkflow', {
       taskTableName: this.taskTable.tableName,
+      taskTableArn: this.taskTable.tableArn,
       lambdaLayer: lambdaLayer
     })
 
@@ -100,9 +111,9 @@ export class ApiStack extends Construct {
           oidcProvider: props.oidcProvider?.valueAsString
         }
       }
-      
+
     } else {
-      
+
       // Create Cognito User Pool
       this.userPool = new cognito.UserPool(this, 'UserPool', {
         selfSignUpEnabled: false,
@@ -157,7 +168,7 @@ export class ApiStack extends Construct {
         }
       }
     }
-    
+
 
     // Create the GraphQL API Endpoint, enable Cognito User Pool Auth and IAM Auth.
     this.api = new appsync.GraphqlApi(this, 'ApiEndpoint', {
@@ -214,6 +225,14 @@ export class ApiStack extends Construct {
       layers: [lambdaLayer]
     })
 
+    const cfnTaskHandlerFn = taskHandlerFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnTaskHandlerFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
     this.taskTable.grantReadWriteData(taskHandlerFn)
     taskHandlerFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -260,14 +279,32 @@ export class ApiStack extends Construct {
       memorySize: 128,
     })
 
-    // this.taskTable.grantReadWriteData(taskHandlerFn)
-    ssmHandlerFn.addToRolePolicy(new iam.PolicyStatement({
+    const cfnSsmHandlerFn = ssmHandlerFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnSsmHandlerFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
+    const ssmReadOnlyPolicy = new iam.Policy(this, 'ssmReadOnlyPolicy')
+    ssmReadOnlyPolicy.addStatements(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: ['*'],
       actions: [
         "ssm:DescribeParameters",
       ]
     }))
+
+    const cfnSsmReadOnlyPolicy = ssmReadOnlyPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnSsmReadOnlyPolicy, [
+      {
+        id: 'W12',
+        reason: 'Need to be able to list all ssm parameter names'
+      },
+    ])
+
+    ssmHandlerFn.role?.attachInlinePolicy(ssmReadOnlyPolicy)
 
     const ssmLambdaDS = this.api.addLambdaDataSource('ssmLambdaDS', ssmHandlerFn, {
       description: 'Lambda Resolver Datasource for SSM parameters'

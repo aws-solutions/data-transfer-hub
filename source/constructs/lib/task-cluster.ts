@@ -14,7 +14,8 @@
 import * as cdk from '@aws-cdk/core'
 import * as ecs from '@aws-cdk/aws-ecs'
 import * as ec2 from '@aws-cdk/aws-ec2'
-import {SubnetType} from "@aws-cdk/aws-ec2";
+import { SubnetType } from "@aws-cdk/aws-ec2";
+import { addCfnNagSuppressRules } from "./constructs-stack";
 
 interface TaskClusterPros {
   cidr: string
@@ -39,12 +40,20 @@ export class TaskCluster extends cdk.Construct {
         {
           name: 'public',
           subnetType: SubnetType.PUBLIC,
-          cidrMask: 24
+          cidrMask: 24,
         }
       ],
       maxAzs: 3,
-      natGateways: 0
+      natGateways: 0,
     })
+
+    const cfnVpc = vpc.node.defaultChild as ec2.CfnVPC
+    addCfnNagSuppressRules(cfnVpc, [
+      {
+        id: 'W60',
+        reason: 'Custom Logs are generated as required, hence Flow Log is not atttached'
+      }
+    ])
 
     const cluster = new ecs.Cluster(this, 'TaskCluster', {
       vpc: vpc
@@ -53,18 +62,6 @@ export class TaskCluster extends cdk.Construct {
     this.clusterName = cluster.clusterName
     this.publicSubnets = vpc.publicSubnets
     this.vpc = vpc
-
-    new cdk.CfnOutput(this, 'VpcId', {
-      value: vpc.vpcId,
-      exportName: 'VpcId',
-      description: 'VPC ID'
-    })
-
-    new cdk.CfnOutput(this, 'ClusterName', {
-      value: cluster.clusterName,
-      exportName: 'ClusterName',
-      description: 'Task Cluster Name'
-    })
 
   }
 

@@ -14,7 +14,7 @@
 import * as cdk from '@aws-cdk/core';
 import { ApiStack, ApiProps } from './api-stack';
 import { PortalStack } from "./portal-stack";
-import { CfnParameter } from '@aws-cdk/core';
+import { CfnParameter, CfnResource } from '@aws-cdk/core';
 import { TaskCluster } from "./task-cluster";
 
 const { VERSION } = process.env;
@@ -23,6 +23,22 @@ export const enum AuthType {
   COGNITO = "cognito",
   OPENID = "openid"
 }
+
+/**
+ * cfn-nag suppression rule interface
+ */
+interface CfnNagSuppressRule {
+  readonly id: string;
+  readonly reason: string;
+}
+
+
+export function addCfnNagSuppressRules(resource: CfnResource, rules: CfnNagSuppressRule[]) {
+  resource.addMetadata('cfn_nag', {
+    rules_to_suppress: rules
+  });
+}
+
 
 /**
  * @class ConstructsStack
@@ -36,7 +52,7 @@ export class ConstructsStack extends cdk.Stack {
     let oidcLoginUrl: CfnParameter | null = null;
     let oidcLogoutUrl: CfnParameter | null = null;
     let oidcTokenValidationUrl: CfnParameter | null = null;
-    
+
     // CFN parameters
     const usernameParameter = new CfnParameter(this, 'AdminEmail', {
       type: 'String',
@@ -50,19 +66,19 @@ export class ConstructsStack extends cdk.Stack {
         description: 'OIDC Provider',
         default: ''
       });
-  
+
       oidcLoginUrl = new CfnParameter(this, 'OidcLoginUrl', {
         type: 'String',
         description: 'OIDC Login URL',
         default: '',
       });
-  
+
       oidcLogoutUrl = new CfnParameter(this, 'OidcLogoutUrl', {
         type: 'String',
         description: 'OIDC Logout URL',
         default: '',
       });
-  
+
       oidcTokenValidationUrl = new CfnParameter(this, 'OidcTokenValidationUrl', {
         type: 'String',
         description: 'OIDC Token Validation URL',
@@ -74,11 +90,11 @@ export class ConstructsStack extends cdk.Stack {
           ParameterGroups: [
             {
               Label: { default: 'User Pool' },
-              Parameters: [ usernameParameter.logicalId ]
+              Parameters: [usernameParameter.logicalId]
             },
             {
               Label: { default: 'OIDC Settings' },
-              Parameters: [ oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, oidcTokenValidationUrl.logicalId ]
+              Parameters: [oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, oidcTokenValidationUrl.logicalId]
             }
           ]
         }
@@ -90,7 +106,7 @@ export class ConstructsStack extends cdk.Stack {
           ParameterGroups: [
             {
               Label: { default: 'User Pool' },
-              Parameters: [ usernameParameter.logicalId ]
+              Parameters: [usernameParameter.logicalId]
             }
           ]
         }
@@ -130,7 +146,7 @@ export class ConstructsStack extends cdk.Stack {
       aws_oidc_provider: oidcProvider?.valueAsString || '',
       aws_oidc_login_url: oidcLoginUrl?.valueAsString || '',
       aws_oidc_logout_url: oidcLogoutUrl?.valueAsString || '',
-      aws_oidc_token_validation_url: oidcTokenValidationUrl?.valueAsString || '',  
+      aws_oidc_token_validation_url: oidcTokenValidationUrl?.valueAsString || '',
       aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
       aws_user_pools_id: apiStack.userPool?.userPoolId || '',
       aws_user_pools_web_client_id: apiStack.userPoolApiClient?.userPoolClientId || '',
