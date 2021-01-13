@@ -170,12 +170,23 @@ export class PortalStack extends cdk.Construct {
       )
     })
 
+    const cfnCustomResourceFn = customResourceFunction.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnCustomResourceFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
     new s3Deployment.BucketDeployment(this, 'DeployWebsite', {
       sources: [s3Deployment.Source.asset(path.join(__dirname, '../../portal/build'))],
       destinationBucket: websiteBucket,
       // disable this, otherwise the aws-exports.json will be deleted
       prune: false
     })
+
+
+
 
     // CustomResourceConfig
     this.createCustomResource('CustomResourceConfig', customResourceFunction, {

@@ -111,21 +111,28 @@ export class CloudFormationStateMachine extends cdk.Construct {
     const stopTaskFnPolicy = new iam.Policy(this, 'StopTaskFnPolicy')
     stopTaskFnPolicy.addStatements(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      resources: [
-        `arn:${cdk.Aws.PARTITION}:cloudformation:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stack/DRH*`
-      ],
+      resources: ['*'],
       actions: [
-        'cloudformation:DeleteStack'
+        '*'
       ]
     }))
-    stopTaskFnPolicy.addStatements(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      resources: [props.taskTableArn],
-      actions: [
-        'dynamodb:Query',
-        'dynamodb:UpdateItem'
-      ]
-    }))
+
+    const cfnStopTaskFnPolicy = stopTaskFnPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnStopTaskFnPolicy, [
+      {
+        id: 'F4',
+        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all actions is required'
+      },
+      {
+        id: 'F39',
+        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+      },
+      {
+        id: 'W12',
+        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+      }
+    ])
+
     stopTaskCfnFn.role?.attachInlinePolicy(stopTaskFnPolicy)
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
