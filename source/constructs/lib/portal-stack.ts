@@ -110,10 +110,10 @@ export class PortalStack extends cdk.Construct {
     const customResourceRole = new iam.Role(this, 'CustomResourceRole', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       path: '/',
-      roleName: `${cdk.Aws.STACK_NAME}CustomResourceRole-${cdk.Aws.REGION}`
+      // roleName: `${cdk.Aws.STACK_NAME}CustomResourceRole-${cdk.Aws.REGION}`
     })
     const cfnCustomResourceRole = customResourceRole.node.defaultChild as iam.CfnRole;
-    // cfnCustomResourceRole.overrideLogicalId('CustomResourceRole');
+    cfnCustomResourceRole.overrideLogicalId('CustomResourceRole');
 
     // CustomResourcePolicy
     const customResourcePolicy = new iam.Policy(this, 'CustomResourcePolicy', {
@@ -143,7 +143,7 @@ export class PortalStack extends cdk.Construct {
     });
     customResourcePolicy.attachToRole(customResourceRole);
     const cfnCustomResourcePolicy = customResourcePolicy.node.defaultChild as iam.CfnPolicy;
-    // cfnCustomResourcePolicy.overrideLogicalId('CustomResourcePolicy');
+    cfnCustomResourcePolicy.overrideLogicalId('CustomResourcePolicy');
 
     const customResourceFunction = new lambda.Function(this, 'CustomHandler', {
       description: 'AWS Data Replication Hub - Custom resource',
@@ -182,11 +182,8 @@ export class PortalStack extends cdk.Construct {
       sources: [s3Deployment.Source.asset(path.join(__dirname, '../../portal/build'))],
       destinationBucket: websiteBucket,
       // disable this, otherwise the aws-exports.json will be deleted
-      prune: false
+      prune: false,
     })
-
-
-
 
     // CustomResourceConfig
     this.createCustomResource('CustomResourceConfig', customResourceFunction, {
@@ -244,7 +241,7 @@ export class PortalStack extends cdk.Construct {
       serviceToken: customResourceFunction.functionArn
     });
     customResource.addOverride('Type', 'Custom::CustomResource');
-    customResource.overrideLogicalId(id);
+    // customResource.overrideLogicalId(id);
 
     if (config) {
       const { properties, condition, dependencies } = config;

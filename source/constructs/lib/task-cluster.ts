@@ -55,9 +55,22 @@ export class TaskCluster extends cdk.Construct {
       }
     ])
 
+    vpc.publicSubnets.forEach((subnet) => {
+      const cfnSubnet = subnet.node.defaultChild as ec2.CfnSubnet
+      addCfnNagSuppressRules(cfnSubnet, [
+        {
+          id: 'W33',
+          reason: 'Default Setting for VPC subnets'
+        }
+      ])
+
+    })
+
     const cluster = new ecs.Cluster(this, 'TaskCluster', {
       vpc: vpc
     })
+
+
 
     this.clusterName = cluster.clusterName
     this.publicSubnets = vpc.publicSubnets

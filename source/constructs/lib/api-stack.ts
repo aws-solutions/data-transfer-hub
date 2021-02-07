@@ -72,7 +72,11 @@ export class ApiStack extends Construct {
     addCfnNagSuppressRules(cfnTable, [
       {
         id: 'W74',
-        reason: 'No sensitve data, therefore no need to use encryption'
+        reason: 'This table is used to store task records for web UI purpose. No sensitve data, therefore no need to use encryption'
+      },
+      {
+        id: 'W78',
+        reason: 'This table is used to store task records for web UI purpose. No important data, therefore no need to enable backup'
       }
     ])
 
@@ -114,6 +118,36 @@ export class ApiStack extends Construct {
 
     } else {
 
+      const poolSmsRole = new iam.Role(this, 'UserPoolSmsRole', {
+        assumedBy: new iam.ServicePrincipal('cognito-idp.amazonaws.com'),
+      });
+      // poolSmsRole.addToPolicy
+
+      const poolSmsPolicy = new iam.Policy(this, 'PoolSmsPolicy', {
+        // policyName: `${cdk.Aws.STACK_NAME}CustomResourcePolicy`,
+        statements: [
+          new iam.PolicyStatement({
+            actions: [
+              'sns:Publish',
+            ],
+            resources: [
+              '*'
+            ]
+          }),
+        ]
+      });
+      poolSmsRole.attachInlinePolicy(
+        poolSmsPolicy
+      )
+
+      const cfnPoolSmsPolicy = poolSmsPolicy.node.defaultChild as iam.CfnPolicy
+      addCfnNagSuppressRules(cfnPoolSmsPolicy, [
+        {
+          id: 'W12',
+          reason: 'User Pool SMS notification requires to publish to any resources'
+        }
+      ])
+
       // Create Cognito User Pool
       this.userPool = new cognito.UserPool(this, 'UserPool', {
         selfSignUpEnabled: false,
@@ -122,7 +156,8 @@ export class ApiStack extends Construct {
           email: true,
           username: false,
           phone: true
-        }
+        },
+        smsRole: poolSmsRole
       })
 
       // Create User Pool Client

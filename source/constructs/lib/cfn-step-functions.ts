@@ -121,15 +121,15 @@ export class CloudFormationStateMachine extends cdk.Construct {
     addCfnNagSuppressRules(cfnStopTaskFnPolicy, [
       {
         id: 'F4',
-        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all actions is required'
+        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all actions is required'
       },
       {
         id: 'F39',
-        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all resources is required'
       },
       {
         id: 'W12',
-        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all resources is required'
       }
     ])
 
