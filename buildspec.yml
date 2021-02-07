@@ -6,7 +6,8 @@ phases:
       nodejs: 10
   build:
     commands:
-      - ./deployment/build-s3-dist.sh ${DIST_OUTPUT_BUCKET} ${SOLUTION_NAME} ${VERSION}
+      - cd deployment
+      - chmod +x ./build-s3-dist.sh && ./build-s3-dist.sh ${DIST_OUTPUT_BUCKET} ${SOLUTION_NAME} ${VERSION}
       - mkdir -p deployment/open-source/ && touch deployment/open-source/.empty
   post_build:
     commands:
