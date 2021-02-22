@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="17px" viewBox="0 0 15 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Alert icon</title>
+    <defs>
+        <path d="M14.6,13.6 L10.6,13.6 C10.6,14.9 9.6,15.9 8.3,15.9 C7,15.9 6,14.9 6,13.6 L2,13.6 C1.4,13.6 0.9,13.1 0.9,12.5 C2.2,11.4 3.8,9.4 3.8,5.1 C3.8,3.4 5.2,1.5 7.6,1.2 C7.6,1.1 7.5,1 7.5,0.9 C7.5,0.4 7.9,4.52970994e-14 8.4,4.52970994e-14 C8.9,4.52970994e-14 9.3,0.4 9.3,0.9 C9.3,1 9.3,1.1 9.2,1.2 C11.6,1.5 13,3.4 13,5.1 C13,9.4 14.5,11.4 15.9,12.5 C15.7,13.1 15.2,13.6 14.6,13.6 L14.6,13.6 Z M14.1,12.5 C12.5,10.7 11.7,8.3 11.7,5.1 C11.7,3.9 10.6,2.2 8.3,2.2 C6,2.2 4.9,3.9 4.9,5.1 C4.9,8.3 4.1,10.7 2.5,12.5 L14.1,12.5 L14.1,12.5 Z M8.3,14.9 C7.6,14.9 7,14.3 7,13.6 C7,13.5 6.9,13.5 6.9,13.5 C6.8,13.5 6.8,13.6 6.8,13.6 C6.8,14.5 7.5,15.2 8.4,15.2 C8.5,15.2 8.5,15.1 8.5,15.1 C8.4,15 8.4,14.9 8.3,14.9 Z" id="path-1"></path>
+        <filter x="-3.3%" y="-3.1%" width="106.7%" height="112.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowOffsetOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-1282.000000, -12.000000)" fill-rule="nonzero" id="App-layout">
+            <g transform="translate(1.000000, 0.000000)">
+                <g id="Alert-icon" transform="translate(1280.100000, 12.000000)">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

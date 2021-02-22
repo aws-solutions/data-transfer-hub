@@ -1,0 +1,285 @@
+.page-breadcrumb {
+  padding: 20px 20px 20px 40px;
+  a,
+  a:link {
+    color: #0073bb;
+  }
+}
+
+.creation-content {
+  // width: 1180px;
+  // margin: 0 auto;
+  display: flex;
+  text-align: left;
+  .creation-step {
+    width: 320px;
+    padding: 10px 50px 20px 40px;
+  }
+  .creation-info {
+    // flex: 1;
+    padding: 10px 20px;
+    // width: 840px;
+    // width: 100%;
+    padding-right: 70px;
+    flex: 1;
+    .box-shadow {
+      background-color: #ffffff;
+      box-shadow: 0px 2px 2px #ccc;
+    }
+    .creation-title {
+      font-size: 18px;
+      color: #000000;
+      padding: 5px 0 15px 5px;
+      span {
+        color: #0073bb;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: pointer;
+        margin-left: 5px;
+      }
+    }
+    .card-list {
+      margin-bottom: 20px;
+    }
+    .option {
+      &-title {
+        color: #000000;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #fafafa;
+        border-bottom: 1px solid #eaeded;
+        padding: 15px 0 15px 20px;
+        span {
+          font-weight: normal;
+          color: #444;
+        }
+        .title-search {
+          margin: 10px 0 0 0;
+        }
+      }
+      .option-input {
+        width: 565px;
+        border: 1px solid #aab7b8;
+        background-color: #fff;
+        height: 32px;
+        line-height: 32px;
+        padding: 0 5px;
+      }
+      &-content {
+        padding: 20px;
+        font-size: 14px;
+        &.padding0 {
+          padding: 0;
+        }
+        .step3-title {
+          color: #687078;
+          padding: 3px 0;
+          font-size: 12px;
+        }
+        .step3-desc {
+          color: #000;
+          padding-bottom: 20px;
+          font-size: 14px;
+        }
+        .table-wrap {
+          padding: 0px 0;
+          .preview-row {
+            display: flex;
+            .key {
+              width: 350px;
+            }
+            .value {
+              flex: 1;
+            }
+          }
+          .table-th {
+            padding: 10px 10px 10px 20px;
+            border-bottom: 1px solid #eaeded;
+            background-color: #fafafa;
+          }
+          .table-td {
+            padding: 10px 10px 10px 20px;
+            border-bottom: 1px solid #eaeded;
+          }
+        }
+
+        .form-items {
+          margin-bottom: 15px;
+          .error {
+            height: 18px;
+            padding-top: 3px;
+            color: #ff2222;
+          }
+          .title {
+            font-weight: bold;
+            color: #444;
+          }
+          .desc {
+            color: #676f77;
+            padding: 4px 0;
+          }
+        }
+        .st-item {
+          display: inline-block;
+          border: 1px solid #aab7b8;
+          margin: 10px 20px 0px 0px;
+          width: 47%;
+          label {
+            width: 100%;
+            height: 82px;
+            display: inline-block;
+            padding: 15px;
+            cursor: pointer;
+          }
+          input {
+            margin-right: 4px;
+          }
+          .desc {
+            color: #687078;
+            padding: 5px 0 15px 16px;
+          }
+          &.active {
+            background-color: #f1faff;
+            border: 1px solid #0073bb;
+          }
+        }
+      }
+      &-list {
+        // width: 800px;
+        padding-left: 20px;
+        padding-bottom: 30px;
+        &-item {
+          cursor: pointer;
+          display: inline-block;
+          border: 1px solid #aab7b8;
+          margin: 20px 20px 0px 0px;
+          label {
+            width: 230px;
+            height: 140px;
+            display: inline-block;
+            padding: 10px;
+          }
+          .name {
+            input {
+              margin-right: 4px;
+            }
+            padding: 3px 0;
+          }
+          .imgs {
+            text-align: center;
+            padding: 10px 0;
+          }
+          &.active {
+            background-color: #f1faff;
+            border: 1px solid #0073bb;
+          }
+        }
+      }
+    }
+    .tips {
+      padding: 10px 20px 20px 20px;
+      &-title {
+        color: #000000;
+        font-size: 16px;
+      }
+      &-desc {
+        color: #545b64;
+        font-size: 14px;
+        padding: 5px 0;
+      }
+      &-list {
+        font-size: 14px;
+        margin-top: 6px;
+        ul,
+        li {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+        li {
+          padding: 2px 0;
+          span {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+    .edition {
+      font-size: 14px;
+      padding: 20px 20px 50px 20px;
+
+      &-title {
+        padding: 5px 0;
+      }
+      &-item {
+        padding: 3px 0;
+        padding-left: 20px;
+        input {
+          position: absolute;
+          margin: 3px 0 0 -20px;
+          // margin-top: -5px;
+          // margin-right: 4px;
+        }
+        span {
+          color: #0073bb;
+          font-weight: bold;
+          font-size: 12px;
+          cursor: pointer;
+          margin-left: 5px;
+        }
+      }
+    }
+    .aws-credential {
+      padding: 20px;
+      background-color: #f1faff;
+      .status-img {
+        position: absolute;
+      }
+      .status-desc {
+        font-size: 14px;
+        padding-left: 40px;
+        .title {
+          font-weight: bold;
+        }
+        .desc {
+          padding: 5px 0;
+          line-height: 1.8em;
+        }
+      }
+      .code-area {
+        display: flex;
+        clear: both;
+        padding-left: 35px;
+        &:after {
+          content: "";
+        }
+        .code-info {
+          flex: 1;
+          background-color: #f2f3f3;
+          padding: 20px;
+        }
+        .copy {
+          padding-left: 10px;
+          width: 100px;
+          .copy-tips {
+            display: inline-block;
+            color: green;
+            margin: 5px 0 0 5px;
+          }
+        }
+      }
+    }
+    .buttons {
+      clear: both;
+      &:after {
+        content: "";
+      }
+      text-align: right;
+      padding: 40px 0;
+      button {
+        margin-left: 15px;
+        font-weight: bold;
+      }
+    }
+  }
+}

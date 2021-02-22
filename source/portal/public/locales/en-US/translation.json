@@ -1,0 +1,162 @@
+{
+  "title": "AWS Data Replication Hub",
+  "yes": "Yes",
+  "no": "No",
+  "signOut": "Sign Out",
+  "info": "Info",
+  "top": {
+    "account": "Account"
+  },
+  "leftBar": {
+    "title": "Data Replication Hub",
+    "taskList": "Tasks"
+  },
+  "breadCrumb": {
+    "home": "Data Replication Hub",
+    "create": "Create Task",
+    "list": "List",
+    "tasks": "Tasks"
+  },
+  "step": {
+    "oneTitle": "Step1",
+    "oneDesc": "Select engine type",
+    "twoTitle": "Step2",
+    "twoDesc": "Specify task details",
+    "threeTitle": "Step3",
+    "threeDesc": "Review and create"
+  },
+  "home": {
+    "title": {
+      "createTitle": "Create Replication Task",
+      "quickStart": "Quick Start",
+      "moreResouce": "More Resources",
+      "destinationType": "Destination Type"
+    }
+  },
+  "creation": {
+    "step1": {
+      "engineType": "Select engine type",
+      "engineOptions": "Engine options"
+    },
+    "step2": {
+      "taskDetail": "Specify task details",
+      "sourceType": "Source Type",
+      "selectSourceType": "Select a source type",
+      "settings": {
+        "source": {
+          "title": "Source settings",
+          "bucketName": "Bucket Name",
+          "bucketDesc": "Input the bucket name.",
+          "objectPrefix": "Bucket Object Prefix",
+          "prefixDesc": "It will only replicate objects with the provided prefix."
+        },
+        "dest": {
+          "title": "Destination settings",
+          "bucketName": "Bucket Name",
+          "bucketDesc": "Input the bucket name.",
+          "objectPrefix": "Bucket Object Prefix",
+          "prefixDesc": "It will only replicate objects with the provided prefix."
+        },
+        "credential": {
+          "title": "Credentials",
+          "whitch": "Which bucket in current AWS account?",
+          "whitchDesc": "Select Source if your source bucket is in the same account as Data Replication Hub. Otherwise, select Destination.",
+          "store": "Parameter Store name for Credentials",
+          "storeDesc": "Choose the SSM Parameter Store which holds the credentials."
+        },
+        "more": {
+          "title": "More",
+          "description": "Description",
+          "descriptionDesc": "Description about this task",
+          "email": "Alarm Email",
+          "emailDesc": "Notification will be sent to this email if any errors."
+        }
+      }
+    },
+    "step3": {
+      "reviewTitle": "Review task",
+      "step1Title": "Step 1: Select engine type",
+      "step1Engine": "Engine",
+      "step1EngineSubEngine": "Engine",
+      "step1EngineSubEngineDesc": "Amazon S3 Replication Engine V1.3",
+      "step1Type": "type",
+      "step1TypeDesc": "Serverless Edition. Serverless edition is ideal for real-time transfer, and you pay as you go.",
+      "step2Detail": "Step 2: Specify task details",
+      "step2TaskParams": "Task Parameters",
+      "step2Params": "Parameter",
+      "step2Value": "Value",
+      "credential": "Credentials",
+      "credentialDesc": "Please create a parameter in Parameter Store from AWS Systems Manager, you can use default name drh-credentials (optional), select SecureString as its type, and put a Value following below format.",
+      "credentialCopied": "Copied"
+    }
+  },
+  "taskList": {
+    "title": "Tasks",
+    "stopTask": "Stop Task",
+    "tips": {
+      "selectTask": "Please select a task",
+      "selectTaskStop": "Please select a task to stop",
+      "confimStop": "Are you sure you want to stop the Task",
+      "successMsg": "Task created successfully"
+    },
+    "table": {
+      "taskId": "Task ID",
+      "source": "Source",
+      "destination": "Destination",
+      "engineType": "Engine Type",
+      "status": "Status",
+      "createdTime": "Created time"
+    }
+  },
+  "taskDetail": {
+    "title": "",
+    "stopTask": "Stop Task",
+    "stopTaskTips": "Are you sure you want to stop this Task?",
+    "generalConfig": "General configuration",
+    "engine": "Engine",
+    "plugin": "S3 Replication Plugin v1.3",
+    "sourceType": "Source Type",
+    "repStatus": "Replication Status",
+    "details": "Details",
+    "taskId": "Task ID",
+    "createdAt": "Created At",
+    "status": "Status",
+    "inProgress": "Replicating in progress",
+    "totalObjects": "Total Objects",
+    "repObjects": "Replicated Objects",
+    "srcName": "Source Bucket Name",
+    "srcPrefix": "Source Bucket Prefix",
+    "srcInThisAccount": "Bucket in This Account?",
+    "destName": "Destination Bucket Name",
+    "destPrefix": "Destination Bucket Prefix",
+    "destInThisAccount": "Bucket in This Account?",
+    "credentials": "Paramete Store for credentials",
+    "option": "Options",
+    "description": "Description",
+    "alarmEmail": "Alarm Email"
+  },
+  "bottom": {
+    "copy": "© 2008 - 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
+    "feedback":"Feedback",
+    "privacy":"Privacy Policy",
+    "use": "Terms of Use"
+  },
+  "btn": {
+    "next": "Next Step",
+    "prev": "Previous",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "copy": "Copy",
+    "stop": "Stop",
+    "createTask": "Create Task",
+    "viewDetail": " View Details"
+  },
+  "tips": {
+    "error": {
+      "sourceBucketRequired": "Source Bucket Name is Required",
+      "destBucketRequired": "Source Bucket Name is Required",
+      "emailRequired": "Alarm Email is required",
+      "emailValidate": "Alarm Email must be validate"
+    }
+  }
+}

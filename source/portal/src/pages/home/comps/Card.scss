@@ -1,0 +1,32 @@
+.card {
+  .title {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 15px 10px;
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #eaeded;
+  }
+  .item-list {
+    padding: 10px 0;
+    ul, li {
+      font-size: 14px;
+      margin: 0 0;
+      padding: 0 0;
+      list-style: none;
+    }
+    ul {
+      padding: 0 20px;
+    }
+    li {
+      padding: 10px 0px;
+      border-bottom: 1px solid #eaeded;
+      a, a:link {
+        text-decoration: none;
+        color: #0073bb;
+      }
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
