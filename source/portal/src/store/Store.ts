@@ -2,6 +2,7 @@ import { createStore } from "redux";
 import reducer from "./Reducer";
 
 export interface IState {
+  infoSpanType: string;
   createTaskFlag: boolean;
   tmpTaskInfo: any;
   infoIsOpen?: boolean;
@@ -38,12 +39,17 @@ export type Action =
       todo: string;
     }
   | {
+      type: "set info span type";
+      spanType: string;
+    }
+  | {
       type: "delete todo";
       index: number;
     };
 
 export function makeStore(): any {
   return createStore(reducer, {
+    infoSpanType: "",
     createTaskFlag: false,
     tmpTaskInfo: {},
     infoIsOpen: false,

@@ -1,6 +1,6 @@
 import React from "react";
 
-const StepOneS3Tips: React.FC = () => {
+const StepOneS3TipsCN: React.FC = () => {
   return (
     <div className="tips">
       <div className="tips-title">Amazon S3 复制引擎</div>
@@ -22,6 +22,9 @@ const StepOneS3Tips: React.FC = () => {
             <span>•</span>从腾讯云COS复制到S3
           </li>
           <li>
+            <span>•</span>从Google GCS复制到S3
+          </li>
+          <li>
             <span>•</span>支持大文件传输
           </li>
           <li>
@@ -39,4 +42,4 @@ const StepOneS3Tips: React.FC = () => {
   );
 };
 
-export default StepOneS3Tips;
+export default StepOneS3TipsCN;

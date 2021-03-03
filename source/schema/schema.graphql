@@ -1,6 +1,7 @@
 scalar AWSDateTime
 directive @aws_iam on FIELD_DEFINITION | OBJECT
 directive @aws_cognito_user_pools on FIELD_DEFINITION | OBJECT
+directive @aws_oidc on FIELD_DEFINITION | OBJECT
 directive @aws_subscribe on FIELD_DEFINITION
 
 schema {
@@ -28,13 +29,18 @@ type Query {
     Get a task object by ID.
     """
     getTask(id: ID!): Task
+
+    """
+    Get a list of parameters in System Manager
+    """
+    listParameters: [Parameter]
 }
 
 type Mutation {
-    createTask(input: CreateTaskInput!): Task @aws_iam @aws_cognito_user_pools
+    createTask(input: CreateTaskInput!): Task @aws_iam @aws_cognito_user_pools @aws_oidc
     # updateTask(id: String, input: UpdateTaskInput!): Task @aws_iam @aws_cognito_user_pools
     updateTaskProgress(id: String, input: UpdateTaskProgressInput): Task @aws_iam
-    stopTask(id: String): Task @aws_iam @aws_cognito_user_pools
+    stopTask(id: String): Task @aws_iam @aws_cognito_user_pools @aws_oidc
 }
 
 
@@ -43,10 +49,27 @@ input UpdateTaskProgressInput {
     replicated: Int
 }
 
+
+
+"""
+Parameter in System Manager Parameter Store
+"""
+type Parameter @aws_iam @aws_cognito_user_pools @aws_oidc{
+    "Parameter Name."
+    name: String!
+
+    "Parameter Type"
+    type: String!
+
+    "Parameter Description"
+    description: String
+
+}
+
 """
 Task. A Data Replication Hub task.
 """
-type Task @aws_iam @aws_cognito_user_pools{
+type Task @aws_iam @aws_cognito_user_pools @aws_oidc{
     "ID. Auto-generated."
     id: ID!
 
@@ -119,7 +142,7 @@ enum TaskProgress {
     STOPPED
 }
 
-type CommonProgressInfo @aws_iam @aws_cognito_user_pools{
+type CommonProgressInfo @aws_iam @aws_cognito_user_pools @aws_oidc{
     "Total number of records. In S3 task, it is the total number of objects."
     total: Int
 

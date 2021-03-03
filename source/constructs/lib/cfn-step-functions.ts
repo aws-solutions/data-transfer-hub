@@ -18,8 +18,11 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import * as iam from '@aws-cdk/aws-iam'
 import * as path from 'path'
 
+import { addCfnNagSuppressRules } from "./constructs-stack";
+
 export interface CloudFormationStateMachineProps {
   taskTableName: string,
+  taskTableArn: string,
   lambdaLayer: lambda.LayerVersion
 }
 
@@ -33,31 +36,51 @@ export class CloudFormationStateMachine extends cdk.Construct {
     const createTaskCfnFn = new lambda.Function(this, 'CreateTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: [ 'api/*', 'layer/*' ]
+        exclude: ['api/*', 'layer/*']
       }),
       handler: 'cdk/cfn-task.createTaskCfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [ props.lambdaLayer ],
+      layers: [props.lambdaLayer],
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
       description: 'AWS Data Replication Hub - Create Task'
     })
+
+    const cfnCreateTaskCfnFn = createTaskCfnFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnCreateTaskCfnFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
 
     const stopTaskCfnFn = new lambda.Function(this, 'StopTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: [ 'api/*', 'layer/*' ]
+        exclude: ['api/*', 'layer/*']
       }),
       handler: 'cdk/cfn-task.stopTaskCfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [ props.lambdaLayer ],
+      layers: [props.lambdaLayer],
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
       description: 'AWS Data Replication Hub - Stop Task'
     })
 
-    // TODO: The CloudFormation creation lambda needs Admin permission.
-    createTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
+    const cfnStopTaskCfnFn = stopTaskCfnFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnStopTaskCfnFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
+    const createTaskFnPolicy = new iam.Policy(this, 'CreateTaskFnPolicy')
+    createTaskFnPolicy.addStatements(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: ['*'],
       actions: [
@@ -65,41 +88,89 @@ export class CloudFormationStateMachine extends cdk.Construct {
       ]
     }))
 
-    // TODO: The CloudFormation stop lambda do NOT need Admin permission.
-    stopTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
+    const cfnCreateTaskFnPolicy = createTaskFnPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnCreateTaskFnPolicy, [
+      {
+        id: 'F4',
+        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all actions is required'
+      },
+      {
+        id: 'F39',
+        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+      },
+      {
+        id: 'W12',
+        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+      }
+    ])
+
+    createTaskCfnFn.role?.attachInlinePolicy(createTaskFnPolicy)
+
+
+    // TODO: Test stop policy
+    const stopTaskFnPolicy = new iam.Policy(this, 'StopTaskFnPolicy')
+    stopTaskFnPolicy.addStatements(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: ['*'],
       actions: [
         '*'
       ]
     }))
+
+    const cfnStopTaskFnPolicy = stopTaskFnPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnStopTaskFnPolicy, [
+      {
+        id: 'F4',
+        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all actions is required'
+      },
+      {
+        id: 'F39',
+        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all resources is required'
+      },
+      {
+        id: 'W12',
+        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all resources is required'
+      }
+    ])
+
+    stopTaskCfnFn.role?.attachInlinePolicy(stopTaskFnPolicy)
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: [ 'api/*', 'layer/*' ]
+        exclude: ['api/*', 'layer/*']
       }),
       handler: 'cdk/cfn-task.queryTaskCfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [ props.lambdaLayer ],
+      layers: [props.lambdaLayer],
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
       description: 'AWS Data Replication Hub - Query Task'
     })
+
+    const cfnQueryTaskCfnFn = queryTaskCfnFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnQueryTaskCfnFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
     queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      resources: ['*'],
+      resources: [props.taskTableArn],
       actions: [
-        'cloudformation:DescribeStacks'
+        'dynamodb:Query',
+        'dynamodb:UpdateItem'
       ]
     }))
     queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      // TODO: limit the access to certain table.
-      resources: ['*'],
+      resources: [`arn:${cdk.Aws.PARTITION}:cloudformation:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stack/DRH*`],
       actions: [
-        'dynamodb:Query',
-        'dynamodb:UpdateItem'
+        'cloudformation:DescribeStacks'
       ]
     }))
 
@@ -148,7 +219,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       .when(
         sfn.Condition.stringEquals('$.action', 'START'), startStackTask.next(waitFor5Seconds))
       .when(
-        sfn.Condition.stringEquals('$.action', 'STOP') , stopStackTask.next(waitFor5Seconds))
+        sfn.Condition.stringEquals('$.action', 'STOP'), stopStackTask.next(waitFor5Seconds))
 
     waitFor5Seconds.next(queryStackStatus).next(queryStackStatusChoice)
 

@@ -3,7 +3,10 @@
   "yes": "是",
   "no": "否",
   "signOut": "退出登录",
+  "reLogin": "重新登录",
+  "reLoignTips": "本次回话已过期。再次登录 AWS Data Replication Hub，请点击“重新登录”.",
   "info": "信息",
+  "optional": "可选",
   "top": {
     "account": "我的账户"
   },
@@ -34,6 +37,12 @@
     }
   },
   "creation": {
+    "tips": {
+      "requiredCredential": "请选择凭证参数",
+      "store1": "选择存储在参数仓库中的",
+      "store2": "凭据",
+      "store3": ". 如果源数据桶是公开数据桶则可以为空"
+    },
     "step1": {
       "engineType": "选择引擎类型",
       "engineOptions": "引擎选项"
@@ -47,6 +56,12 @@
           "title": "数据源设置",
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
+          "srcInAccount": "源数据桶在当前账户吗?",
+          "srcInAccountDesc": "如果Data Replication Hub部署在源数据桶的账号，请选择YES",
+          "srcRegionName": "区域名称",
+          "srcRegionNameDesc": "请选择数据桶的区域",
+          "enableS3Event": "是否启用S3事件?",
+          "enableS3EventDesc": "启用S3事件来触发数据的实时复制.",
           "objectPrefix": "数据桶对象前缀",
           "prefixDesc": "只会复制指定的前缀的数据对象."
         },
@@ -55,7 +70,11 @@
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
           "objectPrefix": "数据桶对象前缀",
-          "prefixDesc": "只会复制指定的前缀的数据对象."
+          "prefixDesc": "在复制的对象前添加前缀.",
+          "storageClass": "存储类型",
+          "storageClassDesc": "对象将会复制到您所选择的存储类型.",
+          "destRegionName": "区域名称",
+          "destRegionNameDesc": "请选择数据桶的区域"
         },
         "credential": {
           "title": "凭证",
@@ -63,6 +82,17 @@
           "whitchDesc": "如果源数据桶和Data Replication Hub应用在同一个账户中，请选择Source，否则请选择Destination.",
           "store": "凭证中的参数存储名称",
           "storeDesc": "请填写在凭证中的SSM参数存储名称."
+        },
+        "advance": {
+          "title": "高级设置",
+          "lambdaMemory": "Lambda内存",
+          "LambdaMemoryDesc": "Lambda内存大小, 默认值256(MB)",
+          "multipartThreshold": "大文件分段阈值",
+          "multipartThresholdDesc": "拆分大文件的阈值, 默认值10(MB)",
+          "chunkSize": "分段大小",
+          "chunkSizeDesc": "按照MB拆分大文件, 默认值5(MB)",
+          "maxThreads": "最大线程数",
+          "maxThreadsDesc":"在Lambda中多部分上传文件的最大线程数量, 默认值10"
         },
         "more": {
           "title": "更多",
@@ -73,12 +103,60 @@
         }
       }
     },
+    "step2ECR": {
+      "taskDetail": "填写任务信息",
+      "sourceType": "源仓库类型",
+      "selectContainerType": "选择容器仓库类型",
+      "settings": {
+        "source": {
+          "title": "源仓库设置",
+          "sourceRegion": "源仓库区域",
+          "sourceRegionDesc": "您可以输入区域名称或区域代码",
+          "sourceInAccount": "源仓库在当前账户吗?",
+          "sourceInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
+          "accountId": "AWS账户ID",
+          "accountIdTips": "输入AWS账户ID (12位数字).",
+          "accountIdPlaceholder": "12位数字账户ID",
+          "credentialsStore": "参数仓库",
+          "tips": "请选择凭据",
+          "dockerImages": "Docker镜像",
+          "dockerImagesDesc": "请选择需要复制的镜像.",
+          "imageList": "镜像列表",
+          "image1": "输入镜像名称",
+          "image2": "image-name",
+          "image3": "tag",
+          "image4": "使用逗号分隔. 如果不指定tag, 则默认为latest."
+        },
+        "dest": {
+          "title": "目标仓库设置",
+          "destinationRegion": "目的仓库区域",
+          "destinationRegionDesc": "您可以输入区域名称或区域代码.",
+          "regionRequired": "目的仓库区域不能为空",
+          "destInAccount": "目的仓库在当前账户吗?",
+          "destInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
+          "credentialsStore": "参数仓库",
+          "tips": "请选择凭据",
+          "prefix": "前缀",
+          "optional": "可选",
+          "prefixDesc": "给所有镜像添加前缀, 默认为空."
+        },
+        "more": {
+          "title": "更多",
+          "description": "描述",
+          "descriptionDesc": "关于这个任务的描述",
+          "email": "通知邮箱",
+          "optional": "可选",
+          "emailDesc": "如果有错误将会及时发送到这个邮箱."
+        }
+      }
+    },
     "step3": {
       "reviewTitle": "任务预览",
       "step1Title": "步骤一: 选择引擎类型",
       "step1Engine": "引擎",
       "step1EngineSubEngine": "引擎",
       "step1EngineSubEngineDesc": "Amazon S3 复制引擎 V1.3",
+      "step1EngineSubEngineECRDesc": "Amazon ECR 复制引擎 v1.0",
       "step1Type": "类型",
       "step1TypeDesc": "无服务器版本. 无服务器版是实时传输的理想之选，只需要为您所使用的付费.",
       "step2Detail": "步骤二: 任务详细信息",
@@ -101,8 +179,8 @@
     },
     "table": {
       "taskId": "任务编号",
-      "source": "源数据桶",
-      "destination": "目的数据桶",
+      "source": "数据源",
+      "destination": "数据目的地",
       "engineType": "引擎类型",
       "status": "状态",
       "createdTime": "创建时间"
@@ -115,6 +193,7 @@
     "generalConfig": "基本配置",
     "engine": "引擎",
     "plugin": "S3 复制插件 v1.3",
+    "pluginECR": "Amazon ECR 复制插件 v1.0",
     "sourceType": "源数据类型",
     "repStatus": "复制状态",
     "details": "详细信息",
@@ -131,9 +210,24 @@
     "destPrefix": "目标数据对象前缀",
     "destInThisAccount": "该数据桶在当前账户吗?",
     "credentials": "凭证参数存储名称",
+    "images": "镜像",
     "option": "其他选项",
     "description": "描述",
-    "alarmEmail": "通知邮箱"
+    "alarmEmail": "通知邮箱",
+    "alarmEmailECR": "告警通知",
+    "sourceRegion": "源仓库区域",
+    "sourceInAccount": "源仓库在当前账户吗?",
+    "srcAccountId": "账户ID",
+    "srcCredential": "账户凭证",
+    "destRegion": "目的仓库区域",
+    "destInAccount": "目的仓库在当前账户吗?",
+    "accountId": "账户ID",
+    "credentialStore": "参数仓库",
+    "prefix": "前缀",
+    "taskMetrics": "任务指标",
+    "dashboard": "CloudWatch 仪表盘",
+    "enableS3Event": "启用S3事件?",
+    "storageClass": "存储类型"
   },
   "bottom": {
     "copy":"© 2008 - 2020, Amazon Web Services, Inc. 或其子公司。保留所有权利。",
@@ -149,7 +243,11 @@
     "copy": "复制",
     "stop": "停止",
     "createTask": "创建任务",
-    "viewDetail": "查看详情"
+    "viewDetail": "查看详情",
+    "taskAction": "操作",
+    "stopTask": "停止任务",
+    "cloneTask": "复制任务",
+    "reLogin": "重新登录"
   },
   "tips": {
     "error": {
@@ -157,6 +255,19 @@
       "destBucketRequired": "目标数据桶名称必填",
       "emailRequired": "通知邮箱必填",
       "emailValidate": "请输入合法的通知邮箱地址"
+    }
+  },
+  "comps": {
+    "credential": {
+      "create": "创建一个",
+      "store": "凭证",
+      "save1": "保存在凭证中. 选择 ",
+      "save2": "SecureString",
+      "save3": " 作为类型.",
+      "format": "格式",
+      "formatDesc": "复制以下凭据，然后替换为您自己实际的值.",
+      "learnMore": "了解更多 ",
+      "createStore": "创建一个凭证"
     }
   }
 }

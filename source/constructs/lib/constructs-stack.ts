@@ -14,10 +14,31 @@
 import * as cdk from '@aws-cdk/core';
 import { ApiStack, ApiProps } from './api-stack';
 import { PortalStack } from "./portal-stack";
-import { CfnParameter } from '@aws-cdk/core';
+import { CfnParameter, CfnResource } from '@aws-cdk/core';
 import { TaskCluster } from "./task-cluster";
 
 const { VERSION } = process.env;
+
+export const enum AuthType {
+  COGNITO = "cognito",
+  OPENID = "openid"
+}
+
+/**
+ * cfn-nag suppression rule interface
+ */
+interface CfnNagSuppressRule {
+  readonly id: string;
+  readonly reason: string;
+}
+
+
+export function addCfnNagSuppressRules(resource: CfnResource, rules: CfnNagSuppressRule[]) {
+  resource.addMetadata('cfn_nag', {
+    rules_to_suppress: rules
+  });
+}
+
 
 /**
  * @class ConstructsStack
@@ -26,6 +47,12 @@ export class ConstructsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const authType = this.node.tryGetContext('authType') || AuthType.COGNITO
+    let oidcProvider: CfnParameter | null = null;
+    let oidcLoginUrl: CfnParameter | null = null;
+    let oidcLogoutUrl: CfnParameter | null = null;
+    let oidcTokenValidationUrl: CfnParameter | null = null;
+
     // CFN parameters
     const usernameParameter = new CfnParameter(this, 'AdminEmail', {
       type: 'String',
@@ -33,23 +60,64 @@ export class ConstructsStack extends cdk.Stack {
       allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
     });
 
+    if (authType === AuthType.OPENID) {
+      oidcProvider = new CfnParameter(this, 'OidcProvider', {
+        type: 'String',
+        description: 'OIDC Provider',
+        default: ''
+      });
+
+      oidcLoginUrl = new CfnParameter(this, 'OidcLoginUrl', {
+        type: 'String',
+        description: 'OIDC Login URL',
+        default: '',
+      });
+
+      oidcLogoutUrl = new CfnParameter(this, 'OidcLogoutUrl', {
+        type: 'String',
+        description: 'OIDC Logout URL',
+        default: '',
+      });
+
+      oidcTokenValidationUrl = new CfnParameter(this, 'OidcTokenValidationUrl', {
+        type: 'String',
+        description: 'OIDC Token Validation URL',
+        default: '',
+      });
+      // CFN metadata
+      this.templateOptions.metadata = {
+        'AWS::CloudFormation::Interface': {
+          ParameterGroups: [
+            {
+              Label: { default: 'User Pool' },
+              Parameters: [usernameParameter.logicalId]
+            },
+            {
+              Label: { default: 'OIDC Settings' },
+              Parameters: [oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, oidcTokenValidationUrl.logicalId]
+            }
+          ]
+        }
+      };
+    } else {
+      // CFN metadata
+      this.templateOptions.metadata = {
+        'AWS::CloudFormation::Interface': {
+          ParameterGroups: [
+            {
+              Label: { default: 'User Pool' },
+              Parameters: [usernameParameter.logicalId]
+            }
+          ]
+        }
+      };
+    }
+
     // CFN description
-    this.templateOptions.description = `(SO9001) - AWS Data Replication Hub with aws-solutions-constructs: This template deploys an one-stop toolset for replicating data from different sources into AWS. Template version ${VERSION}`;
+    this.templateOptions.description = `(SO8001) - AWS Data Replication Hub with aws-solutions-constructs: This template deploys an one-stop toolset for replicating data from different sources into AWS. Template version ${VERSION}`;
 
     // CFN template format version
     this.templateOptions.templateFormatVersion = '2010-09-09';
-
-    // CFN metadata
-    this.templateOptions.metadata = {
-      'AWS::CloudFormation::Interface': {
-        ParameterGroups: [
-          {
-            Label: { default: 'User Pool' },
-            Parameters: [ usernameParameter.logicalId]
-          }
-        ]
-      }
-    };
 
     // Mappings
     new cdk.CfnMapping(this, 'Send', {
@@ -65,6 +133,8 @@ export class ConstructsStack extends cdk.Stack {
 
     // API props
     const drhProps: ApiProps = {
+      authType,
+      oidcProvider,
       usernameParameter
     }
     // API Stack
@@ -72,9 +142,14 @@ export class ConstructsStack extends cdk.Stack {
 
     // Portal - S3 Static Website
     const portal = new PortalStack(this, 'Portal', {
+      auth_type: authType,
+      aws_oidc_provider: oidcProvider?.valueAsString || '',
+      aws_oidc_login_url: oidcLoginUrl?.valueAsString || '',
+      aws_oidc_logout_url: oidcLogoutUrl?.valueAsString || '',
+      aws_oidc_token_validation_url: oidcTokenValidationUrl?.valueAsString || '',
       aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
-      aws_user_pools_id: apiStack.userPool.userPoolId,
-      aws_user_pools_web_client_id: apiStack.userPoolApiClient.userPoolClientId,
+      aws_user_pools_id: apiStack.userPool?.userPoolId || '',
+      aws_user_pools_web_client_id: apiStack.userPoolApiClient?.userPoolClientId || '',
       taskCluster: {
         ecsVpcId: taskCluster.vpc.vpcId,
         ecsSubnets: taskCluster.publicSubnets.map(subnet => subnet.subnetId),
@@ -94,15 +169,15 @@ export class ConstructsStack extends cdk.Stack {
       value: taskCluster.clusterName
     }).overrideLogicalId('TaskClusterName')
     new cdk.CfnOutput(this, 'UserPoolIdOutput', {
-      value: apiStack.userPool.userPoolId,
+      value: apiStack.userPool?.userPoolId || '',
       description: 'User Pool Id'
     }).overrideLogicalId('UserPoolId')
     new cdk.CfnOutput(this, 'UserPoolApiClientIdOutput', {
-      value: apiStack.userPoolApiClient.userPoolClientId,
+      value: apiStack.userPoolApiClient?.userPoolClientId || '',
       description: 'API Client Id'
     }).overrideLogicalId('UserPoolApiClientId')
     new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
-      value: apiStack.userPoolDomain.domainName,
+      value: apiStack.userPoolDomain?.domainName || '',
       description: 'User pool domain'
     }).overrideLogicalId('UserPoolDomain')
     new cdk.CfnOutput(this, 'AdminUsernameOutput', {

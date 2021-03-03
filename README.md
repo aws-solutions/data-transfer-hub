@@ -9,7 +9,7 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
 ## Features
 
 - [x] Authentication
-- [x] Self-service Interface
+- [x] Self-service User Interface
 - [x] CDK Deployment
 - [x] CloudFormation Deployment
 - [x] S3 Plugin
@@ -17,26 +17,34 @@ _Note_: If you have already deployed this solution. Please refer to [User Guide]
     - [x] Replication from Alibaba Cloud OSS to Amazon S3
     - [x] Replication from Tencent COS to Amazon S3
     - [x] Replication from Qiniu Kodo to Amazon S3
+    - [x] Replication from Google Cloud Storage to Amazon S3 (Global)
     - [ ] Replication from Huawei Cloud OBS
     - [x] Support replication with Metadata
     - [x] Support One-time replication
     - [x] Support Incremental replication
-- [ ] ECR Plugin
-    - [ ] Image replication between AWS Standard partition and AWS CN partition
-    - [ ] Image replication from Docker Hub to ECR
-    - [ ] Image replication from gcr.io to ECR
+    - [x] Support S3 Events to trigger replication
+- [x] ECR Plugin
+    - [x] Amazon ECR replication between AWS accounts or regions
+    - [x] Amazon ECR replication between AWS Standard partition and AWS CN partition
+    - [x] Public docker registry to AWS ECR replication
+    - [ ] Private docker registry to AWS ECR replication
+    - [x] Replicate all images or only selected Images
+    - [x] Support One-time replication
+    - [x] Support Incremental replication
 - [ ] DynamoDB Plugin
 
 ## Architecture
 
 ![](replication-hub-architect.jpg)
 
-A web portal will be launched in the customer's account. Through the web portal, customers can create replication tasks and manage them in a centralized place. 
+A web portal will be launched in the customer's AWS account. Through the web portal, customers can create replication tasks and manage them in a centralized place. 
 
-Each type of replication type is a plugin for this solution. You can also use the plugin alone without user interface. 
+Each type of replication is a plugin for this solution. You can also use the plugin independently without user interface. 
 
 Available Plugins:
-* [S3 Plugin](https://github.com/aws-samples/aws-data-replication-hub-s3-plugin)
+* [S3 Plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin)
+
+* [ECR Plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
 
 ## Deploy via CloudFormation
 
@@ -48,9 +56,14 @@ Follow the step-by-step instructions in this section to configure and deploy the
 
 1. Make sure you have sign in AWS Console already.
 1. Click the following button to launch the CloudFormation Stack in your account.
-    [![](./launch-stack.png)](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/template?stackName=AwsDataReplicationHub&templateURL=https://joes-solutions-reference.s3-us-west-2.amazonaws.com/aws-data-replication-hub/beta/AwsDataReplicationHub.template)
+
+    [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataReplicationHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-hub/latest/AwsDataReplicationHub-cognito.template)
 1. Input **AdminEmail** parameter
 1. Click **Next** and select **Create Stack**.
+
+## Deploy in China Region
+
+[Deploy in China Region](docs/DeployInChinaWithAuthing_CN.md)
 
 ## Deploy via AWS CDK
 
@@ -62,7 +75,6 @@ Please install the following dependencies on your local machine.
 
 * nodejs 12+
 * npm 6+
-* AWS CDK CLI v1.64.1
 * Docker
 
 You need CDK bootstrap v4+ to deploy this application. To upgrade to latest CDK bootstrap version. Run 
@@ -89,8 +101,8 @@ _Note_: Please make sure Docker is running.
 cd ../constructs
 npm install 
 npm run build
-cdk synth
-cdk deploy --parameters AdminEmail=<your-email-address>
+npx cdk synth
+npx cdk deploy --parameters AdminEmail=<your-email-address>
 ```
 
 The only parameter you should specify is the default user's email address. It will serve as the username when login into the web portal.
@@ -115,6 +127,7 @@ Now, you are all set. Start to create your first replication task. For the compl
 
 ```
 |- .github/ ...               - resources for open-source contributions.
+|- docs/ ...                  - documentation.
 |- deployment/                - contains build scripts, deployment templates, and dist folders for staging assets.
   |- cdk-solution-helper/     - helper function for converting CDK output to a format compatible with the AWS Solutions pipelines.
   |- build-open-source-dist.sh  - builds the open source package with cleaned assets and builds a .zip file in the /open-source folder for distribution to GitHub
@@ -159,12 +172,12 @@ chmod +x ./build-s3-dist.sh
 
 * Deploy the distributable assets to an Amazon S3 bucket in your account.
 ```
-aws s3 sync ./regional-s3-assets/ s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --delete --acl public-read --profile aws-cred-profile-name
+aws s3 sync ./regional-s3-assets/ s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --delete --acl bucket-owner-full-control
 ```
 
 * Copy the CloudFormation template to Amazon S3 bucket in your account.
 ```
-aws s3 cp ./global-s3-assets/AwsDataReplicationHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control --profile aws-cred-profile-name
+aws s3 cp ./global-s3-assets/AwsDataReplicationHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control
 ```
 
 * Get the link of the solution template uploaded to your Amazon S3 bucket.

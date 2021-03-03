@@ -16,8 +16,11 @@ import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as iam from '@aws-cdk/aws-iam';
 import * as s3 from '@aws-cdk/aws-s3';
+import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as s3Deployment from '@aws-cdk/aws-s3-deployment';
 import * as path from 'path'
+import { AuthType } from './constructs-stack';
+import { addCfnNagSuppressRules } from "./constructs-stack";
 
 // const { BUCKET_NAME, SOLUTION_NAME, VERSION } = process.env
 
@@ -31,6 +34,11 @@ interface CustomResourceConfig {
 }
 
 export interface PortalStackProps {
+  auth_type: string,
+  aws_oidc_provider: string,
+  aws_oidc_login_url: string,
+  aws_oidc_logout_url: string,
+  aws_oidc_token_validation_url: string,
   aws_user_pools_id: string,
   aws_user_pools_web_client_id: string,
   aws_appsync_graphqlEndpoint: string,
@@ -56,15 +64,53 @@ export class PortalStack extends cdk.Construct {
         serverAccessLogsBucket: undefined,
         accessControl: s3.BucketAccessControl.PRIVATE
       },
+      cloudFrontDistributionProps: {
+        // viewerCertificate: cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate(siteDomain),
+        priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
+        enableIpV6: false,
+        loggingConfig: {},
+      },
       insertHttpSecurityHeaders: false
     });
     const websiteBucket = website.s3Bucket as s3.Bucket;
+
+    const cfnWebsiteBucket = websiteBucket.node.defaultChild as s3.CfnBucket
+    addCfnNagSuppressRules(cfnWebsiteBucket, [
+      {
+        id: 'W35',
+        reason: 'authenication required, no need to use enable access logging'
+      }
+    ])
+
+    const cfnWebsiteLoggingBucket = website.s3LoggingBucket?.node.defaultChild as s3.CfnBucket
+    addCfnNagSuppressRules(cfnWebsiteLoggingBucket, [
+      {
+        id: 'W35',
+        reason: 'authenication required, no need to use enable access logging'
+      }
+    ])
+
+    const cfnWebsiteCFLoggingBucket = website.cloudFrontWebDistribution.loggingBucket?.node.defaultChild as s3.CfnBucket
+    addCfnNagSuppressRules(cfnWebsiteCFLoggingBucket, [
+      {
+        id: 'W41',
+        reason: 'No sensitive data, no need to use encryption'
+      },
+      {
+        id: 'W35',
+        reason: 'authenication required, no need to use enable access logging'
+      },
+      {
+        id: 'W51',
+        reason: 'CloudFrontToS3 Construct, no need to set bucket policy'
+      },
+    ])
 
     // CustomResourceRole
     const customResourceRole = new iam.Role(this, 'CustomResourceRole', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       path: '/',
-      roleName: `${cdk.Aws.STACK_NAME}CustomResourceRole-${cdk.Aws.REGION}`
+      // roleName: `${cdk.Aws.STACK_NAME}CustomResourceRole-${cdk.Aws.REGION}`
     })
     const cfnCustomResourceRole = customResourceRole.node.defaultChild as iam.CfnRole;
     cfnCustomResourceRole.overrideLogicalId('CustomResourceRole');
@@ -106,27 +152,37 @@ export class PortalStack extends cdk.Construct {
       timeout: cdk.Duration.seconds(30),
       memorySize: 512,
       role: customResourceRole,
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/'), {
-        bundling: {
-          image: lambda.Runtime.NODEJS_12_X.bundlingDockerImage,
-          command: [
-            'bash', '-c', [
-              `cd /asset-output/`,
-              `cp -r /asset-input/* /asset-output/`,
-              `cd /asset-output/`,
-              `npm install`
-            ].join(' && ')
-          ],
-          user: 'root'
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/'),
+        {
+          bundling: {
+            image: lambda.Runtime.NODEJS_12_X.bundlingDockerImage,
+            command: [
+              'bash', '-c', [
+                `cd /asset-output/`,
+                `cp -r /asset-input/* /asset-output/`,
+                `cd /asset-output/`,
+                `npm install`
+              ].join(' && ')
+            ],
+            user: 'root'
+          }
         }
-      })
+      )
     })
+
+    const cfnCustomResourceFn = customResourceFunction.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnCustomResourceFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
 
     new s3Deployment.BucketDeployment(this, 'DeployWebsite', {
       sources: [s3Deployment.Source.asset(path.join(__dirname, '../../portal/build'))],
       destinationBucket: websiteBucket,
       // disable this, otherwise the aws-exports.json will be deleted
-      prune: false
+      prune: false,
     })
 
     // CustomResourceConfig
@@ -140,9 +196,13 @@ export class PortalStack extends cdk.Construct {
             aws_user_pools_id: props.aws_user_pools_id,
             aws_user_pools_web_client_id: props.aws_user_pools_web_client_id,
             oauth: {},
+            aws_oidc_provider: props.aws_oidc_provider,
+            aws_oidc_login_url: props.aws_oidc_login_url,
+            aws_oidc_logout_url: props.aws_oidc_logout_url,
+            aws_oidc_token_validation_url: props.aws_oidc_token_validation_url,
             aws_appsync_graphqlEndpoint: props.aws_appsync_graphqlEndpoint,
             aws_appsync_region: cdk.Aws.REGION,
-            aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+            aws_appsync_authenticationType: props.auth_type === AuthType.OPENID ? 'OPENID' : 'AMAZON_COGNITO_USER_POOLS',
             taskCluster: props.taskCluster
           }
         },
@@ -150,7 +210,7 @@ export class PortalStack extends cdk.Construct {
         { path: 'destS3key', value: 'aws-exports.json' },
         { path: 'customAction', value: 'putConfigFile' }
       ],
-      dependencies: [ cfnCustomResourceRole, cfnCustomResourcePolicy ]
+      dependencies: [cfnCustomResourceRole, cfnCustomResourcePolicy]
     });
 
     this.websiteURL = website.cloudFrontWebDistribution.distributionDomainName
@@ -181,7 +241,7 @@ export class PortalStack extends cdk.Construct {
       serviceToken: customResourceFunction.functionArn
     });
     customResource.addOverride('Type', 'Custom::CustomResource');
-    customResource.overrideLogicalId(id);
+    // customResource.overrideLogicalId(id);
 
     if (config) {
       const { properties, condition, dependencies } = config;

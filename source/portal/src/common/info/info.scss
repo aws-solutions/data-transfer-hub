@@ -1,0 +1,43 @@
+.credential {
+  .top-tips {
+    padding: 10px 0 15px;
+    line-height: 1.6em;
+    color: #444;
+    i {
+      color: #222;
+    }
+  }
+  .tips-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .code-info {
+    background-color: #f2f3f3;
+    padding: 1px 10px;
+    font-size: 12px;
+  }
+  .copy {
+    font-size: 12px;
+    margin-top: 5px;
+    .copy-tips {
+      color: green;
+      margin: 5px 0 0 5px;
+    }
+  }
+  
+}
+
+.more {
+  margin-top: 30px;
+  border-top: 1px solid #ddd;
+  padding: 20px 0 0 0;
+  &-title {
+    font-size: 16px;
+    color: #222;
+    padding-bottom: 10px;
+  }
+  .open-icon {
+    position: absolute;
+    margin: -1px 0 0 3px;
+  }
+}

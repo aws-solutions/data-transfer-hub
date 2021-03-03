@@ -5,7 +5,7 @@
 $font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen','Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   sans-serif;
 
-body, input, button {
+body, input, textarea, button {
   font-size: 14px;
   margin: 0;
   font-family: $font-family;
@@ -13,6 +13,23 @@ body, input, button {
   -moz-osx-font-smoothing: grayscale;
   background-color: #F2F3F3;
 }
+
+.gray {
+  color: #888;
+}
+
+a, a:link, a:active, a:visited {
+  &.a-link {
+    color: #0073bb;
+    text-decoration: none;
+  }
+}
+ a:hover {
+  &.a-link {
+    color: #0073bb;
+    text-decoration: underline;
+  }
+ }
 
 .sign-in-form-footer {
   display: none;
@@ -42,9 +59,37 @@ code {
   }
 }
 
+.over-mask {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($color: #000000, $alpha: 0.2);
+  .card {
+    width: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -100px 0 0 -150px;
+    .relogin-botton {
+      margin: 20px;
+    }
+  }
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
 .login-wrap {
   width: 460px;
-  margin: 100px auto 0;
+  margin: 0 auto;
   .text-title {
     text-align: center;
     font-weight: bold;
@@ -71,6 +116,10 @@ code {
   background: "#fff"
 }
 
+.margin-left-10 {
+  margin-left: 10px !important;
+}
+
 .padding-20 {
   padding: 20px;
 }
@@ -91,7 +140,15 @@ code {
 }
 
 .margin-left-40 {
-  margin-left: 40px;
+  margin-left: 40px !important;
+}
+
+.font14px {
+  font-size: 14px !important;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .info-span {

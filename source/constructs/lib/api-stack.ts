@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { Construct, CfnParameter, Duration, Stack } from '@aws-cdk/core';
+import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws } from '@aws-cdk/core';
 import * as ddb from '@aws-cdk/aws-dynamodb';
 import * as cognito from '@aws-cdk/aws-cognito';
 import * as appsync from '@aws-cdk/aws-appsync';
@@ -19,24 +19,35 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
+import { AuthType } from './constructs-stack';
+import { addCfnNagSuppressRules } from "./constructs-stack";
 
-// const PLUGIN_TEMPLATE_S3 = 'https://drh-s3-plugin.s3-us-west-2.amazonaws.com/Aws-data-replication-component-s3/v1.0.0/Aws-data-replication-component-s3.ecs.template'
-const PLUGIN_TEMPLATE_S3 = 'https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-component-s3/v1.0.0/Aws-data-replication-component-s3.template';
 
 export interface ApiProps {
+  readonly authType: string,
+  readonly oidcProvider: CfnParameter | null,
   readonly usernameParameter: CfnParameter
 }
 
 export class ApiStack extends Construct {
 
+  readonly authDefaultConfig: any
   readonly taskTable: ddb.Table
-  readonly userPool: cognito.UserPool
+  readonly userPool?: cognito.UserPool
   readonly api: appsync.GraphqlApi
-  readonly userPoolApiClient: cognito.UserPoolClient
-  readonly userPoolDomain: cognito.UserPoolDomain
+  readonly userPoolApiClient?: cognito.UserPoolClient
+  readonly userPoolDomain?: cognito.UserPoolDomain
 
   constructor(scope: Construct, id: string, props: ApiProps) {
     super(scope, id);
+
+    const isCN = new CfnCondition(this, 'IsChinaRegionCondition', {
+      expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn')
+    });
+
+    const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
+    const PLUGIN_TEMPLATE_S3 = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-s3/v1.3.0/Aws-data-replication-component-s3.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template`;
 
     // Create the Progress DynamoDB Table
     this.taskTable = new ddb.Table(this, 'TaskTable', {
@@ -56,6 +67,18 @@ export class ApiStack extends Construct {
       projectionType: ddb.ProjectionType.INCLUDE,
       nonKeyAttributes: ['id', 'status', 'stackStatus']
     })
+
+    const cfnTable = this.taskTable.node.defaultChild as ddb.CfnTable
+    addCfnNagSuppressRules(cfnTable, [
+      {
+        id: 'W74',
+        reason: 'This table is used to store task records for web UI purpose. No sensitve data, therefore no need to use encryption'
+      },
+      {
+        id: 'W78',
+        reason: 'This table is used to store task records for web UI purpose. No important data, therefore no need to enable backup'
+      }
+    ])
 
     const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
@@ -77,80 +100,126 @@ export class ApiStack extends Construct {
       description: 'AWS Data Replication Hub - Lambda Layer'
     })
 
-
     const stateMachine = new cfnSate.CloudFormationStateMachine(this, 'CfnWorkflow', {
       taskTableName: this.taskTable.tableName,
+      taskTableArn: this.taskTable.tableArn,
       lambdaLayer: lambdaLayer
     })
 
-    // Create Cognito User Pool
-    this.userPool = new cognito.UserPool(this, 'UserPool', {
-      selfSignUpEnabled: false,
-      signInCaseSensitive: false,
-      signInAliases: {
-        email: true,
-        username: false,
-        phone: true
-      }
-    })
+    if (props.authType === AuthType.OPENID) {
 
-    // Create User Pool Client
-    this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolApiClient', {
-      userPool: this.userPool,
-      userPoolClientName: 'ReplicationHubPortal',
-      preventUserExistenceErrors: true
-    })
-
-    // Create an Admin User
-    // TODO: The user can be created, however, the state is FORCE_PASSWORD_CHANGE, the customer still cannot use the account yet.
-    // https://stackoverflow.com/questions/40287012/how-to-change-user-status-force-change-password
-    // resolution: create a custom lambda to set user password
-    new cognito.CfnUserPoolUser(this, 'AdminUser', {
-      userPoolId: this.userPool.userPoolId,
-      username: props.usernameParameter.valueAsString,
-      userAttributes: [
-        {
-          name: 'email',
-          value: props.usernameParameter.valueAsString
+      // Open Id Auth Config
+      this.authDefaultConfig = {
+        authorizationType: appsync.AuthorizationType.OIDC,
+        openIdConnectConfig: {
+          oidcProvider: props.oidcProvider?.valueAsString
         }
-      ]
-    })
-
-    this.userPoolDomain = new cognito.UserPoolDomain(this, 'UserPoolDomain', {
-      userPool: this.userPool,
-      cognitoDomain: {
-        domainPrefix: `drh-portal-${Stack.of(this).account}`
       }
-    })
 
-    // const userPoolDomainOutput = new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
-    //   exportName: 'UserPoolDomain',
-    //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
-    //   description: 'Cognito Hosted UI domain name'
-    // })
+    } else {
+
+      const poolSmsRole = new iam.Role(this, 'UserPoolSmsRole', {
+        assumedBy: new iam.ServicePrincipal('cognito-idp.amazonaws.com'),
+      });
+      // poolSmsRole.addToPolicy
+
+      const poolSmsPolicy = new iam.Policy(this, 'PoolSmsPolicy', {
+        // policyName: `${cdk.Aws.STACK_NAME}CustomResourcePolicy`,
+        statements: [
+          new iam.PolicyStatement({
+            actions: [
+              'sns:Publish',
+            ],
+            resources: [
+              '*'
+            ]
+          }),
+        ]
+      });
+      poolSmsRole.attachInlinePolicy(
+        poolSmsPolicy
+      )
+
+      const cfnPoolSmsPolicy = poolSmsPolicy.node.defaultChild as iam.CfnPolicy
+      addCfnNagSuppressRules(cfnPoolSmsPolicy, [
+        {
+          id: 'W12',
+          reason: 'User Pool SMS notification requires to publish to any resources'
+        }
+      ])
+
+      // Create Cognito User Pool
+      this.userPool = new cognito.UserPool(this, 'UserPool', {
+        selfSignUpEnabled: false,
+        signInCaseSensitive: false,
+        signInAliases: {
+          email: true,
+          username: false,
+          phone: true
+        },
+        smsRole: poolSmsRole
+      })
+
+      // Create User Pool Client
+      this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolApiClient', {
+        userPool: this.userPool,
+        userPoolClientName: 'ReplicationHubPortal',
+        preventUserExistenceErrors: true
+      })
+
+      // Create an Admin User
+      // TODO: The user can be created, however, the state is FORCE_PASSWORD_CHANGE, the customer still cannot use the account yet.
+      // https://stackoverflow.com/questions/40287012/how-to-change-user-status-force-change-password
+      // resolution: create a custom lambda to set user password
+      new cognito.CfnUserPoolUser(this, 'AdminUser', {
+        userPoolId: this.userPool.userPoolId,
+        username: props.usernameParameter.valueAsString,
+        userAttributes: [
+          {
+            name: 'email',
+            value: props.usernameParameter.valueAsString
+          }
+        ]
+      })
+
+      this.userPoolDomain = new cognito.UserPoolDomain(this, 'UserPoolDomain', {
+        userPool: this.userPool,
+        cognitoDomain: {
+          domainPrefix: `drh-portal-${Stack.of(this).account}`
+        }
+      })
+
+      // const userPoolDomainOutput = new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
+      //   exportName: 'UserPoolDomain',
+      //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
+      //   description: 'Cognito Hosted UI domain name'
+      // })
+      this.authDefaultConfig = {
+        authorizationType: appsync.AuthorizationType.USER_POOL,
+        userPoolConfig: {
+          userPool: this.userPool,
+          appIdClientRegex: this.userPoolApiClient.userPoolClientId,
+          defaultAction: appsync.UserPoolDefaultAction.ALLOW
+        }
+      }
+    }
+
 
     // Create the GraphQL API Endpoint, enable Cognito User Pool Auth and IAM Auth.
     this.api = new appsync.GraphqlApi(this, 'ApiEndpoint', {
       name: 'ReplicationHubAPI',
       schema: appsync.Schema.fromAsset(path.join(__dirname, '../../schema/schema.graphql')),
       authorizationConfig: {
-        defaultAuthorization: {
-          authorizationType: appsync.AuthorizationType.USER_POOL,
-          userPoolConfig: {
-            userPool: this.userPool,
-            appIdClientRegex: this.userPoolApiClient.userPoolClientId,
-            defaultAction: appsync.UserPoolDefaultAction.ALLOW
-          }
-        },
+        defaultAuthorization: this.authDefaultConfig,
         additionalAuthorizationModes: [
           {
-            authorizationType: appsync.AuthorizationType.IAM,
+            authorizationType: appsync.AuthorizationType.IAM
           }
         ]
       },
-      logConfig: {
-        fieldLogLevel: appsync.FieldLogLevel.ALL
-      },
+      // logConfig: {
+      //   fieldLogLevel: appsync.FieldLogLevel.ALL
+      // },
       xrayEnabled: true
     })
 
@@ -175,7 +244,7 @@ export class ApiStack extends Construct {
     const isDryRun = this.node.tryGetContext('DRY_RUN')
     const taskHandlerFn = new lambda.Function(this, 'TaskHandlerFn', {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: [ 'cdk/*', 'layer/*' ]
+        exclude: ['cdk/*', 'layer/*']
       }),
       runtime: lambda.Runtime.NODEJS_12_X,
       handler: 'api/api-task.handler',
@@ -185,10 +254,19 @@ export class ApiStack extends Construct {
         STATE_MACHINE_ARN: stateMachine.stateMachineArn,
         TASK_TABLE: this.taskTable.tableName,
         PLUGIN_TEMPLATE_S3: PLUGIN_TEMPLATE_S3,
-        DRY_RUN: isDryRun? 'True': 'False'
+        PLUGIN_TEMPLATE_ECR: PLUGIN_TEMPLATE_ECR,
+        DRY_RUN: isDryRun ? 'True' : 'False'
       },
       layers: [lambdaLayer]
     })
+
+    const cfnTaskHandlerFn = taskHandlerFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnTaskHandlerFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
 
     this.taskTable.grantReadWriteData(taskHandlerFn)
     taskHandlerFn.addToRolePolicy(new iam.PolicyStatement({
@@ -220,6 +298,56 @@ export class ApiStack extends Construct {
     lambdaDS.createResolver({
       typeName: 'Mutation',
       fieldName: 'updateTaskProgress',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
+
+
+    // Create Lambda Data Source
+    const ssmHandlerFn = new lambda.Function(this, 'SSMHandlerFn', {
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: ['cdk/*', 'layer/*']
+      }),
+      runtime: lambda.Runtime.NODEJS_12_X,
+      handler: 'api/api-ssm-param.handler',
+      timeout: Duration.seconds(60),
+      memorySize: 128,
+    })
+
+    const cfnSsmHandlerFn = ssmHandlerFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnSsmHandlerFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
+    const ssmReadOnlyPolicy = new iam.Policy(this, 'ssmReadOnlyPolicy')
+    ssmReadOnlyPolicy.addStatements(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ['*'],
+      actions: [
+        "ssm:DescribeParameters",
+      ]
+    }))
+
+    const cfnSsmReadOnlyPolicy = ssmReadOnlyPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnSsmReadOnlyPolicy, [
+      {
+        id: 'W12',
+        reason: 'Need to be able to list all ssm parameter names'
+      },
+    ])
+
+    ssmHandlerFn.role?.attachInlinePolicy(ssmReadOnlyPolicy)
+
+    const ssmLambdaDS = this.api.addLambdaDataSource('ssmLambdaDS', ssmHandlerFn, {
+      description: 'Lambda Resolver Datasource for SSM parameters'
+    });
+
+    ssmLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'listParameters',
       requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })

@@ -53,8 +53,17 @@
           font-weight: normal;
           color: #444;
         }
+        &.padding-left {
+          padding-left: 40px;
+        }
         .title-search {
           margin: 10px 0 0 0;
+        }
+        &-icon {
+          // line-height: 1em;
+          position: absolute;
+          cursor: pointer;
+          margin: -8px 0 0 -30px;
         }
       }
       .option-input {
@@ -64,6 +73,18 @@
         height: 32px;
         line-height: 32px;
         padding: 0 5px;
+      }
+      .option-textarea {
+        width: 100%;
+        border: 1px solid #aab7b8;
+        background-color: #fff;
+        line-height: 1.6em;
+        padding: 5px;
+      }
+      .max-tips {
+        padding: 4px 0 0 0;
+        color: #666;
+        text-align: right;
       }
       &-content {
         padding: 20px;
@@ -105,6 +126,11 @@
 
         .form-items {
           margin-bottom: 15px;
+          .input-icon {
+            position: absolute;
+            color: #666;
+            margin: 4px 0 0 6px;
+          }
           .error {
             height: 18px;
             padding-top: 3px;
@@ -121,6 +147,7 @@
         }
         .st-item {
           display: inline-block;
+          vertical-align: top;
           border: 1px solid #aab7b8;
           margin: 10px 20px 0px 0px;
           width: 47%;

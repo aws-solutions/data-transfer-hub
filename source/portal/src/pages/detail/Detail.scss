@@ -68,6 +68,16 @@
           color: #545b64;
           padding: 2px 0;
         }
+        .image-list {
+          width: 100%;
+          border: 1px solid #aaa;
+          background: #fff;
+          padding: 8px;
+        }
+        .open-icon {
+          position: absolute;
+          margin: 0px 0 0 3px;
+        }
       }
     }
   }

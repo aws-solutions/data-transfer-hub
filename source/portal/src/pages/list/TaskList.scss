@@ -2,9 +2,13 @@
   padding-left: 0px;
   .content {
     font-size: 14px;
-    padding: 12px 20px 12px 35px;
+    padding: 12px 20px 12px 65px;
     background-color: green;
     color: #ffffff;
+    .icon {
+      position: absolute;
+      margin: -3px 0 0 -26px;
+    }
     img {
       position: absolute;
       margin: 1px 0 0 -20px;
@@ -37,7 +41,7 @@
       }
       .buttons {
         text-align: right;
-        width: 420px;
+        width: 620px;
         button {
           margin-left: 8px;
           font-weight: bold;
@@ -68,11 +72,12 @@
         .cur-page {
           font-size: 16px;
           display: inline-block;
-          height: 24px;
+          // height: 24px;
           width: 50px;
           text-align: center;
-          line-height: 18px;
-          padding: 0 15px;
+          line-height: 14px;
+          padding: 15px 15px 0;
+          vertical-align: top;
         }
         .item {
           display: inline-block;
@@ -121,6 +126,13 @@
       }
       .table-item {
         padding: 12px 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        .icon {
+          position: absolute;
+          margin:-1px 0 0 -22px;
+        }
         // flex: 1;
         &.check-item {
           width: 50px;

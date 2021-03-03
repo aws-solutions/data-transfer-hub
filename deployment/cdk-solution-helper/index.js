@@ -26,10 +26,10 @@ fs.readdirSync(global_s3_assets).forEach(file => {
 
   // Clean-up Lambda function code dependencies
   const resources = (template.Resources) ? template.Resources : {};
-  const lambdaFunctions = Object.keys(resources).filter(function(key) {
+  const lambdaFunctions = Object.keys(resources).filter(function (key) {
     return resources[key].Type === "AWS::Lambda::Function";
   });
-  lambdaFunctions.forEach(function(f) {
+  lambdaFunctions.forEach(function (f) {
     const fn = template.Resources[f];
     if (fn.Properties.Code.hasOwnProperty('S3Bucket')) {
       // Set the S3 key reference
@@ -43,6 +43,19 @@ fs.readdirSync(global_s3_assets).forEach(file => {
       // Set the S3 bucket reference
       fn.Properties.Code.S3Bucket = {
         'Fn::Sub': '%%BUCKET_NAME%%-${AWS::Region}'
+      };
+
+      let metadata = Object.assign(fn.Metadata);
+      fn.Metadata = {
+        ...metadata,
+        'cfn_nag': {
+          'rules_to_suppress': [
+            {
+              id: 'W58',
+              reason: 'False alarm: The Lambda function does have the permission to write CloudWatch Logs.'
+            }
+          ]
+        }
       };
     }
   });
@@ -66,7 +79,7 @@ fs.readdirSync(global_s3_assets).forEach(file => {
   const bucketDeployments = Object.keys(resources).filter(function (key) {
     return resources[key].Type === "Custom::CDKBucketDeployment"
   })
-  bucketDeployments.forEach(function (d){
+  bucketDeployments.forEach(function (d) {
     const deployment = template.Resources[d];
     if (deployment.Properties.hasOwnProperty('SourceBucketNames')) {
       let s3Key = Object.assign(deployment.Properties.SourceObjectKeys[0]);
@@ -81,12 +94,29 @@ fs.readdirSync(global_s3_assets).forEach(file => {
     }
   })
 
+  // Clean-up CustomCDKBucketDeployment Policy
+  const bucketDeploymentsPolicy = Object.keys(resources).filter(function (key) {
+    return key.startsWith("CustomCDKBucketDeployment") && resources[key].Type === "AWS::IAM::Policy"
+  })
+
+  bucketDeploymentsPolicy.forEach(function (d) {
+    const policy = template.Resources[d];
+    let resources = policy.Properties.PolicyDocument.Statement[0].Resource
+    resources.forEach((res) => {
+      res['Fn::Join'].forEach((key) => {
+        if (key[2] == ':s3:::') {
+          key[3]['Fn::Sub'] = '%%BUCKET_NAME%%-${AWS::Region}'
+        }
+      })
+    })
+  })
+
   // Clean-up parameters section
   const parameters = (template.Parameters) ? template.Parameters : {};
-  const assetParameters = Object.keys(parameters).filter(function(key) {
+  const assetParameters = Object.keys(parameters).filter(function (key) {
     return key.includes('AssetParameters');
   });
-  assetParameters.forEach(function(a) {
+  assetParameters.forEach(function (a) {
     template.Parameters[a] = undefined;
   });
 
@@ -96,7 +126,7 @@ fs.readdirSync(global_s3_assets).forEach(file => {
   }
 
   // Clean-up CheckBootstrapVersion Rule
-  const rules = (template.Rules) ? template.Rules: {};
+  const rules = (template.Rules) ? template.Rules : {};
   if (rules.hasOwnProperty('CheckBootstrapVersion')) {
     rules.CheckBootstrapVersion = undefined
   }

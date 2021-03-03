@@ -42,7 +42,11 @@ const LeftMenu: React.FC = () => {
         {isOpen ? (
           <div className="is-open">
             <div>
-              <div className="title"><a className="link" href="/#/">{t("leftBar.title")}</a></div>
+              <div className="title">
+                <a className="link" href="/#/">
+                  {t("leftBar.title")}
+                </a>
+              </div>
               <div className="icon" onClick={closeLeftMenu}>
                 <ClearIcon />
               </div>
