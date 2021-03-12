@@ -21,29 +21,28 @@ S3 Replication Task supports the following sources:
 * Alibaba Cloud OSS
 * Tencent COS
 * Qiniu Kodo
+* Google Storage Service (To Amazon S3 global regions only)
 
-The S3 Plugin uses credentials to replicate data from Amazon S3 in another partition or other cloud providers. Store
-your credentials in [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html).
+The S3 Plugin uses credentials to replicate data from Amazon S3 in another partition or other cloud providers. Store your credentials in [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html).
 
 ### Configure Credentials
 
 1. Open **Systems Manager** console
 1. Choose **Parameter Store** in the left navigation bar
 1. Click **Create parameter** button
-1. Input a **Name**, the default Parameter Store name used by Data Replication Hub is `drh-credentials`
+1. Input a **Name**, for example: `drh-credentials`
 1. select **SecureString** as type
 1. Input the credentials as text in **Value**, the credentials format should follow
 ```
 {
   "access_key_id": "<Your Access Key ID>",
-  "secret_access_key": "<Your Access Key Secret>",
-  "region_name": "<Your Region>"
+  "secret_access_key": "<Your Access Key Secret>"
 }
 ```
 
 For other cloud providers, the credentials format should remain the same.
 
-### Create Task in Web Portal
+### Create Replication Task from Web Portal
 
 1. Click the **Create Task** button on task list page.
 1. Choose **Amazon S3** for on the **Select engine type** page, and choose **Next**.

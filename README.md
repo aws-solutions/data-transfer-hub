@@ -52,18 +52,21 @@ You can choose to [deploy via AWS CDK](#deploy-via-aws-cdk) or deploy via direct
 
 **Time to deploy:** Approximately 15 minutes.
 
-Follow the step-by-step instructions in this section to configure and deploy the AWS Data Replication Hub into your account.
+- ### For all Regions other than China Regions
 
-1. Make sure you have sign in AWS Console already.
-1. Click the following button to launch the CloudFormation Stack in your account.
+  Follow the step-by-step instructions in this section to configure and deploy the AWS Data Replication Hub into your account.
 
-    [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataReplicationHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-hub/latest/AwsDataReplicationHub-cognito.template)
-1. Input **AdminEmail** parameter
-1. Click **Next** and select **Create Stack**.
+  1. Make sure you have sign in AWS Console already.
+  1. Click the following button to launch the CloudFormation Stack in your account.
 
-## Deploy in China Region
+      [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataReplicationHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-data-replication-hub/latest/AwsDataReplicationHub-cognito.template)
+  1. Input **AdminEmail** parameter
+  1. Click **Next** and select **Create Stack**.
 
-[Deploy in China Region](docs/DeployInChinaWithAuthing_CN.md)
+
+- ### For Beijing and Ningxia China Regions
+
+  If you want to **deploy this in China Regions**, please follow this [Guide](docs/DeployInChinaWithAuthing_CN.md)
 
 ## Deploy via AWS CDK
 
