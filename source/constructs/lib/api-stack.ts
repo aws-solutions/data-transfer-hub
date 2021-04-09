@@ -121,7 +121,6 @@ export class ApiStack extends Construct {
       const poolSmsRole = new iam.Role(this, 'UserPoolSmsRole', {
         assumedBy: new iam.ServicePrincipal('cognito-idp.amazonaws.com'),
       });
-      // poolSmsRole.addToPolicy
 
       const poolSmsPolicy = new iam.Policy(this, 'PoolSmsPolicy', {
         // policyName: `${cdk.Aws.STACK_NAME}CustomResourcePolicy`,
@@ -159,6 +158,8 @@ export class ApiStack extends Construct {
         },
         smsRole: poolSmsRole
       })
+
+      this.userPool.node.addDependency(poolSmsRole, poolSmsPolicy)
 
       // Create User Pool Client
       this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolApiClient', {
