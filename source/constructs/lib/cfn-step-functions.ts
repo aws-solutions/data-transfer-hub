@@ -45,7 +45,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       layers: [props.lambdaLayer],
       memorySize: 512,
       timeout: cdk.Duration.seconds(60),
-      description: 'AWS Data Replication Hub - Create Task'
+      description: 'Data Transfer Hub - Create Task'
     })
 
     const cfnCreateTaskCfnFn = createTaskCfnFn.node.defaultChild as lambda.CfnFunction
@@ -68,7 +68,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       layers: [props.lambdaLayer],
       memorySize: 512,
       timeout: cdk.Duration.seconds(60),
-      description: 'AWS Data Replication Hub - Stop Task'
+      description: 'Data Transfer Hub - Stop Task'
     })
 
     const cfnStopTaskCfnFn = stopTaskCfnFn.node.defaultChild as lambda.CfnFunction
@@ -147,7 +147,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       layers: [props.lambdaLayer],
       memorySize: 512,
       timeout: cdk.Duration.seconds(60),
-      description: 'AWS Data Replication Hub - Query Task'
+      description: 'Data Transfer Hub - Query Task'
     })
 
     const cfnQueryTaskCfnFn = queryTaskCfnFn.node.defaultChild as lambda.CfnFunction

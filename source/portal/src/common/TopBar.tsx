@@ -56,7 +56,7 @@ const TopBar: React.FC = () => {
   return (
     <div className="drh-top-bar">
       <div className="logo">
-        <img alt="AWS Solutions" src={Logo} />
+        <img width="20" alt="AWS Solutions" src={Logo} />
         <span>AWS Solutions</span>
       </div>
       <div className="options">

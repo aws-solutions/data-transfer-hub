@@ -6,9 +6,10 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import Moment from "react-moment";
 
-import Loading from "../../common/Loading";
+import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -19,23 +20,28 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
-import { API } from "aws-amplify";
-import { getTask } from "../../graphql/queries";
-import { stopTask } from "../../graphql/mutations";
-// import { updateTaskProgress } from "../../graphql/subscriptions";
+import ArrowRightSharpIcon from "@material-ui/icons/ArrowRightSharp";
+import ArrowDropDownSharpIcon from "@material-ui/icons/ArrowDropDownSharp";
 
-import InfoBar from "../../common/InfoBar";
-import LeftMenu from "../../common/LeftMenu";
-import Bottom from "../../common/Bottom";
-import NormalButton from "../../common/comp/NormalButton";
-import PrimaryButton from "../../common/comp/PrimaryButton";
-import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
+import { API } from "aws-amplify";
+import { getTask } from "graphql/queries";
+import { stopTask } from "graphql/mutations";
+// import { updateTaskProgress } from "graphql/subscriptions";
+
+import InfoBar from "common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
+import NormalButton from "common/comp/NormalButton";
+import PrimaryButton from "common/comp/PrimaryButton";
+import StopButtonLoading from "common/comp/PrimaryButtonLoading";
 
 import {
   TASK_STATUS_MAP,
   EnumTaskStatus,
   EnumSourceType,
-} from "../../assets/types/index";
+  S3_TASK_TYPE_MAP,
+  EnumTaskType,
+} from "assets/types/index";
 import {
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
@@ -47,7 +53,7 @@ import {
   S3_EVENT_OPTIONS,
   S3_STORAGE_CLASS_OPTIONS,
   YES_NO,
-} from "../../assets/config/const";
+} from "assets/config/const";
 
 import "./Detail.scss";
 
@@ -139,6 +145,7 @@ const S3_STORAGE_CLASS_OPTIONS_MAP = converListToMap(S3_STORAGE_CLASS_OPTIONS);
 
 const Detail: React.FC = (props: any) => {
   const { t } = useTranslation();
+  const { type, id } = useParams() as any;
 
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -149,6 +156,7 @@ const Detail: React.FC = (props: any) => {
   const [accountInDest, setAccountInDest] = useState("-");
   const [curRegionType, setCurRegionType] = useState("");
   const [curRegion, setCurRegion] = useState("");
+  const [advancedShow, setAdvancedShow] = useState(false);
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
@@ -174,21 +182,40 @@ const Detail: React.FC = (props: any) => {
           : "-";
       });
     }
-    if (tmpCurTask.jobType === "PUT") {
-      setAccountInSrc(YES_NO.YES);
-      setAccountInDest(YES_NO.NO);
+    // if the task engine is lambda
+    if (tmpCurTask.type === EnumTaskType.S3) {
+      if (tmpCurTask.jobType === "PUT") {
+        setAccountInSrc(YES_NO.YES);
+        setAccountInDest(YES_NO.NO);
+      }
+      if (tmpCurTask.jobType === "GET") {
+        setAccountInSrc(YES_NO.NO);
+        setAccountInDest(YES_NO.YES);
+      }
     }
-    if (tmpCurTask.jobType === "GET") {
-      setAccountInSrc(YES_NO.NO);
-      setAccountInDest(YES_NO.YES);
+    // if the task engine is ec2
+    if (tmpCurTask.type === EnumTaskType.S3_EC2) {
+      if (tmpCurTask.srcInCurrentAccount === "true") {
+        setAccountInSrc(YES_NO.YES);
+      }
+      if (tmpCurTask.srcInCurrentAccount === "false") {
+        setAccountInSrc(YES_NO.NO);
+      }
+      if (tmpCurTask.destInCurrentAccount === "true") {
+        setAccountInDest(YES_NO.YES);
+      }
+      if (tmpCurTask.destInCurrentAccount === "false") {
+        setAccountInDest(YES_NO.NO);
+      }
     }
+
     setCurTaskInfo(tmpCurTask);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchNotes(props.match.params.id);
-  }, [props.match.params.id]);
+    fetchNotes(id);
+  }, [id]);
 
   // Get Cur Region and Region Type
   useEffect(() => {
@@ -221,7 +248,7 @@ const Detail: React.FC = (props: any) => {
       );
       setIsStopLoading(false);
       setOpen(false);
-      fetchNotes(props.match.params.id);
+      fetchNotes(id);
       console.info(stopResData);
     } catch (error) {
       console.error("error:", error.errors[0].message.toString());
@@ -237,7 +264,7 @@ const Detail: React.FC = (props: any) => {
   };
 
   const confirmStopTask = () => {
-    stopTaskFunc(props.match.params.id);
+    stopTaskFunc(id);
   };
 
   return (
@@ -323,11 +350,11 @@ const Detail: React.FC = (props: any) => {
                 <div className="general-info-content">
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.engine")}</div>
-                    <div>{t("taskDetail.plugin")}</div>
+                    <div>{S3_TASK_TYPE_MAP[type]?.name}</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.sourceType")}</div>
-                    <div>{curTaskInfo.sourceType}</div>
+                    <div>{curTaskInfo.sourceType || curTaskInfo.srcType}</div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
@@ -343,8 +370,8 @@ const Detail: React.FC = (props: any) => {
                 <div>
                   <AntTabs value={value} onChange={handleChange}>
                     <AntTab label={t("taskDetail.details")} />
+                    <AntTab label="Engine" />
                     <AntTab label={t("taskDetail.option")} />
-                    {/* <AntTab label="Tags" /> */}
                   </AntTabs>
                   <TabPanel value={value} index={0}>
                     <div className="general-info tab-padding box-shadow">
@@ -360,7 +387,7 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.createdAt")}
                           </div>
                           <div>
-                            <Moment format="YYYY-MM-DD HH:mm">
+                            <Moment format="YYYY-MM-DD HH:mm:ss">
                               {curTaskInfo.createdAt}
                             </Moment>
                           </div>
@@ -369,34 +396,43 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.taskMetrics")}
                           </div>
                           <div>
-                            <a
-                              className="a-link"
-                              rel="noopener noreferrer"
-                              target="_blank"
-                              href={`${
-                                CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                              }?region=${curRegion}#dashboards:name=${
-                                curTaskInfo.stackId.split("/")[1]
-                              }-Dashboard`}
-                            >
-                              {t("taskDetail.dashboard")}{" "}
-                              <OpenInNewIcon
-                                fontSize="small"
-                                className="open-icon"
-                              />
-                            </a>
+                            {curTaskInfo.stackId ? (
+                              <a
+                                className="a-link"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                href={`${
+                                  CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
+                                }?region=${curRegion}#dashboards:name=${
+                                  curTaskInfo?.stackId?.split("/")[1]
+                                }-Dashboard`}
+                              >
+                                {t("taskDetail.dashboard")}{" "}
+                                <OpenInNewIcon
+                                  fontSize="small"
+                                  className="open-icon"
+                                />
+                              </a>
+                            ) : (
+                              "-"
+                            )}
                           </div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
                             {t("taskDetail.srcName")}
                           </div>
-                          <div>{curTaskInfo.srcBucketName}</div>
+                          <div>
+                            {curTaskInfo.srcBucketName || curTaskInfo.srcBucket}
+                          </div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.srcPrefix")}
                           </div>
-                          <div>{curTaskInfo.srcBucketPrefix}</div>
+                          <div>
+                            {curTaskInfo.srcBucketPrefix ||
+                              curTaskInfo.srcPrefix}
+                          </div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.srcInThisAccount")}
@@ -408,11 +444,20 @@ const Detail: React.FC = (props: any) => {
                               <div className="sub-name">
                                 {t("taskDetail.credentials")}
                               </div>
-                              <div>{curTaskInfo.credentialsParameterStore}</div>
+                              {/* <div>{curTaskInfo.credentialsParameterStore}</div> */}
+                              {curTaskInfo.type === EnumTaskType.S3 && (
+                                <div>
+                                  {curTaskInfo.credentialsParameterStore}
+                                </div>
+                              )}
+                              {curTaskInfo.type === EnumTaskType.S3_EC2 && (
+                                <div>{curTaskInfo.srcCredentials}</div>
+                              )}
                             </div>
                           )}
                           {accountInSrc === YES_NO.YES &&
-                            curTaskInfo.sourceType === EnumSourceType.S3 && (
+                            (curTaskInfo.sourceType === EnumSourceType.S3 ||
+                              curTaskInfo.srcType === EnumSourceType.S3) && (
                               <div>
                                 <br />
                                 <div className="sub-name">
@@ -421,9 +466,20 @@ const Detail: React.FC = (props: any) => {
                                 <div>
                                   {
                                     S3_EVENT_OPTIONS_MAP[
-                                      curTaskInfo.enableS3Event
+                                      curTaskInfo.enableS3Event ||
+                                        curTaskInfo.srcEvent
                                     ]
                                   }
+                                </div>
+
+                                <br />
+                                <div className="sub-name">
+                                  {t("taskDetail.copyMetadata")}
+                                </div>
+                                <div>
+                                  {curTaskInfo.includeMetadata === "true"
+                                    ? YES_NO.YES
+                                    : YES_NO.NO}
                                 </div>
                               </div>
                             )}
@@ -432,12 +488,18 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.destName")}
                           </div>
-                          <div>{curTaskInfo.destBucketName}</div>
+                          <div>
+                            {curTaskInfo.destBucketName ||
+                              curTaskInfo.destBucket}
+                          </div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.destPrefix")}
                           </div>
-                          <div>{curTaskInfo.destBucketPrefix}</div>
+                          <div>
+                            {curTaskInfo.destBucketPrefix ||
+                              curTaskInfo.destPrefix}
+                          </div>
                           <br />
                           <div className="sub-name">
                             {t("taskDetail.destInThisAccount")}
@@ -449,7 +511,14 @@ const Detail: React.FC = (props: any) => {
                               <div className="sub-name">
                                 {t("taskDetail.credentials")}
                               </div>
-                              <div>{curTaskInfo.credentialsParameterStore}</div>
+                              {curTaskInfo.type === EnumTaskType.S3 && (
+                                <div>
+                                  {curTaskInfo.credentialsParameterStore}
+                                </div>
+                              )}
+                              {curTaskInfo.type === EnumTaskType.S3_EC2 && (
+                                <div>{curTaskInfo.destCredentials}</div>
+                              )}
                             </div>
                           )}
                           <br />
@@ -469,6 +538,115 @@ const Detail: React.FC = (props: any) => {
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     <div className="general-info tab-padding box-shadow">
+                      <div className="title">
+                        {t("taskDetail.engineSettings")}
+                      </div>
+
+                      {curTaskInfo.type === EnumTaskType.S3 && (
+                        <div className="general-info-content">
+                          <div className="split-item">
+                            <div className="sub-name">
+                              {t("taskDetail.lambdaMemory")}
+                            </div>
+                            <div>{curTaskInfo.lambdaMemory} MB</div>
+                            <br />
+                          </div>
+                          <div className="split-item">
+                            <div className="sub-name">
+                              {t("taskDetail.multipartUploadThreshold")}
+                            </div>
+                            <div>{curTaskInfo.multipartThreshold} MB</div>
+                          </div>
+                          <div className="split-item">
+                            <div className="sub-name">
+                              {t("taskDetail.chunkSize")}
+                            </div>
+                            <div>{curTaskInfo.chunkSize} MB</div>
+                          </div>
+                          <div className="split-item">
+                            <div className="sub-name">
+                              {t("taskDetail.chunkSize")}
+                            </div>
+                            <div>{curTaskInfo.maxThreads}</div>
+                          </div>
+                        </div>
+                      )}
+                      {curTaskInfo.type === EnumTaskType.S3_EC2 && (
+                        <>
+                          <div className="general-info-content">
+                            <div className="split-item">
+                              <div className="sub-name">
+                                {t("taskDetail.maximumInstances")}
+                              </div>
+                              <div>{curTaskInfo.maxCapacity}</div>
+                              <br />
+                            </div>
+                            <div className="split-item">
+                              <div className="sub-name">
+                                {t("taskDetail.minimumInstances")}
+                              </div>
+                              <div>{curTaskInfo.minCapacity}</div>
+                            </div>
+                            <div className="split-item">
+                              <div className="sub-name">
+                                {t("taskDetail.desiredInstances")}
+                              </div>
+                              <div>{curTaskInfo.desiredCapacity}</div>
+                            </div>
+                          </div>
+
+                          <div className="engine-title">
+                            {!advancedShow && (
+                              <ArrowRightSharpIcon
+                                onClick={() => {
+                                  setAdvancedShow(true);
+                                }}
+                                className="option-title-icon"
+                                fontSize="default"
+                              />
+                            )}
+                            {advancedShow && (
+                              <ArrowDropDownSharpIcon
+                                onClick={() => {
+                                  setAdvancedShow(false);
+                                }}
+                                className="option-title-icon"
+                                fontSize="default"
+                              />
+                            )}
+                            {t("taskDetail.advancedSettings")}
+                          </div>
+                          <div style={{ minHeight: 80 }}>
+                            {advancedShow && (
+                              <div className="general-info-content">
+                                <div className="split-item">
+                                  <div className="sub-name">
+                                    {t("taskDetail.finderDepth")}
+                                  </div>
+                                  <div>{curTaskInfo.finderDepth}</div>
+                                  <br />
+                                </div>
+                                <div className="split-item">
+                                  <div className="sub-name">
+                                    {t("taskDetail.finderNumber")}
+                                  </div>
+                                  <div>{curTaskInfo.finderNumber}</div>
+                                </div>
+                                <div className="split-item">
+                                  <div className="sub-name">
+                                    {t("taskDetail.workerThreadsNumber")}
+                                  </div>
+                                  <div>{curTaskInfo.workerNumber}</div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                    <div className="general-info tab-padding box-shadow">
                       <div className="title">{t("taskDetail.option")}</div>
                       <div className="general-info-content">
                         <div className="split-item">
@@ -487,16 +665,6 @@ const Detail: React.FC = (props: any) => {
                       </div>
                     </div>
                   </TabPanel>
-                  {/* <TabPanel value={value} index={2}>
-                    <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        Tags <InfoSpan />
-                      </div>
-                      <div className="general-info-content">
-                        <div style={{ padding: "20px" }}>Tags</div>
-                      </div>
-                    </div>
-                  </TabPanel> */}
                 </div>
               </div>
             </div>

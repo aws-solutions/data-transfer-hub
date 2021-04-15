@@ -2,34 +2,40 @@
 // $font-family: "Amazon Ember", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
 // 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 // sans-serif;
-$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen','Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+  "Droid Sans", "Helvetica Neue", sans-serif;
 
-body, input, textarea, button {
+body,
+input,
+textarea,
+button {
   font-size: 14px;
   margin: 0;
   font-family: $font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #F2F3F3;
+  background-color: #f2f3f3;
 }
 
 .gray {
   color: #888;
 }
 
-a, a:link, a:active, a:visited {
+a,
+a:link,
+a:active,
+a:visited {
   &.a-link {
     color: #0073bb;
     text-decoration: none;
   }
 }
- a:hover {
+a:hover {
   &.a-link {
     color: #0073bb;
     text-decoration: underline;
   }
- }
+}
 
 .sign-in-form-footer {
   display: none;
@@ -39,7 +45,9 @@ a, a:link, a:active, a:visited {
   display: none !important;
 }
 
-.MuiTypography-body1, .MuiButton-root, .MuiTab-root {
+.MuiTypography-body1,
+.MuiButton-root,
+.MuiTab-root {
   font-family: $font-family !important;
 }
 
@@ -48,8 +56,7 @@ a, a:link, a:active, a:visited {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 .hand-point {
@@ -113,7 +120,7 @@ code {
 }
 
 .background-white {
-  background: "#fff"
+  background: "#fff";
 }
 
 .margin-left-10 {
@@ -152,8 +159,8 @@ code {
 }
 
 .info-span {
-  color: #0073bb;
-  font-weight: bold;
+  color: #0073bb !important;
+  font-weight: bold !important;
   font-size: 12px;
   cursor: pointer;
   margin-left: 5px;
@@ -204,7 +211,7 @@ code {
       left: 0;
       right: 0;
       height: 30px;
-      background-color: #232F3E;
+      background-color: #232f3e;
     }
   }
 }

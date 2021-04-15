@@ -1,4 +1,4 @@
-# AWS Data Replication Hub
+# Data Transfer Hub
 
 A reliable, secure, scalable AWS solution that enabled structured and unstructured data replication from different sources to AWS.
 
@@ -54,7 +54,7 @@ You can choose to [deploy via AWS CDK](#deploy-via-aws-cdk) or deploy via direct
 
 - ### For all Regions other than China Regions
 
-  Follow the step-by-step instructions in this section to configure and deploy the AWS Data Replication Hub into your account.
+  Follow the step-by-step instructions in this section to configure and deploy the Data Transfer Hub into your account.
 
   1. Make sure you have sign in AWS Console already.
   1. Click the following button to launch the CloudFormation Stack in your account.
@@ -138,7 +138,7 @@ Now, you are all set. Start to create your first replication task. For the compl
 |- source/                    - all source code, scripts, tests, etc.
   |- contructs/               - the CDK app
   |- custom-resource/         - CloudFormation custom resource
-  |- portal/                  - The web portal of AWS data replication hub
+  |- portal/                  - The web portal of Data Transfer Hub
   |- schema/                  - The GraphQL API schema
 |- .gitignore
 |- CHANGELOG.md               - required for every solution to include changes based on version to auto-build release notes.

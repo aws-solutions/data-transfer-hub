@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "redux-react-hook";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -9,31 +9,48 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
-import LeftMenu from "../../common/LeftMenu";
-import InfoBar from "../../common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import InfoBar from "common/InfoBar";
 
-import Bottom from "../../common/Bottom";
+import Bottom from "common/Bottom";
 import Step from "./comps/Step";
-import NextButton from "../../common/comp/PrimaryButton";
-import TextButton from "../../common/comp/TextButton";
+import NextButton from "common/comp/PrimaryButton";
+import TextButton from "common/comp/TextButton";
 import StepOneS3Tips from "./s3/StepOneS3Tips";
-import StepOneS3TipsCN from "./s3/StepOneS3TipsCN";
 import StepOneECRTips from "./ecr/StepOneECRTips";
-import StepOneECRTipsCN from "./ecr/StepOneECRTipsCN";
 
 import "./Creation.scss";
 
-import { TYPE_LIST, EnumTaskType } from "../../assets/types/index";
+import {
+  TYPE_LIST,
+  EnumTaskType,
+  ACTION_TYPE,
+  S3_ENGINE_TYPE,
+  S3_EDITION_LIST,
+} from "assets/types/index";
+import InfoSpan from "common/InfoSpan";
 
 const StepOne: React.FC = (props: any) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const { engine } = useParams() as any;
 
   const [taskType, setTaskType] = useState(props.match.params.type);
+  const [editionType, setEditionType] = useState(engine);
 
   const dispatch = useDispatch();
   const updateTmpTaskInfo = React.useCallback(() => {
-    dispatch({ type: "update task info", taskInfo: { type: taskType } });
-  }, [dispatch, taskType]);
+    let tmpTaskType = taskType;
+    if (editionType === S3_ENGINE_TYPE.EC2) {
+      tmpTaskType = EnumTaskType.S3_EC2;
+    }
+    if (editionType === S3_ENGINE_TYPE.LAMBDA) {
+      tmpTaskType = EnumTaskType.S3;
+    }
+    dispatch({
+      type: ACTION_TYPE.UPDATE_TASK_INFO,
+      taskInfo: { type: tmpTaskType },
+    });
+  }, [dispatch, editionType, taskType]);
 
   // TaskType 变化时变化tmptaskinfo
   useEffect(() => {
@@ -48,15 +65,47 @@ const StepOne: React.FC = (props: any) => {
     });
   };
   const goToStepTwo = () => {
-    const toPath = "/create/step2/" + taskType;
+    let toPath = `/create/step2/${taskType}`;
+    if (taskType === EnumTaskType.S3) {
+      toPath = `/create/step2/${taskType}/${editionType}`;
+    }
     history.push({
       pathname: toPath,
     });
   };
 
   const changeDataType = (event: any) => {
-    window.history.pushState({}, "", "/#/create/step1/" + event.target.value);
+    console.info("taskType:", taskType);
+    console.info("EnumTaskType.S3:", EnumTaskType.S3);
+    console.info("editionType:", editionType);
+    if (!editionType) {
+      setEditionType(S3_ENGINE_TYPE.EC2);
+    }
+    if (event.target.value === EnumTaskType.S3) {
+      window.history.pushState(
+        {},
+        "",
+        `/#/create/step1/${event.target.value}/${editionType}`
+      );
+    } else {
+      window.history.pushState({}, "", "/#/create/step1/" + event.target.value);
+    }
+
     setTaskType(event.target.value);
+  };
+
+  useEffect(() => {
+    if (taskType === EnumTaskType.S3) {
+      window.history.pushState(
+        {},
+        "",
+        `/#/create/step1/${taskType}/${editionType}`
+      );
+    }
+  }, [taskType, editionType]);
+
+  const handleEditionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditionType((event.target as HTMLInputElement).value);
   };
 
   return (
@@ -120,22 +169,40 @@ const StepOne: React.FC = (props: any) => {
                       );
                     })}
                   </div>
+                  <div>{taskType === EnumTaskType.S3 && <StepOneS3Tips />}</div>
                   <div>
-                    {taskType === EnumTaskType.S3 &&
-                      i18n.language !== "zh-CN" && <StepOneS3Tips />}
+                    {taskType === EnumTaskType.ECR && <StepOneECRTips />}
                   </div>
-                  <div>
-                    {taskType === EnumTaskType.S3 &&
-                      i18n.language === "zh-CN" && <StepOneS3TipsCN />}
-                  </div>
-                  <div>
-                    {taskType === EnumTaskType.ECR &&
-                      i18n.language !== "zh-CN" && <StepOneECRTips />}
-                  </div>
-                  <div>
-                    {taskType === EnumTaskType.ECR &&
-                      i18n.language === "zh-CN" && <StepOneECRTipsCN />}
-                  </div>
+
+                  {taskType === EnumTaskType.S3 && (
+                    <div className="edition">
+                      <div className="title">
+                        {t("creation.s3plugin.edition")}{" "}
+                        <InfoSpan spanType="ENGINE_EDITION" />
+                      </div>
+                      <div>
+                        {S3_EDITION_LIST.map((item, index) => {
+                          return (
+                            <div key={index} className="item">
+                              <label>
+                                <input
+                                  onChange={handleEditionChange}
+                                  value={item.value}
+                                  checked={editionType === item.value}
+                                  name="edition-type"
+                                  type="radio"
+                                />
+                                &nbsp;{item.name}{" "}
+                                {item.recommened && (
+                                  <span>({t("recommened")})</span>
+                                )}
+                              </label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="buttons">

@@ -1,4 +1,5 @@
 import { Action, IState } from "./Store";
+import { ACTION_TYPE } from "../assets/types/index";
 
 export default function reducer(
   state: IState | null | undefined,
@@ -9,69 +10,54 @@ export default function reducer(
   }
 
   switch (action.type) {
-    case "open side bar": {
+    case ACTION_TYPE.OPEN_SIDE_BAR: {
       return {
         ...state,
         isOpen: true,
       };
     }
-    case "close side bar": {
+    case ACTION_TYPE.CLOSE_SIDE_BAR: {
       return {
         ...state,
         isOpen: false,
       };
     }
-    case "open info bar": {
+    case ACTION_TYPE.OPEN_INFO_BAR: {
       return {
         ...state,
         infoIsOpen: true,
       };
     }
-    case "close info bar": {
+    case ACTION_TYPE.CLOSE_INFO_BAR: {
       return {
         ...state,
         infoIsOpen: false,
       };
     }
-    case "update task info": {
+    case ACTION_TYPE.UPDATE_TASK_INFO: {
       return {
         ...state,
         tmpTaskInfo: action.taskInfo,
       };
     }
-    case "set create task flag": {
+    case ACTION_TYPE.SET_CREATE_TASK_FLAG: {
       return {
         ...state,
         createTaskFlag: true,
       };
     }
-    case "hide create task flag": {
+    case ACTION_TYPE.HIDE_CREATE_TASK_FLAG: {
       return {
         ...state,
         createTaskFlag: false,
       };
     }
-    case "add todo": {
-      return {
-        ...state,
-        lastUpdated: Date.now(),
-        todos: state.todos.concat(action.todo),
-      };
-    }
-
-    case "set info span type": {
+    case ACTION_TYPE.SET_INFO_SPAN_TYPE: {
       return {
         ...state,
         infoSpanType: action.spanType,
       };
     }
-
-    case "delete todo": {
-      const todos = state.todos.slice();
-      todos.splice(action.index, 1);
-      return { ...state, lastUpdated: Date.now(), todos };
-    }
-
     default:
       return state;
   }

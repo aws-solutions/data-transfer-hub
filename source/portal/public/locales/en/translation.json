@@ -1,21 +1,22 @@
 {
-  "title": "AWS Data Replication Hub",
+  "title": "Data Transfer Hub",
   "yes": "Yes",
   "no": "No",
   "signOut": "Sign Out",
   "reLogin": "Login Again",
-  "reLoignTips": "This session has expired. To log in to AWS Data Replication Hub again, please click Login Again.",
+  "reLoignTips": "This session has expired. To log in to Data Transfer Hub again, please click Login Again.",
   "info": "Info",
   "optional": "optional",
+  "recommened": "Recommened",
   "top": {
     "account": "Account"
   },
   "leftBar": {
-    "title": "Data Replication Hub",
+    "title": "Data Transfer Hub",
     "taskList": "Tasks"
   },
   "breadCrumb": {
-    "home": "Data Replication Hub",
+    "home": "Data Transfer Hub",
     "create": "Create Task",
     "list": "List",
     "tasks": "Tasks"
@@ -37,6 +38,35 @@
     }
   },
   "creation": {
+    "s3plugin": {
+      "name": "Amazon S3 Transfer Engine",
+      "desc": "Transfer objects from different sources into Amazon S3.",
+      "feat1": "Transfer S3 objects between AWS standard regions and AWS China regions",
+      "feat2": "Transfer objects from Aliyun OSS / Tencent COS / Qiniu Kodo",
+      "feat3": "Large file support",
+      "feat4": "Support S3 Event trigger",
+      "feat5": "Support replication with object metadata",
+      "feat6": "Support incremental data transfer",
+      "feat7": "Auto retry and error handling",
+      "edition": "Edition"
+    },
+    "ecrPlugin": {
+      "name": "Amazon ECR Transfer Engine",
+      "desc": "Amazon ECR engine is used for replicating Docker images from different Docker Registry.",
+      "feat1": "Replication between AWS standard partition and AWS CN paritition",
+      "feat2": "Replication from Docker Hub, GCR.io, Quay.io",
+      "feat3": "Parallel replication",
+      "feat4": "Support public Docker images",
+      "feat5": "Support Selective Docker images",
+      "feat6": "Serverless architect, no minimum cost"
+    },
+    "sourceType": {
+      "amazonS3Name": "Amazon S3",
+      "aliyunOSSName": "Aliyun OSS",
+      "qiniuKodoName": "Qiniu Kodo",
+      "tencentCOSName": "Tencent COS",
+      "googleGCSName": "Google GCS"
+    },
     "tips": {
       "requiredCredential": "Please select a parameter store",
       "store1": "Select the",
@@ -50,54 +80,73 @@
     "step2": {
       "taskDetail": "Specify task details",
       "sourceType": "Source Type",
-      "selectSourceType": "Select a source type",
+      "selectSourceType": "Select the source type among various providers.",
       "settings": {
         "source": {
           "title": "Source settings",
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
           "srcInAccount": "Is Bucket in this account?",
-          "srcInAccountDesc": "Select YES, if the source bucket is in the same account as Data Replication Hub.",
+          "srcInAccountDesc": "Select Yes, if the bucket is in the same AWS account as Data Transfer Hub.",
           "srcRegionName": "Region Name",
-          "srcRegionNameDesc": "Select Region Name",
+          "srcRegionNameDesc": "You can enter region name or region code.",
           "enableS3Event": "Enable S3 Event?",
-          "enableS3EventDesc": "Whether to enable S3 Event to trigger the replication.",
+          "enableS3EventDesc": "Whether to enable S3 Event to trigger the transfer.",
           "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "It will only replicate objects with the provided prefix."
+          "prefixDesc": "It will only replicate objects with the provided prefix.",
+          "includeMetadata": "Include Object Metadata?",
+          "includeMetadataDesc1": "Copy of",
+          "includeMetadataDesc2": "Object Metadata.",
+          "includeMetadataDesc3": "This will have additional API cost."
         },
         "dest": {
           "title": "Destination settings",
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
+          "destInAccount": "Is Bucket in this account?",
+          "destInAccountDesc": "Select Yes, if the bucket is in the same AWS account as Data Transfer Hub.",
           "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "Add Prefix to all the replicated objects.",
+          "prefixDesc": "Add Prefix to all the transferred objects.",
           "storageClass": "Storage Class",
           "storageClassDesc": "Objects will be stored with the selected storage class.",
           "destRegionName": "Region Name",
-          "destRegionNameDesc": "Select Region Name"
+          "destRegionNameDesc": "You can enter region name or region code."
         },
         "credential": {
           "title": "Credentials",
           "whitch": "Which bucket in current AWS account?",
-          "whitchDesc": "Select Source if your source bucket is in the same account as Data Replication Hub. Otherwise, select Destination.",
+          "whitchDesc": "Select Source if your source bucket is in the same account as Data Transfer Hub. Otherwise, select Destination.",
           "store": "Parameter Store name for Credentials",
           "storeDesc": "Choose the SSM Parameter Store which holds the credentials."
         },
         "advance": {
-          "title": "Advanced Options",
+          "title": "Engine settings",
+          "professionTitle": "Advanced Options",
           "lambdaMemory": "Lambda Memory",
-          "LambdaMemoryDesc": "Lambda Memory, default to 256 MB",
+          "LambdaMemoryDesc": "Set the default Lambda memory, default is 256 MB.",
           "multipartThreshold": "Multipart Threshold",
-          "multipartThresholdDesc": "Threshold Size for multipart upload in MB, default to 10 (MB)",
+          "multipartThresholdDesc": "Threshold size for multipart upload in MB, default is 10 MB.",
           "chunkSize": "Chunk Size",
-          "chunkSizeDesc": "Chunk Size for multipart upload in MB, default to 5 (MB)",
+          "chunkSizeDesc": "Chunk size for multipart upload in MB, default is 5 MB.",
           "maxThreads": "Max Threads",
-          "maxThreadsDesc":"Max Theads to run multipart upload in lambda, default to 10"
+          "maxThreadsDesc": "Max threads to run multipart upload in Lambda, default is 10.",
+          "maximumCapacity": "Maximum Capacity",
+          "maximumCapacityDesc": "Maximum number of Graviton2 instances.",
+          "minimumCapacity": "Minimum Capacity",
+          "minimumCapacityDesc": "Minimum number of Graviton2 instances.",
+          "desiredCapacity": "Desired Capacity",
+          "desiredCapacityDesc": "Desired number of Graviton2 instances.",
+          "finderDepth": "Finder Depth",
+          "finderDepthDesc": "The depth of sub folders to compare in parallel. 0 means comparing all objects in sequence.",
+          "finderNumber": "Finder Number",
+          "finderNumberDesc": "The number of find threads to run in parrallel.",
+          "workerThreadsNumber": "Worker Threads Number",
+          "workerThreadsNumberDesc": "The number of worker threads to run in one insance."
         },
         "more": {
           "title": "More",
           "description": "Description",
-          "descriptionDesc": "Description about this task",
+          "descriptionDesc": "Input the description of the task.",
           "email": "Alarm Email",
           "emailDesc": "Notification will be sent to this email if any errors."
         }
@@ -227,12 +276,25 @@
     "taskMetrics": "Task Metrics",
     "dashboard": "CloudWatch Dashboard",
     "enableS3Event": "Enable S3 Event?",
-    "storageClass": "Storage Class"
+    "storageClass": "Storage Class",
+    "copyMetadata": "Copy Metadata?",
+    "engineSettings": "Engine Settings",
+    "lambdaMemory": "Lambda Memory",
+    "multipartUploadThreshold": "Multipart Upload Threshold",
+    "chunkSize": "Chunk Size",
+    "maxThreads": "Max Threads",
+    "maximumInstances": "Maximum Instances",
+    "minimumInstances": "Minimum Instances",
+    "desiredInstances": "Desired Instances",
+    "advancedSettings": "Advanced Settings",
+    "finderDepth": "Finder Depth",
+    "finderNumber": "Finder Number",
+    "workerThreadsNumber": "Worker Threads Number"
   },
   "bottom": {
-    "copy": "© 2008 - 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
-    "feedback":"Feedback",
-    "privacy":"Privacy Policy",
+    "copy": "© 2008 - 2021, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
+    "feedback": "Feedback",
+    "privacy": "Privacy Policy",
     "use": "Terms of Use"
   },
   "btn": {
@@ -252,7 +314,7 @@
   "tips": {
     "error": {
       "sourceBucketRequired": "Source Bucket Name is Required",
-      "destBucketRequired": "Source Bucket Name is Required",
+      "destBucketRequired": "Destination Bucket Name is Required",
       "emailRequired": "Alarm Email is required",
       "emailValidate": "Alarm Email must be validate",
       "credentialRequired": "Parameter Store Credential is Required"
@@ -260,6 +322,7 @@
   },
   "comps": {
     "credential": {
+      "name": "Credentials Store",
       "create": "Create a",
       "store": "Parameter Store",
       "save1": "to save your credentials. Select ",
@@ -269,6 +332,20 @@
       "formatDesc": "Copy the following credential, and replace with your own value.",
       "learnMore": "Learn more ",
       "createStore": "Create a Credential Store"
+    },
+    "engineSettings": {
+      "name": "Engine settings",
+      "tip1": "This is the advanced settings to tune the performance of the application.",
+      "tip2": "Recommend to adjust this settings only under the guidance of AWS Solutions Architect."
+    },
+    "engineEdition": {
+      "name": "Engine Edition",
+      "learnMore": "Learn more ",
+      "tip1": "Choose the right data transfer engine for the task.",
+      "tip2": "Use the Graviton2 instances to read and write to the buckets.",
+      "tip3": "is enabled in this edition which can provide better network performance. Especially recommend for data transfer between China regions and standard regions.",
+      "tip4": "AWS Lambda has its advantage in concurrency. Every AWS Account can have 1000 maximum concurrency by default.",
+      "learnMoreTitle": "How to enable TCP BBR to improve network speed on Linux?"
     }
   }
 }

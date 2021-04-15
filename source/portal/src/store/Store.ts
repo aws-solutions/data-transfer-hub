@@ -1,5 +1,6 @@
 import { createStore } from "redux";
 import reducer from "./Reducer";
+import { ACTION_TYPE } from "assets/types/index";
 
 export interface IState {
   infoSpanType: string;
@@ -7,44 +8,34 @@ export interface IState {
   tmpTaskInfo: any;
   infoIsOpen?: boolean;
   isOpen: boolean;
-  lastUpdated: number;
-  todos: string[];
 }
 
 export type Action =
   | {
-      type: "open side bar";
+      type: ACTION_TYPE.OPEN_SIDE_BAR;
     }
   | {
-      type: "close side bar";
+      type: ACTION_TYPE.CLOSE_SIDE_BAR;
     }
   | {
-      type: "open info bar";
+      type: ACTION_TYPE.OPEN_INFO_BAR;
     }
   | {
-      type: "close info bar";
+      type: ACTION_TYPE.CLOSE_INFO_BAR;
     }
   | {
-      type: "update task info";
+      type: ACTION_TYPE.UPDATE_TASK_INFO;
       taskInfo: any;
     }
   | {
-      type: "set create task flag";
+      type: ACTION_TYPE.SET_CREATE_TASK_FLAG;
     }
   | {
-      type: "hide create task flag";
+      type: ACTION_TYPE.HIDE_CREATE_TASK_FLAG;
     }
   | {
-      type: "add todo";
-      todo: string;
-    }
-  | {
-      type: "set info span type";
+      type: ACTION_TYPE.SET_INFO_SPAN_TYPE;
       spanType: string;
-    }
-  | {
-      type: "delete todo";
-      index: number;
     };
 
 export function makeStore(): any {
@@ -54,8 +45,6 @@ export function makeStore(): any {
     tmpTaskInfo: {},
     infoIsOpen: false,
     isOpen: false,
-    // isOpen: localStorage.getItem("drhIsOpen") ? true : false,
-    lastUpdated: 0,
-    todos: [],
+    // isOpen: localStorage.getItem("drhIsOpen") ? true : false
   });
 }

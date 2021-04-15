@@ -1,33 +1,37 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const StepOneECRTips: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="tips">
-      <div className="tips-title">Replication Engine for Amazon ECR</div>
-      <div className="tips-desc">
-        Amazon ECR engine is used for replicating Docker images from different
-        Docker Registry.
-      </div>
+      <div className="tips-title">{t("creation.ecrPlugin.name")}</div>
+      <div className="tips-desc">{t("creation.ecrPlugin.desc")}</div>
       <div className="tips-list">
         <ul>
           <li>
-            <span>•</span>Replication between AWS standard partition and AWS CN
-            paritition
+            <span>•</span>
+            {t("creation.ecrPlugin.feat1")}
           </li>
           <li>
-            <span>•</span>Replication from Docker Hub, GCR.io, Quay.io
+            <span>•</span>
+            {t("creation.ecrPlugin.feat2")}
           </li>
           <li>
-            <span>•</span>Parallel replication
+            <span>•</span>
+            {t("creation.ecrPlugin.feat3")}
           </li>
           <li>
-            <span>•</span>Support public Docker images
+            <span>•</span>
+            {t("creation.ecrPlugin.feat4")}
           </li>
           <li>
-            <span>•</span>Support Selective Docker images
+            <span>•</span>
+            {t("creation.ecrPlugin.feat5")}
           </li>
           <li>
-            <span>•</span>Serverless architect, no minimum cost
+            <span>•</span>
+            {t("creation.ecrPlugin.feat6")}
           </li>
         </ul>
       </div>

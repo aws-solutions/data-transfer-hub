@@ -10,14 +10,43 @@ import STATUS_PROGRESS from "@material-ui/icons/RemoveCircleOutline";
 import STATUS_ERROR from "@material-ui/icons/HighlightOff";
 import STATUS_DONE from "@material-ui/icons/CheckCircleOutline";
 
+// S3 ENGINE TYPE
+export enum S3_ENGINE_TYPE {
+  LAMBDA = "lambda",
+  EC2 = "ec2",
+}
+
+export const S3_EDITION_LIST = [
+  { name: "EC2 Graviton 2", value: S3_ENGINE_TYPE.EC2, recommened: true },
+  { name: "Lambda", value: S3_ENGINE_TYPE.LAMBDA },
+];
+
+// Redux Action Type
+export enum ACTION_TYPE {
+  OPEN_SIDE_BAR = "open side bar",
+  CLOSE_SIDE_BAR = "close side bar",
+  OPEN_INFO_BAR = "open info bar",
+  CLOSE_INFO_BAR = "close info bar",
+  UPDATE_TASK_INFO = "update task info",
+  SET_CREATE_TASK_FLAG = "set create task flag",
+  HIDE_CREATE_TASK_FLAG = "hide create task flag",
+  SET_INFO_SPAN_TYPE = "set info span type",
+}
+
 // Task Tyep Enum
 export enum EnumTaskType {
+  S3_EC2 = "S3EC2",
   S3 = "S3",
   DynamoDB = "DynamoDB",
   ECR = "ECR",
   MongoDB = "MongoDB",
   MySQL = "MySQL",
 }
+
+export const S3_TASK_TYPE_MAP: any = {
+  S3: { name: "Amazon S3 Transfer Plugin Lambda" },
+  S3EC2: { name: "Amazon S3 Transfer Plugin Graviton2" },
+};
 
 // Task List
 export const TYPE_LIST = [
@@ -65,6 +94,7 @@ export enum EnumBucketType {
 
 // Task Tyep Enum
 export enum EnumSourceType {
+  S3_EC2 = "Amazon_S3",
   S3 = "Amazon_S3",
   Qiniu = "Qiniu_Kodo",
   AliOSS = "Aliyun_OSS",
@@ -105,74 +135,30 @@ export const TASK_STATUS_MAP: any = {
 export interface ISouceType {
   id: string;
   en_name: string;
-  "zh-CN_name": string;
+  zh_name: string;
   value: string;
   en_desc: string;
-  "zh-CN_desc": string;
+  zh_desc: string;
   [key: string]: string;
 }
-
-// Task Source Type List
-export const SOURCE_TYPE = [
-  {
-    id: "1",
-    en_name: "Amazon S3",
-    "zh-CN_name": "Amazon S3",
-    value: EnumSourceType.S3,
-    en_desc: "Amazon S3 replication between AWS partitions.",
-    "zh-CN_desc": "Amazon S3 的标准区和中国区之间的复制.",
-  },
-  {
-    id: "2",
-    en_name: "Aliyun OSS",
-    "zh-CN_name": "阿里云 OSS",
-    value: EnumSourceType.AliOSS,
-    en_desc: "Replicate objects from Aliyun OSS to Amazon S3.",
-    "zh-CN_desc": "从阿里云OSS复制数据到 Amazon S3.",
-  },
-  {
-    id: "3",
-    en_name: "Qiniu Kodo",
-    "zh-CN_name": "七牛 Kodo",
-    value: EnumSourceType.Qiniu,
-    en_desc: "Replicate objects from Qiniu Kodo to Amazon S3.",
-    "zh-CN_desc": "从七牛Kodo复制数据到 Amazon S3.",
-  },
-  {
-    id: "4",
-    en_name: "Tencent COS",
-    "zh-CN_name": "腾讯 COS",
-    value: EnumSourceType.TencentCOS,
-    en_desc: "Replicate objects from Tencent COS to Amazon S3.",
-    "zh-CN_desc": "从腾讯COS复制数据到 Amazon S3.",
-  },
-  {
-    id: "5",
-    en_name: "Google GCS",
-    "zh-CN_name": "Google GCS",
-    value: EnumSourceType.GoogleGCS,
-    en_desc: "Replicate objects from Google GCS to Amazon S3.",
-    "zh-CN_desc": "从Google GCS复制数据到 Amazon S3.",
-  },
-];
 
 // ECR Task Source Type List
 export const ECR_SOURCE_TYPE = [
   {
     id: "1",
     en_name: "Amazon ECR",
-    "zh-CN_name": "Amazon ECR",
+    zh_name: "Amazon ECR",
     value: ECREnumSourceType.ECR,
     en_desc: "Amazon ECR replication between AWS partitions.",
-    "zh-CN_desc": "Amazon ECR的标准区和中国区之间的复制.",
+    zh_desc: "Amazon ECR的标准区和中国区之间的复制.",
   },
   {
     id: "2",
     en_name: "Public Container Registry",
-    "zh-CN_name": "公共容器仓库",
+    zh_name: "公共容器仓库",
     value: ECREnumSourceType.PUBLIC,
     en_desc: "Replication from a standard Public Container Registry..",
-    "zh-CN_desc": "从标准公共容器仓库复制镜像到ECR.",
+    zh_desc: "从标准公共容器仓库复制镜像到ECR.",
   },
 ];
 
@@ -181,17 +167,17 @@ export const DOCKER_IMAGE_TYPE = [
   {
     id: 1,
     en_name: "All",
-    "zh-CN_name": "全部",
+    zh_name: "全部",
     value: EnumDockerImageType.ALL,
     en_desc: "Replicate all images in the source.",
-    "zh-CN_desc": "复制源地址所有镜像",
+    zh_desc: "复制源地址所有镜像",
   },
   {
     id: 2,
     en_name: "Selected Images",
-    "zh-CN_name": "选择镜像",
+    zh_name: "选择镜像",
     value: EnumDockerImageType.SELECTED,
     en_desc: "Replicate only selected Docker Images.",
-    "zh-CN_desc": "只复制所选择需要复制的镜像.",
+    zh_desc: "只复制所选择需要复制的镜像.",
   },
 ];

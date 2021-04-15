@@ -1,9 +1,10 @@
 import React from "react";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { Trans } from "react-i18next";
 
-import { MenuProps } from "../../../assets/config/const";
-import SelectInput from "../../../common/comp/SelectInput";
+import { MenuProps } from "assets/config/const";
+import SelectInput from "common/comp/SelectInput";
 
 interface OptionType {
   name: string | number;
@@ -11,8 +12,10 @@ interface OptionType {
 }
 
 type SelectMenuProp = {
+  isI18n?: boolean;
   optionTitle: string;
   optionDesc: string;
+  optionDescHtml?: any;
   selectValue: string;
   optionList: OptionType[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,12 +24,26 @@ type SelectMenuProp = {
 };
 
 const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
-  const { selectValue, optionList, optionTitle, optionDesc, onChange } = props;
+  const {
+    isI18n,
+    selectValue,
+    optionList,
+    optionTitle,
+    optionDesc,
+    optionDescHtml,
+    onChange,
+  } = props;
 
   return (
     <>
       <div className="title">{optionTitle}</div>
-      <div className="desc">{optionDesc}</div>
+      <div className="desc">
+        {optionDescHtml ? (
+          <span dangerouslySetInnerHTML={{ __html: optionDescHtml }}></span>
+        ) : (
+          optionDesc
+        )}
+      </div>
       <div>
         <Select
           MenuProps={MenuProps}
@@ -35,13 +52,18 @@ const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
           input={<SelectInput style={{ width: 565 }} />}
         >
           {optionList.map((option, index) => {
-            return (
+            return isI18n ? (
+              <MenuItem key={index} value={option.value}>
+                <Trans i18nKey={`${option.name}`} />
+              </MenuItem>
+            ) : (
               <MenuItem key={index} className="font14px" value={option.value}>
                 {option.name}
               </MenuItem>
             );
           })}
         </Select>
+        <div className="error">&nbsp;</div>
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+import { EnumSourceType } from "../types/index";
 // URL to be done
 export const URL = "";
 export const URL_FEEDBACK =
@@ -20,9 +21,17 @@ export const SSM_PARASTORE_HELP_LINK_MAP: any = {
     "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html",
 };
 
+export const METADATA_LINK =
+  "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html";
+
+export const BBR_LINK = "https://github.com/google/bbr";
+
+export const BBR_LEARN_MORE_LINK =
+  "https://www.techrepublic.com/article/how-to-enable-tcp-bbr-to-improve-network-speed-on-linux/";
+
 export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
 
-export const CUR_SUPPORT_LANGS: string[] = ["zh-CN", "en"];
+export const CUR_SUPPORT_LANGS: string[] = ["zh", "en"];
 
 export const GLOBAL_STR = "global";
 export const CHINA_STR = "china";
@@ -50,112 +59,188 @@ export interface IRegionType {
 }
 
 export const S3_PARAMS_LIST_MAP: any = {
+  sourceType: {
+    en_name: "Source Type",
+    zh_name: "数据源类型",
+  },
+  srcType: {
+    en_name: "Source Type",
+    zh_name: "数据源类型",
+  },
   srcBucketName: {
     en_name: "Source Bucket Name",
-    "zh-CN_name": "源数据桶名称",
+    zh_name: "源数据桶名称",
+  },
+  srcBucket: {
+    en_name: "Source Bucket Name",
+    zh_name: "源数据桶名称",
   },
   srcBucketPrefix: {
     en_name: "Source Bucket Object Prefix",
-    "zh-CN_name": "源数据桶对象前缀",
+    zh_name: "源数据桶对象前缀",
   },
-  destBucketName: {
-    en_name: "Destination Bucket Name",
-    "zh-CN_name": "目标数据桶名称",
-  },
-  destBucketPrefix: {
-    en_name: "Destination Bucket Object Prefix",
-    "zh-CN_name": "目标数据桶对象前缀",
+  srcPrefix: {
+    en_name: "Source Bucket Object Prefix",
+    zh_name: "源数据桶对象前缀",
   },
   enableS3Event: {
     en_name: "Enable S3 Event",
-    "zh-CN_name": "启用S3事件",
+    zh_name: "启用S3事件",
   },
-  regionName: {
-    en_name: "Region Name",
-    "zh-CN_name": "区域名称",
+  srcEvent: {
+    en_name: "Enable S3 Event",
+    zh_name: "启用S3事件",
   },
-  credentialsParameterStore: {
-    en_name: "Parameter Store name for Credentials",
-    "zh-CN_name": "凭证中的参数存储名称",
+  srcInCurrentAccount: {
+    en_name: "Source in Current Account",
+    zh_name: "源数据桶是否在当前账户",
   },
-  alarmEmail: {
-    en_name: "Alarm Email",
-    "zh-CN_name": "通知邮箱",
+  srcRegion: {
+    en_name: "Source Region",
+    zh_name: "源数据区域名称",
   },
-  sourceType: {
-    en_name: "Source Type",
-    "zh-CN_name": "数据源类型",
+  srcCredentials: {
+    en_name: "Source Parameter Store Name for Credentials",
+    zh_name: "源数据凭证中的参数存储名称",
+  },
+  destBucketName: {
+    en_name: "Destination Bucket Name",
+    zh_name: "目标数据桶名称",
+  },
+  destBucket: {
+    en_name: "Destination Bucket Name",
+    zh_name: "目标数据桶名称",
+  },
+  destBucketPrefix: {
+    en_name: "Destination Bucket Object Prefix",
+    zh_name: "目标数据桶对象前缀",
+  },
+  destPrefix: {
+    en_name: "Destination Bucket Object Prefix",
+    zh_name: "目标数据桶对象前缀",
   },
   destStorageClass: {
     en_name: "Destination Object Storage Class",
-    "zh-CN_name": "目标S3存储类型",
+    zh_name: "目标S3存储类型",
+  },
+  destInCurrentAccount: {
+    en_name: "Destination in Current Account",
+    zh_name: "目标数据桶是否在当前账户",
+  },
+  regionName: {
+    en_name: "Region Name",
+    zh_name: "区域名称",
+  },
+  destRegion: {
+    en_name: "Destination Region",
+    zh_name: "目标区域名称",
+  },
+  credentialsParameterStore: {
+    en_name: "Parameter Store name for Credentials",
+    zh_name: "凭证中的参数存储名称",
+  },
+  destCredentials: {
+    en_name: "Destination Parameter Store name for Credentials",
+    zh_name: "目标区域凭证中的参数存储名称",
+  },
+  includeMetadata: {
+    en_name: "Include Metadata",
+    zh_name: "是否包含元数据",
+  },
+  finderDepth: {
+    en_name: "Finder Depth",
+    zh_name: "Finder Depth",
+  },
+  finderNumber: {
+    en_name: "Finder Number",
+    zh_name: "Finder Number",
+  },
+  workerNumber: {
+    en_name: "Worker Number",
+    zh_name: "Worker Number",
+  },
+  maxCapacity: {
+    en_name: "Max Capacity",
+    zh_name: "Max Capacity",
+  },
+  minCapacity: {
+    en_name: "Min Capacity",
+    zh_name: "Min Capacity",
+  },
+  desiredCapacity: {
+    en_name: "Desired Capacity",
+    zh_name: "Desired Capacity",
   },
   lambdaMemory: {
     en_name: "Lambda Memory",
-    "zh-CN_name": "Lambda 内存",
+    zh_name: "Lambda 内存",
   },
   multipartThreshold: {
     en_name: "Multipart Threshold",
-    "zh-CN_name": "大文件分段阈值",
+    zh_name: "大文件分段阈值",
   },
   chunkSize: {
     en_name: "Chunk Size",
-    "zh-CN_name": "分段大小",
+    zh_name: "分段大小",
   },
   maxThreads: {
     en_name: "Max Threads",
-    "zh-CN_name": "最大线程数",
+    zh_name: "最大线程数",
+  },
+  alarmEmail: {
+    en_name: "Alarm Email",
+    zh_name: "通知邮箱",
   },
 };
 
 export const ECR_PARAMS_LIST_MAP: any = {
   srcRegion: {
     en_name: "Source region",
-    "zh-CN_name": "源仓库区域",
+    zh_name: "源仓库区域",
   },
   srcAccountId: {
     en_name: "Source AWS Account ID",
-    "zh-CN_name": "源AWS账户ID",
+    zh_name: "源AWS账户ID",
   },
   srcList: {
     en_name: "Type of Source Image List",
-    "zh-CN_name": "源镜像类型",
+    zh_name: "源镜像类型",
   },
   srcImageList: {
     en_name: "Source Image List",
-    "zh-CN_name": "镜像列表",
+    zh_name: "镜像列表",
   },
   srcCredential: {
     en_name: "Source Credential Parameter Name",
-    "zh-CN_name": "源仓库凭证参数名称",
+    zh_name: "源仓库凭证参数名称",
   },
   sourceInAccount: {
     en_name: "Source In Account?",
-    "zh-CN_name": "数据源在当前账户吗？",
+    zh_name: "数据源在当前账户吗？",
   },
   destRegion: {
     en_name: "Destination AWS Region",
-    "zh-CN_name": "目的仓库AWS区域",
+    zh_name: "目的仓库AWS区域",
   },
   destInAccount: {
     en_name: "Destination In Account?",
-    "zh-CN_name": "目的仓库在当前账户吗？",
+    zh_name: "目的仓库在当前账户吗？",
   },
   destAccountId: {
     en_name: "Destination AWS Account ID",
-    "zh-CN_name": "目的仓库AWS账户ID",
+    zh_name: "目的仓库AWS账户ID",
   },
   sourceType: {
     en_name: "Source Type",
-    "zh-CN_name": "源仓库类型",
+    zh_name: "源仓库类型",
   },
   destPrefix: {
     en_name: "Destination Image Prefix",
-    "zh-CN_name": "目标镜像前缀",
+    zh_name: "目标镜像前缀",
   },
   destCredential: {
     en_name: "Destination Credential Parameter Name",
-    "zh-CN_name": "目的仓库凭证参数名称",
+    zh_name: "目的仓库凭证参数名称",
   },
 };
 
@@ -169,6 +254,8 @@ export enum S3_EVENT_TYPE {
   CREATE_ONLY = "Create_Only",
   DELETE_ONLY = "Delete_Only",
   CREATE_AND_DELETE = "Create_And_Delete",
+  CREATE_ONLY_EC2 = "Create",
+  CREATE_AND_DELETE_EC2 = "CreateAndDelete",
 }
 
 export enum S3_STORAGE_CLASS_TYPE {
@@ -258,6 +345,31 @@ export const QINIU_REGION_LIST = [
   { name: "South East Asia(ap-southeast-1)", value: "ap-southeast-1" },
 ];
 
+export const getRegionListBySourceType = (sourceType: string) => {
+  let regionList: any = [];
+  switch (sourceType) {
+    case EnumSourceType.S3:
+      regionList = AWS_REGION_LIST;
+      break;
+    case EnumSourceType.AliOSS:
+      regionList = ALICLOUD_REGION_LIST;
+      break;
+    case EnumSourceType.TencentCOS:
+      regionList = TENCENT_REGION_LIST;
+      break;
+    case EnumSourceType.Qiniu:
+      regionList = QINIU_REGION_LIST;
+      break;
+    case EnumSourceType.GoogleGCS:
+      regionList = [];
+      break;
+    default:
+      regionList = [];
+      break;
+  }
+  return regionList;
+};
+
 export const getRegionNameById = (id: string): any => {
   if (id && id !== "-") {
     return AWS_REGION_LIST.find((item) => item.value === id)?.name;
@@ -308,11 +420,31 @@ export const S3_STORAGE_CLASS_OPTIONS = [
   },
 ];
 
+export const SOURCE_TYPE_OPTIONS = [
+  { name: "creation.sourceType.amazonS3Name", value: EnumSourceType.S3 },
+  { name: "creation.sourceType.aliyunOSSName", value: EnumSourceType.AliOSS },
+  { name: "creation.sourceType.qiniuKodoName", value: EnumSourceType.Qiniu },
+  {
+    name: "creation.sourceType.tencentCOSName",
+    value: EnumSourceType.TencentCOS,
+  },
+  {
+    name: "creation.sourceType.googleGCSName",
+    value: EnumSourceType.GoogleGCS,
+  },
+];
+
 export const S3_EVENT_OPTIONS = [
   { name: "No", value: S3_EVENT_TYPE.NO },
   { name: "Create Only", value: S3_EVENT_TYPE.CREATE_ONLY },
   { name: "Delete Only", value: S3_EVENT_TYPE.DELETE_ONLY },
   { name: "Create and Delete", value: S3_EVENT_TYPE.CREATE_AND_DELETE },
+];
+
+export const S3_EVENT_OPTIONS_EC2 = [
+  { name: "No", value: S3_EVENT_TYPE.NO },
+  { name: "Create", value: S3_EVENT_TYPE.CREATE_ONLY_EC2 },
+  { name: "Create and Delete", value: S3_EVENT_TYPE.CREATE_AND_DELETE_EC2 },
 ];
 
 // Clone task useless property
@@ -330,5 +462,7 @@ export const CREATE_USE_LESS_PROPERTY = [
 ];
 
 export const emailIsValid = (email: string): boolean => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
 };

@@ -1,42 +1,41 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const StepOneS3Tips: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="tips">
-      <div className="tips-title">Replication Engine for Amazon S3</div>
-      <div className="tips-desc">
-        Amazon S3 engine is used for replicating objects from different sources
-        into S3 Buckets.
-      </div>
+      <div className="tips-title">{t("creation.s3plugin.name")}</div>
+      <div className="tips-desc">{t("creation.s3plugin.desc")}</div>
       <div className="tips-list">
         <ul>
           <li>
-            <span>•</span>Replication between AWS standard partition and AWS CN
-            paritition
+            <span>•</span>
+            {t("creation.s3plugin.feat1")}
           </li>
           <li>
-            <span>•</span>Replcate objects from Aliyun OSS to S3
+            <span>•</span>
+            {t("creation.s3plugin.feat2")}
           </li>
           <li>
-            <span>•</span>Replcate objects from Qiniu Kodo to S3
+            <span>•</span>
+            {t("creation.s3plugin.feat3")}
           </li>
           <li>
-            <span>•</span>Replcate objects from Tencent COS to S3
+            <span>•</span>
+            {t("creation.s3plugin.feat4")}
           </li>
           <li>
-            <span>•</span>Replcate objects from Google GCS to S3
+            <span>•</span>
+            {t("creation.s3plugin.feat5")}
           </li>
           <li>
-            <span>•</span>Large file support
+            <span>•</span>
+            {t("creation.s3plugin.feat6")}
           </li>
           <li>
-            <span>•</span>Versioning support
-          </li>
-          <li>
-            <span>•</span>Serverless architect, no minimum cost
-          </li>
-          <li>
-            <span>•</span>Parralel replication
+            <span>•</span>
+            {t("creation.s3plugin.feat7")}
           </li>
         </ul>
       </div>

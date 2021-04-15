@@ -10,10 +10,10 @@ import "./LeftMenu.scss";
 
 import { IState } from "../store/Store";
 
+import { ACTION_TYPE } from "assets/types/index";
+
 const mapState = (state: IState) => ({
   isOpen: state.isOpen,
-  lastUpdated: state.lastUpdated,
-  todoCount: state.todos.length,
 });
 
 const LeftMenu: React.FC = () => {
@@ -22,12 +22,12 @@ const LeftMenu: React.FC = () => {
 
   const dispatch = useDispatch();
   const openLeftMenu = React.useCallback(() => {
-    dispatch({ type: "open side bar" });
+    dispatch({ type: ACTION_TYPE.OPEN_SIDE_BAR });
     localStorage.setItem("drhIsOpen", "open");
   }, [dispatch]);
 
   const closeLeftMenu = React.useCallback(() => {
-    dispatch({ type: "close side bar" });
+    dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
     localStorage.setItem("drhIsOpen", "");
   }, [dispatch]);
 

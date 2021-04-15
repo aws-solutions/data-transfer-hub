@@ -8,17 +8,17 @@ import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "redux-react-hook";
 
-import LeftMenu from "../../common/LeftMenu";
-import Bottom from "../../common/Bottom";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
 import Card from "./comps/Card";
-import NextButton from "../../common/comp/PrimaryButton";
-import SelectInput from "../../common/comp/SelectInput";
-import { TYPE_LIST, EnumTaskType } from "../../assets/types/index";
-import { MenuProps } from "../../assets/config/const";
+import NextButton from "common/comp/PrimaryButton";
+import SelectInput from "common/comp/SelectInput";
+import { TYPE_LIST, EnumTaskType, ACTION_TYPE } from "assets/types/index";
+import { MenuProps } from "assets/config/const";
 
 import "./Home.scss";
 
-import { IState } from "../../store/Store";
+import { IState } from "store/Store";
 
 import {
   TOP_TITLE_INFO,
@@ -26,14 +26,12 @@ import {
   BENIFITS_AND_FEATURES,
   GET_START_LINKS,
   RESOURCE_LINKS,
-} from "../../assets/config/content";
+} from "assets/config/content";
 
-import { CUR_SUPPORT_LANGS, URL_YOUTUBE } from "../../assets/config/const";
+import { CUR_SUPPORT_LANGS, URL_YOUTUBE } from "assets/config/const";
 
 const mapState = (state: IState) => ({
   isOpen: state.isOpen,
-  lastUpdated: state.lastUpdated,
-  todoCount: state.todos.length,
 });
 
 const Home: React.FC = () => {
@@ -70,8 +68,11 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const startToCreate = () => {
-    dispatch({ type: "close side bar" });
-    const toPath = "/create/step1/" + taskType;
+    dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
+    let toPath = `/create/step1/${taskType}`;
+    if (taskType === EnumTaskType.S3) {
+      toPath = `/create/step1/${taskType}/ec2`;
+    }
     history.push({
       pathname: toPath,
     });

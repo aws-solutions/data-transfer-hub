@@ -11,7 +11,7 @@ import {
   DRH_REGION_TYPE_NAME,
   DRH_REGION_NAME,
   GLOBAL_STR,
-} from "../../assets/config/const";
+} from "assets/config/const";
 
 import "./info.scss";
 interface Page {

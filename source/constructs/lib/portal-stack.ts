@@ -146,7 +146,7 @@ export class PortalStack extends cdk.Construct {
     cfnCustomResourcePolicy.overrideLogicalId('CustomResourcePolicy');
 
     const customResourceFunction = new lambda.Function(this, 'CustomHandler', {
-      description: 'AWS Data Replication Hub - Custom resource',
+      description: 'Data Transfer Hub - Custom resource',
       runtime: lambda.Runtime.NODEJS_12_X,
       handler: 'index.handler',
       timeout: cdk.Duration.seconds(30),

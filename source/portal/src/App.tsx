@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect, useCallback } from "react";
-import { useTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { HashRouter, Route } from "react-router-dom";
 
 import Card from "@material-ui/core/Card";
@@ -21,7 +21,9 @@ import DetailS3 from "./pages/detail/DetailS3";
 import DetailECR from "./pages/detail/DetailECR";
 import StepOne from "./pages/creation/StepOne";
 import StepTwoS3 from "./pages/creation/s3/StepTwoS3";
+
 import StepThreeS3 from "./pages/creation/s3/StepThreeS3";
+
 import StepTwoECR from "./pages/creation/ecr/StepTwoECR";
 import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
@@ -40,22 +42,12 @@ import {
 
 import "./App.scss";
 
-const HomePage = withTranslation()(Home);
-const DetailPageS3 = withTranslation()(DetailS3);
-const DetailPageECR = withTranslation()(DetailECR);
-const StepOnePage = withTranslation()(StepOne);
-const StepTwoS3Page = withTranslation()(StepTwoS3);
-const StepThreeS3Page = withTranslation()(StepThreeS3);
-const StepTwoECRPage = withTranslation()(StepTwoECR);
-const StepThreeECRPage = withTranslation()(StepThreeECR);
-const ListPage = withTranslation()(List);
-
 // loading component for suspense fallback
 const Loader = () => (
   <div className="App">
     <div className="app-loading">
       <DataLoading />
-      AWS Data Replication Hub is loading...
+      Data Transfer Hub is loading...
     </div>
   </div>
 );
@@ -87,6 +79,7 @@ const App: React.FC = () => {
       const ConfigObj = res.data;
       const AuthType = ConfigObj.aws_appsync_authenticationType;
       setAuthType(AuthType);
+      Amplify.configure(ConfigObj);
       localStorage.setItem(DRH_CONFIG_JSON_NAME, JSON.stringify(ConfigObj));
       localStorage.setItem(AUTH_TYPE_NAME, AuthType);
       localStorage.setItem(DRH_REGION_NAME, ConfigObj.aws_project_region);
@@ -95,15 +88,14 @@ const App: React.FC = () => {
         ConfigObj.aws_project_region?.startsWith("cn") ? "china" : "global"
       );
       if (AuthType === OPEN_ID_TYPE) {
-        Amplify.configure(ConfigObj);
-        const oidcLoginUrl = ConfigObj.aws_oidc_login_url;
-        setLoginUrl(oidcLoginUrl);
-        const oidcLogoutUrl = ConfigObj.aws_oidc_logout_url;
-        const oidcValidateUrl = ConfigObj.aws_oidc_token_validation_url;
+        const OIDC_LOGIN_URL = ConfigObj.aws_oidc_login_url;
+        setLoginUrl(OIDC_LOGIN_URL);
+        const OIDC_LOGOUT_URL = ConfigObj.aws_oidc_logout_url;
+        const OIDC_VALIDATE_URL = ConfigObj.aws_oidc_token_validation_url;
         const token = getUrlToken("access_token", window.location.hash);
         const id_token = getUrlToken("id_token", window.location.hash);
-        localStorage.setItem(OPENID_SIGNIN_URL, oidcLoginUrl);
-        localStorage.setItem(OPENID_SIGNOUT_URL, oidcLogoutUrl);
+        localStorage.setItem(OPENID_SIGNIN_URL, OIDC_LOGIN_URL);
+        localStorage.setItem(OPENID_SIGNOUT_URL, OIDC_LOGOUT_URL);
         // First Login and got tokens
         if (token) {
           localStorage.setItem(DRH_API_HEADER, token);
@@ -114,29 +106,28 @@ const App: React.FC = () => {
           const curToken = localStorage.getItem(DRH_API_HEADER);
           if (curToken) {
             // if got token to validate it
-            Axios.get(oidcValidateUrl + "?access_token=" + curToken)
+            Axios.get(OIDC_VALIDATE_URL + "?access_token=" + curToken)
               .then((res) => {
+                setLoadingConfig(false);
                 if (res.data.iss) {
                   // Token is valid
-                  setLoadingConfig(false);
                 } else {
-                  redirectToLogin();
+                  window.location.href = OIDC_LOGIN_URL;
                 }
               })
               .catch((err) => {
-                redirectToLogin();
                 console.error(err);
+                window.location.href = OIDC_LOGIN_URL;
               });
           } else {
-            redirectToLogin();
+            window.location.href = OIDC_LOGIN_URL;
           }
         }
       } else {
-        Amplify.configure(ConfigObj);
         setLoadingConfig(false);
       }
     });
-  }, [redirectToLogin]);
+  }, []);
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authData: any) => {
@@ -209,39 +200,44 @@ const App: React.FC = () => {
       )}
       <TopBar />
       <HashRouter>
-        <Route path="/" exact component={HomePage}></Route>
-        <Route path="/home" exact component={HomePage}></Route>
-        <Route path="/create/step1/:type" exact component={StepOnePage}></Route>
+        <Route path="/" exact component={Home}></Route>
+        <Route path="/home" exact component={Home}></Route>
+        <Route path="/create/step1/:type" exact component={StepOne}></Route>
         <Route
-          path={`/create/step2/${EnumTaskType.S3}`}
+          path="/create/step1/:type/:engine"
           exact
-          component={StepTwoS3Page}
+          component={StepOne}
+        ></Route>
+        <Route
+          path={`/create/step2/${EnumTaskType.S3}/:engine`}
+          exact
+          component={StepTwoS3}
         ></Route>
         <Route
           path={`/create/step2/${EnumTaskType.ECR}`}
           exact
-          component={StepTwoECRPage}
+          component={StepTwoECR}
         ></Route>
         <Route
-          path={`/create/step3/${EnumTaskType.S3}`}
+          path={`/create/step3/${EnumTaskType.S3}/:engine`}
           exact
-          component={StepThreeS3Page}
+          component={StepThreeS3}
         ></Route>
         <Route
           path={`/create/step3/${EnumTaskType.ECR}`}
           exact
-          component={StepThreeECRPage}
+          component={StepThreeECR}
         ></Route>
-        <Route path="/task/list" exact component={ListPage}></Route>
+        <Route path="/task/list" exact component={List}></Route>
         <Route
-          path={`/task/detail/${EnumTaskType.S3}/:id`}
+          path={`/task/detail/s3/:type/:id`}
           exact
-          component={DetailPageS3}
+          component={DetailS3}
         ></Route>
         <Route
           path={`/task/detail/${EnumTaskType.ECR}/:id`}
           exact
-          component={DetailPageECR}
+          component={DetailECR}
         ></Route>
       </HashRouter>
     </div>
@@ -249,7 +245,7 @@ const App: React.FC = () => {
     <div className="login-wrap">
       <AmplifyAuthenticator>
         <AmplifySignIn
-          headerText="Sign in to AWS Data Replication Hub"
+          headerText="Sign in to Data Transfer Hub"
           slot="sign-in"
           usernameAlias="username"
           formFields={[

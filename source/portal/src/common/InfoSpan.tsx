@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
+import { ACTION_TYPE } from "assets/types";
 
 interface spanInfo {
   spanType: string;
@@ -11,8 +12,8 @@ const InfoSpan: React.FC<spanInfo> = (props) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const openInfoBar = React.useCallback(() => {
-    dispatch({ type: "open info bar" });
-    dispatch({ type: "set info span type", spanType: spanType });
+    dispatch({ type: ACTION_TYPE.OPEN_INFO_BAR });
+    dispatch({ type: ACTION_TYPE.SET_INFO_SPAN_TYPE, spanType: spanType });
     localStorage.setItem("drhInfoOpen", "open");
   }, [dispatch, spanType]);
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
@@ -10,42 +10,33 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
 import { API } from "aws-amplify";
-import { createTask as createTaskMutaion } from "../../../graphql/mutations";
-import { IState } from "../../../store/Store";
+import { createTask as createTaskMutaion } from "graphql/mutations";
+import { IState } from "store/Store";
 
-import InfoBar from "../../../common/InfoBar";
-import LeftMenu from "../../../common/LeftMenu";
-import Bottom from "../../../common/Bottom";
+import InfoBar from "common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
 import Step from "../comps/Step";
-import CreateButtonLoading from "../../../common/comp/PrimaryButtonLoading";
-import NextButton from "../../../common/comp/PrimaryButton";
-import NormalButton from "../../../common/comp/NormalButton";
-import TextButton from "../../../common/comp/TextButton";
+import CreateButtonLoading from "common/comp/PrimaryButtonLoading";
+import NextButton from "common/comp/PrimaryButton";
+import NormalButton from "common/comp/NormalButton";
+import TextButton from "common/comp/TextButton";
 
-// import IMG_STATUS from "../../../assets/images/status.svg";
+// import IMG_STATUS from "assets/images/status.svg";
 
 import "../Creation.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
   S3_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
-  CREATE_USE_LESS_PROPERTY,
+  // CREATE_USE_LESS_PROPERTY,
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
   DRH_CONFIG_JSON_NAME,
-} from "../../../assets/config/const";
-
-interface IParameterType {
-  ParameterKey: string;
-  ParameterValue: string;
-}
-
-type TaskInputType = {
-  type: string;
-  decription: string;
-  parameters: Array<IParameterType>;
-};
+  YES_NO,
+} from "assets/config/const";
+import { ACTION_TYPE, S3_ENGINE_TYPE, S3_TASK_TYPE_MAP } from "assets/types";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -56,27 +47,12 @@ const JOB_TYPE_MAP: any = {
   GET: "Destination",
 };
 
-const ParamShowIndexMap: any = {
-  sourceType: 1,
-  jobType: 2,
-  srcBucketName: 3,
-  srcBucketPrefix: 4,
-  enableS3Event: 5,
-  destBucketName: 6,
-  destBucketPrefix: 7,
-  destStorageClass: 8,
-  credentialsParameterStore: 9,
-  regionName: 10,
-  lambdaMemory: 11,
-  multipartThreshold: 12,
-  chunkSize: 13,
-  maxThreads: 14,
-  alarmEmail: 15,
-};
-
 const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
+
+  const { engine } = useParams() as any;
+  console.info("type:", engine);
 
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
@@ -96,45 +72,217 @@ const StepThreeS3: React.FC = () => {
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
     if (!tmpTaskInfo.hasOwnProperty("type")) {
-      const toPath = "/create/step1/S3";
+      const toPath = "/create/step1/S3/ec2";
       history.push({
         pathname: toPath,
       });
     }
   }, [history, tmpTaskInfo]);
 
+  const buildLambdaParams = (parametersObj: any) => {
+    const taskParamArr = [];
+    console.info("parametersObj:", parametersObj);
+    // Special Parameters
+    const jobType =
+      parametersObj.sourceInAccount === YES_NO.YES ? "PUT" : "GET";
+    const credentialsParameterStore =
+      parametersObj.sourceInAccount === YES_NO.YES
+        ? parametersObj.destCredentialsParameterStore
+        : parametersObj.srcCredentialsParameterStore;
+    const regionName =
+      parametersObj.sourceInAccount === YES_NO.YES
+        ? parametersObj.destRegionName
+        : parametersObj.srcRegionName;
+
+    // Build Parameter Data with Lambda Version
+    taskParamArr.push({
+      ParameterKey: "sourceType",
+      ParameterValue: parametersObj.sourceType,
+    });
+    taskParamArr.push({ ParameterKey: "jobType", ParameterValue: jobType });
+    taskParamArr.push({
+      ParameterKey: "srcBucketName",
+      ParameterValue: parametersObj.srcBucketName,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcBucketPrefix",
+      ParameterValue: parametersObj.srcBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "enableS3Event",
+      ParameterValue: parametersObj.enableS3Event,
+    });
+    taskParamArr.push({
+      ParameterKey: "destBucketName",
+      ParameterValue: parametersObj.destBucketName,
+    });
+    taskParamArr.push({
+      ParameterKey: "destBucketPrefix",
+      ParameterValue: parametersObj.destBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "destStorageClass",
+      ParameterValue: parametersObj.destStorageClass,
+    });
+    taskParamArr.push({
+      ParameterKey: "credentialsParameterStore",
+      ParameterValue: credentialsParameterStore,
+    });
+    taskParamArr.push({
+      ParameterKey: "regionName",
+      ParameterValue: regionName,
+    });
+    taskParamArr.push({
+      ParameterKey: "lambdaMemory",
+      ParameterValue: parametersObj.lambdaMemory,
+    });
+    taskParamArr.push({
+      ParameterKey: "multipartThreshold",
+      ParameterValue: parametersObj.multipartThreshold,
+    });
+    taskParamArr.push({
+      ParameterKey: "chunkSize",
+      ParameterValue: parametersObj.chunkSize,
+    });
+    taskParamArr.push({
+      ParameterKey: "maxThreads",
+      ParameterValue: parametersObj.maxThreads,
+    });
+    taskParamArr.push({
+      ParameterKey: "alarmEmail",
+      ParameterValue: parametersObj.alarmEmail,
+    });
+    return taskParamArr;
+  };
+
+  const buildEC2Params = (parametersObj: any) => {
+    const taskParamArr: any = [];
+    console.info("parametersObj:", parametersObj);
+    if (!parametersObj) {
+      return [];
+    }
+    // Special Param
+    const srcInAccount =
+      parametersObj.sourceInAccount === YES_NO.YES ? "true" : "false";
+
+    const destInAccount =
+      parametersObj.destInAccount === YES_NO.YES ? "true" : "false";
+
+    console.info(
+      " parametersObj.includeMetadata === YES_NO.YES:",
+      parametersObj.includeMetadata === YES_NO.YES
+    );
+    const tmpIncludeMetaData =
+      parametersObj.includeMetadata === YES_NO.YES ? "true" : "false";
+
+    // Build Parameter Data with EC2 Version
+    taskParamArr.push({
+      ParameterKey: "srcType",
+      ParameterValue: parametersObj.sourceType,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcBucket",
+      ParameterValue: parametersObj.srcBucketName,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcPrefix",
+      ParameterValue: parametersObj.srcBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcEvent",
+      ParameterValue: parametersObj.enableS3Event,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcRegion",
+      ParameterValue: parametersObj.srcRegionName,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcInCurrentAccount",
+      ParameterValue: srcInAccount,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcCredentials",
+      ParameterValue: parametersObj.srcCredentialsParameterStore,
+    });
+    taskParamArr.push({
+      ParameterKey: "destBucket",
+      ParameterValue: parametersObj.destBucketName,
+    });
+    taskParamArr.push({
+      ParameterKey: "destPrefix",
+      ParameterValue: parametersObj.destBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "destStorageClass",
+      ParameterValue: parametersObj.destStorageClass,
+    });
+
+    taskParamArr.push({
+      ParameterKey: "destRegion",
+      ParameterValue: parametersObj.destRegionName,
+    });
+    taskParamArr.push({
+      ParameterKey: "destInCurrentAccount",
+      ParameterValue: destInAccount,
+    });
+    taskParamArr.push({
+      ParameterKey: "destCredentials",
+      ParameterValue: parametersObj.destCredentialsParameterStore,
+    });
+    taskParamArr.push({
+      ParameterKey: "includeMetadata",
+      ParameterValue: tmpIncludeMetaData,
+    });
+    taskParamArr.push({
+      ParameterKey: "maxCapacity",
+      ParameterValue: parametersObj.maxCapacity,
+    });
+    taskParamArr.push({
+      ParameterKey: "minCapacity",
+      ParameterValue: parametersObj.minCapacity,
+    });
+    taskParamArr.push({
+      ParameterKey: "desiredCapacity",
+      ParameterValue: parametersObj.desiredCapacity,
+    });
+    taskParamArr.push({
+      ParameterKey: "finderDepth",
+      ParameterValue: parametersObj.finderDepth,
+    });
+    taskParamArr.push({
+      ParameterKey: "finderNumber",
+      ParameterValue: parametersObj.finderNumber,
+    });
+    taskParamArr.push({
+      ParameterKey: "workerNumber",
+      ParameterValue: parametersObj.workerNumber,
+    });
+    taskParamArr.push({
+      ParameterKey: "alarmEmail",
+      ParameterValue: parametersObj.alarmEmail,
+    });
+    return taskParamArr;
+  };
+
   // Build  Task  Info  Data
   useEffect(() => {
-    // console.info("tmpTaskInfo:", tmpTaskInfo);
-    // const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
-    // const tmpParamsArr = [];
-    // for (const key in parametersObj) {
-    //   tmpParamsArr.push({
-    //     ParameterKey: key,
-    //     ParameterValue: parametersObj[key],
-    //   });
-    // }
-    const NOT_PARAMS: Array<string> = ["regionObj", "sourceInAccount"];
-    const NOT_PARAMS_TASK: Array<string> = ["sourceInAccount", "regionObj"];
     const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
-    const tmpParamsArr = [];
-    const taskParamArr = [];
-    for (const key in parametersObj) {
-      if (NOT_PARAMS.indexOf(key) < 0) {
-        tmpParamsArr.push({
-          ParameterKey: key,
-          ParameterValue: parametersObj[key],
-          sortId: ParamShowIndexMap[key] || 100,
-        });
-      }
-      if (NOT_PARAMS_TASK.indexOf(key) < 0) {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: parametersObj[key],
-        });
-      }
+
+    // Set Description
+    if (createTaskInfo) {
+      createTaskInfo.description = parametersObj?.description || "";
     }
-    // Add New Params to Creat Task
+
+    let taskParamArr: any = [];
+    if (engine === S3_ENGINE_TYPE.LAMBDA) {
+      taskParamArr = buildLambdaParams(parametersObj);
+    }
+    if (engine === S3_ENGINE_TYPE.EC2) {
+      taskParamArr = buildEC2Params(parametersObj);
+    }
+    setParamList(taskParamArr);
+
+    // Add Cluster Data
     const configJson: any = JSON.parse(
       localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
     );
@@ -153,16 +301,10 @@ const StepThreeS3: React.FC = () => {
       }
     }
 
-    tmpParamsArr.sort((a, b) => (a.sortId > b.sortId ? 1 : -1));
-    setParamList(tmpParamsArr);
-    // Remove uesless property when clone task
-    for (const key in createTaskInfo) {
-      if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
-        delete createTaskInfo[key];
-      }
-    }
     createTaskInfo.parameters = taskParamArr;
+    console.info("createTaskInfo:", createTaskInfo);
     setCreateTaskGQL(createTaskInfo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tmpTaskInfo]);
 
   async function createTask() {
@@ -181,7 +323,7 @@ const StepThreeS3: React.FC = () => {
     );
     console.info("createTaskData:", createTaskData);
     dispatch({
-      type: "set create task flag",
+      type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
     });
     // Redirect to task list page
     const toPath = "/task/list";
@@ -198,7 +340,7 @@ const StepThreeS3: React.FC = () => {
   };
 
   const goToStepTwo = () => {
-    const toPath = "/create/step2/s3";
+    const toPath = `/create/step2/s3/${engine}`;
     history.push({
       pathname: toPath,
     });
@@ -248,7 +390,7 @@ const StepThreeS3: React.FC = () => {
                       {t("creation.step3.step1EngineSubEngine")}
                     </div>
                     <div className="step3-desc">
-                      {t("creation.step3.step1EngineSubEngineDesc")}
+                      {S3_TASK_TYPE_MAP[tmpTaskInfo.type]?.name}
                     </div>
                     <div className="step3-title">
                       {t("creation.step3.step1Type")}
@@ -267,7 +409,12 @@ const StepThreeS3: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - 1})</span>
+                    {engine === S3_ENGINE_TYPE.LAMBDA && (
+                      <span>({paramsList.length - 4})</span>
+                    )}
+                    {engine === S3_ENGINE_TYPE.EC2 && (
+                      <span>({paramsList.length - 3})</span>
+                    )}
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">

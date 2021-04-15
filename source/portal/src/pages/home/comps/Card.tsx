@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CUR_SUPPORT_LANGS } from "../../../assets/config/const";
+import { CUR_SUPPORT_LANGS } from "assets/config/const";
 
 import "./Card.scss";
 
@@ -18,7 +18,7 @@ const Card: React.FC<DATA_TYPE> = (props: any) => {
       setTitleStr(i18n.language + "_title");
       setNameStr(i18n.language + "_name");
     }
-  }, [i18n.language])
+  }, [i18n.language]);
 
   const { contentInfo } = props;
   return (

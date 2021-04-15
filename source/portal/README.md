@@ -1,5 +1,5 @@
 
-## Data Replication Hub UI
+## Data Transfer Hub UI
 
 In the project directory, you can run:
 

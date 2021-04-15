@@ -7,7 +7,7 @@
 
 ## OpenId认证配置
 
-中国区目前暂时没有上线Cognito User Pool服务，如果要将AWS Data Replication Hub部署在中国区使用，我们目前支持使用[Authing](http://authing.cn/)作为OpenId的认证服务商提供的认证服务。
+中国区目前暂时没有上线Cognito User Pool服务，如果要将Data Transfer Hub部署在中国区使用，我们目前支持使用[Authing](http://authing.cn/)作为OpenId的认证服务商提供的认证服务。
 
 ### 注册Authing.cn开发者账号
 [点击注册](https://docs.authing.cn/quickstart/create-authing-account.html)
@@ -29,7 +29,7 @@
 
 ### 部署Data Replication Hub
 
-按照下面的步骤将AWS Data Replication Hub配置和部署到您的AWS中国区账户中
+按照下面的步骤将Data Transfer Hub配置和部署到您的AWS中国区账户中
 
 1. 确保您已经登陆到AWS中国区的[控制台](https://console.amazonaws.cn/console/home).
 

@@ -22,8 +22,8 @@
         margin-left: 15px;
       }
     }
-  } 
-  
+  }
+
   .general-info {
     font-size: 14px;
     &.tab-padding {
@@ -48,7 +48,7 @@
       display: flex;
       .bar {
         padding: 5px 0 0 0;
-        flex:1;
+        flex: 1;
       }
       .number {
         color: #687078;
@@ -56,9 +56,25 @@
         text-align: right;
       }
     }
+    .engine-title {
+      font-size: 14px;
+      font-weight: bold;
+      padding-bottom: 10px;
+      padding-left: 20px;
+      border-bottom: 1px solid #eee;
+      margin-left: 20px;
+      margin-right: 20px;
+      .option-title-icon {
+        position: absolute;
+        margin-left: -20px;
+        margin-top: -3px;
+        cursor: pointer;
+      }
+    }
     &-content {
       display: flex;
       padding: 25px 0;
+
       .split-item {
         flex: 1;
         padding: 3px 20px;

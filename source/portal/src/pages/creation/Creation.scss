@@ -41,6 +41,17 @@
     .card-list {
       margin-bottom: 20px;
     }
+    .profession-title {
+      color: #000000;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 0 0 20px 25px;
+      .option-profession-icon {
+        position: absolute;
+        cursor: pointer;
+        margin: -8px 0 0 -30px;
+      }
+    }
     .option {
       &-title {
         color: #000000;
@@ -107,7 +118,7 @@
           .preview-row {
             display: flex;
             .key {
-              width: 350px;
+              width: 400px;
             }
             .value {
               flex: 1;
@@ -233,8 +244,14 @@
     }
     .edition {
       font-size: 14px;
-      padding: 20px 20px 50px 20px;
-
+      padding: 5px 20px 50px 20px;
+      .title {
+        font-size: 16px;
+        padding-bottom: 10px;
+      }
+      .item {
+        padding: 5px 0;
+      }
       &-title {
         padding: 5px 0;
       }

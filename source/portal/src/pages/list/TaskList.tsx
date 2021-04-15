@@ -6,7 +6,7 @@ import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import Moment from "react-moment";
 
-import Loading from "../../common/Loading";
+import Loading from "common/Loading";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
@@ -26,18 +26,18 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import { API } from "aws-amplify";
-import { listTasks } from "../../graphql/queries";
-import { stopTask } from "../../graphql/mutations";
+import { listTasks } from "graphql/queries";
+import { stopTask } from "graphql/mutations";
 
-import { IState } from "../../store/Store";
+import { IState } from "store/Store";
 
-import LeftMenu from "../../common/LeftMenu";
-import Bottom from "../../common/Bottom";
-import InfoBar from "../../common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
+import InfoBar from "common/InfoBar";
 
-import NormalButton from "../../common/comp/NormalButton";
-import PrimaryButton from "../../common/comp/PrimaryButton";
-import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
+import NormalButton from "common/comp/NormalButton";
+import PrimaryButton from "common/comp/PrimaryButton";
+import StopButtonLoading from "common/comp/PrimaryButtonLoading";
 
 import STATUS_PENDING from "@material-ui/icons/Schedule";
 import STATUS_STOPED from "@material-ui/icons/RemoveCircleOutline";
@@ -56,18 +56,20 @@ import PAGE_NEXT_DISABLED from "@material-ui/icons/NavigateNext";
 
 import {
   TASK_STATUS_MAP,
-  EnumBucketType,
   EnumTaskStatus,
   EnumTaskType,
   ECREnumSourceType,
-} from "../../assets/types/index";
+  ACTION_TYPE,
+  S3_ENGINE_TYPE,
+} from "assets/types/index";
 import {
   YES_NO,
   AWS_REGION_LIST,
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
-} from "../../assets/config/const";
+  getRegionListBySourceType,
+} from "assets/config/const";
 
 const StyledMenu = withStyles({
   paper: {
@@ -159,7 +161,7 @@ const List: React.FC = () => {
       {
         query: listTasks,
         variables: {
-          limit: 15,
+          limit: 30,
           nextToken: token,
         },
       },
@@ -200,21 +202,27 @@ const List: React.FC = () => {
   useEffect(() => {
     window.setTimeout(() => {
       dispatch({
-        type: "hide create task flag",
+        type: ACTION_TYPE.HIDE_CREATE_TASK_FLAG,
       });
     }, 4000);
   }, [dispatch]);
 
   const goToStepOne = () => {
-    dispatch({ type: "close side bar" });
-    const toPath = "/create/step1/S3";
+    dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
+    const toPath = "/create/step1/S3/ec2";
     history.push({
       pathname: toPath,
     });
   };
 
   const goToDetail = () => {
-    const toPath = `/task/detail/${curSelectTask.type}/${curSelectTask.id}`;
+    let toPath = `/task/detail/${curSelectTask.type}/${curSelectTask.id}`;
+    if (
+      curSelectTask.type === EnumTaskType.S3 ||
+      curSelectTask.type === EnumTaskType.S3_EC2
+    ) {
+      toPath = `/task/detail/s3/${curSelectTask.type}/${curSelectTask.id}`;
+    }
     history.push({
       pathname: toPath,
     });
@@ -254,28 +262,178 @@ const List: React.FC = () => {
     setOpen(true);
   };
 
+  const getIsSrcInAccount = (list: any) => {
+    let tmpJobTypeObj: any = {};
+    list.forEach((element: any) => {
+      if (element.ParameterKey === "jobType") {
+        tmpJobTypeObj = element;
+      }
+    });
+    if (tmpJobTypeObj.ParameterValue === "PUT") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const cloneCurTask = () => {
     setAnchorEl(null);
     console.info("curSelectTask:", curSelectTask);
     const tmpTaskInfo = curSelectTask;
     tmpTaskInfo.parametersObj = {};
-    // when need to clone task type is S3
+    // when need to clone task type is S3 (Lambda Version)
+    let isSrcInAccount = getIsSrcInAccount(curSelectTask.parameters);
     if (curSelectTask.type === EnumTaskType.S3) {
+      // Clone Lambda Version Task
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
         curSelectTask.parameters.forEach((element: any) => {
-          if (element.ParameterKey === "jobType") {
-            if (element.ParameterValue === "PUT") {
-              tmpTaskInfo.parametersObj.bucketInAccount = EnumBucketType.Source;
-            } else {
-              tmpTaskInfo.parametersObj.bucketInAccount =
-                EnumBucketType.Destination;
-            }
-          }
+          // Set All Properties
           tmpTaskInfo.parametersObj[element.ParameterKey] =
             element.ParameterValue;
+
+          if (element.ParameterKey === "jobType") {
+            if (element.ParameterValue === "PUT") {
+              tmpTaskInfo.parametersObj.sourceInAccount = YES_NO.YES;
+              tmpTaskInfo.parametersObj.destInAccount = YES_NO.NO;
+            } else {
+              tmpTaskInfo.parametersObj.sourceInAccount = YES_NO.NO;
+              tmpTaskInfo.parametersObj.destInAccount = YES_NO.YES;
+            }
+          }
+          // Set Credential
+          if (element.ParameterKey === "credentialsParameterStore") {
+            if (isSrcInAccount) {
+              tmpTaskInfo.parametersObj.destCredentialsParameterStore =
+                element.ParameterValue;
+            } else {
+              tmpTaskInfo.parametersObj.srcCredentialsParameterStore =
+                element.ParameterValue;
+            }
+          }
+          // Set Region
+          if (element.ParameterKey === "regionName") {
+            const sourceTypeName = getParamsValueByName(
+              "sourceType",
+              curSelectTask.parameters
+            );
+            const regionName = getParamsValueByName(
+              "regionName",
+              curSelectTask.parameters
+            );
+            const REGION_LIST = getRegionListBySourceType(sourceTypeName);
+            const regionObj = REGION_LIST.find(
+              (item: any) => item.value === regionName
+            );
+            if (isSrcInAccount) {
+              // Set Dest Region Obj
+              tmpTaskInfo.parametersObj.destRegionObj = regionObj;
+            } else {
+              // Set Source Region Obj
+              tmpTaskInfo.parametersObj.srcRegionObj = regionObj;
+            }
+          }
+
+          // Set Description
+          tmpTaskInfo.parametersObj.description =
+            tmpTaskInfo?.description || "";
         });
       }
     }
+
+    // when need to clone task type is S3 (EC2 Version)
+    if (curSelectTask.type === EnumTaskType.S3_EC2) {
+      // Clone EC2 Version Task
+      if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
+        curSelectTask.parameters.forEach((element: any) => {
+          // Set All Properties
+          tmpTaskInfo.parametersObj[element.ParameterKey] =
+            element.ParameterValue;
+
+          if (element.ParameterKey === "srcType") {
+            tmpTaskInfo.parametersObj.sourceType = element.ParameterValue;
+          }
+          if (element.ParameterKey === "srcBucket") {
+            tmpTaskInfo.parametersObj.srcBucketName = element.ParameterValue;
+          }
+          if (element.ParameterKey === "srcPrefix") {
+            tmpTaskInfo.parametersObj.srcBucketPrefix = element.ParameterValue;
+          }
+          if (element.ParameterKey === "srcEvent") {
+            tmpTaskInfo.parametersObj.enableS3Event = element.ParameterValue;
+          }
+
+          // Set Source Region
+          // Set Region
+          if (element.ParameterKey === "srcRegion") {
+            const sourceTypeName = getParamsValueByName(
+              "srcType",
+              curSelectTask.parameters
+            );
+            const srcRegionName = getParamsValueByName(
+              "srcRegion",
+              curSelectTask.parameters
+            );
+            const REGION_LIST = getRegionListBySourceType(sourceTypeName);
+            const srcRegionObj = REGION_LIST.find(
+              (item: any) => item.value === srcRegionName
+            );
+            tmpTaskInfo.parametersObj.srcRegionObj = srcRegionObj;
+          }
+
+          if (element.ParameterKey === "srcInCurrentAccount") {
+            tmpTaskInfo.parametersObj.sourceInAccount =
+              element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
+          }
+
+          if (element.ParameterKey === "srcCredentials") {
+            tmpTaskInfo.parametersObj.srcCredentialsParameterStore =
+              element.ParameterValue;
+          }
+
+          if (element.ParameterKey === "destBucket") {
+            tmpTaskInfo.parametersObj.destBucketName = element.ParameterValue;
+          }
+
+          if (element.ParameterKey === "destPrefix") {
+            tmpTaskInfo.parametersObj.destBucketPrefix = element.ParameterValue;
+          }
+
+          // Set Dest Region
+          // Set Region
+          if (element.ParameterKey === "destRegion") {
+            const destRegionName = getParamsValueByName(
+              "destRegion",
+              curSelectTask.parameters
+            );
+            const REGION_LIST = AWS_REGION_LIST;
+            const destRegionObj = REGION_LIST.find(
+              (item: any) => item.value === destRegionName
+            );
+            tmpTaskInfo.parametersObj.destRegionObj = destRegionObj;
+          }
+
+          if (element.ParameterKey === "destInCurrentAccount") {
+            tmpTaskInfo.parametersObj.destInAccount =
+              element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
+          }
+
+          if (element.ParameterKey === "destCredentials") {
+            tmpTaskInfo.parametersObj.destCredentialsParameterStore =
+              element.ParameterValue;
+          }
+
+          if (element.ParameterKey === "includeMetadata") {
+            tmpTaskInfo.parametersObj.includeMetadata =
+              element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
+          }
+
+          // Set Description
+          tmpTaskInfo.parametersObj.description =
+            tmpTaskInfo?.description || "";
+        });
+      }
+    }
+
     if (curSelectTask.type === EnumTaskType.ECR) {
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
         curSelectTask.parameters.forEach((element: any) => {
@@ -321,25 +479,21 @@ const List: React.FC = () => {
       }
     }
     dispatch({
-      type: "update task info",
+      type: ACTION_TYPE.UPDATE_TASK_INFO,
       taskInfo: tmpTaskInfo,
     });
     // Redirect to Create S3 Task Step two
-    const toPath = "/create/step2/" + curSelectTask.type;
+    let toPath = `/create/step2/${curSelectTask.type}`;
+    if (curSelectTask.type === EnumTaskType.S3) {
+      toPath = `/create/step2/s3/${S3_ENGINE_TYPE.LAMBDA}`;
+    }
+    if (curSelectTask.type === EnumTaskType.S3_EC2) {
+      toPath = `/create/step2/s3/${S3_ENGINE_TYPE.EC2}`;
+    }
     history.push({
       pathname: toPath,
     });
   };
-
-  type StatusType = {
-    name: string;
-    src: string;
-    class: string;
-  };
-
-  interface StatusDataType {
-    [key: string]: StatusType;
-  }
 
   const changeRadioSelect = (event: any) => {
     console.info("event:", event);
@@ -404,6 +558,13 @@ const List: React.FC = () => {
   };
 
   const buildTaskSource = (item: any) => {
+    if (item.type === EnumTaskType.S3_EC2) {
+      return (
+        getParamsValueByName("srcType", item.parameters) +
+        "/" +
+        getParamsValueByName("srcBucket", item.parameters)
+      );
+    }
     if (item.type === EnumTaskType.S3) {
       return (
         getParamsValueByName("sourceType", item.parameters) +
@@ -429,11 +590,27 @@ const List: React.FC = () => {
   };
 
   const buildTaskDestination = (item: any) => {
+    if (item.type === EnumTaskType.S3_EC2) {
+      return getParamsValueByName("destBucket", item.parameters);
+    }
     if (item.type === EnumTaskType.S3) {
       return getParamsValueByName("destBucketName", item.parameters);
     }
     if (item.type === EnumTaskType.ECR) {
       return getParamsValueByName("destRegion", item.parameters);
+    }
+    return "";
+  };
+
+  const buildTaskType = (item: any) => {
+    if (item.type === EnumTaskType.S3_EC2) {
+      return "S3 Graviton2 Plugin";
+    }
+    if (item.type === EnumTaskType.S3) {
+      return "S3 Lambda Plugin";
+    }
+    if (item.type === EnumTaskType.ECR) {
+      return "ECR Plugin";
     }
     return "";
   };
@@ -660,11 +837,22 @@ const List: React.FC = () => {
                             />
                           </div>
                           <div className="table-item item-id">
-                            <Link
-                              to={`/task/detail/${element.type}/${element.id}`}
-                            >
-                              {element.id}
-                            </Link>
+                            {(element.type === EnumTaskType.S3 ||
+                              element.type === EnumTaskType.S3_EC2) && (
+                              <Link
+                                to={`/task/detail/s3/${element.type}/${element.id}`}
+                              >
+                                {element.id}
+                              </Link>
+                            )}
+                            {element.type !== EnumTaskType.S3 &&
+                              element.type !== EnumTaskType.S3_EC2 && (
+                                <Link
+                                  to={`/task/detail/${element.type}/${element.id}`}
+                                >
+                                  {element.id}
+                                </Link>
+                              )}
                           </div>
                           <div
                             className="table-item body-item"
@@ -679,7 +867,7 @@ const List: React.FC = () => {
                             {buildTaskDestination(element)}
                           </div>
                           <div className="table-item body-item">
-                            {element.type}
+                            {buildTaskType(element)}
                           </div>
                           <div className="table-item body-item">
                             <div
@@ -701,7 +889,7 @@ const List: React.FC = () => {
                             </div>
                           </div>
                           <div className="table-item create-time">
-                            <Moment format="YYYY-MM-DD HH:mm">
+                            <Moment format="YYYY-MM-DD HH:mm:ss">
                               {element.createdAt}
                             </Moment>
                           </div>

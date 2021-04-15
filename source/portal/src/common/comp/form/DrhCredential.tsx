@@ -5,12 +5,13 @@ import { API } from "aws-amplify";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import Loader from "react-loader-spinner";
 
-import SelectInput from "../../../common/comp/SelectInput";
-import InfoSpan from "../../../common/InfoSpan";
-import NormalButton from "../../../common/comp/NormalButton";
+import SelectInput from "common/comp/SelectInput";
+import InfoSpan from "common/InfoSpan";
+import NormalButton from "common/comp/NormalButton";
 
-import { listParameters } from "../../../graphql/queries";
+import { listParameters } from "graphql/queries";
 
 import {
   MenuProps,
@@ -21,12 +22,7 @@ import {
   AUTH_TYPE_NAME,
   DRH_API_HEADER,
   OPEN_ID_TYPE,
-} from "../../../assets/config/const";
-
-interface OptionType {
-  name: string | number;
-  value: string | number;
-}
+} from "assets/config/const";
 
 type SelectMenuProp = {
   credentialValue: string;
@@ -42,12 +38,14 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const { t } = useTranslation();
   const { credentialValue, onChange } = props;
   const [ssmParamList, setSSMParamList] = useState([]);
+  const [loadingData, setLoadingData] = useState(false);
 
   async function getSSMParamsList() {
     const authType = localStorage.getItem(AUTH_TYPE_NAME);
     const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
+    setLoadingData(true);
     const apiData: any = await API.graphql(
       {
         query: listParameters,
@@ -55,6 +53,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
       },
       authType === OPEN_ID_TYPE ? openIdHeader : undefined
     );
+    setLoadingData(false);
     if (
       apiData &&
       apiData.data &&
@@ -114,15 +113,25 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
             );
           })}
         </Select>
-        <NormalButton
-          style={{ height: 32 }}
-          className="margin-left-10"
-          onClick={() => {
-            getSSMParamsList();
-          }}
-        >
-          <RefreshIcon width="10" />
-        </NormalButton>
+        {loadingData ? (
+          <NormalButton
+            className="margin-left-10"
+            style={{ width: 50, height: 32 }}
+            disabled={true}
+          >
+            <Loader type="ThreeDots" color="#888" height={10} />
+          </NormalButton>
+        ) : (
+          <NormalButton
+            style={{ height: 32 }}
+            className="margin-left-10"
+            onClick={() => {
+              getSSMParamsList();
+            }}
+          >
+            <RefreshIcon width="10" />
+          </NormalButton>
+        )}
       </div>
     </>
   );

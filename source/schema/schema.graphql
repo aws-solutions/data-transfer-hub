@@ -111,10 +111,11 @@ type Task @aws_iam @aws_cognito_user_pools @aws_oidc{
 }
 
 """
-The set of task types supported by AWS Data Replication Hub.
+The set of task types supported by Data Transfer Hub.
 """
 enum TaskType {
     S3
+    S3EC2
     DynamoDB
     ECR
 }

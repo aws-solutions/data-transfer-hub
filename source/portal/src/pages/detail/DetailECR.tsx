@@ -8,7 +8,7 @@ import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import Moment from "react-moment";
 
-import Loading from "../../common/Loading";
+import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -19,30 +19,30 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { API } from "aws-amplify";
-import { getTask } from "../../graphql/queries";
-import { stopTask } from "../../graphql/mutations";
-// import { updateTaskProgress } from "../../graphql/subscriptions";
+import { getTask } from "graphql/queries";
+import { stopTask } from "graphql/mutations";
+// import { updateTaskProgress } from "graphql/subscriptions";
 
-import InfoBar from "../../common/InfoBar";
-import LeftMenu from "../../common/LeftMenu";
-import Bottom from "../../common/Bottom";
-import NormalButton from "../../common/comp/NormalButton";
-import PrimaryButton from "../../common/comp/PrimaryButton";
-import StopButtonLoading from "../../common/comp/PrimaryButtonLoading";
+import InfoBar from "common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
+import NormalButton from "common/comp/NormalButton";
+import PrimaryButton from "common/comp/PrimaryButton";
+import StopButtonLoading from "common/comp/PrimaryButtonLoading";
 
 import {
   TASK_STATUS_MAP,
   ECREnumSourceType,
   EnumTaskStatus,
   EnumDockerImageType,
-} from "../../assets/types/index";
+} from "assets/types/index";
 
 import {
   getRegionNameById,
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
-} from "../../assets/config/const";
+} from "assets/config/const";
 
 import "./Detail.scss";
 

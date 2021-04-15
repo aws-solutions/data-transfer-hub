@@ -10,19 +10,19 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
 import { API } from "aws-amplify";
-import { createTask as createTaskMutaion } from "../../../graphql/mutations";
-import { IState } from "../../../store/Store";
+import { createTask as createTaskMutaion } from "graphql/mutations";
+import { IState } from "store/Store";
 
-import InfoBar from "../../../common/InfoBar";
-import LeftMenu from "../../../common/LeftMenu";
-import Bottom from "../../../common/Bottom";
+import InfoBar from "common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
 import Step from "../comps/Step";
-import CreateButtonLoading from "../../../common/comp/PrimaryButtonLoading";
-import NextButton from "../../../common/comp/PrimaryButton";
-import NormalButton from "../../../common/comp/NormalButton";
-import TextButton from "../../../common/comp/TextButton";
+import CreateButtonLoading from "common/comp/PrimaryButtonLoading";
+import NextButton from "common/comp/PrimaryButton";
+import NormalButton from "common/comp/NormalButton";
+import TextButton from "common/comp/TextButton";
 
-// import IMG_STATUS from "../../../assets/images/status.svg";
+// import IMG_STATUS from "assets/images/status.svg";
 
 import "../Creation.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -35,18 +35,8 @@ import {
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
   DRH_CONFIG_JSON_NAME,
-} from "../../../assets/config/const";
-
-interface IParameterType {
-  ParameterKey: string;
-  ParameterValue: string;
-}
-
-type TaskInputType = {
-  type: string;
-  decription: string;
-  parameters: Array<IParameterType>;
-};
+} from "assets/config/const";
+import { ACTION_TYPE } from "assets/types";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -178,7 +168,7 @@ const StepThreeECR: React.FC = () => {
     );
     console.info("createTaskData:", createTaskData);
     dispatch({
-      type: "set create task flag",
+      type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
     });
     // Redirect to task list page
     const toPath = "/task/list";

@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import classNames from "classnames";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,18 +18,18 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
-import { listParameters } from "../../../graphql/queries";
-import InfoSpan from "../../../common/InfoSpan";
-import InfoBar from "../../../common/InfoBar";
-import LeftMenu from "../../../common/LeftMenu";
-import Bottom from "../../../common/Bottom";
+import { listParameters } from "graphql/queries";
+import InfoSpan from "common/InfoSpan";
+import InfoBar from "common/InfoBar";
+import LeftMenu from "common/LeftMenu";
+import Bottom from "common/Bottom";
 import Step from "../comps/Step";
-import NextButton from "../../../common/comp/PrimaryButton";
-import NormalButton from "../../../common/comp/NormalButton";
-import TextButton from "../../../common/comp/TextButton";
-import SelectInput from "../../../common/comp/SelectInput";
+import NextButton from "common/comp/PrimaryButton";
+import NormalButton from "common/comp/NormalButton";
+import TextButton from "common/comp/TextButton";
+import SelectInput from "common/comp/SelectInput";
 
-import { IState } from "../../../store/Store";
+import { IState } from "store/Store";
 
 import {
   CUR_SUPPORT_LANGS,
@@ -44,13 +44,13 @@ import {
   DRH_REGION_TYPE_NAME,
   DRH_REGION_NAME,
   GLOBAL_STR,
-} from "../../../assets/config/const";
+} from "assets/config/const";
 import {
   ECR_SOURCE_TYPE,
   ECREnumSourceType,
   EnumDockerImageType,
   DOCKER_IMAGE_TYPE,
-} from "../../../assets/types/index";
+} from "assets/types/index";
 
 import "../Creation.scss";
 
@@ -295,7 +295,14 @@ const StepTwoECR: React.FC = () => {
     }
   }, [history, tmpTaskInfo]);
 
-  const { register, handleSubmit, errors } = useForm({
+  // const { register, handleSubmit, {errors} } = useForm({
+  //   resolver: yupResolver(schema),
+  // });
+  const {
+    // register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(schema),
   });
 
@@ -433,7 +440,7 @@ const StepTwoECR: React.FC = () => {
                           <input
                             name="srcRegion"
                             defaultValue={srcRegion}
-                            ref={register}
+                            // ref={register}
                             className="hidden"
                             type="text"
                           />
@@ -520,7 +527,7 @@ const StepTwoECR: React.FC = () => {
                             onChange={(event: any) => {
                               setSrcAccountId(event.target.value);
                             }}
-                            ref={register}
+                            // ref={register}
                             className="option-input"
                             placeholder={t(
                               "creation.step2ECR.settings.source.accountIdPlaceholder"
@@ -558,7 +565,7 @@ const StepTwoECR: React.FC = () => {
                           <input
                             name="srcCredential"
                             defaultValue={srcCredential}
-                            ref={register}
+                            // ref={register}
                             className="hidden"
                             type="text"
                           />
@@ -659,7 +666,7 @@ const StepTwoECR: React.FC = () => {
                           <div>
                             <textarea
                               className="option-textarea"
-                              ref={register}
+                              // ref={register}
                               name="srcImageList"
                               value={srcImageList}
                               onChange={changeSrcImageList}
@@ -696,7 +703,7 @@ const StepTwoECR: React.FC = () => {
                           <input
                             name="destRegion"
                             defaultValue={destRegion}
-                            ref={register}
+                            // ref={register}
                             className="hidden"
                             type="text"
                           />
@@ -784,7 +791,7 @@ const StepTwoECR: React.FC = () => {
                             onChange={(event: any) => {
                               setDestAccountId(event.target.value);
                             }}
-                            ref={register}
+                            // ref={register}
                             className="option-input"
                             placeholder={t(
                               "creation.step2ECR.settings.source.accountIdPlaceholder"
@@ -821,7 +828,7 @@ const StepTwoECR: React.FC = () => {
                           <input
                             name="destCredential"
                             defaultValue={destCredential}
-                            ref={register}
+                            // ref={register}
                             className="hidden"
                             type="text"
                           />
@@ -889,7 +896,7 @@ const StepTwoECR: React.FC = () => {
                             onChange={(event: any) => {
                               setDestPrefix(event.target.value);
                             }}
-                            ref={register}
+                            // ref={register}
                             className="option-input"
                             placeholder="Prefix"
                             type="text"
@@ -918,7 +925,7 @@ const StepTwoECR: React.FC = () => {
                           <input
                             defaultValue={tmpTaskInfo.description}
                             name="description"
-                            ref={register({ required: true })}
+                            // ref={register({ required: true })}
                             className="option-input"
                             placeholder={t(
                               "creation.step2ECR.settings.more.description"
@@ -942,7 +949,7 @@ const StepTwoECR: React.FC = () => {
                               tmpTaskInfo.parametersObj.alarmEmail
                             }
                             name="alarmEmail"
-                            ref={register({ required: true })}
+                            // ref={register({ required: true })}
                             className="option-input"
                             placeholder="abc@example.com"
                             type="text"

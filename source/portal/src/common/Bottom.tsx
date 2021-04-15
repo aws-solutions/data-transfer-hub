@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./Bottom.scss";
-import LanguageIcon from '@material-ui/icons/Language';
-import FeedbackIcon from '@material-ui/icons/Feedback';
+import LanguageIcon from "@material-ui/icons/Language";
+import FeedbackIcon from "@material-ui/icons/Feedback";
 
 import { URL_FEEDBACK } from "../assets/config/const";
+
+const EN_LANGUAGE_LIST = ["en", "en_US", "en_GB"];
+const ZH_LANGUAGE_LIST = ["zh", "zh_CN"];
 
 const langList = [
   {
@@ -13,7 +16,7 @@ const langList = [
     name: "English",
   },
   {
-    id: "zh-CN",
+    id: "zh",
     name: "中文(简体)",
   },
 ];
@@ -30,6 +33,12 @@ const getCurrentLangObj = (id: string) => {
 
 const Bottom: React.FC = () => {
   const { t, i18n } = useTranslation();
+  if (EN_LANGUAGE_LIST.indexOf(i18n.language) >= 0) {
+    i18n.language = "en";
+  }
+  if (ZH_LANGUAGE_LIST.indexOf(i18n.language) >= 0) {
+    i18n.language = "zh";
+  }
   const initLang = getCurrentLangObj(i18n.language);
   const [currentLang, setCurrentLang] = useState(initLang);
 
@@ -47,9 +56,9 @@ const Bottom: React.FC = () => {
   return (
     <div className="page-bottom">
       <a rel="noopener noreferrer" href={URL_FEEDBACK} target="_blank">
-      <div className="item feedback">
-        <FeedbackIcon className="bottom-icon" fontSize="small" />
-        {t("bottom.feedback")}
+        <div className="item feedback">
+          <FeedbackIcon className="bottom-icon" fontSize="small" />
+          {t("bottom.feedback")}
         </div>
       </a>
       <div className="item language">
@@ -73,7 +82,7 @@ const Bottom: React.FC = () => {
           ""
         )}
         <span onClick={toggleShowLang}>
-          <LanguageIcon  className="bottom-icon" fontSize="small" />{" "}
+          <LanguageIcon className="bottom-icon" fontSize="small" />{" "}
           <span>{currentLang.name}</span>
         </span>
       </div>
