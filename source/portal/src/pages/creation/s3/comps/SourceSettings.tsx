@@ -206,7 +206,11 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               optionTitle={t("creation.step2.sourceType")}
               optionDesc={t("creation.step2.selectSourceType")}
               selectValue={sourceType}
-              optionList={SOURCE_TYPE_OPTIONS}
+              optionList={
+                engineType === S3_ENGINE_TYPE.EC2
+                  ? SOURCE_TYPE_OPTIONS.slice(0, 4)
+                  : SOURCE_TYPE_OPTIONS
+              }
             />
           </div>
           <div className="form-items" ref={srcBucketRef}>
@@ -297,7 +301,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
             />
           </div>
 
-          <div className={s3EventClass}>
+          <div className="form-items">
             {engineType === S3_ENGINE_TYPE.EC2 && (
               <DrhSelect
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
