@@ -26,3 +26,5 @@ regional-s3-assets
 # Parcel build directories
 .cache
 .build
+
+Config

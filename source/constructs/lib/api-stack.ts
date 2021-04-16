@@ -84,7 +84,7 @@ export class ApiStack extends Construct {
     const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
         bundling: {
-          image: lambda.Runtime.NODEJS_12_X.bundlingDockerImage,
+          image: lambda.Runtime.NODEJS_12_X.bundlingImage,
           command: [
             'bash', '-c', [
               `cd /asset-output/`,

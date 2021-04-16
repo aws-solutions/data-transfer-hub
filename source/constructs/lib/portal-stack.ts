@@ -61,50 +61,23 @@ export class PortalStack extends cdk.Construct {
         versioned: false,
         websiteIndexDocument: 'index.html',
         websiteErrorDocument: 'index.html',
-        serverAccessLogsBucket: undefined,
-        accessControl: s3.BucketAccessControl.PRIVATE
+        // serverAccessLogsBucket: undefined,
+        encryption: s3.BucketEncryption.S3_MANAGED,
+        accessControl: s3.BucketAccessControl.PRIVATE,
+        enforceSSL: true,
+        removalPolicy: cdk.RemovalPolicy.DESTROY,
+        autoDeleteObjects: true,
       },
       cloudFrontDistributionProps: {
         // viewerCertificate: cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate(siteDomain),
         priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
         enableIpV6: false,
-        loggingConfig: {},
+        // loggingConfig: {},
+        enableLogging: true,  //Enable access logging for the distribution.
       },
-      insertHttpSecurityHeaders: false
+      insertHttpSecurityHeaders: false,
     });
     const websiteBucket = website.s3Bucket as s3.Bucket;
-
-    const cfnWebsiteBucket = websiteBucket.node.defaultChild as s3.CfnBucket
-    addCfnNagSuppressRules(cfnWebsiteBucket, [
-      {
-        id: 'W35',
-        reason: 'authenication required, no need to use enable access logging'
-      }
-    ])
-
-    const cfnWebsiteLoggingBucket = website.s3LoggingBucket?.node.defaultChild as s3.CfnBucket
-    addCfnNagSuppressRules(cfnWebsiteLoggingBucket, [
-      {
-        id: 'W35',
-        reason: 'authenication required, no need to use enable access logging'
-      }
-    ])
-
-    const cfnWebsiteCFLoggingBucket = website.cloudFrontWebDistribution.loggingBucket?.node.defaultChild as s3.CfnBucket
-    addCfnNagSuppressRules(cfnWebsiteCFLoggingBucket, [
-      {
-        id: 'W41',
-        reason: 'No sensitive data, no need to use encryption'
-      },
-      {
-        id: 'W35',
-        reason: 'authenication required, no need to use enable access logging'
-      },
-      {
-        id: 'W51',
-        reason: 'CloudFrontToS3 Construct, no need to set bucket policy'
-      },
-    ])
 
     // CustomResourceRole
     const customResourceRole = new iam.Role(this, 'CustomResourceRole', {
@@ -155,7 +128,7 @@ export class PortalStack extends cdk.Construct {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/'),
         {
           bundling: {
-            image: lambda.Runtime.NODEJS_12_X.bundlingDockerImage,
+            image: lambda.Runtime.NODEJS_12_X.bundlingImage,
             command: [
               'bash', '-c', [
                 `cd /asset-output/`,
