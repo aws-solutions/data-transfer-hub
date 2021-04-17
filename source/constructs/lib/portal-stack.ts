@@ -56,20 +56,21 @@ export class PortalStack extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: PortalStackProps) {
     super(scope, id);
 
-    const website = new CloudFrontToS3(this, 'CloudFrontToS3', {
+    const website = new CloudFrontToS3(this, 'Web', {
       bucketProps: {
         versioned: false,
         encryption: s3.BucketEncryption.S3_MANAGED,
         accessControl: s3.BucketAccessControl.PRIVATE,
         enforceSSL: true,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
-        autoDeleteObjects: true,
+        removalPolicy: cdk.RemovalPolicy.RETAIN,
+        autoDeleteObjects: false,
       },
       cloudFrontDistributionProps: {
         // viewerCertificate: cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate(siteDomain),
         priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
         enableIpV6: false,
         enableLogging: true,  //Enable access logging for the distribution.
+        comment: 'Data Transfer Hub Portal Distribution',
       },
       insertHttpSecurityHeaders: false,
     });

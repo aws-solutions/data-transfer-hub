@@ -70,7 +70,8 @@ export class TaskCluster extends cdk.Construct {
       vpc: vpc
     })
 
-
+    const cfnCluster = cluster.node.defaultChild as ecs.CfnCluster
+    cfnCluster.overrideLogicalId('TaskCluster')
 
     this.clusterName = cluster.clusterName
     this.publicSubnets = vpc.publicSubnets

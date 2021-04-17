@@ -156,7 +156,8 @@ export class ApiStack extends Construct {
           username: false,
           phone: true
         },
-        smsRole: poolSmsRole
+        smsRole: poolSmsRole,
+        removalPolicy: RemovalPolicy.DESTROY,
       })
 
       this.userPool.node.addDependency(poolSmsRole, poolSmsPolicy)
