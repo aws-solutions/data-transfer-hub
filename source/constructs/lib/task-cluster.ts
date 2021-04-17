@@ -66,7 +66,7 @@ export class TaskCluster extends cdk.Construct {
 
     })
 
-    const cluster = new ecs.Cluster(this, 'TaskCluster', {
+    const cluster = new ecs.Cluster(this, 'DTHTaskCluster', {
       vpc: vpc
     })
 

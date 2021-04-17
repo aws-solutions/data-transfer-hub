@@ -79,61 +79,55 @@ export class CloudFormationStateMachine extends cdk.Construct {
       }
     ])
 
-    const createTaskFnPolicy = new iam.Policy(this, 'CreateTaskFnPolicy')
-    createTaskFnPolicy.addStatements(new iam.PolicyStatement({
+    const taskFnPolicy = new iam.Policy(this, 'TaskFnPolicy')
+    taskFnPolicy.addStatements(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: ['*'],
       actions: [
-        '*'
+        "cloudformation:Create*",
+        "cloudformation:Update*",
+        "cloudformation:Delete*",
+        "dynamodb:*",
+        "states:*",
+        "s3:*",
+        "sqs:*",
+        "sns:*",
+        "ec2:*",
+        "autoscaling:*",
+        "ecs:*",
+        "logs:*",
+        "cloudwatch:*",
+        "events:*",
+        "lambda:*",
+        "iam:Get*",
+        "iam:Tag*",
+        "iam:Untag*",
+        "iam:Create*",
+        "iam:Update*",
+        "iam:Delete*",
+        "iam:Put*",
+        "ssm:Get*"
       ]
     }))
 
-    const cfnCreateTaskFnPolicy = createTaskFnPolicy.node.defaultChild as iam.CfnPolicy
-    addCfnNagSuppressRules(cfnCreateTaskFnPolicy, [
+    createTaskCfnFn.role?.attachInlinePolicy(taskFnPolicy)
+    stopTaskCfnFn.role?.attachInlinePolicy(taskFnPolicy)
+
+    const cfnTaskFnPolicy = taskFnPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnTaskFnPolicy, [
       {
         id: 'F4',
-        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all actions is required'
+        reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
       },
       {
-        id: 'F39',
-        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+        id: 'W76',
+        reason: 'This policy needs to be able to start/delete other complex cloudformation stacks'
       },
       {
         id: 'W12',
-        reason: 'Need to be able to start cloudformation stacks of each plugin and therefore all resources is required'
+        reason: 'This policy needs to be able to start/delete other cloudformation stacks of the plugin with unknown resources names'
       }
     ])
-
-    createTaskCfnFn.role?.attachInlinePolicy(createTaskFnPolicy)
-
-
-    // TODO: Test stop policy
-    const stopTaskFnPolicy = new iam.Policy(this, 'StopTaskFnPolicy')
-    stopTaskFnPolicy.addStatements(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      resources: ['*'],
-      actions: [
-        '*'
-      ]
-    }))
-
-    const cfnStopTaskFnPolicy = stopTaskFnPolicy.node.defaultChild as iam.CfnPolicy
-    addCfnNagSuppressRules(cfnStopTaskFnPolicy, [
-      {
-        id: 'F4',
-        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all actions is required'
-      },
-      {
-        id: 'F39',
-        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all resources is required'
-      },
-      {
-        id: 'W12',
-        reason: 'Need to be able to delete cloudformation stacks of each plugin and therefore all resources is required'
-      }
-    ])
-
-    stopTaskCfnFn.role?.attachInlinePolicy(stopTaskFnPolicy)
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
       runtime: lambda.Runtime.NODEJS_12_X,

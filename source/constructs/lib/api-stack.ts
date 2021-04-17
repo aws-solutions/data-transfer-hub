@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws } from '@aws-cdk/core';
+import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws, RemovalPolicy } from '@aws-cdk/core';
 import * as ddb from '@aws-cdk/aws-dynamodb';
 import * as cognito from '@aws-cdk/aws-cognito';
 import * as appsync from '@aws-cdk/aws-appsync';
@@ -21,6 +21,7 @@ import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
 import { AuthType } from './constructs-stack';
 import { addCfnNagSuppressRules } from "./constructs-stack";
+import { TableEncryption } from '@aws-cdk/aws-dynamodb';
 
 
 export interface ApiProps {
@@ -56,7 +57,9 @@ export class ApiStack extends Construct {
       partitionKey: {
         name: 'id',
         type: ddb.AttributeType.STRING
-      }
+      },
+      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: TableEncryption.DEFAULT,
     })
 
     this.taskTable.addGlobalSecondaryIndex({
@@ -73,12 +76,8 @@ export class ApiStack extends Construct {
     addCfnNagSuppressRules(cfnTable, [
       {
         id: 'W74',
-        reason: 'This table is used to store task records for web UI purpose. No sensitve data, therefore no need to use encryption'
+        reason: 'This table is set to use DEFAULT encryption, the key is owned by DDB.'
       },
-      {
-        id: 'W78',
-        reason: 'This table is used to store task records for web UI purpose. No important data, therefore no need to enable backup'
-      }
     ])
 
     const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
@@ -162,10 +161,13 @@ export class ApiStack extends Construct {
 
       this.userPool.node.addDependency(poolSmsRole, poolSmsPolicy)
 
+      const cfnUserPool = this.userPool.node.defaultChild as cognito.CfnUserPool
+      cfnUserPool.overrideLogicalId('DataTransferHubUserPool')
+
       // Create User Pool Client
-      this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolApiClient', {
+      this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
         userPool: this.userPool,
-        userPoolClientName: 'ReplicationHubPortal',
+        userPoolClientName: 'DTHPortal',
         preventUserExistenceErrors: true
       })
 
@@ -187,7 +189,7 @@ export class ApiStack extends Construct {
       this.userPoolDomain = new cognito.UserPoolDomain(this, 'UserPoolDomain', {
         userPool: this.userPool,
         cognitoDomain: {
-          domainPrefix: `drh-portal-${Stack.of(this).account}`
+          domainPrefix: `dth-portal-${Stack.of(this).account}`
         }
       })
 
@@ -209,7 +211,7 @@ export class ApiStack extends Construct {
 
     // Create the GraphQL API Endpoint, enable Cognito User Pool Auth and IAM Auth.
     this.api = new appsync.GraphqlApi(this, 'ApiEndpoint', {
-      name: 'ReplicationHubAPI',
+      name: 'DataTransferHubAPI',
       schema: appsync.Schema.fromAsset(path.join(__dirname, '../../schema/schema.graphql')),
       authorizationConfig: {
         defaultAuthorization: this.authDefaultConfig,
@@ -219,9 +221,9 @@ export class ApiStack extends Construct {
           }
         ]
       },
-      // logConfig: {
-      //   fieldLogLevel: appsync.FieldLogLevel.ALL
-      // },
+      logConfig: {
+        fieldLogLevel: appsync.FieldLogLevel.NONE,
+      },
       xrayEnabled: true
     })
 

@@ -69,7 +69,6 @@ export class PortalStack extends cdk.Construct {
         // viewerCertificate: cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate(siteDomain),
         priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
         enableIpV6: false,
-        // loggingConfig: {},
         enableLogging: true,  //Enable access logging for the distribution.
       },
       insertHttpSecurityHeaders: false,

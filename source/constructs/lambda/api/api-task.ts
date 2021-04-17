@@ -1,6 +1,6 @@
 import * as AWS from "aws-sdk";
 import { Context } from "aws-lambda";
-import {Task, CreateTaskInput, UpdateTaskInput, assert, pprint, CommonTaskProgress, makeid,} from '../common';
+import { Task, CreateTaskInput, UpdateTaskInput, assert, pprint, CommonTaskProgress, makeid, } from '../common';
 import { v4 as uuidv4 } from 'uuid';
 
 type CreateTaskInputArg = {
@@ -31,12 +31,12 @@ interface AppSyncEvent {
 }
 
 /**
- * Create a replication task.
+ * Create a transfer task.
  *
  * @param event Task input parameters. { type: TaskType, parameters: [{ ParameterKey: String, ParameterValue: String }] }
  * @param context
  */
-const handler = async function(event: AppSyncEvent, context?: Context) {
+const handler = async function (event: AppSyncEvent, context?: Context) {
   assert(process.env.PLUGIN_TEMPLATE_S3 !== undefined, 'no environment variable PLUGIN_TEMPLATE_S3 found')
   assert(process.env.AWS_REGION !== undefined, 'NO AWS_REGION')
   pprint('EVENT', event)
@@ -75,7 +75,7 @@ async function updateTaskProgress(taskId: string, progress: CommonTaskProgress) 
     },
     UpdateExpression: 'set progressInfo = :progressInfo',
     ExpressionAttributeValues: {
-      ':progressInfo' : progress
+      ':progressInfo': progress
     },
     ReturnValues: "ALL_NEW"
   }).promise()
@@ -103,12 +103,12 @@ async function stopTask(taskId: string) {
     }
   }).promise()
 
-  assert(taskList.Items && taskList.Items[0], `Cannot the task with id ${taskId}` )
+  assert(taskList.Items && taskList.Items[0], `Cannot the task with id ${taskId}`)
   const task = taskList.Items[0]
 
-  const sfnRes = !isDryRun ?  await sfn.startExecution({
+  const sfnRes = !isDryRun ? await sfn.startExecution({
     stateMachineArn: process.env.STATE_MACHINE_ARN,
-    input: JSON.stringify({...task, action: 'STOP'})  // Add action STOP
+    input: JSON.stringify({ ...task, action: 'STOP' })  // Add action STOP
   }).promise() : {
     executionArn: `dry-run-execution-arn-${makeid(10)}`
   }
@@ -133,7 +133,7 @@ async function stopTask(taskId: string) {
 }
 
 /**
- * Create a replication Task. The return is an Task object.
+ * Create a transfer Task. The return is an Task object.
  * @param input
  */
 async function createTask(input: CreateTaskInput) {
@@ -160,7 +160,7 @@ async function createTask(input: CreateTaskInput) {
   // Start to execute Steps Functions for CloudFormation template provisioning
   const sfnRes = !isDryRun ? await sfn.startExecution({
     stateMachineArn: process.env.STATE_MACHINE_ARN,
-    input: JSON.stringify({...task, action: 'START'}) // Add action START
+    input: JSON.stringify({ ...task, action: 'START' }) // Add action START
   }).promise() : {
     executionArn: `try-run-execution-arn-${makeid(5)}`
   }
