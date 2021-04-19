@@ -60,6 +60,7 @@ export class ApiStack extends Construct {
       },
       removalPolicy: RemovalPolicy.DESTROY,
       encryption: TableEncryption.DEFAULT,
+      pointInTimeRecovery: true,
     })
 
     this.taskTable.addGlobalSecondaryIndex({

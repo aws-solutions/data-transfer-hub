@@ -53,6 +53,12 @@ fs.readdirSync(global_s3_assets).forEach(file => {
             {
               id: 'W58',
               reason: 'False alarm: The Lambda function does have the permission to write CloudWatch Logs.'
+            }, {
+              id: 'W92',
+              reason: 'No concurrencies required for this function'
+            }, {
+              id: 'W89',
+              reason: 'This function does not need to be deployed in a VPC'
             }
           ]
         }
