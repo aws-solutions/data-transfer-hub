@@ -99,13 +99,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
         "cloudwatch:*",
         "events:*",
         "lambda:*",
-        "iam:Get*",
-        "iam:Tag*",
-        "iam:Untag*",
-        "iam:Create*",
-        "iam:Update*",
-        "iam:Delete*",
-        "iam:Put*",
+        "iam:*",
         "ssm:Get*"
       ]
     }))
@@ -118,6 +112,10 @@ export class CloudFormationStateMachine extends cdk.Construct {
       {
         id: 'F4',
         reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+      },
+      {
+        id: 'F39',
+        reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
       },
       {
         id: 'W76',
