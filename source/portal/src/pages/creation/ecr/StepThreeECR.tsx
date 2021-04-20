@@ -89,7 +89,7 @@ const StepThreeECR: React.FC = () => {
     });
     taskParamArr.push({
       ParameterKey: "srcRegion",
-      ParameterValue: parametersObj.srcRegion,
+      ParameterValue: parametersObj.srcRegion || "",
     });
     taskParamArr.push({
       ParameterKey: "srcAccountId",
@@ -108,16 +108,12 @@ const StepThreeECR: React.FC = () => {
       ParameterValue: parametersObj.srcCredential,
     });
     taskParamArr.push({
-      ParameterKey: "destBucket",
-      ParameterValue: parametersObj.destBucketName,
-    });
-    taskParamArr.push({
       ParameterKey: "destAccountId",
       ParameterValue: parametersObj.destAccountId,
     });
     taskParamArr.push({
       ParameterKey: "destRegion",
-      ParameterValue: parametersObj.destRegion,
+      ParameterValue: parametersObj.destRegion || "",
     });
     taskParamArr.push({
       ParameterKey: "destCredential",
@@ -303,7 +299,7 @@ const StepThreeECR: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - 6})</span>
+                    <span>({paramsList.length - 4})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">

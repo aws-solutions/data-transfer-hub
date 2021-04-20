@@ -30,6 +30,8 @@ import {
   YES_NO_LIST,
   IRegionType,
   YES_NO,
+  CUR_SUPPORT_LANGS,
+  emailIsValid,
 } from "assets/config/const";
 import {
   ECR_SOURCE_TYPE,
@@ -54,10 +56,18 @@ const StepTwoECR: React.FC = () => {
   const dispatch = useDispatch();
 
   const { tmpTaskInfo } = useMappedState(mapState);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const [titleStr, setTitleStr] = useState("en_name");
+  const [descStr, setDescStr] = useState("en_desc");
+
   const [sourceType, setSourceType] = useState(
     tmpTaskInfo.parametersObj?.sourceType || ECREnumSourceType.ECR
   );
+
+  const [destRegionRequiredError, setDestRegionRequiredError] = useState(false);
+  const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);
+  const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
 
   const [classSourceRegion, setClassSourceRegion] = useState("form-items");
   const [classIsSourceInAccount, setClassIsSourceAccount] = useState(
@@ -111,6 +121,13 @@ const StepTwoECR: React.FC = () => {
     tmpTaskInfo.parametersObj?.alarmEmail || ""
   );
 
+  useEffect(() => {
+    if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
+      setTitleStr(i18n.language + "_name");
+      setDescStr(i18n.language + "_desc");
+    }
+  }, [i18n.language]);
+
   // Redirect Step One if task type is null
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
@@ -121,6 +138,32 @@ const StepTwoECR: React.FC = () => {
       });
     }
   }, [history, tmpTaskInfo]);
+
+  const validateInput = () => {
+    const paramsObj = tmpTaskInfo.parametersObj;
+    // Source Bucket Not Can Be Empty
+    let errorCount = 0;
+
+    // Check Destination Region
+    if (!paramsObj.destRegion) {
+      errorCount++;
+      setDestRegionRequiredError(true);
+    }
+    // Alarm Email Not Can Be Empty
+    if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
+      errorCount++;
+      setAlramEmailRequireError(true);
+    } else if (!emailIsValid(paramsObj.alarmEmail)) {
+      // Alarm Email Not valid
+      errorCount++;
+      setAlarmEmailFormatError(true);
+    }
+
+    if (errorCount > 0) {
+      return false;
+    }
+    return true;
+  };
 
   // Monitor Page Item Change
   useEffect(() => {
@@ -189,10 +232,12 @@ const StepTwoECR: React.FC = () => {
 
   const goToStepThree = () => {
     console.info("tmpTaskInfo:", tmpTaskInfo);
-    const toPath = "/create/step3/ECR";
-    history.push({
-      pathname: toPath,
-    });
+    if (validateInput()) {
+      const toPath = "/create/step3/ECR";
+      history.push({
+        pathname: toPath,
+      });
+    }
   };
 
   const updateTmpTaskInfo = (key: string, value: any) => {
@@ -347,10 +392,9 @@ const StepTwoECR: React.FC = () => {
                                   name="option-type"
                                   type="radio"
                                 />
-                                {/* {item[titleStr]} */}
-                                {item.en_name}
+                                {item[titleStr]}
                               </div>
-                              <div className="desc">{item.en_desc}</div>
+                              <div className="desc">{item[descStr]}</div>
                             </label>
                           </div>
                         );
@@ -418,7 +462,6 @@ const StepTwoECR: React.FC = () => {
                           ) => {
                             setSrcAccountId(event.target.value);
                           }}
-                          isOptional={true}
                           inputName="srcAccountId"
                           inputValue={srcAccountId}
                           placeholder={t(
@@ -429,6 +472,7 @@ const StepTwoECR: React.FC = () => {
 
                       <div className={classSrcCredential}>
                         <DrhCredential
+                          hideBucket={true}
                           credentialValue={srcCredential}
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
@@ -466,9 +510,9 @@ const StepTwoECR: React.FC = () => {
                                       name="option-type"
                                       type="radio"
                                     />
-                                    {item.en_name}
+                                    {item[titleStr]}
                                   </div>
-                                  <div className="desc">{item.en_desc}</div>
+                                  <div className="desc">{item[descStr]}</div>
                                 </label>
                               </div>
                             );
@@ -521,10 +565,15 @@ const StepTwoECR: React.FC = () => {
                           optionDesc={t(
                             "creation.step2ECR.settings.dest.destinationRegionDesc"
                           )}
+                          showRequiredError={destRegionRequiredError}
+                          requiredErrorMsg={t(
+                            "creation.step2ECR.settings.dest.regionRequired"
+                          )}
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>,
                             data: IRegionType
                           ) => {
+                            setDestRegionRequiredError(false);
                             setDestRegionObj(data);
                           }}
                         />
@@ -573,6 +622,7 @@ const StepTwoECR: React.FC = () => {
 
                       <div className={classDestCredential}>
                         <DrhCredential
+                          hideBucket={true}
                           credentialValue={destCredential}
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
@@ -627,7 +677,9 @@ const StepTwoECR: React.FC = () => {
                           isOptional={true}
                           inputName="description"
                           inputValue={description}
-                          placeholder="description"
+                          placeholder={t(
+                            "creation.step2ECR.settings.more.description"
+                          )}
                         />
                       </div>
 
@@ -642,12 +694,18 @@ const StepTwoECR: React.FC = () => {
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
+                            setAlramEmailRequireError(false);
+                            setAlarmEmailFormatError(false);
                             setAlarmEmail(event.target.value);
                           }}
                           isOptional={true}
                           inputName="alarmEmail"
                           inputValue={alarmEmail}
-                          placeholder="alarmEmail"
+                          placeholder="abc@example.com"
+                          showRequiredError={alramEmailRequireError}
+                          requiredErrorMsg={t("tips.error.emailRequired")}
+                          showFormatError={alarmEmailFormatError}
+                          formatErrorMsg={t("tips.error.emailValidate")}
                         />
                       </div>
                     </div>

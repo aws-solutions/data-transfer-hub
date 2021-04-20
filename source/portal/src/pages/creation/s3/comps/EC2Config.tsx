@@ -115,6 +115,7 @@ const OptionSettings: React.FC = () => {
           <div className="option-content">
             <div className="form-items">
               <DrhInput
+                inputType="number"
                 optionTitle={t(
                   "creation.step2.settings.advance.maximumCapacity"
                 )}
@@ -132,6 +133,7 @@ const OptionSettings: React.FC = () => {
 
             <div className="form-items">
               <DrhInput
+                inputType="number"
                 optionTitle={t(
                   "creation.step2.settings.advance.minimumCapacity"
                 )}
@@ -149,6 +151,7 @@ const OptionSettings: React.FC = () => {
 
             <div className="form-items">
               <DrhInput
+                inputType="number"
                 optionTitle={t(
                   "creation.step2.settings.advance.desiredCapacity"
                 )}
@@ -190,6 +193,7 @@ const OptionSettings: React.FC = () => {
                 <div>
                   <div className="form-items">
                     <DrhInput
+                      inputType="number"
                       optionTitle={t(
                         "creation.step2.settings.advance.finderDepth"
                       )}
@@ -209,6 +213,7 @@ const OptionSettings: React.FC = () => {
 
                   <div className="form-items">
                     <DrhInput
+                      inputType="number"
                       optionTitle={t(
                         "creation.step2.settings.advance.finderNumber"
                       )}
@@ -228,6 +233,7 @@ const OptionSettings: React.FC = () => {
 
                   <div className="form-items">
                     <DrhInput
+                      inputType="number"
                       optionTitle={t(
                         "creation.step2.settings.advance.workerThreadsNumber"
                       )}

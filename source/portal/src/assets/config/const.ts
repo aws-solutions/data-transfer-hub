@@ -149,27 +149,27 @@ export const S3_PARAMS_LIST_MAP: any = {
   },
   finderDepth: {
     en_name: "Finder Depth",
-    zh_name: "Finder Depth",
+    zh_name: "查找器深度",
   },
   finderNumber: {
     en_name: "Finder Number",
-    zh_name: "Finder Number",
+    zh_name: "查找器数量",
   },
   workerNumber: {
     en_name: "Worker Number",
-    zh_name: "Worker Number",
+    zh_name: "工作线程数",
   },
   maxCapacity: {
     en_name: "Max Capacity",
-    zh_name: "Max Capacity",
+    zh_name: "最大容量",
   },
   minCapacity: {
     en_name: "Min Capacity",
-    zh_name: "Min Capacity",
+    zh_name: "最小容量",
   },
   desiredCapacity: {
     en_name: "Desired Capacity",
-    zh_name: "Desired Capacity",
+    zh_name: "所需容量",
   },
   lambdaMemory: {
     en_name: "Lambda Memory",
@@ -241,6 +241,10 @@ export const ECR_PARAMS_LIST_MAP: any = {
   destCredential: {
     en_name: "Destination Credential Parameter Name",
     zh_name: "目的仓库凭证参数名称",
+  },
+  alarmEmail: {
+    en_name: "Alarm Email",
+    zh_name: "通知邮箱",
   },
 };
 

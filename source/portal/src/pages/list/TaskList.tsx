@@ -196,7 +196,8 @@ const List: React.FC = () => {
 
   useEffect(() => {
     getTaskList(null, "next");
-  }, []);
+    dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
+  }, [dispatch]);
 
   // Hide Create Flag in 3 seconds
   useEffect(() => {
@@ -233,6 +234,7 @@ const List: React.FC = () => {
     const openIdHeader = {
       Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
     };
+    setIsStopLoading(true);
     try {
       const stopResData: any = await API.graphql(
         {
@@ -437,6 +439,10 @@ const List: React.FC = () => {
     if (curSelectTask.type === EnumTaskType.ECR) {
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
         curSelectTask.parameters.forEach((element: any) => {
+          // Set All Properties
+          tmpTaskInfo.parametersObj[element.ParameterKey] =
+            element.ParameterValue;
+
           if (element.ParameterKey === "srcAccountId") {
             if (element.ParameterValue === "") {
               tmpTaskInfo.parametersObj.sourceInAccount = YES_NO.YES;
@@ -456,7 +462,7 @@ const List: React.FC = () => {
               (ele) => ele.value === element.ParameterValue
             )?.name;
             if (srcRegionName) {
-              tmpTaskInfo.parametersObj.srcRegionDefault = {
+              tmpTaskInfo.parametersObj.srcRegionObj = {
                 name: srcRegionName,
                 value: element.ParameterValue,
               };
@@ -467,14 +473,15 @@ const List: React.FC = () => {
               (ele) => ele.value === element.ParameterValue
             )?.name;
             if (destRegionName) {
-              tmpTaskInfo.parametersObj.destRegionDefault = {
+              tmpTaskInfo.parametersObj.destRegionObj = {
                 name: destRegionName,
                 value: element.ParameterValue,
               };
             }
           }
-          tmpTaskInfo.parametersObj[element.ParameterKey] =
-            element.ParameterValue;
+          // Set Description
+          tmpTaskInfo.parametersObj.description =
+            tmpTaskInfo?.description || "";
         });
       }
     }

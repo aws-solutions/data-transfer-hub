@@ -46,6 +46,9 @@ const StepOne: React.FC = (props: any) => {
     if (editionType === S3_ENGINE_TYPE.LAMBDA) {
       tmpTaskType = EnumTaskType.S3;
     }
+    if (taskType === EnumTaskType.ECR) {
+      tmpTaskType = EnumTaskType.ECR;
+    }
     dispatch({
       type: ACTION_TYPE.UPDATE_TASK_INFO,
       taskInfo: { type: tmpTaskType },

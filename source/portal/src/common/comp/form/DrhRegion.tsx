@@ -31,6 +31,8 @@ const DrhRegion: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
     onChange,
   } = props;
 
+  console.info("showRequiredError:", showRequiredError);
+
   return (
     <>
       <div className="title">{optionTitle}</div>

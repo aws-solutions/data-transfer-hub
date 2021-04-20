@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 type DrhInputProps = {
+  inputType?: string;
   isHidden?: boolean;
   optionTitle: string;
   optionDesc: string;
@@ -23,6 +24,7 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
   const { t } = useTranslation();
 
   const {
+    inputType,
     optionTitle,
     optionDesc,
     isOptional,
@@ -51,12 +53,14 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
       <div>
         <input
           defaultValue={defaultValue}
+          min={inputType === "number" ? 0 : undefined}
           value={inputValue}
           name={inputName}
+          onWheel={(event) => event.currentTarget.blur()}
           onChange={(event) => onChange(event)}
           className={className + " option-input"}
           placeholder={placeholder}
-          type="text"
+          type={inputType ? inputType : "text"}
         />
         <div className="error">
           {showRequiredError && <span>{requiredErrorMsg}</span>}

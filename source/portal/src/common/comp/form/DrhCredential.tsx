@@ -24,11 +24,12 @@ import {
   OPEN_ID_TYPE,
 } from "assets/config/const";
 
-type SelectMenuProp = {
+interface SelectMenuProp {
+  hideBucket?: boolean;
   credentialValue: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
-};
+}
 
 const curRegionType: string =
   localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
@@ -36,7 +37,7 @@ const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
 
 const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const { t } = useTranslation();
-  const { credentialValue, onChange } = props;
+  const { credentialValue, hideBucket, onChange } = props;
   const [ssmParamList, setSSMParamList] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
 
@@ -84,7 +85,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
         >
           {t("creation.tips.store2")}
         </a>{" "}
-        {t("creation.tips.store3")}
+        {!hideBucket && t("creation.tips.store3")}
       </div>
       <div>
         <Select
