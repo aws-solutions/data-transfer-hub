@@ -68,7 +68,7 @@ export class PortalStack extends cdk.Construct {
       cloudFrontDistributionProps: {
         // viewerCertificate: cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate(siteDomain),
         priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
-        enableIpV6: false,
+        enableIpv6: false,
         enableLogging: true,  //Enable access logging for the distribution.
         comment: 'Data Transfer Hub Portal Distribution',
       },

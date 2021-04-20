@@ -60,6 +60,7 @@ export class ApiStack extends Construct {
       },
       removalPolicy: RemovalPolicy.DESTROY,
       encryption: TableEncryption.DEFAULT,
+      pointInTimeRecovery: true,
     })
 
     this.taskTable.addGlobalSecondaryIndex({
@@ -164,6 +165,9 @@ export class ApiStack extends Construct {
 
       const cfnUserPool = this.userPool.node.defaultChild as cognito.CfnUserPool
       cfnUserPool.overrideLogicalId('DataTransferHubUserPool')
+      cfnUserPool.userPoolAddOns = {
+        advancedSecurityMode: 'ENFORCED'
+      }
 
       // Create User Pool Client
       this.userPoolApiClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
@@ -223,7 +227,7 @@ export class ApiStack extends Construct {
         ]
       },
       logConfig: {
-        fieldLogLevel: appsync.FieldLogLevel.NONE,
+        fieldLogLevel: appsync.FieldLogLevel.ERROR,
       },
       xrayEnabled: true
     })
