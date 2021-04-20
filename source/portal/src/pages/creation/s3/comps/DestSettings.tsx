@@ -27,15 +27,27 @@ const mapState = (state: IState) => ({
 interface DestPropType {
   engineType: string;
   destShowBucketRequiredError: boolean;
+  destShowBucketValidError: boolean;
+  destShowRegionRequiredError: boolean;
+  changeDestBucket: any;
+  changeDestRegion: any;
 }
 
 const DestSettings: React.FC<DestPropType> = (props) => {
   const { t } = useTranslation();
   const { tmpTaskInfo } = useMappedState(mapState);
   const dispatch = useDispatch();
-  const { engineType, destShowBucketRequiredError } = props;
+  const {
+    engineType,
+    destShowBucketRequiredError,
+    destShowBucketValidError,
+    changeDestBucket,
+    destShowRegionRequiredError,
+    changeDestRegion,
+  } = props;
   // Refs
   const destBucketRef = useRef<any>(null);
+  const destRegionRef = useRef<any>(null);
 
   const destInAccountClass = "form-items";
 
@@ -43,9 +55,12 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [showDestRegion, setShowDestRegion] = useState(false);
   const [showDestInAccount, setShowDestInAccount] = useState(true);
 
-  const [destInAccount, setDestInAccount] = useState<string>(YES_NO.NO);
+  const [destInAccount, setDestInAccount] = useState<string>(YES_NO.YES);
 
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
+  const [destBucketFormatError, setDestBucketFormatError] = useState(false);
+  const [destRegionReqiredError, setDestRegionReqiredError] = useState(false);
+
   const [destBucketName, setDestBucketName] = useState(
     tmpTaskInfo.parametersObj?.destBucketName || ""
   );
@@ -71,11 +86,27 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   // Show Error
   useEffect(() => {
     console.info("destShowBucketRequiredError:", destShowBucketRequiredError);
-    setDestBucketRequiredError(destShowBucketRequiredError);
     if (destShowBucketRequiredError) {
+      setDestBucketRequiredError(destShowBucketRequiredError);
+    }
+    if (destShowBucketValidError) {
+      setDestBucketFormatError(destShowBucketValidError);
+    }
+    if (destShowBucketRequiredError || destShowBucketValidError) {
       destBucketRef?.current?.scrollIntoView();
     }
-  }, [destShowBucketRequiredError]);
+  }, [destShowBucketRequiredError, destShowBucketValidError]);
+
+  // Show destRegionRequiredError
+  useEffect(() => {
+    console.info("destRegionRequiredError:", destShowRegionRequiredError);
+    if (destShowRegionRequiredError) {
+      setDestRegionReqiredError(destShowRegionRequiredError);
+    }
+    if (destShowRegionRequiredError) {
+      destBucketRef?.current?.scrollIntoView();
+    }
+  }, [destShowRegionRequiredError]);
 
   useEffect(() => {
     updateTmpTaskInfo("destInAccount", destInAccount);
@@ -85,6 +116,10 @@ const DestSettings: React.FC<DestPropType> = (props) => {
     } else {
       setShowDestCredential(false);
       setShowDestRegion(false);
+    }
+    if (engineType === S3_ENGINE_TYPE.EC2) {
+      // If engine type is EC2 always show region
+      setShowDestRegion(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destInAccount]);
@@ -138,21 +173,30 @@ const DestSettings: React.FC<DestPropType> = (props) => {
       // engine type is lambda
       // show dest credential and dest region when src in account is true, else hide
       if (srcInAccount) {
+        setShowDestInAccount(false);
         setShowDestCredential(true);
         setShowDestRegion(true);
       } else {
+        // Set Destination is Not In Account
+        setDestInAccount(YES_NO.NO);
+        // Show Dest In Account Option, Credential and Region
+        setShowDestInAccount(true);
         setShowDestCredential(false);
         setShowDestRegion(false);
       }
     }
     if (engineType === S3_ENGINE_TYPE.EC2) {
-      // engine type is lambda
+      // engine type is EC2
       // show dest credential and dest region when src in account is true, else hide
       if (srcInAccount) {
         setShowDestInAccount(false);
+        // Set Destination is Not In Account
+        setDestInAccount(YES_NO.NO);
       } else {
         setShowDestInAccount(true);
       }
+      // Set Dest Region Show
+      setShowDestRegion(true);
     }
   }, [engineType, tmpTaskInfo?.parametersObj?.sourceInAccount]);
 
@@ -169,6 +213,8 @@ const DestSettings: React.FC<DestPropType> = (props) => {
               optionDesc={t("creation.step2.settings.dest.bucketDesc")}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setDestBucketRequiredError(false);
+                setDestBucketFormatError(false);
+                changeDestBucket();
                 setDestBucketName(event.target.value);
               }}
               inputName="destBucketName"
@@ -176,6 +222,8 @@ const DestSettings: React.FC<DestPropType> = (props) => {
               placeholder={t("creation.step2.settings.dest.bucketName")}
               showRequiredError={destBucketRequiredError}
               requiredErrorMsg={t("tips.error.destBucketRequired")}
+              showFormatError={destBucketFormatError}
+              formatErrorMsg={t("tips.error.destBucketNameInvalid")}
             />
           </div>
 
@@ -231,7 +279,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
           )}
 
           {showDestRegion && (
-            <div className="form-items">
+            <div className="form-items" ref={destRegionRef}>
               <DrhRegion
                 regionValue={destRegionObj}
                 optionList={AWS_REGION_LIST}
@@ -239,10 +287,14 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                 optionDesc={t(
                   "creation.step2.settings.dest.destRegionNameDesc"
                 )}
+                showRequiredError={destRegionReqiredError}
+                requiredErrorMsg={t("tips.error.destRegionRequired")}
                 onChange={(
                   event: React.ChangeEvent<HTMLInputElement>,
                   data: IRegionType
                 ) => {
+                  changeDestRegion();
+                  setDestRegionReqiredError(false);
                   setDestRegionObj(data);
                 }}
               />

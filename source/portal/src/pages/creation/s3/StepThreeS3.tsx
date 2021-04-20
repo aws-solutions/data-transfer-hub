@@ -29,7 +29,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
   S3_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
-  // CREATE_USE_LESS_PROPERTY,
+  CREATE_USE_LESS_PROPERTY,
   DRH_API_HEADER,
   AUTH_TYPE_NAME,
   OPEN_ID_TYPE,
@@ -298,6 +298,13 @@ const StepThreeS3: React.FC = () => {
           ParameterKey: key,
           ParameterValue: clusterData[key],
         });
+      }
+    }
+
+    // Remove uesless property when clone task
+    for (const key in createTaskInfo) {
+      if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
+        delete createTaskInfo[key];
       }
     }
 

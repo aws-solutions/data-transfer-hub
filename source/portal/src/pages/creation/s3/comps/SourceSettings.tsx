@@ -34,10 +34,21 @@ const mapState = (state: IState) => ({
 interface SourcePropType {
   engineType: string;
   srcShowBucketRequiredError: boolean;
+  srcShowBucketValidError: boolean;
+  srcRegionRequiredError: boolean;
+  changeSrcBucket: any;
+  changeSrcRegion: any;
 }
 
 const SourceSettings: React.FC<SourcePropType> = (props) => {
-  const { engineType, srcShowBucketRequiredError } = props;
+  const {
+    engineType,
+    srcShowBucketRequiredError,
+    srcShowBucketValidError,
+    srcRegionRequiredError,
+    changeSrcBucket,
+    changeSrcRegion,
+  } = props;
   console.info("engineType:", engineType);
   const { t } = useTranslation();
   const { tmpTaskInfo } = useMappedState(mapState);
@@ -46,6 +57,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
 
   // Refs
   const srcBucketRef = useRef<any>(null);
+  const srcRegionRef = useRef<any>(null);
 
   const [sourceType, setSourceType] = useState<string>(
     tmpTaskInfo.parametersObj?.sourceType || EnumSourceType.S3
@@ -82,6 +94,8 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   );
 
   const [srcBucketRequiredError, setSrcBucketRequiredError] = useState(false);
+  const [srcBucketFormatError, setSrcBucketFormatError] = useState(false);
+  const [srcRegionReqired, setSrcRegionReqired] = useState(false);
   const [srcBucketPrefix, setSrcBucketPrefix] = useState(
     tmpTaskInfo.parametersObj?.srcBucketPrefix || ""
   );
@@ -119,12 +133,23 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
 
   // Show Error
   useEffect(() => {
-    console.info("srcShowBucketRequiredError:", srcShowBucketRequiredError);
-    setSrcBucketRequiredError(srcShowBucketRequiredError);
     if (srcShowBucketRequiredError) {
+      setSrcBucketRequiredError(srcShowBucketRequiredError);
+    }
+    if (srcShowBucketValidError) {
+      setSrcBucketFormatError(srcShowBucketValidError);
+    }
+    if (srcShowBucketRequiredError || srcShowBucketValidError) {
       srcBucketRef?.current?.scrollIntoView();
     }
-  }, [srcShowBucketRequiredError]);
+  }, [srcShowBucketRequiredError, srcShowBucketValidError]);
+
+  useEffect(() => {
+    if (srcRegionRequiredError) {
+      setSrcRegionReqired(srcRegionRequiredError);
+      srcRegionRef?.current?.scrollIntoView();
+    }
+  }, [srcRegionRequiredError]);
 
   // Monitor the sourceInAccount Change
   useEffect(() => {
@@ -139,6 +164,10 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       if (sourceType !== EnumSourceType.GoogleGCS) {
         setShowSrcRegion(true);
       }
+    }
+    if (engineType === S3_ENGINE_TYPE.EC2) {
+      // If engine type is EC2 always show region
+      setShowSrcRegion(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceInAccount]);
@@ -218,7 +247,9 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               optionTitle={t("creation.step2.settings.source.bucketName")}
               optionDesc={t("creation.step2.settings.source.bucketDesc")}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                changeSrcBucket();
                 setSrcBucketRequiredError(false);
+                setSrcBucketFormatError(false);
                 setSrcBucketName(event.target.value);
               }}
               inputName="srcBucketName"
@@ -226,6 +257,8 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               placeholder={t("creation.step2.settings.source.bucketName")}
               showRequiredError={srcBucketRequiredError}
               requiredErrorMsg={t("tips.error.sourceBucketRequired")}
+              showFormatError={srcBucketFormatError}
+              formatErrorMsg={t("tips.error.sourceBucketNameInvalid")}
             />
           </div>
 
@@ -267,7 +300,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
           )}
 
           {showSrcRegion && (
-            <div className="form-items">
+            <div className="form-items" ref={srcRegionRef}>
               <DrhRegion
                 regionValue={srcRegionObj}
                 optionList={regionList}
@@ -275,11 +308,15 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 optionDesc={t(
                   "creation.step2.settings.source.srcRegionNameDesc"
                 )}
+                showRequiredError={srcRegionReqired}
+                requiredErrorMsg={t("tips.error.srcRegionRequired")}
                 onChange={(
                   event: React.ChangeEvent<HTMLInputElement>,
                   data: IRegionType
                 ) => {
+                  setSrcRegionReqired(false);
                   setSrcRegionObj(data);
+                  changeSrcRegion();
                 }}
               />
             </div>

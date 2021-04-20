@@ -24,7 +24,7 @@ import LambdaConfig from "./comps/LambdaConfig";
 import EC2Config from "./comps/EC2Config";
 import OptionSettings from "./comps/MoreSettings";
 
-import { emailIsValid } from "assets/config/const";
+import { bucketNameIsValid, emailIsValid } from "assets/config/const";
 
 import "../Creation.scss";
 
@@ -42,7 +42,11 @@ const StepTwoS3: React.FC = () => {
   const history = useHistory();
 
   const [srcBucketRequiredError, setSrcBucketRequiredError] = useState(false);
+  const [srcBucketFormatError, setSrcBucketFormatError] = useState(false);
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
+  const [destBucketFormatError, setDestBucketFormatError] = useState(false);
+  const [srcRegionRequiredError, setSrcRegionRequiredError] = useState(false);
+  const [destRegionRequiredError, setDestRegionRequiredError] = useState(false);
   const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);
   const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
 
@@ -64,11 +68,17 @@ const StepTwoS3: React.FC = () => {
     if (!paramsObj.srcBucketName || paramsObj.srcBucketName.trim() === "") {
       errorCount++;
       setSrcBucketRequiredError(true);
+    } else if (!bucketNameIsValid(paramsObj.srcBucketName)) {
+      errorCount++;
+      setSrcBucketFormatError(true);
     }
     // Dest Bucket Not Can Be Empty
     if (!paramsObj.destBucketName || paramsObj.destBucketName.trim() === "") {
       errorCount++;
       setDestBucketRequiredError(true);
+    } else if (!bucketNameIsValid(paramsObj.destBucketName)) {
+      errorCount++;
+      setDestBucketFormatError(true);
     }
     // Alarm Email Not Can Be Empty
     if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
@@ -79,6 +89,21 @@ const StepTwoS3: React.FC = () => {
       errorCount++;
       setAlarmEmailFormatError(true);
     }
+
+    // If Engine is EC2, check source region and destination region required
+    if (engine === S3_ENGINE_TYPE.EC2) {
+      // Check Source Region
+      if (!paramsObj.srcRegionName) {
+        errorCount++;
+        setSrcRegionRequiredError(true);
+      }
+      // Check Destination Region
+      if (!paramsObj.destRegionName) {
+        errorCount++;
+        setDestRegionRequiredError(true);
+      }
+    }
+
     if (errorCount > 0) {
       return false;
     }
@@ -140,16 +165,38 @@ const StepTwoS3: React.FC = () => {
               <SourceSettings
                 engineType={engine}
                 srcShowBucketRequiredError={srcBucketRequiredError}
+                srcShowBucketValidError={srcBucketFormatError}
+                srcRegionRequiredError={srcRegionRequiredError}
+                changeSrcBucket={() => {
+                  setSrcBucketRequiredError(false);
+                  setSrcBucketFormatError(false);
+                }}
+                changeSrcRegion={() => {
+                  setSrcRegionRequiredError(false);
+                }}
               />
               <DestSettings
                 engineType={engine}
                 destShowBucketRequiredError={destBucketRequiredError}
+                destShowBucketValidError={destBucketFormatError}
+                destShowRegionRequiredError={destRegionRequiredError}
+                changeDestBucket={() => {
+                  setDestBucketRequiredError(false);
+                  setDestBucketFormatError(false);
+                }}
+                changeDestRegion={() => {
+                  setDestRegionRequiredError(false);
+                }}
               />
               {engine === S3_ENGINE_TYPE.LAMBDA && <LambdaConfig />}
               {engine === S3_ENGINE_TYPE.EC2 && <EC2Config />}
               <OptionSettings
                 showAlramEmailRequireError={alramEmailRequireError}
                 showAlarmEmailFormatError={alarmEmailFormatError}
+                changeAlarmEmail={() => {
+                  setAlramEmailRequireError(false);
+                  setAlarmEmailFormatError(false);
+                }}
               />
               <div className="buttons">
                 <TextButton onClick={goToHomePage}>

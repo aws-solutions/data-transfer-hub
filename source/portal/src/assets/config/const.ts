@@ -466,3 +466,32 @@ export const emailIsValid = (email: string): boolean => {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
+
+export const bucketNameIsValid = (bucketName: string): boolean => {
+  // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const REG1 = bucketName && /^[a-z\d.-]*$/.test(bucketName);
+  const REG2 = bucketName && /^[a-z\d]/.test(bucketName);
+  const REG3 = bucketName && !/-$/.test(bucketName);
+  const REG4 = bucketName && !/\.+\./.test(bucketName);
+  const REG5 = bucketName && !/-+\.$/.test(bucketName);
+  const REG6 =
+    bucketName &&
+    !/^(?:(?:^|\.)(?:2(?:5[0-5]|[0-4]\d)|1?\d?\d)){4}$/.test(bucketName);
+  const REG7 = bucketName && bucketName.length >= 3 && bucketName.length <= 63;
+
+  console.info(
+    "REG1 && REG2 && REG3 && REG4 && REG5 && REG6 && REG7:",
+    REG1,
+    REG2,
+    REG3,
+    REG4,
+    REG5,
+    REG6,
+    REG7
+  );
+
+  if (REG1 && REG2 && REG3 && REG4 && REG5 && REG6 && REG7) {
+    return true;
+  }
+  return false;
+};

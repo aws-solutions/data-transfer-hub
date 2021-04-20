@@ -42,20 +42,6 @@ const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
-const ParamShowIndexMap: any = {
-  sourceType: 1,
-  srcRegion: 2,
-  sourceInAccount: 3,
-  srcAccountId: 4,
-  srcCredential: 5,
-  srcList: 6,
-  srcImageList: 7,
-  destRegion: 8,
-  destInAccount: 9,
-  destAccountId: 10,
-  destCredential: 11,
-};
-
 const JOB_TYPE_MAP: any = {
   PUT: "Source",
   GET: "Destination",
@@ -90,33 +76,79 @@ const StepThreeECR: React.FC = () => {
     }
   }, [history, tmpTaskInfo]);
 
+  const buildECRParams = (parametersObj: any) => {
+    const taskParamArr: any = [];
+    console.info("parametersObj:", parametersObj);
+    if (!parametersObj) {
+      return [];
+    }
+
+    taskParamArr.push({
+      ParameterKey: "sourceType",
+      ParameterValue: parametersObj.sourceType,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcRegion",
+      ParameterValue: parametersObj.srcRegion,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcAccountId",
+      ParameterValue: parametersObj.srcAccountId,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcList",
+      ParameterValue: parametersObj.srcList,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcImageList",
+      ParameterValue: parametersObj.srcImageList,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcCredential",
+      ParameterValue: parametersObj.srcCredential,
+    });
+    taskParamArr.push({
+      ParameterKey: "destBucket",
+      ParameterValue: parametersObj.destBucketName,
+    });
+    taskParamArr.push({
+      ParameterKey: "destAccountId",
+      ParameterValue: parametersObj.destAccountId,
+    });
+    taskParamArr.push({
+      ParameterKey: "destRegion",
+      ParameterValue: parametersObj.destRegion,
+    });
+    taskParamArr.push({
+      ParameterKey: "destCredential",
+      ParameterValue: parametersObj.destCredential,
+    });
+    taskParamArr.push({
+      ParameterKey: "destPrefix",
+      ParameterValue: parametersObj.destPrefix,
+    });
+
+    taskParamArr.push({
+      ParameterKey: "alarmEmail",
+      ParameterValue: parametersObj.alarmEmail,
+    });
+
+    return taskParamArr;
+  };
+
   // Build  Task  Info  Data
   useEffect(() => {
-    const NOT_PARAMS: Array<string> = ["srcRegionDefault", "destRegionDefault"];
-    const NOT_PARAMS_TASK: Array<string> = [
-      "sourceInAccount",
-      "srcRegionDefault",
-      "destInAccount",
-      "destRegionDefault",
-    ];
     const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
-    const tmpParamsArr = [];
-    const taskParamArr = [];
-    for (const key in parametersObj) {
-      if (NOT_PARAMS.indexOf(key) < 0) {
-        tmpParamsArr.push({
-          ParameterKey: key,
-          ParameterValue: parametersObj[key],
-          sortId: ParamShowIndexMap[key] || 100,
-        });
-      }
-      if (NOT_PARAMS_TASK.indexOf(key) < 0) {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: parametersObj[key],
-        });
-      }
+
+    // Set Description
+    if (createTaskInfo) {
+      createTaskInfo.description = parametersObj?.description || "";
     }
+
+    const taskParamArr: any = buildECRParams(parametersObj);
+
+    setParamList(taskParamArr);
+
     // Add New Params to Creat Task
     const configJson: any = JSON.parse(
       localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
@@ -139,8 +171,7 @@ const StepThreeECR: React.FC = () => {
         });
       }
     }
-    tmpParamsArr.sort((a, b) => (a.sortId > b.sortId ? 1 : -1));
-    setParamList(tmpParamsArr);
+
     // Remove uesless property when clone task
     for (const key in createTaskInfo) {
       if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
@@ -272,7 +303,7 @@ const StepThreeECR: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - 2})</span>
+                    <span>({paramsList.length - 6})</span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">

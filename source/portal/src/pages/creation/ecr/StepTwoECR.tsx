@@ -2,24 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import classNames from "classnames";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import SearchIcon from "@material-ui/icons/Search";
-import { API } from "aws-amplify";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
-import RefreshIcon from "@material-ui/icons/Refresh";
 
-import { listParameters } from "graphql/queries";
-import InfoSpan from "common/InfoSpan";
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
 import Bottom from "common/Bottom";
@@ -27,29 +16,27 @@ import Step from "../comps/Step";
 import NextButton from "common/comp/PrimaryButton";
 import NormalButton from "common/comp/NormalButton";
 import TextButton from "common/comp/TextButton";
-import SelectInput from "common/comp/SelectInput";
+
+// DRH Comp
+import DrhInput from "common/comp/form/DrhInput";
+import DrhSelect from "common/comp/form/DrhSelect";
+import DrhCredential from "common/comp/form/DrhCredential";
+import DrhRegion from "common/comp/form/DrhRegion";
 
 import { IState } from "store/Store";
 
 import {
-  CUR_SUPPORT_LANGS,
   AWS_REGION_LIST,
   YES_NO_LIST,
+  IRegionType,
   YES_NO,
-  MenuProps,
-  SSM_LINK_MAP,
-  DRH_API_HEADER,
-  AUTH_TYPE_NAME,
-  OPEN_ID_TYPE,
-  DRH_REGION_TYPE_NAME,
-  DRH_REGION_NAME,
-  GLOBAL_STR,
 } from "assets/config/const";
 import {
   ECR_SOURCE_TYPE,
+  DOCKER_IMAGE_TYPE,
   ECREnumSourceType,
   EnumDockerImageType,
-  DOCKER_IMAGE_TYPE,
+  EnumTaskType,
 } from "assets/types/index";
 
 import "../Creation.scss";
@@ -58,37 +45,36 @@ const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
-const schema = yup.object().shape({
-  destRegion: yup.string().required(),
-  alarmEmail: yup.string().email().required(),
-});
-
 const MAX_LENGTH = 4096;
 
 const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
 
 const StepTwoECR: React.FC = () => {
-  const { tmpTaskInfo } = useMappedState(mapState);
-  const { t, i18n } = useTranslation();
-  const [titleStr, setTitleStr] = useState("en_name");
-  const [descStr, setDescStr] = useState("en_desc");
-  const [curRegionType, setCurRegionType] = useState("");
-  const [curRegion, setCurRegion] = useState("");
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const [ssmParamList, setSSMParamList] = useState([]);
-  const [curLength, setCurLength] = useState(0);
-  // ECR Task Params
-  const [paramData, setParamData] = useState<any>();
+  const { tmpTaskInfo } = useMappedState(mapState);
+  const { t } = useTranslation();
   const [sourceType, setSourceType] = useState(
     tmpTaskInfo.parametersObj?.sourceType || ECREnumSourceType.ECR
   );
-  const [srcRegion, setSrcRegion] = useState(
-    tmpTaskInfo.parametersObj?.srcRegion || ""
+
+  const [classSourceRegion, setClassSourceRegion] = useState("form-items");
+  const [classIsSourceInAccount, setClassIsSourceAccount] = useState(
+    "form-items"
   );
-  const [srcRegionDefault, setSrcRegionDefault] = useState(
-    tmpTaskInfo.parametersObj?.srcRegionDefault || null
+  const [classSrcAccountId, setClassSrcAccountId] = useState("form-items");
+  const [classSrcCredential, setClassSrcCredential] = useState("form-items");
+  const [classDockerImage, setClassDockerImage] = useState("form-items");
+  const [classImageList, setClassImageList] = useState("form-items");
+  const [classDestAccountId, setClassDestAccountId] = useState("form-items");
+  const [classDestCredential, setClassDestCredential] = useState("form-items");
+  const [curLength, setCurLength] = useState(0);
+
+  const [srcRegionObj, setSrcRegionObj] = useState<IRegionType | null>(
+    tmpTaskInfo.parametersObj?.srcRegionObj || null
   );
-  const [sourceInAccount, setSouceInAccount] = useState(
+  const [sourceInAccount, setSourceInAccount] = useState<string>(
     tmpTaskInfo.parametersObj?.sourceInAccount || YES_NO.NO
   );
   const [srcAccountId, setSrcAccountId] = useState(
@@ -103,13 +89,10 @@ const StepTwoECR: React.FC = () => {
   const [srcImageList, setSrcImageList] = useState(
     tmpTaskInfo.parametersObj?.srcImageList || ""
   );
-  const [destRegion, setDestRegion] = useState(
-    tmpTaskInfo.parametersObj?.destRegion || ""
+  const [destRegionObj, setDestRegionObj] = useState<IRegionType | null>(
+    tmpTaskInfo.parametersObj?.destRegionObj || null
   );
-  const [destRegionDefault, setDestRegionDefault] = useState(
-    tmpTaskInfo.parametersObj?.destRegionDefault || null
-  );
-  const [destInAccount, setDestInAccount] = useState(
+  const [destInAccount, setDestInAccount] = useState<string>(
     tmpTaskInfo.parametersObj?.destInAccount || YES_NO.NO
   );
   const [destAccountId, setDestAccountId] = useState(
@@ -121,22 +104,25 @@ const StepTwoECR: React.FC = () => {
   const [destPrefix, setDestPrefix] = useState(
     tmpTaskInfo.parametersObj?.destPrefix || ""
   );
-
-  // Show Hidden Class
-  const [classSourceRegion, setClassSourceRegion] = useState("form-items");
-  const [classIsSourceInAccount, setClassIsSourceAccount] = useState(
-    "form-items"
+  const [description, setDescription] = useState(
+    tmpTaskInfo.parametersObj?.description || ""
   );
-  const [classSrcAccountId, setClassSrcAccountId] = useState("form-items");
-  const [classSrcCredential, setClassSrcCredential] = useState("form-items");
-  const [classDockerImage, setClassDockerImage] = useState("form-items");
-  const [classImageList, setClassImageList] = useState("form-items");
-  const [classDestAccountId, setClassDestAccountId] = useState("form-items");
-  const [classDestCredential, setClassDestCredential] = useState("form-items");
+  const [alarmEmail, setAlarmEmail] = useState(
+    tmpTaskInfo.parametersObj?.alarmEmail || ""
+  );
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+  // Redirect Step One if task type is null
+  useEffect(() => {
+    // if the taskInfo has no taskType, redirect to Step one
+    if (!tmpTaskInfo.hasOwnProperty("type")) {
+      const toPath = "/create/step1/ECR";
+      history.push({
+        pathname: toPath,
+      });
+    }
+  }, [history, tmpTaskInfo]);
 
+  // Monitor Page Item Change
   useEffect(() => {
     if (sourceType === ECREnumSourceType.ECR) {
       setClassSourceRegion("form-items");
@@ -178,136 +164,13 @@ const StepTwoECR: React.FC = () => {
     }
   }, [sourceType, sourceInAccount, destInAccount, srcList]);
 
-  useEffect(() => {
-    if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
-      setTitleStr(i18n.language + "_name");
-      setDescStr(i18n.language + "_desc");
+  const changeSrcImageList = (event: any) => {
+    setCurLength(event.target.value.length);
+    if (event.target.value.length >= MAX_LENGTH) {
+      setSrcImageList(event.target.value.substr(0, MAX_LENGTH - 1));
+    } else {
+      setSrcImageList(event.target.value);
     }
-  }, [i18n.language]);
-
-  // Get Region and Region Type
-  useEffect(() => {
-    const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
-    const curRegionType: string =
-      localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
-    setCurRegion(curRegion);
-    setCurRegionType(curRegionType);
-  }, []);
-
-  useEffect(() => {
-    if (paramData) {
-      // build New Data
-      const { description, ...parameters } = paramData;
-      tmpTaskInfo.description = description;
-      parameters.sourceType = sourceType;
-      if (sourceType === ECREnumSourceType.ECR) {
-        parameters.srcRegion = srcRegion;
-        parameters.sourceInAccount = sourceInAccount;
-        parameters.srcAccountId = srcAccountId;
-        parameters.srcCredential = srcCredential;
-        parameters.srcRegionDefault = srcRegionDefault;
-      } else {
-        parameters.srcRegion = "";
-        parameters.sourceInAccount = "";
-        parameters.srcAccountId = "";
-        parameters.srcCredential = "";
-        parameters.srcRegionDefault = null;
-      }
-      parameters.srcList = srcList;
-      if (srcList === EnumDockerImageType.SELECTED) {
-        parameters.srcImageList = srcImageList;
-      } else {
-        parameters.srcImageList = "";
-      }
-      parameters.destInAccount = destInAccount;
-      if (destInAccount === YES_NO.NO) {
-        parameters.destAccountId = destAccountId;
-        parameters.destCredential = destCredential;
-      } else {
-        parameters.destAccountId = "";
-        parameters.destCredential = "";
-      }
-      parameters.destRegion = destRegion;
-      parameters.destRegionDefault = destRegionDefault;
-      dispatch({
-        type: "update task info",
-        taskInfo: Object.assign(tmpTaskInfo, { parametersObj: parameters }),
-      });
-      const toPath = "/create/step3/ECR";
-      history.push({
-        pathname: toPath,
-      });
-    }
-  }, [
-    tmpTaskInfo,
-    paramData,
-    dispatch,
-    srcList,
-    history,
-    srcAccountId,
-    destAccountId,
-    sourceInAccount,
-    destInAccount,
-    srcRegionDefault,
-    destRegionDefault,
-    srcRegion,
-    destRegion,
-    srcImageList,
-    srcCredential,
-    destCredential,
-    sourceType,
-  ]);
-
-  // Get Parameter List
-  async function getSSMParamsList() {
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
-    const apiData: any = await API.graphql(
-      {
-        query: listParameters,
-        variables: {},
-      },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
-    if (
-      apiData &&
-      apiData.data &&
-      apiData.data.listParameters &&
-      apiData.data.listParameters.length > 0
-    ) {
-      setSSMParamList(apiData.data.listParameters);
-    }
-  }
-
-  useEffect(() => {
-    getSSMParamsList();
-  }, []);
-
-  useEffect(() => {
-    // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
-      const toPath = "/create/step1/ECR";
-      history.push({
-        pathname: toPath,
-      });
-    }
-  }, [history, tmpTaskInfo]);
-
-  // const { register, handleSubmit, {errors} } = useForm({
-  //   resolver: yupResolver(schema),
-  // });
-  const {
-    // register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = (data: any) => {
-    setParamData(data);
   };
 
   const goToHomePage = () => {
@@ -325,35 +188,111 @@ const StepTwoECR: React.FC = () => {
   };
 
   const goToStepThree = () => {
-    handleSubmit(onSubmit)();
+    console.info("tmpTaskInfo:", tmpTaskInfo);
+    const toPath = "/create/step3/ECR";
+    history.push({
+      pathname: toPath,
+    });
   };
 
-  const changeSrcRegion = (event: any, data: any) => {
-    if (data && data.value) {
-      setSrcRegionDefault(data);
-      setSrcRegion(data.value);
-    } else {
-      setSrcRegion("");
-    }
+  const updateTmpTaskInfo = (key: string, value: any) => {
+    const param: any = { ...tmpTaskInfo.parametersObj };
+    param[key] = value;
+    dispatch({
+      type: EnumTaskType.ECR,
+      taskInfo: Object.assign(tmpTaskInfo, {
+        parametersObj: param,
+      }),
+    });
   };
 
-  const changeDestRegion = (event: any, data: any) => {
-    if (data && data.value) {
-      setDestRegionDefault(data);
-      setDestRegion(data.value);
-    } else {
-      setDestRegion("");
-    }
-  };
+  // Monitor Data Change
 
-  const changeSrcImageList = (event: any) => {
-    setCurLength(event.target.value.length);
-    if (event.target.value.length >= MAX_LENGTH) {
-      setSrcImageList(event.target.value.substr(0, MAX_LENGTH - 1));
-    } else {
-      setSrcImageList(event.target.value);
-    }
-  };
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("sourceType", sourceType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceType]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("srcRegionObj", srcRegionObj);
+    updateTmpTaskInfo("srcRegion", srcRegionObj?.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcRegionObj]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("sourceInAccount", sourceInAccount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceInAccount]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("srcAccountId", srcAccountId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcAccountId]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("srcCredential", srcCredential);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcCredential]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("srcList", srcList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcList]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("srcImageList", srcImageList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcImageList]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("destRegionObj", destRegionObj);
+    updateTmpTaskInfo("destRegion", destRegionObj?.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destRegionObj]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("destInAccount", destInAccount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destInAccount]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("destCredential", destCredential);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destCredential]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("destAccountId", destAccountId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destAccountId]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("destPrefix", destPrefix);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destPrefix]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("description", description);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [description]);
+
+  useEffect(() => {
+    // Update tmpTaskInfo
+    updateTmpTaskInfo("alarmEmail", alarmEmail);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alarmEmail]);
 
   return (
     <div className="drh-page">
@@ -408,9 +347,10 @@ const StepTwoECR: React.FC = () => {
                                   name="option-type"
                                   type="radio"
                                 />
-                                {item[titleStr]}
+                                {/* {item[titleStr]} */}
+                                {item.en_name}
                               </div>
-                              <div className="desc">{item[descStr]}</div>
+                              <div className="desc">{item.en_desc}</div>
                             </label>
                           </div>
                         );
@@ -420,7 +360,7 @@ const StepTwoECR: React.FC = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form>
                 <div className="box-shadow card-list">
                   <div className="option">
                     <div className="option-title">
@@ -428,189 +368,74 @@ const StepTwoECR: React.FC = () => {
                     </div>
                     <div className="option-content">
                       <div className={classSourceRegion}>
-                        <div className="title">
-                          {t("creation.step2ECR.settings.source.sourceRegion")}
-                        </div>
-                        <div className="desc">
-                          {t(
+                        <DrhRegion
+                          regionValue={srcRegionObj}
+                          optionList={AWS_REGION_LIST}
+                          optionTitle={t(
+                            "creation.step2ECR.settings.source.sourceRegion"
+                          )}
+                          optionDesc={t(
                             "creation.step2ECR.settings.source.sourceRegionDesc"
                           )}
-                        </div>
-                        <div className="select">
-                          <input
-                            name="srcRegion"
-                            defaultValue={srcRegion}
-                            // ref={register}
-                            className="hidden"
-                            type="text"
-                          />
-                          <SearchIcon className="input-icon" />
-                          <Autocomplete
-                            options={AWS_REGION_LIST}
-                            value={srcRegionDefault}
-                            onChange={changeSrcRegion}
-                            getOptionLabel={(option) => option.name}
-                            style={{ width: 565 }}
-                            renderInput={(params) => (
-                              <div ref={params.InputProps.ref}>
-                                <input
-                                  type="search"
-                                  autoComplete="off"
-                                  style={{
-                                    width: 565,
-                                    height: 32,
-                                    border: "1px solid #aab7b8",
-                                    background: "#fff",
-                                    lineHeight: "32px",
-                                    padding: "0 5px 0 32px",
-                                  }}
-                                  {...params.inputProps}
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-                        <div className="error">
-                          {errors.srcRegion &&
-                            errors.srcRegion.type === "required" &&
-                            "Source region Required"}
-                        </div>
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>,
+                            data: IRegionType
+                          ) => {
+                            setSrcRegionObj(data);
+                          }}
+                        />
                       </div>
 
                       <div className={classIsSourceInAccount}>
-                        <div className="title">
-                          {t(
+                        <DrhSelect
+                          isI18n={true}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setSourceInAccount(event.target.value);
+                          }}
+                          optionTitle={t(
                             "creation.step2ECR.settings.source.sourceInAccount"
                           )}
-                        </div>
-                        <div className="desc">
-                          {t(
+                          optionDesc={t(
                             "creation.step2ECR.settings.source.sourceInAccountDesc"
                           )}
-                        </div>
-                        <div className="select">
-                          <Select
-                            MenuProps={MenuProps}
-                            value={sourceInAccount}
-                            onChange={(event: any) => {
-                              setSouceInAccount(event.target.value);
-                            }}
-                            input={<SelectInput style={{ width: 565 }} />}
-                          >
-                            {YES_NO_LIST.map((element, index) => {
-                              return (
-                                <MenuItem
-                                  className="font14px"
-                                  key={index}
-                                  value={element.value}
-                                >
-                                  {element.name}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </div>
-                        <div className="error"></div>
+                          selectValue={sourceInAccount}
+                          optionList={YES_NO_LIST}
+                        />
                       </div>
 
                       <div className={classSrcAccountId}>
-                        <div className="title">
-                          {t("creation.step2ECR.settings.source.accountId")}
-                        </div>
-                        <div className="desc">
-                          {t("creation.step2ECR.settings.source.accountIdTips")}
-                        </div>
-                        <div>
-                          <input
-                            name="srcAccountId"
-                            value={srcAccountId}
-                            onChange={(event: any) => {
-                              setSrcAccountId(event.target.value);
-                            }}
-                            // ref={register}
-                            className="option-input"
-                            placeholder={t(
-                              "creation.step2ECR.settings.source.accountIdPlaceholder"
-                            )}
-                            type="text"
-                          />
-                        </div>
-                        <div className="error"></div>
+                        <DrhInput
+                          optionTitle={t(
+                            "creation.step2ECR.settings.source.accountId"
+                          )}
+                          optionDesc={t(
+                            "creation.step2ECR.settings.source.accountIdTips"
+                          )}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setSrcAccountId(event.target.value);
+                          }}
+                          isOptional={true}
+                          inputName="srcAccountId"
+                          inputValue={srcAccountId}
+                          placeholder={t(
+                            "creation.step2ECR.settings.source.accountIdPlaceholder"
+                          )}
+                        />
                       </div>
 
                       <div className={classSrcCredential}>
-                        <div className="title">
-                          {t(
-                            "creation.step2ECR.settings.source.credentialsStore"
-                          )}{" "}
-                          <InfoSpan spanType="CREDENTIAL" />
-                        </div>
-                        <div className="desc">
-                          {t("creation.tips.store1")}{" "}
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="a-link"
-                            href={
-                              SSM_LINK_MAP[curRegionType] +
-                              "?region=" +
-                              curRegion
-                            }
-                          >
-                            {t("creation.tips.store2")}
-                          </a>{" "}
-                          {t("creation.tips.store3")}
-                        </div>
-                        <div>
-                          <input
-                            name="srcCredential"
-                            defaultValue={srcCredential}
-                            // ref={register}
-                            className="hidden"
-                            type="text"
-                          />
-                          <Select
-                            MenuProps={MenuProps}
-                            value={srcCredential}
-                            displayEmpty
-                            renderValue={
-                              srcCredential !== ""
-                                ? undefined
-                                : () => (
-                                    <div className="gray">
-                                      {t(
-                                        "creation.step2ECR.settings.source.tips"
-                                      )}
-                                    </div>
-                                  )
-                            }
-                            onChange={(event: any) => {
-                              setSrcCredential(event.target.value);
-                            }}
-                            input={<SelectInput style={{ width: 490 }} />}
-                          >
-                            {ssmParamList.map((param: any, index: number) => {
-                              return (
-                                <MenuItem
-                                  key={index}
-                                  className="font14px"
-                                  value={param.name}
-                                >
-                                  {param.name}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                          <NormalButton
-                            style={{ height: 32 }}
-                            className="margin-left-10"
-                            onClick={() => {
-                              getSSMParamsList();
-                            }}
-                          >
-                            <RefreshIcon width="10" />
-                          </NormalButton>
-                        </div>
+                        <DrhCredential
+                          credentialValue={srcCredential}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setSrcCredential(event.target.value);
+                          }}
+                        />
                       </div>
 
                       <div className={classDockerImage}>
@@ -641,9 +466,9 @@ const StepTwoECR: React.FC = () => {
                                       name="option-type"
                                       type="radio"
                                     />
-                                    {item[titleStr]}
+                                    {item.en_name}
                                   </div>
-                                  <div className="desc">{item[descStr]}</div>
+                                  <div className="desc">{item.en_desc}</div>
                                 </label>
                               </div>
                             );
@@ -666,13 +491,11 @@ const StepTwoECR: React.FC = () => {
                           <div>
                             <textarea
                               className="option-textarea"
-                              // ref={register}
                               name="srcImageList"
                               value={srcImageList}
                               onChange={changeSrcImageList}
                               placeholder={defaultTxtValue}
                               rows={7}
-                              // defaultValue={}
                             ></textarea>
                             <div className="max-tips">{`${curLength}/${MAX_LENGTH}`}</div>
                           </div>
@@ -689,219 +512,94 @@ const StepTwoECR: React.FC = () => {
                     </div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">
-                          {t(
+                        <DrhRegion
+                          regionValue={destRegionObj}
+                          optionList={AWS_REGION_LIST}
+                          optionTitle={t(
                             "creation.step2ECR.settings.dest.destinationRegion"
                           )}
-                        </div>
-                        <div className="desc">
-                          {t(
+                          optionDesc={t(
                             "creation.step2ECR.settings.dest.destinationRegionDesc"
                           )}
-                        </div>
-                        <div className="select">
-                          <input
-                            name="destRegion"
-                            defaultValue={destRegion}
-                            // ref={register}
-                            className="hidden"
-                            type="text"
-                          />
-                          <SearchIcon className="input-icon" />
-                          <Autocomplete
-                            options={AWS_REGION_LIST}
-                            value={destRegionDefault}
-                            // getOptionSelected={(option, value) =>
-                            //   option.value === value.value
-                            // }
-                            onChange={changeDestRegion}
-                            getOptionLabel={(option) => option.name}
-                            style={{ width: 565 }}
-                            renderInput={(params) => (
-                              <div ref={params.InputProps.ref}>
-                                <input
-                                  type="search"
-                                  autoComplete="off"
-                                  style={{
-                                    width: 565,
-                                    height: 32,
-                                    border: "1px solid #aab7b8",
-                                    background: "#fff",
-                                    lineHeight: "32px",
-                                    padding: "0 5px 0 32px",
-                                  }}
-                                  {...params.inputProps}
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-                        <div className="error">
-                          {errors.destRegion &&
-                            errors.destRegion.type === "required" &&
-                            t("creation.step2ECR.settings.dest.regionRequired")}
-                        </div>
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>,
+                            data: IRegionType
+                          ) => {
+                            setDestRegionObj(data);
+                          }}
+                        />
                       </div>
 
                       <div className="form-items">
-                        <div className="title">
-                          {t("creation.step2ECR.settings.dest.destInAccount")}
-                        </div>
-                        <div className="desc">
-                          {t(
+                        <DrhSelect
+                          isI18n={true}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setDestInAccount(event.target.value);
+                          }}
+                          optionTitle={t(
+                            "creation.step2ECR.settings.dest.destInAccount"
+                          )}
+                          optionDesc={t(
                             "creation.step2ECR.settings.dest.destInAccountDesc"
                           )}
-                        </div>
-                        <div className="select">
-                          <Select
-                            MenuProps={MenuProps}
-                            value={destInAccount}
-                            onChange={(event: any) => {
-                              setDestInAccount(event.target.value);
-                            }}
-                            input={<SelectInput style={{ width: 565 }} />}
-                          >
-                            {YES_NO_LIST.map((element, index) => {
-                              return (
-                                <MenuItem
-                                  className="font14px"
-                                  key={index}
-                                  value={element.value}
-                                >
-                                  {element.name}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </div>
+                          selectValue={destInAccount}
+                          optionList={YES_NO_LIST}
+                        />
                       </div>
 
                       <div className={classDestAccountId}>
-                        <div className="title">
-                          {" "}
-                          {t("creation.step2ECR.settings.source.accountId")}
-                        </div>
-                        <div className="desc">
-                          {t("creation.step2ECR.settings.source.accountIdTips")}
-                        </div>
-                        <div>
-                          <input
-                            name="destAccountId"
-                            value={destAccountId}
-                            onChange={(event: any) => {
-                              setDestAccountId(event.target.value);
-                            }}
-                            // ref={register}
-                            className="option-input"
-                            placeholder={t(
-                              "creation.step2ECR.settings.source.accountIdPlaceholder"
-                            )}
-                            type="text"
-                          />
-                        </div>
+                        <DrhInput
+                          optionTitle={t(
+                            "creation.step2ECR.settings.source.accountId"
+                          )}
+                          optionDesc={t(
+                            "creation.step2ECR.settings.source.accountIdTips"
+                          )}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setDestAccountId(event.target.value);
+                          }}
+                          isOptional={true}
+                          inputName="destAccountId"
+                          inputValue={destAccountId}
+                          placeholder={t(
+                            "creation.step2ECR.settings.source.accountIdPlaceholder"
+                          )}
+                        />
                       </div>
 
                       <div className={classDestCredential}>
-                        <div className="title">
-                          {t(
-                            "creation.step2ECR.settings.dest.credentialsStore"
-                          )}{" "}
-                          <InfoSpan spanType="CREDENTIAL" />
-                        </div>
-                        <div className="desc">
-                          {t("creation.tips.store1")}{" "}
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="a-link"
-                            href={
-                              SSM_LINK_MAP[curRegionType] +
-                              "?region=" +
-                              curRegion
-                            }
-                          >
-                            {t("creation.tips.store2")}
-                          </a>{" "}
-                          {t("creation.tips.store3")}
-                        </div>
-                        <div>
-                          <input
-                            name="destCredential"
-                            defaultValue={destCredential}
-                            // ref={register}
-                            className="hidden"
-                            type="text"
-                          />
-                          <Select
-                            MenuProps={MenuProps}
-                            value={destCredential}
-                            displayEmpty
-                            renderValue={
-                              destCredential !== ""
-                                ? undefined
-                                : () => (
-                                    <div className="gray">
-                                      {t(
-                                        "creation.step2ECR.settings.dest.tips"
-                                      )}
-                                    </div>
-                                  )
-                            }
-                            onChange={(event: any) => {
-                              setDestCredential(event.target.value);
-                            }}
-                            input={<SelectInput style={{ width: 490 }} />}
-                          >
-                            {ssmParamList.map((param: any, index: number) => {
-                              return (
-                                <MenuItem
-                                  key={index}
-                                  className="font14px"
-                                  value={param.name}
-                                >
-                                  {param.name}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                          <NormalButton
-                            style={{ height: 32 }}
-                            className="margin-left-10"
-                            onClick={() => {
-                              getSSMParamsList();
-                            }}
-                          >
-                            <RefreshIcon width="10" />
-                          </NormalButton>
-                        </div>
-                        <div className="error">
-                          {errors.destCredential &&
-                            errors.destCredential.type === "required" &&
-                            "Source Credential is required"}
-                        </div>
+                        <DrhCredential
+                          credentialValue={destCredential}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setDestCredential(event.target.value);
+                          }}
+                        />
                       </div>
 
                       <div className="form-items">
-                        <div className="title">
-                          {t("creation.step2ECR.settings.dest.prefix")} -{" "}
-                          <i>{t("creation.step2ECR.settings.dest.optional")}</i>
-                        </div>
-                        <div className="desc">
-                          {t("creation.step2ECR.settings.dest.prefixDesc")}
-                        </div>
-                        <div>
-                          <input
-                            name="destPrefix"
-                            value={destPrefix}
-                            onChange={(event: any) => {
-                              setDestPrefix(event.target.value);
-                            }}
-                            // ref={register}
-                            className="option-input"
-                            placeholder="Prefix"
-                            type="text"
-                          />
-                        </div>
+                        <DrhInput
+                          optionTitle={t(
+                            "creation.step2ECR.settings.dest.prefix"
+                          )}
+                          optionDesc={t(
+                            "creation.step2ECR.settings.dest.prefixDesc"
+                          )}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setDestPrefix(event.target.value);
+                          }}
+                          isOptional={true}
+                          inputName="destPrefix"
+                          inputValue={destPrefix}
+                          placeholder="Prefix"
+                        />
                       </div>
                     </div>
                   </div>
@@ -914,55 +612,43 @@ const StepTwoECR: React.FC = () => {
                     </div>
                     <div className="option-content">
                       <div className="form-items">
-                        <div className="title">
-                          {t("creation.step2ECR.settings.more.description")} -{" "}
-                          <i>{t("creation.step2ECR.settings.more.optional")}</i>
-                        </div>
-                        <div className="desc">
-                          {t("creation.step2ECR.settings.more.descriptionDesc")}
-                        </div>
-                        <div>
-                          <input
-                            defaultValue={tmpTaskInfo.description}
-                            name="description"
-                            // ref={register({ required: true })}
-                            className="option-input"
-                            placeholder={t(
-                              "creation.step2ECR.settings.more.description"
-                            )}
-                            type="text"
-                          />
-                        </div>
+                        <DrhInput
+                          optionTitle={t(
+                            "creation.step2ECR.settings.more.description"
+                          )}
+                          optionDesc={t(
+                            "creation.step2ECR.settings.more.descriptionDesc"
+                          )}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setDescription(event.target.value);
+                          }}
+                          isOptional={true}
+                          inputName="description"
+                          inputValue={description}
+                          placeholder="description"
+                        />
                       </div>
 
                       <div className="form-items">
-                        <div className="title">
-                          {t("creation.step2ECR.settings.more.email")}
-                        </div>
-                        <div className="desc">
-                          {t("creation.step2ECR.settings.more.emailDesc")}
-                        </div>
-                        <div>
-                          <input
-                            defaultValue={
-                              tmpTaskInfo.parametersObj &&
-                              tmpTaskInfo.parametersObj.alarmEmail
-                            }
-                            name="alarmEmail"
-                            // ref={register({ required: true })}
-                            className="option-input"
-                            placeholder="abc@example.com"
-                            type="text"
-                          />
-                          <div className="error">
-                            {errors.alarmEmail &&
-                              errors.alarmEmail.type === "required" &&
-                              t("tips.error.emailRequired")}
-                            {errors.alarmEmail &&
-                              errors.alarmEmail.type === "email" &&
-                              t("tips.error.emailValidate")}
-                          </div>
-                        </div>
+                        <DrhInput
+                          optionTitle={t(
+                            "creation.step2ECR.settings.more.email"
+                          )}
+                          optionDesc={t(
+                            "creation.step2ECR.settings.more.emailDesc"
+                          )}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setAlarmEmail(event.target.value);
+                          }}
+                          isOptional={true}
+                          inputName="alarmEmail"
+                          inputValue={alarmEmail}
+                          placeholder="alarmEmail"
+                        />
                       </div>
                     </div>
                   </div>

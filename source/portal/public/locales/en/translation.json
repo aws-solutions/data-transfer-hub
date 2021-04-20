@@ -314,7 +314,11 @@
   "tips": {
     "error": {
       "sourceBucketRequired": "Source Bucket Name is Required",
+      "sourceBucketNameInvalid": "Source Bucket Name is Invalid",
       "destBucketRequired": "Destination Bucket Name is Required",
+      "destBucketNameInvalid": "Destination Bucket Name is Invalid",
+      "srcRegionRequired": "Source Region is Required",
+      "destRegionRequired": "Destination Region is Required",
       "emailRequired": "Alarm Email is required",
       "emailValidate": "Alarm Email must be validate",
       "credentialRequired": "Parameter Store Credential is Required"

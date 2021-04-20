@@ -314,7 +314,11 @@
   "tips": {
     "error": {
       "sourceBucketRequired": "源数据桶名称必填",
+      "sourceBucketNameInvalid": "源数据桶名称无效",
       "destBucketRequired": "目标数据桶名称必填",
+      "destBucketNameInvalid": "目标数据桶名称无效",
+      "srcRegionRequired": "源数据桶区域必填",
+      "destRegionRequired": "目标数据桶区域必填",
       "emailRequired": "通知邮箱必填",
       "emailValidate": "请输入合法的通知邮箱地址",
       "credentialRequired": "凭证参数必填"
