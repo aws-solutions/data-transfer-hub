@@ -9,8 +9,11 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
-import { API } from "aws-amplify";
+// import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
+import gql from "graphql-tag";
+import ClientContext from "common/context/ClientContext";
+
 import { IState } from "store/Store";
 
 import InfoBar from "common/InfoBar";
@@ -30,9 +33,6 @@ import {
   S3_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
-  DRH_API_HEADER,
-  AUTH_TYPE_NAME,
-  OPEN_ID_TYPE,
   DRH_CONFIG_JSON_NAME,
   YES_NO,
 } from "assets/config/const";
@@ -50,6 +50,7 @@ const JOB_TYPE_MAP: any = {
 const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
+  const client: any = React.useContext(ClientContext);
 
   const { engine } = useParams() as any;
   console.info("type:", engine);
@@ -316,18 +317,13 @@ const StepThreeS3: React.FC = () => {
 
   async function createTask() {
     setIsCreating(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
-    // if (!formData.name || !formData.description) return;
-    const createTaskData = await API.graphql(
-      {
-        query: createTaskMutaion,
-        variables: { input: createTaskGQL },
-      },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
+    const mutationCreate = gql(createTaskMutaion);
+    const createTaskData: any = await client?.mutate({
+      fetchPolicy: "no-cache",
+      mutation: mutationCreate,
+      variables: { input: createTaskGQL },
+    });
+
     console.info("createTaskData:", createTaskData);
     dispatch({
       type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
@@ -398,12 +394,6 @@ const StepThreeS3: React.FC = () => {
                     </div>
                     <div className="step3-desc">
                       {S3_TASK_TYPE_MAP[tmpTaskInfo.type]?.name}
-                    </div>
-                    <div className="step3-title">
-                      {t("creation.step3.step1Type")}
-                    </div>
-                    <div className="step3-desc">
-                      {t("creation.step3.step1TypeDesc")}
                     </div>
                   </div>
                 </div>

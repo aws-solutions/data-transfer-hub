@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { API } from "aws-amplify";
+// import { API } from "aws-amplify";
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -12,6 +12,8 @@ import InfoSpan from "common/InfoSpan";
 import NormalButton from "common/comp/NormalButton";
 
 import { listParameters } from "graphql/queries";
+import gql from "graphql-tag";
+import ClientContext from "common/context/ClientContext";
 
 import {
   MenuProps,
@@ -19,9 +21,6 @@ import {
   DRH_REGION_NAME,
   DRH_REGION_TYPE_NAME,
   GLOBAL_STR,
-  AUTH_TYPE_NAME,
-  DRH_API_HEADER,
-  OPEN_ID_TYPE,
 } from "assets/config/const";
 
 interface SelectMenuProp {
@@ -37,23 +36,26 @@ const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
 
 const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const { t } = useTranslation();
+  const client: any = React.useContext(ClientContext);
   const { credentialValue, hideBucket, onChange } = props;
   const [ssmParamList, setSSMParamList] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
 
   async function getSSMParamsList() {
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
     setLoadingData(true);
-    const apiData: any = await API.graphql(
-      {
-        query: listParameters,
-        variables: {},
-      },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
+    const query = gql(listParameters);
+    const apiData: any = await client?.query({
+      fetchPolicy: "no-cache",
+      query: query,
+      variables: {},
+    });
+    // const apiData: any = await API.graphql(
+    //   {
+    //     query: listParameters,
+    //     variables: {},
+    //   },
+    //   authType === OPEN_ID_TYPE ? openIdHeader : undefined
+    // );
     setLoadingData(false);
     if (
       apiData &&
@@ -67,6 +69,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
 
   useEffect(() => {
     getSSMParamsList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

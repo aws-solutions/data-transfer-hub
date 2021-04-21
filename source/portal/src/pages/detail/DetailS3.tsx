@@ -23,9 +23,11 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import ArrowRightSharpIcon from "@material-ui/icons/ArrowRightSharp";
 import ArrowDropDownSharpIcon from "@material-ui/icons/ArrowDropDownSharp";
 
-import { API } from "aws-amplify";
+// import { API } from "aws-amplify";
 import { getTask } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
+import gql from "graphql-tag";
+import ClientContext from "common/context/ClientContext";
 // import { updateTaskProgress } from "graphql/subscriptions";
 
 import InfoBar from "common/InfoBar";
@@ -43,9 +45,6 @@ import {
   EnumTaskType,
 } from "assets/types/index";
 import {
-  DRH_API_HEADER,
-  AUTH_TYPE_NAME,
-  OPEN_ID_TYPE,
   DRH_REGION_TYPE_NAME,
   DRH_REGION_NAME,
   GLOBAL_STR,
@@ -144,6 +143,7 @@ const S3_EVENT_OPTIONS_MAP = converListToMap(S3_EVENT_OPTIONS);
 const S3_STORAGE_CLASS_OPTIONS_MAP = converListToMap(S3_STORAGE_CLASS_OPTIONS);
 
 const Detail: React.FC = (props: any) => {
+  const client: any = React.useContext(ClientContext);
   const { t } = useTranslation();
   const { type, id } = useParams() as any;
 
@@ -160,19 +160,15 @@ const Detail: React.FC = (props: any) => {
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
-    const apiData: any = await API.graphql(
-      {
-        query: getTask,
-        variables: {
-          id: taskId,
-        },
+    const query = gql(getTask);
+    const apiData: any = await client?.query({
+      fetchPolicy: "no-cache",
+      query: query,
+      variables: {
+        id: taskId,
       },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
+    });
+
     const tmpCurTask = apiData.data.getTask;
 
     if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
@@ -215,7 +211,8 @@ const Detail: React.FC = (props: any) => {
 
   useEffect(() => {
     fetchNotes(id);
-  }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Get Cur Region and Region Type
   useEffect(() => {
@@ -232,20 +229,15 @@ const Detail: React.FC = (props: any) => {
 
   async function stopTaskFunc(taskId: string) {
     setIsStopLoading(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
     try {
-      const stopResData: any = await API.graphql(
-        {
-          query: stopTask,
-          variables: {
-            id: taskId,
-          },
+      const mutationStop = gql(stopTask);
+      const stopResData: any = await client?.mutate({
+        fetchPolicy: "no-cache",
+        mutation: mutationStop,
+        variables: {
+          id: taskId,
         },
-        authType === OPEN_ID_TYPE ? openIdHeader : undefined
-      );
+      });
       setIsStopLoading(false);
       setOpen(false);
       fetchNotes(id);

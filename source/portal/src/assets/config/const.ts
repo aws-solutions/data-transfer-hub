@@ -463,6 +463,7 @@ export const CREATE_USE_LESS_PROPERTY = [
   "stackStatusReason",
   "stoppedAt",
   "templateUrl",
+  "__typename",
 ];
 
 export const emailIsValid = (email: string): boolean => {

@@ -18,10 +18,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { API } from "aws-amplify";
+// import { API } from "aws-amplify";
 import { getTask } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
-// import { updateTaskProgress } from "graphql/subscriptions";
+import gql from "graphql-tag";
+import ClientContext from "common/context/ClientContext";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -37,12 +38,7 @@ import {
   EnumDockerImageType,
 } from "assets/types/index";
 
-import {
-  getRegionNameById,
-  DRH_API_HEADER,
-  AUTH_TYPE_NAME,
-  OPEN_ID_TYPE,
-} from "assets/config/const";
+import { getRegionNameById } from "assets/config/const";
 
 import "./Detail.scss";
 
@@ -112,6 +108,7 @@ function TabPanel(props: TabPanelProps) {
 
 const Detail: React.FC = (props: any) => {
   const { t } = useTranslation();
+  const client: any = React.useContext(ClientContext);
 
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -121,19 +118,14 @@ const Detail: React.FC = (props: any) => {
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
-    const apiData: any = await API.graphql(
-      {
-        query: getTask,
-        variables: {
-          id: taskId,
-        },
+    const query = gql(getTask);
+    const apiData: any = await client?.query({
+      fetchPolicy: "no-cache",
+      query: query,
+      variables: {
+        id: taskId,
       },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
+    });
     const tmpCurTask = apiData.data.getTask;
 
     if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
@@ -149,7 +141,8 @@ const Detail: React.FC = (props: any) => {
 
   useEffect(() => {
     fetchNotes(props.match.params.id);
-  }, [props.match.params.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange: any = (event: React.ChangeEvent, newValue: number) => {
     setValue(newValue);
@@ -157,20 +150,15 @@ const Detail: React.FC = (props: any) => {
 
   async function stopTaskFunc(taskId: string) {
     setIsStopLoading(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
     try {
-      const stopResData: any = await API.graphql(
-        {
-          query: stopTask,
-          variables: {
-            id: taskId,
-          },
+      const mutationStop = gql(stopTask);
+      const stopResData: any = await client?.mutate({
+        fetchPolicy: "no-cache",
+        mutation: mutationStop,
+        variables: {
+          id: taskId,
         },
-        authType === OPEN_ID_TYPE ? openIdHeader : undefined
-      );
+      });
       setIsStopLoading(false);
       setOpen(false);
       fetchNotes(props.match.params.id);

@@ -25,9 +25,11 @@ import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import { API } from "aws-amplify";
+// import { API } from "aws-amplify";
 import { listTasks } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
+import gql from "graphql-tag";
+import ClientContext from "common/context/ClientContext";
 
 import { IState } from "store/Store";
 
@@ -65,9 +67,6 @@ import {
 import {
   YES_NO,
   AWS_REGION_LIST,
-  DRH_API_HEADER,
-  AUTH_TYPE_NAME,
-  OPEN_ID_TYPE,
   getRegionListBySourceType,
 } from "assets/config/const";
 
@@ -125,6 +124,7 @@ const mapState = (state: IState) => ({
 const List: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const client: any = React.useContext(ClientContext);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -152,27 +152,25 @@ const List: React.FC = () => {
   const [messageOpen, setMessageOpen] = useState(false);
 
   async function getTaskList(token: string | null, direction: string) {
+    console.info("getTaskList:getTaskList:", token, direction);
+    console.info("client:", client);
     setIsLoading(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
-    const apiData: any = await API.graphql(
-      {
-        query: listTasks,
-        variables: {
-          limit: 30,
-          nextToken: token,
-        },
+    const query = gql(listTasks);
+    const apiData: any = await client?.query({
+      fetchPolicy: "no-cache",
+      query: query,
+      variables: {
+        limit: 30,
+        nextToken: token,
       },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
+    });
     // Build Pagination Data
     // First build Table Data
     // const dataListArr: any = [];
     // If click the next, set New Next token
+    setIsLoading(false);
     if (direction === "next") {
-      if (apiData.data.listTasks.nextToken) {
+      if (apiData?.data?.listTasks?.nextToken) {
         setNextToken(apiData.data.listTasks.nextToken);
       } else {
         setIsLast(true);
@@ -190,14 +188,13 @@ const List: React.FC = () => {
       );
       setTaskListData(orderedList);
     }
-
-    setIsLoading(false);
   }
 
   useEffect(() => {
     getTaskList(null, "next");
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Hide Create Flag in 3 seconds
   useEffect(() => {
@@ -230,28 +227,26 @@ const List: React.FC = () => {
   };
 
   async function stopTaskFunc(taskId: string) {
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
     setIsStopLoading(true);
     try {
-      const stopResData: any = await API.graphql(
-        {
-          query: stopTask,
-          variables: {
-            id: taskId,
-          },
+      const mutationStop = gql(stopTask);
+      const stopResData: any = await client?.mutate({
+        fetchPolicy: "no-cache",
+        mutation: mutationStop,
+        variables: {
+          id: taskId,
         },
-        authType === OPEN_ID_TYPE ? openIdHeader : undefined
-      );
+      });
       setIsStopLoading(false);
       setOpen(false);
       refreshData();
       console.info("stopResData:", stopResData);
     } catch (error) {
-      console.error("error:", error?.errors[0]?.message?.toString() || "Error");
-      const errorMsg = error?.errors[0]?.message?.toString() || "Error";
+      console.error(
+        "error:",
+        error?.errors?.[0]?.message?.toString() || "Error"
+      );
+      const errorMsg = error?.errors?.[0]?.message?.toString() || "Error";
       setIsStopLoading(false);
       setMessageOpen(true);
       setErrorMessage(errorMsg);
@@ -611,10 +606,10 @@ const List: React.FC = () => {
 
   const buildTaskType = (item: any) => {
     if (item.type === EnumTaskType.S3_EC2) {
-      return "S3 Graviton2 Plugin";
+      return "S3 Graviton2";
     }
     if (item.type === EnumTaskType.S3) {
-      return "S3 Lambda Plugin";
+      return "S3 Lambda";
     }
     if (item.type === EnumTaskType.ECR) {
       return "ECR Plugin";

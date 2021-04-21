@@ -9,8 +9,10 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
-import { API } from "aws-amplify";
+// import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
+import gql from "graphql-tag";
+import ClientContext from "common/context/ClientContext";
 import { IState } from "store/Store";
 
 import InfoBar from "common/InfoBar";
@@ -31,9 +33,6 @@ import {
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
   getRegionNameById,
-  DRH_API_HEADER,
-  AUTH_TYPE_NAME,
-  OPEN_ID_TYPE,
   DRH_CONFIG_JSON_NAME,
 } from "assets/config/const";
 import { ACTION_TYPE } from "assets/types";
@@ -50,6 +49,7 @@ const JOB_TYPE_MAP: any = {
 const StepThreeECR: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
+  const client: any = React.useContext(ClientContext);
 
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
@@ -180,19 +180,13 @@ const StepThreeECR: React.FC = () => {
 
   async function createTask() {
     setIsCreating(true);
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    const openIdHeader = {
-      Authorization: `${localStorage.getItem(DRH_API_HEADER) || ""}`,
-    };
     console.info("createTaskGQL:", createTaskGQL);
-    // remove srcInAccount and destInAccount
-    const createTaskData = await API.graphql(
-      {
-        query: createTaskMutaion,
-        variables: { input: createTaskGQL },
-      },
-      authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    );
+    const createTask = gql(createTaskMutaion);
+    const createTaskData: any = await client?.mutate({
+      fetchPolicy: "no-cache",
+      mutation: createTask,
+      variables: { input: createTaskGQL },
+    });
     console.info("createTaskData:", createTaskData);
     dispatch({
       type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
@@ -281,12 +275,6 @@ const StepThreeECR: React.FC = () => {
                     </div>
                     <div className="step3-desc">
                       {t("creation.step3.step1EngineSubEngineECRDesc")}
-                    </div>
-                    <div className="step3-title">
-                      {t("creation.step3.step1Type")}
-                    </div>
-                    <div className="step3-desc">
-                      {t("creation.step3.step1TypeDesc")}
                     </div>
                   </div>
                 </div>
