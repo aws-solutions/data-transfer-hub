@@ -9,6 +9,7 @@ import ArrowDropDownSharpIcon from "@material-ui/icons/ArrowDropDownSharp";
 import DrhSelect from "common/comp/form/DrhSelect";
 import { ACTION_TYPE } from "assets/types";
 import InfoSpan from "common/InfoSpan";
+import { EnumSpanType } from "common/InfoBar";
 
 import {
   LAMBDA_OPTIONS,
@@ -97,7 +98,7 @@ const OptionSettings: React.FC = () => {
             />
           )}
           {t("creation.step2.settings.advance.title")}
-          <InfoSpan spanType="ENGINE_SETTING" />
+          <InfoSpan spanType={EnumSpanType.ENGINE_SETTING} />
         </div>
         {advancedShow && (
           <div className="option-content">

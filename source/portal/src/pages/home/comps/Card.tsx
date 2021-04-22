@@ -29,7 +29,9 @@ const Card: React.FC<DATA_TYPE> = (props: any) => {
           {contentInfo.list.map((element: any, index: any) => {
             return (
               <li key={index}>
-                <a href={element.link}>{element[nameStr]}</a>
+                <a target="_blank" href={element.link} rel="noreferrer">
+                  {element[nameStr]}
+                </a>
               </li>
             );
           })}

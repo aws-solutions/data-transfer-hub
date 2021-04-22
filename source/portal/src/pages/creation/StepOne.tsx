@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
 import LeftMenu from "common/LeftMenu";
-import InfoBar from "common/InfoBar";
+import InfoBar, { EnumSpanType } from "common/InfoBar";
 
 import Bottom from "common/Bottom";
 import Step from "./comps/Step";
@@ -181,7 +181,7 @@ const StepOne: React.FC = (props: any) => {
                     <div className="edition">
                       <div className="title">
                         {t("creation.s3plugin.edition")}{" "}
-                        <InfoSpan spanType="ENGINE_EDITION" />
+                        <InfoSpan spanType={EnumSpanType.ENGINE_EDITION} />
                       </div>
                       <div>
                         {S3_EDITION_LIST.map((item, index) => {

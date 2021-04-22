@@ -38,11 +38,14 @@ const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
     <>
       <div className="title">{optionTitle}</div>
       <div className="desc">
-        {optionDescHtml ? (
-          <span dangerouslySetInnerHTML={{ __html: optionDescHtml }}></span>
-        ) : (
-          optionDesc
-        )}
+        {
+          // <span dangerouslySetInnerHTML={{ __html: optionDescHtml }}></span>
+          optionDescHtml
+            ? optionDescHtml.map((element: any, index: number) => {
+                return <span key={index}>{element}</span>;
+              })
+            : optionDesc
+        }
       </div>
       <div>
         <Select

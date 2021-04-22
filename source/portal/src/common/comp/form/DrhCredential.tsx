@@ -14,6 +14,7 @@ import NormalButton from "common/comp/NormalButton";
 import { listParameters } from "graphql/queries";
 import gql from "graphql-tag";
 import ClientContext from "common/context/ClientContext";
+import DescLink from "common/comp/DescLink";
 
 import {
   MenuProps,
@@ -22,6 +23,7 @@ import {
   DRH_REGION_TYPE_NAME,
   GLOBAL_STR,
 } from "assets/config/const";
+import { EnumSpanType } from "common/InfoBar";
 
 interface SelectMenuProp {
   hideBucket?: boolean;
@@ -76,18 +78,14 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
     <>
       <div className="title">
         {t("creation.step2ECR.settings.source.credentialsStore")}{" "}
-        <InfoSpan spanType="CREDENTIAL" />
+        <InfoSpan spanType={EnumSpanType.CREDENTIAL} />
       </div>
       <div className="desc">
         {t("creation.tips.store1")}{" "}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          className="a-link"
-          href={SSM_LINK_MAP[curRegionType] + "?region=" + curRegion}
-        >
-          {t("creation.tips.store2")}
-        </a>{" "}
+        <DescLink
+          title={t("creation.tips.store2")}
+          link={SSM_LINK_MAP[curRegionType] + "?region=" + curRegion}
+        />
         {!hideBucket && t("creation.tips.store3")}
       </div>
       <div>

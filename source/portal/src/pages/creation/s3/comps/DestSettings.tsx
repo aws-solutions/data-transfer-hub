@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useMappedState } from "redux-react-hook";
 
+import ArrowRightSharpIcon from "@material-ui/icons/ArrowRightSharp";
+import ArrowDropDownSharpIcon from "@material-ui/icons/ArrowDropDownSharp";
+
 // DRH Comp
 import DrhInput from "common/comp/form/DrhInput";
 import DrhSelect from "common/comp/form/DrhSelect";
 import DrhCredential from "common/comp/form/DrhCredential";
 import DrhRegion from "common/comp/form/DrhRegion";
+import DescLink from "common/comp/DescLink";
+import { EnumSpanType } from "common/InfoBar";
 
 import {
   IRegionType,
@@ -15,6 +20,8 @@ import {
   YES_NO,
   YES_NO_LIST,
   AWS_REGION_LIST,
+  DEST_OBJECT_ACL_LINK,
+  OBJECT_ACL_LIST,
 } from "assets/config/const";
 
 import { ACTION_TYPE, S3_ENGINE_TYPE } from "assets/types/index";
@@ -51,6 +58,8 @@ const DestSettings: React.FC<DestPropType> = (props) => {
 
   const destInAccountClass = "form-items";
 
+  const [professionShow, setProfessionShow] = useState(false);
+
   const [showDestCredential, setShowDestCredential] = useState(false);
   const [showDestRegion, setShowDestRegion] = useState(false);
   const [showDestInAccount, setShowDestInAccount] = useState(true);
@@ -72,6 +81,10 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [destStorageClass, setDestStorageClass] = useState(
     tmpTaskInfo.parametersObj?.destStorageClass ||
       S3_STORAGE_CLASS_TYPE.STANDARD
+  );
+
+  const [destAcl, setDestAcl] = useState(
+    tmpTaskInfo.parametersObj?.destAcl || "bucket-owner-full-control"
   );
 
   const [
@@ -152,6 +165,11 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   }, [destStorageClass]);
 
   useEffect(() => {
+    updateTmpTaskInfo("destAcl", destAcl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destAcl]);
+
+  useEffect(() => {
     updateTmpTaskInfo(
       "destCredentialsParameterStore",
       destCredentialsParameterStore
@@ -227,32 +245,6 @@ const DestSettings: React.FC<DestPropType> = (props) => {
             />
           </div>
 
-          <div className="form-items">
-            <DrhInput
-              optionTitle={t("creation.step2.settings.dest.objectPrefix")}
-              optionDesc={t("creation.step2.settings.dest.prefixDesc")}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setDestBucketPrefix(event.target.value);
-              }}
-              isOptional={true}
-              inputName="destBucketPrefix"
-              inputValue={destBucketPrefix}
-              placeholder={t("creation.step2.settings.dest.objectPrefix")}
-            />
-          </div>
-
-          <div className="form-items">
-            <DrhSelect
-              optionTitle={t("creation.step2.settings.dest.storageClass")}
-              optionDesc={t("creation.step2.settings.dest.storageClassDesc")}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setDestStorageClass(event.target.value);
-              }}
-              selectValue={destStorageClass}
-              optionList={S3_STORAGE_CLASS_OPTIONS}
-            />
-          </div>
-
           <div className={destInAccountClass}>
             {engineType === S3_ENGINE_TYPE.EC2 && showDestInAccount && (
               <DrhSelect
@@ -298,6 +290,86 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                   setDestRegionObj(data);
                 }}
               />
+            </div>
+          )}
+
+          <div className="profession-title padding-left">
+            {!professionShow && (
+              <ArrowRightSharpIcon
+                onClick={() => {
+                  setProfessionShow(true);
+                }}
+                className="option-profession-icon"
+                fontSize="large"
+              />
+            )}
+            {professionShow && (
+              <ArrowDropDownSharpIcon
+                onClick={() => {
+                  setProfessionShow(false);
+                }}
+                className="option-profession-icon"
+                fontSize="large"
+              />
+            )}
+            {t("creation.step2.settings.advance.professionTitle")}
+          </div>
+
+          {professionShow && (
+            <div>
+              <div className="form-items">
+                <DrhInput
+                  showInfo={true}
+                  infoType={EnumSpanType.S3_BUCKET_DEST_PREFIX}
+                  optionTitle={t("creation.step2.settings.dest.objectPrefix")}
+                  optionDesc={t("creation.step2.settings.dest.prefixDesc")}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setDestBucketPrefix(event.target.value);
+                  }}
+                  isOptional={true}
+                  inputName="destBucketPrefix"
+                  inputValue={destBucketPrefix}
+                  placeholder={t("creation.step2.settings.dest.objectPrefix")}
+                />
+              </div>
+
+              <div className="form-items">
+                <DrhSelect
+                  optionTitle={t("creation.step2.settings.dest.storageClass")}
+                  optionDesc={t(
+                    "creation.step2.settings.dest.storageClassDesc"
+                  )}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setDestStorageClass(event.target.value);
+                  }}
+                  selectValue={destStorageClass}
+                  optionList={S3_STORAGE_CLASS_OPTIONS}
+                />
+              </div>
+
+              {engineType === S3_ENGINE_TYPE.EC2 && (
+                <div className="form-items">
+                  <DrhSelect
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setDestAcl(event.target.value);
+                    }}
+                    optionTitle={t("creation.step2.settings.source.objectACL")}
+                    optionDesc=""
+                    optionDescHtml={[
+                      t("creation.step2.settings.source.objectACLDesc1"),
+                      <DescLink
+                        title={t(
+                          "creation.step2.settings.source.objectACLDesc2"
+                        )}
+                        link={DEST_OBJECT_ACL_LINK}
+                      />,
+                      t("creation.step2.settings.source.objectACLDesc3"),
+                    ]}
+                    selectValue={destAcl}
+                    optionList={OBJECT_ACL_LIST}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>

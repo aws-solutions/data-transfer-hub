@@ -9,10 +9,22 @@ import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import "./InfoBar.scss";
 import CredentialInfo from "./info/CredentialInfo";
 import EngineSettings from "./info/EngineSettings";
+import EngineSettingsEC2 from "./info/EngineSettingsEC2";
 import EngineEdition from "./info/EngineEdition";
+import S3BucketSrcPrefix from "./info/S3BucketSrcPrefix";
+import S3BucketDestPrefix from "./info/S3BucketDestPrefix";
 
 import { IState } from "../store/Store";
 import { ACTION_TYPE } from "assets/types";
+
+export enum EnumSpanType {
+  CREDENTIAL = "CREDENTIAL",
+  ENGINE_SETTING = "ENGINE_SETTING",
+  ENGINE_SETTING_EC2 = "ENGINE_SETTING_EC2",
+  ENGINE_EDITION = "ENGINE_EDITION",
+  S3_BUCKET_SRC_PREFIX = "S3_BUCKET_SRC_PREFIX",
+  S3_BUCKET_DEST_PREFIX = "S3_BUCKET_DEST_PREFIX",
+}
 
 const mapState = (state: IState) => ({
   infoIsOpen: state.infoIsOpen,
@@ -44,25 +56,41 @@ const InfoBar: React.FC<InfoType> = (props: InfoType) => {
           <div className="is-open">
             <div>
               <div className="title">
-                {infoSpanType === "CREDENTIAL" && t("comps.credential.name")}
-                {infoSpanType === "ENGINE_SETTING" &&
+                {infoSpanType === EnumSpanType.CREDENTIAL &&
+                  t("comps.credential.name")}
+                {infoSpanType === EnumSpanType.ENGINE_SETTING &&
                   t("comps.engineSettings.name")}
-                {infoSpanType === "ENGINE_EDITION" &&
+                {infoSpanType === EnumSpanType.ENGINE_SETTING_EC2 &&
+                  t("comps.engineSettingsEC2.name")}
+                {infoSpanType === EnumSpanType.ENGINE_EDITION &&
                   t("comps.engineEdition.name")}
+                {infoSpanType === EnumSpanType.S3_BUCKET_SRC_PREFIX &&
+                  t("comps.s3BucketSrcPrefix.name")}
+                {infoSpanType === EnumSpanType.S3_BUCKET_DEST_PREFIX &&
+                  t("comps.s3BucketDestPrefix.name")}
               </div>
               <div className="icon" onClick={closeInfoBar}>
                 <ClearIcon />
               </div>
             </div>
             <div className="info-content">
-              {infoSpanType === "CREDENTIAL" && (
+              {infoSpanType === EnumSpanType.CREDENTIAL && (
                 <CredentialInfo name={props.page} />
               )}
-              {infoSpanType === "ENGINE_SETTING" && (
+              {infoSpanType === EnumSpanType.ENGINE_SETTING && (
                 <EngineSettings name="s3StepTwo" />
               )}
-              {infoSpanType === "ENGINE_EDITION" && (
+              {infoSpanType === EnumSpanType.ENGINE_SETTING_EC2 && (
+                <EngineSettingsEC2 name="s3StepTwo" />
+              )}
+              {infoSpanType === EnumSpanType.ENGINE_EDITION && (
                 <EngineEdition name="stepOne" />
+              )}
+              {infoSpanType === EnumSpanType.S3_BUCKET_SRC_PREFIX && (
+                <S3BucketSrcPrefix name="s3StepTwo" />
+              )}
+              {infoSpanType === EnumSpanType.S3_BUCKET_DEST_PREFIX && (
+                <S3BucketDestPrefix name="s3StepTwo" />
               )}
             </div>
           </div>

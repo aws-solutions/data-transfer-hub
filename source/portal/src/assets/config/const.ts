@@ -1,8 +1,19 @@
 import { EnumSourceType } from "../types/index";
+
+export const GITHUB_LINK =
+  "https://github.com/awslabs/aws-data-replication-hub";
+// Home page links
+export const WHAT_IS_LINK = "/";
+export const COPY_BETWEEN_LINK = "/";
+export const COPY_OSS_S3_LINK = "/";
+
+export const DOCUMENT_LINK = GITHUB_LINK + "#readme";
+export const FAQ_LINK = "/";
+export const REPORT_ISSUE_LINK = GITHUB_LINK + "/issues/new";
+
 // URL to be done
 export const URL = "";
-export const URL_FEEDBACK =
-  "https://github.com/aws-samples/aws-data-replication-hub/issues/new";
+export const URL_FEEDBACK = GITHUB_LINK + "/issues/new";
 export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
 export const SSM_LINK_MAP: any = {
   china: "https://console.amazonaws.cn/systems-manager/parameters",
@@ -21,6 +32,12 @@ export const SSM_PARASTORE_HELP_LINK_MAP: any = {
     "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html",
 };
 
+export const S3_BUCKET_PREFIX_LINK =
+  "https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html";
+
+export const S3_EVENT_LINK =
+  "https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html";
+
 export const METADATA_LINK =
   "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html";
 
@@ -30,6 +47,11 @@ export const BBR_LEARN_MORE_LINK =
   "https://www.techrepublic.com/article/how-to-enable-tcp-bbr-to-improve-network-speed-on-linux/";
 
 export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
+
+export const DEST_OBJECT_ACL_LINK =
+  "https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl";
+
+export const AUTO_SCALING_LINK = "/#/";
 
 export const CUR_SUPPORT_LANGS: string[] = ["zh", "en"];
 
@@ -66,6 +88,10 @@ export const S3_PARAMS_LIST_MAP: any = {
   srcType: {
     en_name: "Source Type",
     zh_name: "数据源类型",
+  },
+  srcEndpoint: {
+    en_name: "Source Endpoint URL",
+    zh_name: "源数据端点URL",
   },
   srcBucketName: {
     en_name: "Source Bucket Name",
@@ -146,6 +172,10 @@ export const S3_PARAMS_LIST_MAP: any = {
   includeMetadata: {
     en_name: "Include Metadata",
     zh_name: "是否包含元数据",
+  },
+  destAcl: {
+    en_name: "Object ACL",
+    zh_name: "目标对象ACL",
   },
   finderDepth: {
     en_name: "Finder Depth",
@@ -412,6 +442,17 @@ export const MAXTHREADS_OPTIONS = [
   { name: 10, value: 10 },
   { name: 20, value: 20 },
   { name: 50, value: 50 },
+];
+
+export const OBJECT_ACL_LIST = [
+  { name: "bucket-owner-full-control", value: "bucket-owner-full-control" },
+  { name: "private", value: "private" },
+  { name: "public-read", value: "public-read" },
+  { name: "public-read-write", value: "public-read-write" },
+  { name: "authenticated-read", value: "authenticated-read" },
+  { name: "aws-exec-read", value: "aws-exec-read" },
+  { name: "bucket-owner-read", value: "bucket-owner-read" },
+  // { name: "bucket-owner-full-control", value: "bucket-owner-full-control" },
 ];
 
 export const S3_STORAGE_CLASS_OPTIONS = [

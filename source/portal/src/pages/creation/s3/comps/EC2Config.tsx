@@ -8,9 +8,11 @@ import ArrowDropDownSharpIcon from "@material-ui/icons/ArrowDropDownSharp";
 // DRH Comp
 import DrhInput from "common/comp/form/DrhInput";
 import InfoSpan from "common/InfoSpan";
+import { EnumSpanType } from "common/InfoBar";
 import { ACTION_TYPE } from "assets/types";
 
 import { IState } from "store/Store";
+
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
@@ -109,7 +111,7 @@ const OptionSettings: React.FC = () => {
             />
           )}
           {t("creation.step2.settings.advance.title")}
-          <InfoSpan spanType="ENGINE_SETTING" />
+          <InfoSpan spanType={EnumSpanType.ENGINE_SETTING_EC2} />
         </div>
         {advancedShow && (
           <div className="option-content">
@@ -188,6 +190,7 @@ const OptionSettings: React.FC = () => {
                   />
                 )}
                 {t("creation.step2.settings.advance.professionTitle")}
+                <InfoSpan spanType={EnumSpanType.ENGINE_SETTING} />
               </div>
               {professionShow && (
                 <div>

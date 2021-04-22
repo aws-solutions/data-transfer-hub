@@ -7,6 +7,8 @@ import DrhInput from "common/comp/form/DrhInput";
 import DrhSelect from "common/comp/form/DrhSelect";
 import DrhCredential from "common/comp/form/DrhCredential";
 import DrhRegion from "common/comp/form/DrhRegion";
+import { EnumSpanType } from "common/InfoBar";
+import DescLink from "common/comp/DescLink";
 
 import {
   IRegionType,
@@ -18,6 +20,7 @@ import {
   S3_EVENT_OPTIONS_EC2,
   getRegionListBySourceType,
   METADATA_LINK,
+  S3_EVENT_LINK,
 } from "assets/config/const";
 
 import {
@@ -81,6 +84,10 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [s3EventClass, setS3EventClass] = useState("");
   const [showSrcCredential, setShowSrcCredential] = useState(true);
   const [showSrcRegion, setShowSrcRegion] = useState(true);
+
+  const [srcEndpoint, setSrcEndpoint] = useState(
+    tmpTaskInfo.parametersObj?.srcEndpoint || ""
+  );
 
   const [srcBucketName, setSrcBucketName] = useState(
     tmpTaskInfo.parametersObj?.srcBucketName || ""
@@ -185,6 +192,11 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
 
   // Monitor Data Change
   useEffect(() => {
+    updateTmpTaskInfo("srcEndpoint", srcEndpoint);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcEndpoint]);
+
+  useEffect(() => {
     updateTmpTaskInfo("srcBucketName", srcBucketName);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketName]);
@@ -242,6 +254,23 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               }
             />
           </div>
+
+          {engineType === S3_ENGINE_TYPE.EC2 && (
+            <div className="form-items">
+              <DrhInput
+                optionTitle={t("creation.step2.settings.source.srcEndpoint")}
+                optionDesc={t("creation.step2.settings.source.srcEndpointDesc")}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSrcEndpoint(event.target.value);
+                }}
+                isOptional={true}
+                inputName="srcEndpoint"
+                inputValue={srcEndpoint}
+                placeholder={t("creation.step2.settings.source.srcEndpoint")}
+              />
+            </div>
+          )}
+
           <div className="form-items" ref={srcBucketRef}>
             <DrhInput
               optionTitle={t("creation.step2.settings.source.bucketName")}
@@ -264,6 +293,8 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
 
           <div className="form-items">
             <DrhInput
+              showInfo={true}
+              infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
               optionTitle={t("creation.step2.settings.source.objectPrefix")}
               optionDesc={t("creation.step2.settings.source.prefixDesc")}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -328,7 +359,15 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 setEnableS3Event(event.target.value);
               }}
               optionTitle={t("creation.step2.settings.source.enableS3Event")}
-              optionDesc={t("creation.step2.settings.source.enableS3EventDesc")}
+              optionDesc="{t(creation.step2.settings.source.enableS3EventDesc)}"
+              optionDescHtml={[
+                t("creation.step2.settings.source.enableS3EventDesc1"),
+                <DescLink
+                  link={S3_EVENT_LINK}
+                  title={t("creation.step2.settings.source.enableS3EventDesc2")}
+                />,
+                t("creation.step2.settings.source.enableS3EventDesc3"),
+              ]}
               selectValue={enableS3Event}
               optionList={
                 engineType === S3_ENGINE_TYPE.EC2
@@ -348,14 +387,16 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                   "creation.step2.settings.source.includeMetadata"
                 )}
                 optionDesc=""
-                optionDescHtml={`${t(
-                  "creation.step2.settings.source.includeMetadataDesc1"
-                )} <a target="_blank" rel="noopener noreferrer" class="a-link" href=${METADATA_LINK}} > ${t(
-                  "creation.step2.settings.source.includeMetadataDesc2"
-                )}</a> ${t(
-                  "creation.step2.settings.source.includeMetadataDesc3"
-                )}`}
-                // optionDesc="Copy of Object Metadata. This will have additional API cost."
+                optionDescHtml={[
+                  t("creation.step2.settings.source.includeMetadataDesc1"),
+                  <DescLink
+                    title={t(
+                      "creation.step2.settings.source.includeMetadataDesc2"
+                    )}
+                    link={METADATA_LINK}
+                  />,
+                  t("creation.step2.settings.source.includeMetadataDesc3"),
+                ]}
                 selectValue={includeMetadata}
                 optionList={YES_NO_LIST}
               />

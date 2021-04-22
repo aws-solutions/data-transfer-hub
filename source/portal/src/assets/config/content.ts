@@ -1,8 +1,18 @@
+import {
+  WHAT_IS_LINK,
+  COPY_BETWEEN_LINK,
+  COPY_OSS_S3_LINK,
+  DOCUMENT_LINK,
+  FAQ_LINK,
+  GITHUB_LINK,
+  REPORT_ISSUE_LINK,
+} from "assets/config/const";
+
 export const TOP_TITLE_INFO = {
   en_title: "Data Transfer Hub",
   zh_title: "Data Transfer Hub",
   en_subTitle: "Easily move data into and out of AWS China regions",
-  zh_subTitle: "轻松将不同数据源的数据复制到AWS",
+  zh_subTitle: "轻松将数据传入和传出AWS中国区域",
   en_desc:
     "Data Transfer Hub helps you create, monitor and manage data transfer task. You can easily move data into and out of AWS China regions from and to other AWS standard regions, or from other cloud providers to AWS.",
   zh_desc:
@@ -78,17 +88,17 @@ export const GET_START_LINKS = {
     {
       en_name: "What is Data Transfer Hub?",
       zh_name: "什么是Data Transfer Hub?",
-      link: "/",
+      link: WHAT_IS_LINK,
     },
     {
       en_name: "Copy Amazon S3 objects from U.S. Regions to China regions.",
       zh_name: "Amazon S3从美国区域复制到中国区域",
-      link: "/",
+      link: COPY_BETWEEN_LINK,
     },
     {
       en_name: "Migration from Aliyun OSS to Amazon S3.",
       zh_name: "将阿里云OSS的数据复制至Amazon S3",
-      link: "/",
+      link: COPY_OSS_S3_LINK,
     },
   ],
 };
@@ -100,22 +110,22 @@ export const RESOURCE_LINKS = {
     {
       en_name: "Documentation",
       zh_name: "文档",
-      link: "/",
+      link: DOCUMENT_LINK,
     },
     {
       en_name: "FAQ",
       zh_name: "常见问题",
-      link: "/",
+      link: FAQ_LINK,
     },
     {
       en_name: "GitHub",
       zh_name: "GitHub",
-      link: "/",
+      link: GITHUB_LINK,
     },
     {
       en_name: "Report an issue",
       zh_name: "问题反馈",
-      link: "/",
+      link: REPORT_ISSUE_LINK,
     },
   ],
 };

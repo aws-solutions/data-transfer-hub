@@ -37,6 +37,15 @@ a:hover {
   }
 }
 
+.desc-link {
+  padding-right: 25px;
+  .icon {
+    position: absolute;
+    width: 18px;
+    margin: -2px 0 0 2px;
+  }
+}
+
 .sign-in-form-footer {
   display: none;
 }

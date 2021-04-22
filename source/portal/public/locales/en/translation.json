@@ -85,19 +85,27 @@
         "source": {
           "title": "Source settings",
           "bucketName": "Bucket Name",
+          "srcEndpoint": "Endpoint URL",
+          "srcEndpointDesc": "Source Endpoint URL, leave blank unless you want to use a custom Endpoint URL.",
           "bucketDesc": "Input the bucket name.",
           "srcInAccount": "Is Bucket in this account?",
           "srcInAccountDesc": "Select Yes, if the bucket is in the same AWS account as Data Transfer Hub.",
           "srcRegionName": "Region Name",
           "srcRegionNameDesc": "You can enter region name or region code.",
           "enableS3Event": "Enable S3 Event?",
-          "enableS3EventDesc": "Whether to enable S3 Event to trigger the transfer.",
+          "enableS3EventDesc1": "Whether to enable ",
+          "enableS3EventDesc2": "S3 Event Notifications",
+          "enableS3EventDesc3": " to trigger the transfer.",
           "objectPrefix": "Bucket Object Prefix",
           "prefixDesc": "It will only replicate objects with the provided prefix.",
           "includeMetadata": "Include Object Metadata?",
-          "includeMetadataDesc1": "Copy of",
+          "includeMetadataDesc1": "Copy of ",
           "includeMetadataDesc2": "Object Metadata.",
-          "includeMetadataDesc3": "This will have additional API cost."
+          "includeMetadataDesc3": " This will have additional API cost.",
+          "objectACL": "Object ACL",
+          "objectACLDesc1": "Select the ",
+          "objectACLDesc2": "Object ACL.",
+          "objectACLDesc3": " Use the default value if you don't want to set the object ACL."
         },
         "dest": {
           "title": "Destination settings",
@@ -105,8 +113,8 @@
           "bucketDesc": "Input the bucket name.",
           "destInAccount": "Is Bucket in this account?",
           "destInAccountDesc": "Select Yes, if the bucket is in the same AWS account as Data Transfer Hub.",
-          "objectPrefix": "Bucket Object Prefix",
-          "prefixDesc": "Add Prefix to all the transferred objects.",
+          "objectPrefix": "Prefix to Insert",
+          "prefixDesc": "The data transfer engine will insert this prefix for all objects. It will automatically append ‘/‘.",
           "storageClass": "Storage Class",
           "storageClassDesc": "Objects will be stored with the selected storage class.",
           "destRegionName": "Region Name",
@@ -350,6 +358,29 @@
       "tip3": "is enabled in this edition which can provide better network performance. Especially recommend for data transfer between China regions and standard regions.",
       "tip4": "AWS Lambda has its advantage in concurrency. Every AWS Account can have 1000 maximum concurrency by default.",
       "learnMoreTitle": "How to enable TCP BBR to improve network speed on Linux?"
+    },
+    "s3BucketSrcPrefix": {
+      "name": "Object Prefix",
+      "desc": "The S3 transfer engine will transfer the objects with the certain prefix only. For example, prefix photos will match objects like photos/a.jpg, photos.jpg or photosa.jpg.",
+      "linkName": "Organizing objects using prefixes"
+    },
+    "s3BucketDestPrefix": {
+      "name": "Prefix to Insert",
+      "tips1": "The S3 transfer engine will insert the prefix before all objects. Leave it empty if you don’t want to insert prefix.",
+      "tips2": "For example, if the prefix is `prefix` and the object key in source bucket is ",
+      "codeTips1": "abc/test.jpg",
+      "tips3": ". Then the object key in destination bucket is",
+      "codeTips2": "prefix/abc/test.jpg",
+      "tips4": "Do not include the ",
+      "codeTips3": "/",
+      "tips5": "at the end of the prefix. The engine will append it automatically.",
+      "linkName": "Organizing objects using prefixes"
+    },
+    "engineSettingsEC2": {
+      "name": "Engine settings",
+      "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimun,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
+      "tip2": "You can adjust these numbers on AWS Console after creating the task.",
+      "linkName": "Adjust the Auto Scaling Group to change the transfer concurrency."
     }
   }
 }

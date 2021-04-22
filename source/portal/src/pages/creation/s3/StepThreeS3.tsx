@@ -182,6 +182,10 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.sourceType,
     });
     taskParamArr.push({
+      ParameterKey: "srcEndpoint",
+      ParameterValue: parametersObj.srcEndpoint,
+    });
+    taskParamArr.push({
       ParameterKey: "srcBucket",
       ParameterValue: parametersObj.srcBucketName,
     });
@@ -233,6 +237,10 @@ const StepThreeS3: React.FC = () => {
     taskParamArr.push({
       ParameterKey: "includeMetadata",
       ParameterValue: tmpIncludeMetaData,
+    });
+    taskParamArr.push({
+      ParameterKey: "destAcl",
+      ParameterValue: parametersObj.destAcl,
     });
     taskParamArr.push({
       ParameterKey: "maxCapacity",

@@ -71,7 +71,7 @@
       "requiredCredential": "请选择凭证参数",
       "store1": "选择存储在参数仓库中的",
       "store2": "凭据",
-      "store3": ". 如果源数据桶是公开数据桶则可以为空"
+      "store3": ". 如果数据桶是公开数据桶则可以为空"
     },
     "step1": {
       "engineType": "选择引擎类型",
@@ -86,18 +86,26 @@
           "title": "数据源设置",
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
+          "srcEndpoint": "端点URL",
+          "srcEndpointDesc": "源端点URL，除非您要使用自定义端点URL，否则请留空.",
           "srcInAccount": "源数据桶在当前账户吗?",
           "srcInAccountDesc": "如果Data Transfer Hub部署在源数据桶的账号，请选择YES",
           "srcRegionName": "源区域名称",
           "srcRegionNameDesc": "您可以输入区域名称或区域代码.",
-          "enableS3Event": "是否启用S3事件?",
-          "enableS3EventDesc": "是否启用S3事件来触发传输.",
+          "enableS3Event": "是否启用S3事件通知?",
+          "enableS3EventDesc1": "是否启用 ",
+          "enableS3EventDesc2": "S3事件通知",
+          "enableS3EventDesc3": " 触发数据传输.",
           "objectPrefix": "数据桶对象前缀",
           "prefixDesc": "只会复制指定的前缀的数据对象.",
           "includeMetadata": "包括对象元数据?",
           "includeMetadataDesc1": "复制",
           "includeMetadataDesc2": "元数据.",
-          "includeMetadataDesc3": "这将产生额外的API费用."
+          "includeMetadataDesc3": "这将产生额外的API费用.",
+          "objectACL": "目标对象ACL",
+          "objectACLDesc1": "选择 ",
+          "objectACLDesc2": "目标对象ACL.",
+          "objectACLDesc3": " 如果您不想设置对象ACL，请使用默认值."
         },
         "dest": {
           "title": "目标桶设置",
@@ -105,8 +113,8 @@
           "bucketDesc": "请输入数据桶名称.",
           "destInAccount": "目标数据桶在当前账户吗?",
           "destInAccountDesc": "如果Data Transfer Hub部署在目标数据桶的账号，请选择YES",
-          "objectPrefix": "数据桶对象前缀",
-          "prefixDesc": "将前缀添加到所有传输的对象.",
+          "objectPrefix": "插入前缀",
+          "prefixDesc": "数据传输引擎将为所有对象插入此前缀, 它将自动附加 ‘/‘.",
           "storageClass": "存储类型",
           "storageClassDesc": "对象将会复制到您所选择的存储类型.",
           "destRegionName": "目标区域名称",
@@ -350,6 +358,29 @@
       "tip3": "的启用，可以提供更好的网络性能。 特别推荐用于中国区域和标准区域之间的数据传输.",
       "tip4": "AWS Lambda在并发方面具有优势。 默认情况下，每个AWS账户最多可具有1000个并发.",
       "learnMoreTitle": "如何在Linux上启用TCP BBR以提高网络速度?"
+    },
+    "s3BucketSrcPrefix": {
+      "name": "对象前缀",
+      "desc": "S3传输引擎将仅传输具有特定前缀的对象。 例如，前缀 photos 将匹配photos/a.jpg，photos.jpg或photosa.jpg之类的对象.",
+      "linkName": "使用前缀组织对象"
+    },
+    "s3BucketDestPrefix": {
+      "name": "插入前缀",
+      "tips1": "S3传输引擎将在所有对象之前插入前缀。 如果您不想插入前缀，请将其保留为空.",
+      "tips2": "例如, 如果前缀是 `prefix` 并且源存储桶中的对象Key是 ",
+      "codeTips1": "abc/test.jpg",
+      "tips3": ". 然后目标存储桶中的对象key为",
+      "codeTips2": "prefix/abc/test.jpg",
+      "tips4": "不要包含在最后增加 ",
+      "codeTips3": "/",
+      "tips5": " ,引擎会自动附加这个.",
+      "linkName": "使用前缀组织对象"
+    },
+    "engineSettingsEC2": {
+      "name": "引擎设置",
+      "tip1": "S3传输引擎在Auto Scaling组中使用Amazon EC2 Graviton2传输对象。 您可以通过设置最小实例数，最大实例数和所需实例数来调整并发性。 传输引擎将在最小值和最大值之间自动缩放.",
+      "tip2": "创建任务后，您可以在AWS Console上调整这些数字.",
+      "linkName": "调整Auto Scaling组以更改传输并发."
     }
   }
 }

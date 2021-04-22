@@ -1,7 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import InfoSpan from "common/InfoSpan";
 
 type DrhInputProps = {
+  showInfo?: boolean;
+  infoType?: string;
   inputType?: string;
   isHidden?: boolean;
   optionTitle: string;
@@ -24,6 +27,8 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
   const { t } = useTranslation();
 
   const {
+    showInfo,
+    infoType,
     inputType,
     optionTitle,
     optionDesc,
@@ -48,6 +53,7 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
             - <i>{t("optional")}</i>
           </span>
         )}
+        {showInfo && <InfoSpan spanType={infoType || ""} />}
       </div>
       <div className="desc">{optionDesc}</div>
       <div>
