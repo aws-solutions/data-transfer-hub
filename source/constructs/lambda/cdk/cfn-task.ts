@@ -40,7 +40,7 @@ exports.createTaskCfn = async function (input: CfnTaskInput, context: Context) {
   const cfn = new AWS.CloudFormation();
   const stack = await cfn.createStack({
     TemplateURL: input.templateUrl,
-    StackName: `DRH-${input.type.toString()}-${id}`,
+    StackName: `DTH-${input.type.toString()}-${id}`,
     Parameters: input.parameters,
     Capabilities: ['CAPABILITY_NAMED_IAM'],
     Tags: [

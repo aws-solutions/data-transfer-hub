@@ -66,7 +66,6 @@ export class PortalStack extends cdk.Construct {
         autoDeleteObjects: false,
       },
       cloudFrontDistributionProps: {
-        // viewerCertificate: cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate(siteDomain),
         priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
         enableIpv6: false,
         enableLogging: true,  //Enable access logging for the distribution.
@@ -75,6 +74,18 @@ export class PortalStack extends cdk.Construct {
       insertHttpSecurityHeaders: false,
     });
     const websiteBucket = website.s3Bucket as s3.Bucket;
+
+    // Currently, CachePolicy is not available in Cloudfront in China Regions.
+    // Need to override the default CachePolicy to use ForwardedValues to support both China regions and Global regions.
+    // This should be updated in the future once the feature is landed in China regions.
+    const websiteDist = website.cloudFrontWebDistribution.node.defaultChild as cloudfront.CfnDistribution
+    websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.CachePolicyId', undefined)
+    websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.ForwardedValues', {
+      "Cookies": {
+        "Forward": "none"
+      },
+      "QueryString": false
+    })
 
     // CustomResourceRole
     const customResourceRole = new iam.Role(this, 'CustomResourceRole', {

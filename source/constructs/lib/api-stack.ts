@@ -213,6 +213,35 @@ export class ApiStack extends Construct {
       }
     }
 
+    // AWSAppSyncPushToCloudWatchLogs managed policy is not available in China regions.
+    // Create the policy manually
+    const apiLogRole = new iam.Role(this, 'ApiLogRole', {
+      assumedBy: new iam.ServicePrincipal('appsync.amazonaws.com'),
+    });
+
+    const apiLogPolicy = new iam.Policy(this, 'ApiLogPolicy', {
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            'logs:CreateLogGroup',
+            'logs:CreateLogStream',
+            'logs:PutLogEvents',
+          ],
+          resources: [
+            '*'
+          ]
+        }),
+      ]
+    });
+    apiLogRole.attachInlinePolicy(apiLogPolicy)
+
+    const cfnApiLogRoley = apiLogPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnApiLogRoley, [
+      {
+        id: 'W12',
+        reason: 'The managed policy AWSAppSyncPushToCloudWatchLogs needs to use any resources'
+      }
+    ])
 
     // Create the GraphQL API Endpoint, enable Cognito User Pool Auth and IAM Auth.
     this.api = new appsync.GraphqlApi(this, 'ApiEndpoint', {
@@ -228,6 +257,7 @@ export class ApiStack extends Construct {
       },
       logConfig: {
         fieldLogLevel: appsync.FieldLogLevel.ERROR,
+        role: apiLogRole,
       },
       xrayEnabled: true
     })

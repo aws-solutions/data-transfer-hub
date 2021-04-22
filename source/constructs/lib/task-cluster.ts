@@ -47,10 +47,10 @@ export class TaskCluster extends cdk.Construct {
       natGateways: 0,
     })
 
-    vpc.addFlowLog('FlowLogS3', {
-      destination: ec2.FlowLogDestination.toS3(),
+    vpc.addFlowLog('FlowLogCW', {
+      destination: ec2.FlowLogDestination.toCloudWatchLogs(),
       trafficType: ec2.FlowLogTrafficType.REJECT
-    });
+    })
 
     const cfnVpc = vpc.node.defaultChild as ec2.CfnVPC
     addCfnNagSuppressRules(cfnVpc, [

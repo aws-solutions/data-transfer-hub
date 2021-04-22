@@ -100,7 +100,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
         "events:*",
         "lambda:*",
         "iam:*",
-        "ssm:Get*"
+        "ssm:*"
       ]
     }))
 
