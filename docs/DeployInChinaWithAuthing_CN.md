@@ -1,6 +1,6 @@
-# 在AWS中国区部署 Data Replication Hub
+# Deploy in AWS China Regions
 
-**部署时间:** 大约需要20分钟.
+**Estimated Deployment Time:** Approximate 20 minutes.
 
 ## 部署前提
 由于在中国区的网站服务需要有ICP备案，请确保您已经将Data Replication Hub的相关域名已经备案，否则部署完成后，可能无法正常访问服务。
