@@ -57,7 +57,7 @@ Available Plugins:
 
 > **Time to deploy:** Approximately 15 minutes.
 
-Refer to this [guide](docs/DeployInChinaWithAuthing_CN.md) if you want deploy this solution in AWS China regions.
+Refer to this [guide](docs/DeployInChinaWithAuthing_EN.md) if you want deploy this solution in AWS China regions.
 
 ### Launch CloudFormation Stack
 

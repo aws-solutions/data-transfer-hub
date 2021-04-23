@@ -1,6 +1,6 @@
-# Deploy in AWS China Regions
+# 在AWS中国区部署 Data Replication Hub
 
-**Estimated Deployment Time:** Approximate 20 minutes.
+**部署时间:** 大约需要20分钟.
 
 ## 部署前提
 由于在中国区的网站服务需要有ICP备案，请确保您已经将Data Replication Hub的相关域名已经备案，否则部署完成后，可能无法正常访问服务。
@@ -19,11 +19,11 @@
 
 1. 应用配置：
 
-  ![应用配置](./images/oidc-app-setting.jpg)
+  ![应用配置](./images/oidc-app-setting-1.png)
 
 2. 配置登陆表单:
 
-  ![配置登陆表单](./images/oidc-app-setting-mail.jpg)
+  ![配置登陆表单](./images/oidc-app-setting-mail.png)
 
 3. 其他参数根据您的项目需要进行配置或者默认即可
 
@@ -43,16 +43,16 @@
 
 5. 打开[Authing控制台](https://console.authing.cn/console)并打开应用配置信息按照下图所示填写在Cloudformation中的OIDC Settings中的参数:
 
-  ![URL](./images/oidc-app-setting-url.jpg)
+  ![URL](./images/oidc-app-setting-url.png)
 
-6. 填写**OidcTokenValidationUrl**，该URL为 https://<你的应用名>.authing.cn/api/v2/oidc/validate_token ，请查看[文档说明](https://docs.authing.cn/user/token.html#%E5%9C%A8%E7%BA%BF%E9%AA%8C%E8%AF%81-oidc-idtoken)
+6. 填写**OidcTokenValidationUrl**，该URL为 `https://<你的应用名>.authing.cn/api/v2/oidc/validate_token` ，请查看[文档说明](https://docs.authing.cn/user/token.html#%E5%9C%A8%E7%BA%BF%E9%AA%8C%E8%AF%81-oidc-idtoken)
    
     
 7. 点击 **下一步** 然后点击 **创建堆栈**.
 
 ### 在Route53中配置域名指向CloudFront
 
-在Route 53和ClouFront中，将Route53中的域名增加解析到CloudFront，并在CloudFron中备用域名 (CNAMEs)
+在Route 53和ClouFront中，将Route53中的域名增加解析到CloudFront，并在CloudFront中备用域名 (CNAMEs)
 
 1. 在[Cloudformation](https://console.amazonaws.cn/cloudformation/home)的输出中找到PortalUrl
 
@@ -78,4 +78,4 @@
 
 如果没有特别需要，建议在首次登录成功后，在Authing的应用控制台将注册功能关闭，以免产生不必要的注册用户
 
-  ![Portal Url](./images/oidc-app-setting-safe.jpg)
+  ![Portal Url](./images/oidc-app-setting-safe.png)
