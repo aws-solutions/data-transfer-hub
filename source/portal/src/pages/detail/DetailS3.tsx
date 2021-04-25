@@ -36,9 +36,9 @@ import Bottom from "common/Bottom";
 import NormalButton from "common/comp/NormalButton";
 import PrimaryButton from "common/comp/PrimaryButton";
 import StopButtonLoading from "common/comp/PrimaryButtonLoading";
+import TaskStatusComp from "common/comp/TaskStatusComp";
 
 import {
-  TASK_STATUS_MAP,
   EnumTaskStatus,
   EnumSourceType,
   S3_TASK_TYPE_MAP,
@@ -351,9 +351,7 @@ const Detail: React.FC = (props: any) => {
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
                     <div>
-                      {curTaskInfo.progress
-                        ? TASK_STATUS_MAP[curTaskInfo.progress].name
-                        : "-"}
+                      <TaskStatusComp progress={curTaskInfo.progress} />
                     </div>
                   </div>
                 </div>

@@ -24,12 +24,16 @@ import LambdaConfig from "./comps/LambdaConfig";
 import EC2Config from "./comps/EC2Config";
 import OptionSettings from "./comps/MoreSettings";
 
-import { bucketNameIsValid, emailIsValid } from "assets/config/const";
+import {
+  bucketNameIsValid,
+  emailIsValid,
+  urlIsValid,
+} from "assets/config/const";
 
 import "../Creation.scss";
 
 import { IState } from "store/Store";
-import { S3_ENGINE_TYPE } from "assets/types";
+import { EnumSourceType, S3_ENGINE_TYPE } from "assets/types";
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
@@ -46,7 +50,11 @@ const StepTwoS3: React.FC = () => {
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
   const [destBucketFormatError, setDestBucketFormatError] = useState(false);
   const [srcRegionRequiredError, setSrcRegionRequiredError] = useState(false);
+  const [srcShowEndPointFormatError, setSrcShowEndPointFormatError] = useState(
+    false
+  );
   const [destRegionRequiredError, setDestRegionRequiredError] = useState(false);
+  const [destPrefixFormatError, setDestPrefixFormatError] = useState(false);
   const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);
   const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
 
@@ -72,6 +80,7 @@ const StepTwoS3: React.FC = () => {
       errorCount++;
       setSrcBucketFormatError(true);
     }
+
     // Dest Bucket Not Can Be Empty
     if (!paramsObj.destBucketName || paramsObj.destBucketName.trim() === "") {
       errorCount++;
@@ -80,6 +89,13 @@ const StepTwoS3: React.FC = () => {
       errorCount++;
       setDestBucketFormatError(true);
     }
+
+    // If dest prefix is not empty, could not end with "/"
+    if (paramsObj.destBucketPrefix.endsWith("/")) {
+      errorCount++;
+      setDestPrefixFormatError(true);
+    }
+
     // Alarm Email Not Can Be Empty
     if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
       errorCount++;
@@ -92,8 +108,19 @@ const StepTwoS3: React.FC = () => {
 
     // If Engine is EC2, check source region and destination region required
     if (engine === S3_ENGINE_TYPE.EC2) {
+      // Source Endpoint is not valid
+      if (
+        paramsObj.sourceType === EnumSourceType.S3_COMPATIBLE &&
+        !urlIsValid(paramsObj.srcEndpoint)
+      ) {
+        errorCount++;
+        setSrcShowEndPointFormatError(true);
+      }
       // Check Source Region
-      if (!paramsObj.srcRegionName) {
+      if (
+        !paramsObj.srcRegionName &&
+        paramsObj.sourceType !== EnumSourceType.S3_COMPATIBLE
+      ) {
         errorCount++;
         setSrcRegionRequiredError(true);
       }
@@ -109,6 +136,40 @@ const StepTwoS3: React.FC = () => {
     }
     return true;
   };
+
+  // Monitor tmpTaskInfo and hide validation error
+  useEffect(() => {
+    setSrcBucketRequiredError(false);
+    setSrcBucketFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.srcBucketName]);
+
+  useEffect(() => {
+    setSrcShowEndPointFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.srcEndpoint]);
+
+  useEffect(() => {
+    setSrcRegionRequiredError(false);
+  }, [tmpTaskInfo?.parametersObj?.srcRegionObj]);
+
+  useEffect(() => {
+    setDestBucketRequiredError(false);
+    setDestBucketRequiredError(false);
+  }, [tmpTaskInfo?.parametersObj?.destBucketName]);
+
+  useEffect(() => {
+    setDestRegionRequiredError(false);
+  }, [tmpTaskInfo?.parametersObj?.destRegionObj]);
+
+  useEffect(() => {
+    setDestPrefixFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.destBucketPrefix]);
+
+  useEffect(() => {
+    setAlramEmailRequireError(false);
+    setAlarmEmailFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.alarmEmail]);
+
+  // END Monitor tmpTaskInfo and hide validation error
 
   const goToHomePage = () => {
     const toPath = "/";
@@ -134,6 +195,20 @@ const StepTwoS3: React.FC = () => {
       });
     }
   };
+
+  // Hide Error When Source Type Changed
+  useEffect(() => {
+    setSrcBucketRequiredError(false);
+    setSrcBucketFormatError(false);
+    setDestBucketRequiredError(false);
+    setDestBucketFormatError(false);
+    setSrcRegionRequiredError(false);
+    setSrcShowEndPointFormatError(false);
+    setDestRegionRequiredError(false);
+    setDestPrefixFormatError(false);
+    setAlramEmailRequireError(false);
+    setAlarmEmailFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.sourceType]);
 
   return (
     <div className="drh-page">
@@ -167,36 +242,20 @@ const StepTwoS3: React.FC = () => {
                 srcShowBucketRequiredError={srcBucketRequiredError}
                 srcShowBucketValidError={srcBucketFormatError}
                 srcRegionRequiredError={srcRegionRequiredError}
-                changeSrcBucket={() => {
-                  setSrcBucketRequiredError(false);
-                  setSrcBucketFormatError(false);
-                }}
-                changeSrcRegion={() => {
-                  setSrcRegionRequiredError(false);
-                }}
+                srcShowEndPointFormatError={srcShowEndPointFormatError}
               />
               <DestSettings
                 engineType={engine}
                 destShowBucketRequiredError={destBucketRequiredError}
                 destShowBucketValidError={destBucketFormatError}
                 destShowRegionRequiredError={destRegionRequiredError}
-                changeDestBucket={() => {
-                  setDestBucketRequiredError(false);
-                  setDestBucketFormatError(false);
-                }}
-                changeDestRegion={() => {
-                  setDestRegionRequiredError(false);
-                }}
+                destShowPrefixFormatError={destPrefixFormatError}
               />
               {engine === S3_ENGINE_TYPE.LAMBDA && <LambdaConfig />}
               {engine === S3_ENGINE_TYPE.EC2 && <EC2Config />}
               <OptionSettings
                 showAlramEmailRequireError={alramEmailRequireError}
                 showAlarmEmailFormatError={alarmEmailFormatError}
-                changeAlarmEmail={() => {
-                  setAlramEmailRequireError(false);
-                  setAlarmEmailFormatError(false);
-                }}
               />
               <div className="buttons">
                 <TextButton onClick={goToHomePage}>

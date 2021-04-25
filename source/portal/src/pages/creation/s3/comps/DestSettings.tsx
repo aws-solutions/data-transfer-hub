@@ -36,8 +36,7 @@ interface DestPropType {
   destShowBucketRequiredError: boolean;
   destShowBucketValidError: boolean;
   destShowRegionRequiredError: boolean;
-  changeDestBucket: any;
-  changeDestRegion: any;
+  destShowPrefixFormatError: boolean;
 }
 
 const DestSettings: React.FC<DestPropType> = (props) => {
@@ -48,9 +47,8 @@ const DestSettings: React.FC<DestPropType> = (props) => {
     engineType,
     destShowBucketRequiredError,
     destShowBucketValidError,
-    changeDestBucket,
     destShowRegionRequiredError,
-    changeDestRegion,
+    destShowPrefixFormatError,
   } = props;
   // Refs
   const destBucketRef = useRef<any>(null);
@@ -69,6 +67,8 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
   const [destBucketFormatError, setDestBucketFormatError] = useState(false);
   const [destRegionReqiredError, setDestRegionReqiredError] = useState(false);
+
+  const [destPrefixFormatError, setDestPrefixFormatError] = useState(false);
 
   const [destBucketName, setDestBucketName] = useState(
     tmpTaskInfo.parametersObj?.destBucketName || ""
@@ -99,16 +99,20 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   // Show Error
   useEffect(() => {
     console.info("destShowBucketRequiredError:", destShowBucketRequiredError);
-    if (destShowBucketRequiredError) {
-      setDestBucketRequiredError(destShowBucketRequiredError);
-    }
-    if (destShowBucketValidError) {
-      setDestBucketFormatError(destShowBucketValidError);
-    }
+    setDestBucketRequiredError(destShowBucketRequiredError);
+    setDestBucketFormatError(destShowBucketValidError);
     if (destShowBucketRequiredError || destShowBucketValidError) {
       destBucketRef?.current?.scrollIntoView();
     }
   }, [destShowBucketRequiredError, destShowBucketValidError]);
+
+  // Show destPrefix format Error
+  useEffect(() => {
+    if (destShowPrefixFormatError) {
+      setProfessionShow(true);
+    }
+    setDestPrefixFormatError(destShowPrefixFormatError);
+  }, [destShowPrefixFormatError]);
 
   // Show destRegionRequiredError
   useEffect(() => {
@@ -218,6 +222,13 @@ const DestSettings: React.FC<DestPropType> = (props) => {
     }
   }, [engineType, tmpTaskInfo?.parametersObj?.sourceInAccount]);
 
+  useEffect(() => {
+    setDestBucketRequiredError(false);
+    setDestBucketFormatError(false);
+    setDestRegionReqiredError(false);
+    setDestPrefixFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.sourceType]);
+
   return (
     <div className="box-shadow card-list">
       <div className="option">
@@ -232,7 +243,6 @@ const DestSettings: React.FC<DestPropType> = (props) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setDestBucketRequiredError(false);
                 setDestBucketFormatError(false);
-                changeDestBucket();
                 setDestBucketName(event.target.value);
               }}
               inputName="destBucketName"
@@ -285,7 +295,6 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                   event: React.ChangeEvent<HTMLInputElement>,
                   data: IRegionType
                 ) => {
-                  changeDestRegion();
                   setDestRegionReqiredError(false);
                   setDestRegionObj(data);
                 }}
@@ -324,8 +333,11 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                   optionTitle={t("creation.step2.settings.dest.objectPrefix")}
                   optionDesc={t("creation.step2.settings.dest.prefixDesc")}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setDestPrefixFormatError(false);
                     setDestBucketPrefix(event.target.value);
                   }}
+                  showFormatError={destPrefixFormatError}
+                  formatErrorMsg={t("tips.error.destPrefixInvalid")}
                   isOptional={true}
                   inputName="destBucketPrefix"
                   inputValue={destBucketPrefix}

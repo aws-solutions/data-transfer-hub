@@ -15,6 +15,8 @@ const S3BucketDestPrefix: React.FC<Page> = (props: Page) => {
 
       <div className="top-tips">
         {t("comps.s3BucketDestPrefix.tips2")}
+        <code>{t("comps.s3BucketDestPrefix.codeTips0")}</code>
+        {t("comps.s3BucketDestPrefix.tips2_1")}
         <code>{t("comps.s3BucketDestPrefix.codeTips1")}</code>
         {t("comps.s3BucketDestPrefix.tips3")}
         <code>{t("comps.s3BucketDestPrefix.codeTips2")}</code>

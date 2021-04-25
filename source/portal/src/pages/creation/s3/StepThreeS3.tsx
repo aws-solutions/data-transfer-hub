@@ -36,7 +36,12 @@ import {
   DRH_CONFIG_JSON_NAME,
   YES_NO,
 } from "assets/config/const";
-import { ACTION_TYPE, S3_ENGINE_TYPE, S3_TASK_TYPE_MAP } from "assets/types";
+import {
+  ACTION_TYPE,
+  EnumSourceType,
+  S3_ENGINE_TYPE,
+  S3_TASK_TYPE_MAP,
+} from "assets/types";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -179,7 +184,10 @@ const StepThreeS3: React.FC = () => {
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
       ParameterKey: "srcType",
-      ParameterValue: parametersObj.sourceType,
+      ParameterValue:
+        parametersObj.sourceType === EnumSourceType.S3_COMPATIBLE
+          ? EnumSourceType.S3
+          : parametersObj.sourceType,
     });
     taskParamArr.push({
       ParameterKey: "srcEndpoint",

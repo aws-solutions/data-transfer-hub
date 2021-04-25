@@ -14,7 +14,6 @@ const mapState = (state: IState) => ({
 interface MoreSettingsType {
   showAlramEmailRequireError: boolean;
   showAlarmEmailFormatError: boolean;
-  changeAlarmEmail: any;
 }
 
 const OptionSettings: React.FC<MoreSettingsType> = (props) => {
@@ -25,11 +24,7 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
   // Refs
   const alarmEmailRef = useRef<any>(null);
 
-  const {
-    showAlramEmailRequireError,
-    showAlarmEmailFormatError,
-    changeAlarmEmail,
-  } = props;
+  const { showAlramEmailRequireError, showAlarmEmailFormatError } = props;
 
   const [description, setDescription] = useState(
     tmpTaskInfo.parametersObj?.description || ""
@@ -77,6 +72,11 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alarmEmail]);
 
+  useEffect(() => {
+    setAlramEmailRequireError(false);
+    setAlarmEmailFormatError(false);
+  }, [tmpTaskInfo?.parametersObj?.sourceType]);
+
   return (
     <div className="box-shadow card-list">
       <div className="option">
@@ -106,7 +106,6 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setAlramEmailRequireError(false);
                 setAlarmEmailFormatError(false);
-                changeAlarmEmail();
                 setAlarmEmail(event.target.value);
               }}
               inputName="alarmEmail"

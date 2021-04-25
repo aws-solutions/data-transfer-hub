@@ -66,7 +66,8 @@
       "aliyunOSSName": "阿里云 OSS",
       "qiniuKodoName": "七牛 Kodo",
       "tencentCOSName": "腾讯 COS",
-      "googleGCSName": "Google GCS"
+      "googleGCSName": "Google GCS",
+      "compatibleName": "Amazon S3 兼容的存储"
     },
     "tips": {
       "requiredCredential": "请选择凭证参数",
@@ -323,10 +324,12 @@
     "error": {
       "sourceBucketRequired": "源数据桶名称必填",
       "sourceBucketNameInvalid": "源数据桶名称无效",
+      "srcEndpointInvalid": "端点URL无效",
       "destBucketRequired": "目标数据桶名称必填",
       "destBucketNameInvalid": "目标数据桶名称无效",
       "srcRegionRequired": "源数据桶区域必填",
       "destRegionRequired": "目标数据桶区域必填",
+      "destPrefixInvalid": "不需要在后缀后面添加‘/’",
       "emailRequired": "通知邮箱必填",
       "emailValidate": "请输入合法的通知邮箱地址",
       "credentialRequired": "凭证参数必填"
@@ -367,7 +370,9 @@
     "s3BucketDestPrefix": {
       "name": "插入前缀",
       "tips1": "S3传输引擎将在所有对象之前插入前缀。 如果您不想插入前缀，请将其保留为空.",
-      "tips2": "例如, 如果前缀是 `prefix` 并且源存储桶中的对象Key是 ",
+      "tips2": "例如, 如果前缀是 ",
+      "codeTips0": "prefix",
+      "tips2_1": " 并且源数据的key是 ",
       "codeTips1": "abc/test.jpg",
       "tips3": ". 然后目标存储桶中的对象key为",
       "codeTips2": "prefix/abc/test.jpg",

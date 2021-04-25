@@ -3,12 +3,15 @@ import { EnumSourceType } from "../types/index";
 export const GITHUB_LINK =
   "https://github.com/awslabs/aws-data-replication-hub";
 // Home page links
-export const WHAT_IS_LINK = "/";
-export const COPY_BETWEEN_LINK = "/";
-export const COPY_OSS_S3_LINK = "/";
+export const WHAT_IS_LINK = GITHUB_LINK + "#readme";
+export const COPY_BETWEEN_LINK =
+  GITHUB_LINK + "/docs/tutortial-oregon-to-beijing-s3.md";
+export const COPY_OSS_S3_LINK =
+  GITHUB_LINK + "/docs/tutortial-migration-oss-to-s3.md";
 
 export const DOCUMENT_LINK = GITHUB_LINK + "#readme";
-export const FAQ_LINK = "/";
+export const FAQ_LINK =
+  "https://www.amazonaws.cn/en/solutions/data-replication-hub/resources/";
 export const REPORT_ISSUE_LINK = GITHUB_LINK + "/issues/new";
 
 // URL to be done
@@ -51,7 +54,8 @@ export const S3_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/buckets/";
 export const DEST_OBJECT_ACL_LINK =
   "https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl";
 
-export const AUTO_SCALING_LINK = "/#/";
+export const AUTO_SCALING_LINK =
+  "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html";
 
 export const CUR_SUPPORT_LANGS: string[] = ["zh", "en"];
 
@@ -465,7 +469,7 @@ export const S3_STORAGE_CLASS_OPTIONS = [
   },
 ];
 
-export const SOURCE_TYPE_OPTIONS = [
+export const SOURCE_TYPE_OPTIONS_LAMBDA = [
   { name: "creation.sourceType.amazonS3Name", value: EnumSourceType.S3 },
   { name: "creation.sourceType.aliyunOSSName", value: EnumSourceType.AliOSS },
   { name: "creation.sourceType.qiniuKodoName", value: EnumSourceType.Qiniu },
@@ -476,6 +480,20 @@ export const SOURCE_TYPE_OPTIONS = [
   {
     name: "creation.sourceType.googleGCSName",
     value: EnumSourceType.GoogleGCS,
+  },
+];
+
+export const SOURCE_TYPE_OPTIONS_EC2 = [
+  { name: "creation.sourceType.amazonS3Name", value: EnumSourceType.S3 },
+  { name: "creation.sourceType.aliyunOSSName", value: EnumSourceType.AliOSS },
+  { name: "creation.sourceType.qiniuKodoName", value: EnumSourceType.Qiniu },
+  {
+    name: "creation.sourceType.tencentCOSName",
+    value: EnumSourceType.TencentCOS,
+  },
+  {
+    name: "creation.sourceType.compatibleName",
+    value: EnumSourceType.S3_COMPATIBLE,
   },
 ];
 
@@ -507,10 +525,20 @@ export const CREATE_USE_LESS_PROPERTY = [
   "__typename",
 ];
 
+export const urlIsValid = (url: string): boolean => {
+  const REG = /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/;
+  return REG.test(url);
+};
+
 export const emailIsValid = (email: string): boolean => {
   // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+};
+
+export const destBucketPrefixValid = (prifix: string): boolean => {
+  const REG = /.*(?<!a)$/.test(prifix);
+  return !REG;
 };
 
 export const bucketNameIsValid = (bucketName: string): boolean => {

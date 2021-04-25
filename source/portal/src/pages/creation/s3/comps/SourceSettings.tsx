@@ -14,7 +14,8 @@ import {
   IRegionType,
   YES_NO,
   YES_NO_LIST,
-  SOURCE_TYPE_OPTIONS,
+  SOURCE_TYPE_OPTIONS_LAMBDA,
+  SOURCE_TYPE_OPTIONS_EC2,
   S3_EVENT_TYPE,
   S3_EVENT_OPTIONS,
   S3_EVENT_OPTIONS_EC2,
@@ -39,8 +40,7 @@ interface SourcePropType {
   srcShowBucketRequiredError: boolean;
   srcShowBucketValidError: boolean;
   srcRegionRequiredError: boolean;
-  changeSrcBucket: any;
-  changeSrcRegion: any;
+  srcShowEndPointFormatError: boolean;
 }
 
 const SourceSettings: React.FC<SourcePropType> = (props) => {
@@ -49,8 +49,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
     srcShowBucketRequiredError,
     srcShowBucketValidError,
     srcRegionRequiredError,
-    changeSrcBucket,
-    changeSrcRegion,
+    srcShowEndPointFormatError,
   } = props;
   console.info("engineType:", engineType);
   const { t } = useTranslation();
@@ -103,6 +102,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [srcBucketRequiredError, setSrcBucketRequiredError] = useState(false);
   const [srcBucketFormatError, setSrcBucketFormatError] = useState(false);
   const [srcRegionReqired, setSrcRegionReqired] = useState(false);
+  const [srcEndpointFormatError, setSrcEndpointFormatError] = useState(false);
   const [srcBucketPrefix, setSrcBucketPrefix] = useState(
     tmpTaskInfo.parametersObj?.srcBucketPrefix || ""
   );
@@ -111,8 +111,14 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
 
   // Monitor the sourceType change
   useEffect(() => {
+    // Hide Errors
+    setSrcBucketRequiredError(false);
+    setSrcBucketFormatError(false);
+    setSrcRegionReqired(false);
     // Update tmpTaskInfo
     updateTmpTaskInfo("sourceType", sourceType);
+    // Set Endpoint to empty
+    setSrcEndpoint("");
     // Set Is Bucket In Account to No
     if (
       sourceType !== EnumSourceType.S3 ||
@@ -134,6 +140,13 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
     setRegionList(getRegionListBySourceType(sourceType));
     if (sourceType === EnumSourceType.GoogleGCS) {
       updateTmpTaskInfo("srcRegionName", "Auto");
+    }
+    if (engineType === S3_ENGINE_TYPE.EC2) {
+      if (sourceType === EnumSourceType.S3_COMPATIBLE) {
+        setShowSrcRegion(false);
+      } else {
+        setShowSrcRegion(true);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceType]);
@@ -157,6 +170,10 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       srcRegionRef?.current?.scrollIntoView();
     }
   }, [srcRegionRequiredError]);
+
+  useEffect(() => {
+    setSrcEndpointFormatError(srcShowEndPointFormatError);
+  }, [srcShowEndPointFormatError]);
 
   // Monitor the sourceInAccount Change
   useEffect(() => {
@@ -249,34 +266,37 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               selectValue={sourceType}
               optionList={
                 engineType === S3_ENGINE_TYPE.EC2
-                  ? SOURCE_TYPE_OPTIONS.slice(0, 4)
-                  : SOURCE_TYPE_OPTIONS
+                  ? SOURCE_TYPE_OPTIONS_EC2
+                  : SOURCE_TYPE_OPTIONS_LAMBDA
               }
             />
           </div>
 
-          {engineType === S3_ENGINE_TYPE.EC2 && (
-            <div className="form-items">
-              <DrhInput
-                optionTitle={t("creation.step2.settings.source.srcEndpoint")}
-                optionDesc={t("creation.step2.settings.source.srcEndpointDesc")}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setSrcEndpoint(event.target.value);
-                }}
-                isOptional={true}
-                inputName="srcEndpoint"
-                inputValue={srcEndpoint}
-                placeholder="https://s3-compatible-endpoint.com"
-              />
-            </div>
-          )}
+          {engineType === S3_ENGINE_TYPE.EC2 &&
+            sourceType === EnumSourceType.S3_COMPATIBLE && (
+              <div className="form-items">
+                <DrhInput
+                  optionTitle={t("creation.step2.settings.source.srcEndpoint")}
+                  optionDesc={t(
+                    "creation.step2.settings.source.srcEndpointDesc"
+                  )}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setSrcEndpoint(event.target.value);
+                  }}
+                  inputName="srcEndpoint"
+                  inputValue={srcEndpoint}
+                  placeholder="https://s3-compatible-endpoint.com"
+                  showFormatError={srcEndpointFormatError}
+                  formatErrorMsg={t("tips.error.srcEndpointInvalid")}
+                />
+              </div>
+            )}
 
           <div className="form-items" ref={srcBucketRef}>
             <DrhInput
               optionTitle={t("creation.step2.settings.source.bucketName")}
               optionDesc={t("creation.step2.settings.source.bucketDesc")}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                changeSrcBucket();
                 setSrcBucketRequiredError(false);
                 setSrcBucketFormatError(false);
                 setSrcBucketName(event.target.value);
@@ -347,7 +367,6 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 ) => {
                   setSrcRegionReqired(false);
                   setSrcRegionObj(data);
-                  changeSrcRegion();
                 }}
               />
             </div>

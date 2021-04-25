@@ -96,6 +96,7 @@ export enum EnumBucketType {
 export enum EnumSourceType {
   S3_EC2 = "Amazon_S3",
   S3 = "Amazon_S3",
+  S3_COMPATIBLE = "Amazon_S3_COMPATIBLE",
   Qiniu = "Qiniu_Kodo",
   AliOSS = "Aliyun_OSS",
   TencentCOS = "Tencent_COS",

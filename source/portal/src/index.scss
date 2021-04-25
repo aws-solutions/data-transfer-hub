@@ -175,6 +175,30 @@ code {
   margin-left: 5px;
 }
 
+.task-info {
+  .status {
+    padding-left: 30px;
+    margin-left: -10px;
+    &.error {
+      color: #d13212;
+    }
+    &.gray {
+      color: #888;
+    }
+    &.success {
+      color: green;
+    }
+    .icon {
+      position: absolute;
+      margin: -1px 0 0 -22px;
+    }
+    img {
+      position: absolute;
+      margin: 0 0 0 -20px;
+    }
+  }
+}
+
 .drh-page {
   width: 100%;
   position: absolute;

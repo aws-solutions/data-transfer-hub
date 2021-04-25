@@ -37,15 +37,10 @@ import LeftMenu from "common/LeftMenu";
 import Bottom from "common/Bottom";
 import InfoBar from "common/InfoBar";
 
+import TaskStatusComp from "common/comp/TaskStatusComp";
 import NormalButton from "common/comp/NormalButton";
 import PrimaryButton from "common/comp/PrimaryButton";
 import StopButtonLoading from "common/comp/PrimaryButtonLoading";
-
-import STATUS_PENDING from "@material-ui/icons/Schedule";
-import STATUS_STOPED from "@material-ui/icons/RemoveCircleOutline";
-import STATUS_ERROR from "@material-ui/icons/HighlightOff";
-import STATUS_DONE from "@material-ui/icons/CheckCircleOutline";
-import STATUS_PROGRESS from "@material-ui/icons/FlipCameraAndroid";
 
 import "./TaskList.scss";
 
@@ -57,7 +52,6 @@ import PAGE_NEXT from "@material-ui/icons/NavigateNext";
 import PAGE_NEXT_DISABLED from "@material-ui/icons/NavigateNext";
 
 import {
-  TASK_STATUS_MAP,
   EnumTaskStatus,
   EnumTaskType,
   ECREnumSourceType,
@@ -99,15 +93,6 @@ const StyledMenuItem = withStyles((theme) => ({
     },
   },
 }))(MenuItem);
-
-const STATUS_ICON_MAP: any = {
-  STARTING: <STATUS_PENDING fontSize="small" />,
-  STOPPING: <STATUS_PENDING fontSize="small" />,
-  ERROR: <STATUS_ERROR fontSize="small" />,
-  IN_PROGRESS: <STATUS_PROGRESS fontSize="small" />,
-  DONE: <STATUS_DONE fontSize="small" />,
-  STOPPED: <STATUS_STOPED fontSize="small" />,
-};
 
 export interface State extends SnackbarOrigin {
   open: boolean;
@@ -872,23 +857,7 @@ const List: React.FC = () => {
                             {buildTaskType(element)}
                           </div>
                           <div className="table-item body-item">
-                            <div
-                              className={
-                                element.progress
-                                  ? TASK_STATUS_MAP[element.progress].class +
-                                    " status"
-                                  : "status"
-                              }
-                            >
-                              <span className="icon">
-                                {element.progress
-                                  ? STATUS_ICON_MAP[element.progress]
-                                  : ""}
-                              </span>
-                              {element.progress
-                                ? TASK_STATUS_MAP[element.progress].name
-                                : ""}
-                            </div>
+                            <TaskStatusComp progress={element.progress} />
                           </div>
                           <div className="table-item create-time">
                             <Moment format="YYYY-MM-DD HH:mm:ss">

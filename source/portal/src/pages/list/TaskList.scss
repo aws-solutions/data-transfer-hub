@@ -157,23 +157,6 @@
           text-decoration: none;
           color: #0073bb;
         }
-        .status {
-          padding-left: 30px;
-          margin-left: -10px;
-          &.error {
-            color: #d13212;
-          }
-          &.gray {
-            color: #888;
-          }
-          &.success {
-            color: green;
-          }
-          img {
-            position: absolute;
-            margin: 0 0 0 -20px;
-          }
-        }
       }
     }
   }

@@ -66,7 +66,8 @@
       "aliyunOSSName": "Aliyun OSS",
       "qiniuKodoName": "Qiniu Kodo",
       "tencentCOSName": "Tencent COS",
-      "googleGCSName": "Google GCS"
+      "googleGCSName": "Google GCS",
+      "compatibleName": "Amazon S3 Compatible Storage"
     },
     "tips": {
       "requiredCredential": "Please select a parameter store",
@@ -173,6 +174,7 @@
           "sourceInAccount": "Is source in this account?",
           "sourceInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
           "accountId": "AWS Account ID",
+          "accountIdTips": "Enter the AWS Account ID (12 digits).",
           "credentialsStore": "Credentials Store ",
           "tips": "Please select a parameter store",
           "dockerImages": "Docker Images",
@@ -325,7 +327,9 @@
       "destBucketRequired": "Destination Bucket Name is Required",
       "destBucketNameInvalid": "Destination Bucket Name is Invalid",
       "srcRegionRequired": "Source Region is Required",
+      "srcEndpointInvalid": "Endpoint URL is Invalid",
       "destRegionRequired": "Destination Region is Required",
+      "destPrefixInvalid": "Do not append / at the end of the prefix",
       "emailRequired": "Alarm Email is required",
       "emailValidate": "Alarm Email must be validate",
       "credentialRequired": "Parameter Store Credential is Required"
@@ -366,7 +370,9 @@
     "s3BucketDestPrefix": {
       "name": "Prefix to Insert",
       "tips1": "The S3 transfer engine will insert the prefix before all objects. Leave it empty if you don’t want to insert prefix.",
-      "tips2": "For example, if the prefix is `prefix` and the object key in source bucket is ",
+      "tips2": "For example, if the prefix is ",
+      "codeTips0": "prefix",
+      "tips2_1": " and the object key in source bucket is ",
       "codeTips1": "abc/test.jpg",
       "tips3": ". Then the object key in destination bucket is",
       "codeTips2": "prefix/abc/test.jpg",
