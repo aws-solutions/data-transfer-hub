@@ -266,7 +266,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 isOptional={true}
                 inputName="srcEndpoint"
                 inputValue={srcEndpoint}
-                placeholder={t("creation.step2.settings.source.srcEndpoint")}
+                placeholder="https://s3-compatible-endpoint.com"
               />
             </div>
           )}
@@ -283,7 +283,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               }}
               inputName="srcBucketName"
               inputValue={srcBucketName}
-              placeholder={t("creation.step2.settings.source.bucketName")}
+              placeholder="src-bucket-name"
               showRequiredError={srcBucketRequiredError}
               requiredErrorMsg={t("tips.error.sourceBucketRequired")}
               showFormatError={srcBucketFormatError}
@@ -303,7 +303,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               isOptional={true}
               inputName="srcBucketPrefix"
               inputValue={srcBucketPrefix}
-              placeholder={t("creation.step2.settings.source.objectPrefix")}
+              placeholder="object-prefix/"
             />
           </div>
 

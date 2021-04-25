@@ -47,7 +47,8 @@
       "feat4": "支持S3事件触发",
       "feat5": "支持对象元数据复制",
       "feat6": "支持增量数据传输",
-      "feat7": "自动重试和错误处理",
+      "feat7": "支持从 S3 兼容对象存储传输数据",
+      "feat8": "自动重试和错误处理",
       "edition": "引擎版本"
     },
     "ecrPlugin": {
@@ -69,9 +70,9 @@
     },
     "tips": {
       "requiredCredential": "请选择凭证参数",
-      "store1": "选择存储在参数仓库中的",
-      "store2": "凭据",
-      "store3": ". 如果数据桶是公开数据桶则可以为空"
+      "store1": "选择存储凭据的",
+      "store2": "Parameter Store",
+      "store3": ". 如果数据桶是公开数据桶则可以为空."
     },
     "step1": {
       "engineType": "选择引擎类型",
@@ -89,7 +90,7 @@
           "srcEndpoint": "端点URL",
           "srcEndpointDesc": "源端点URL，除非您要使用自定义端点URL，否则请留空.",
           "srcInAccount": "源数据桶在当前账户吗?",
-          "srcInAccountDesc": "如果Data Transfer Hub部署在源数据桶的账号，请选择YES",
+          "srcInAccountDesc": "如果 Data Transfer Hub 部署在源数据桶的账号，请选择YES.",
           "srcRegionName": "源区域名称",
           "srcRegionNameDesc": "您可以输入区域名称或区域代码.",
           "enableS3Event": "是否启用S3事件通知?",
@@ -112,18 +113,18 @@
           "bucketName": "数据桶名称",
           "bucketDesc": "请输入数据桶名称.",
           "destInAccount": "目标数据桶在当前账户吗?",
-          "destInAccountDesc": "如果Data Transfer Hub部署在目标数据桶的账号，请选择YES",
+          "destInAccountDesc": "如果 Data Transfer Hub 部署在目标数据桶的账号，请选择YES.",
           "objectPrefix": "插入前缀",
           "prefixDesc": "数据传输引擎将为所有对象插入此前缀, 它将自动附加 ‘/‘.",
           "storageClass": "存储类型",
           "storageClassDesc": "对象将会复制到您所选择的存储类型.",
           "destRegionName": "目标区域名称",
-          "destRegionNameDesc": "您可以输入区域名称或区域代码"
+          "destRegionNameDesc": "您可以输入区域名称或区域代码."
         },
         "credential": {
           "title": "凭证",
           "whitch": "哪一个数据桶在当前的账户中?",
-          "whitchDesc": "如果源数据桶和Data Transfer Hub应用在同一个账户中，请选择Source，否则请选择Destination.",
+          "whitchDesc": "如果源数据桶和 Data Transfer Hub 应用在同一个账户中，请选择 Source，否则请选择 Destination.",
           "store": "凭证中的参数存储名称",
           "storeDesc": "请填写在凭证中的SSM参数存储名称."
         },
@@ -139,11 +140,11 @@
           "maxThreads": "最大线程数",
           "maxThreadsDesc": "在Lambda中多部分上传文件的最大线程数量, 默认值10",
           "maximumCapacity": "最大容量",
-          "maximumCapacityDesc": "Graviton2实例的最大数量.",
+          "maximumCapacityDesc": "Graviton2 实例的最大数量.",
           "minimumCapacity": "最小容量",
-          "minimumCapacityDesc": "Graviton2实例的最小数量.",
+          "minimumCapacityDesc": "Graviton2 实例的最小数量.",
           "desiredCapacity": "所需容量",
-          "desiredCapacityDesc": "所需的Graviton2实例数.",
+          "desiredCapacityDesc": "所需的 Graviton2 实例数.",
           "finderDepth": "查找器深度",
           "finderDepthDesc": "要并行比较的子文件夹的深度, 0表示按顺序比较所有对象.",
           "finderNumber": "查找器数量",
@@ -173,8 +174,7 @@
           "sourceInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
           "accountId": "AWS账户ID",
           "accountIdTips": "输入AWS账户ID (12位数字).",
-          "accountIdPlaceholder": "12位数字账户ID",
-          "credentialsStore": "参数仓库",
+          "credentialsStore": "凭据",
           "tips": "请选择凭据",
           "dockerImages": "Docker镜像",
           "dockerImagesDesc": "请选择需要复制的镜像.",
@@ -191,7 +191,7 @@
           "regionRequired": "目的仓库区域不能为空",
           "destInAccount": "目的仓库在当前账户吗?",
           "destInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
-          "credentialsStore": "参数仓库",
+          "credentialsStore": "凭据",
           "tips": "请选择凭据",
           "prefix": "前缀",
           "optional": "可选",
@@ -252,7 +252,7 @@
     "plugin": "S3 复制插件 v1.3",
     "pluginECR": "Amazon ECR 复制插件 v1.0",
     "sourceType": "源数据类型",
-    "repStatus": "复制状态",
+    "repStatus": "状态",
     "details": "详细信息",
     "taskId": "任务编号",
     "createdAt": "创建于",
@@ -336,19 +336,19 @@
     "credential": {
       "name": "参数仓库",
       "create": "创建一个",
-      "store": "凭证",
-      "save1": "保存在凭证中. 选择 ",
+      "store": "Parameter Store",
+      "save1": "用于保存凭证. 选择 ",
       "save2": "SecureString",
       "save3": " 作为类型.",
       "format": "格式",
       "formatDesc": "复制以下凭据，然后替换为您自己实际的值.",
       "learnMore": "了解更多",
-      "createStore": "创建一个凭证"
+      "createStore": "创建一个凭据"
     },
     "engineSettings": {
       "name": "引擎设置",
       "tip1": "这是用于调整应用程序性能的高级设置.",
-      "tip2": "建议在AWS Solutions Architect的指导下调整此设置."
+      "tip2": "建议在 AWS Solutions Architect 的指导下调整此设置."
     },
     "engineEdition": {
       "name": "引擎版本",
@@ -378,9 +378,9 @@
     },
     "engineSettingsEC2": {
       "name": "引擎设置",
-      "tip1": "S3传输引擎在Auto Scaling组中使用Amazon EC2 Graviton2传输对象。 您可以通过设置最小实例数，最大实例数和所需实例数来调整并发性。 传输引擎将在最小值和最大值之间自动缩放.",
-      "tip2": "创建任务后，您可以在AWS Console上调整这些数字.",
-      "linkName": "调整Auto Scaling组以更改传输并发."
+      "tip1": "S3传输引擎在 包含 Amazon EC2 Graviton2 机型的 Auto Scaling 组进行对象传输。 您可以通过设置最小实例数，最大实例数和所需实例数来调整并发性。 传输引擎将在最小值和最大值之间自动缩放.",
+      "tip2": "创建任务后，您可以在 AWS Console 上调整这些数字.",
+      "linkName": "调整 Auto Scaling 组以更改传输并发."
     }
   }
 }

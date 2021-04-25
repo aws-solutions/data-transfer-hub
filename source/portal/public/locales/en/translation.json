@@ -47,7 +47,8 @@
       "feat4": "Support S3 Event trigger",
       "feat5": "Support replication with object metadata",
       "feat6": "Support incremental data transfer",
-      "feat7": "Auto retry and error handling",
+      "feat7": "Support transfer from S3 compatible storage",
+      "feat8": "Auto retry and error handling",
       "edition": "Edition"
     },
     "ecrPlugin": {
@@ -172,8 +173,6 @@
           "sourceInAccount": "Is source in this account?",
           "sourceInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
           "accountId": "AWS Account ID",
-          "accountIdTips": "Enter the AWS Account ID (12 digits).",
-          "accountIdPlaceholder": "12 digits Account ID",
           "credentialsStore": "Credentials Store ",
           "tips": "Please select a parameter store",
           "dockerImages": "Docker Images",
@@ -252,7 +251,7 @@
     "plugin": "S3 Replication Plugin v1.3",
     "pluginECR": "Amazon ECR Plugin v1.0",
     "sourceType": "Source Type",
-    "repStatus": "Replication Status",
+    "repStatus": "Status",
     "details": "Details",
     "taskId": "Task ID",
     "createdAt": "Created At",

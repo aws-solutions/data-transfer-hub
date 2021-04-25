@@ -464,9 +464,7 @@ const StepTwoECR: React.FC = () => {
                           }}
                           inputName="srcAccountId"
                           inputValue={srcAccountId}
-                          placeholder={t(
-                            "creation.step2ECR.settings.source.accountIdPlaceholder"
-                          )}
+                          placeholder="123456789012"
                         />
                       </div>
 
@@ -614,9 +612,7 @@ const StepTwoECR: React.FC = () => {
                           isOptional={true}
                           inputName="destAccountId"
                           inputValue={destAccountId}
-                          placeholder={t(
-                            "creation.step2ECR.settings.source.accountIdPlaceholder"
-                          )}
+                          placeholder="123456789012"
                         />
                       </div>
 

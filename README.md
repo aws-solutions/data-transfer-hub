@@ -31,6 +31,7 @@ With Data Transfer Hub, you can perform any of the following tasks:
     - [x] Support data transfer with Metadata
     - [x] Support S3 Events to trigger data transfer
     - [x] [BBR](https://www.techrepublic.com/article/how-to-enable-tcp-bbr-to-improve-network-speed-on-linux/) enabled.
+    - [x] Support transfer from Amazon S3 Compatible Storage
 - [x] ECR Plugin
     - [x] Amazon ECR images copy between AWS standard regions and AWS China regions
     - [x] Public docker registry to AWS ECR images copy

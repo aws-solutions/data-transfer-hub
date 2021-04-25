@@ -1,5 +1,5 @@
 {
-  "name": "data-replication-web",
+  "name": "data-transfer-hub-portal",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

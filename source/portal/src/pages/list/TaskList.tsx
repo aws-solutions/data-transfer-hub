@@ -606,10 +606,10 @@ const List: React.FC = () => {
 
   const buildTaskType = (item: any) => {
     if (item.type === EnumTaskType.S3_EC2) {
-      return "S3 Graviton2";
+      return "S3 Plugin (Graviton2)";
     }
     if (item.type === EnumTaskType.S3) {
-      return "S3 Lambda";
+      return "S3 Plugin (Lambda)";
     }
     if (item.type === EnumTaskType.ECR) {
       return "ECR Plugin";

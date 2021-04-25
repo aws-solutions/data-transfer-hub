@@ -362,7 +362,7 @@ const Detail: React.FC = (props: any) => {
                 <div>
                   <AntTabs value={value} onChange={handleChange}>
                     <AntTab label={t("taskDetail.details")} />
-                    <AntTab label="Engine" />
+                    <AntTab label={t("taskDetail.engine")} />
                     <AntTab label={t("taskDetail.option")} />
                   </AntTabs>
                   <TabPanel value={value} index={0}>

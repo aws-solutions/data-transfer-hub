@@ -237,7 +237,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
               }}
               inputName="destBucketName"
               inputValue={destBucketName}
-              placeholder={t("creation.step2.settings.dest.bucketName")}
+              placeholder="bucket-name"
               showRequiredError={destBucketRequiredError}
               requiredErrorMsg={t("tips.error.destBucketRequired")}
               showFormatError={destBucketFormatError}
@@ -329,7 +329,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                   isOptional={true}
                   inputName="destBucketPrefix"
                   inputValue={destBucketPrefix}
-                  placeholder={t("creation.step2.settings.dest.objectPrefix")}
+                  placeholder="prefix"
                 />
               </div>
 

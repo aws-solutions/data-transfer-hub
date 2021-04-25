@@ -26,7 +26,7 @@ export const HOW_IT_WORKS = {
     {
       en_name:
         "Create the cloud credentials and save it in the System Manager Parameter Store.",
-      zh_name: "创建云凭证并将其保存在系统管理器参数存储中。",
+      zh_name: "创建云凭证并将其保存在 System Manager Parameter Store 中。",
     },
     {
       en_name: "Choose a task type, and specify the source and destination.",
@@ -54,21 +54,21 @@ export const BENIFITS_AND_FEATURES = {
       en_content:
         "Create, monitor, and manage your data transfer tasks with a few clicks on portal.",
       zh_content:
-        "只需在门户网站上单击几下，即可创建，监视和管理您的数据传输任务。",
+        "只需在网站上单击几下，即可创建，监视和管理您的数据传输任务。",
     },
     {
       en_title: "Migration from other cloud",
-      zh_title: "从其他云服务商中将数据复制至AWS",
+      zh_title: "从其他云服务商中将数据复制至 AWS",
       en_content:
         "Copy objects from other cloud providers’ object storage services to Amazon S3.",
-      zh_content: "将对象从其他云提供商的对象存储服务复制到Amazon S3。",
+      zh_content: "从其它云厂商的对象存储服务复制数据到 Amazon S3。",
     },
     {
       en_title: "Cross-partition transfer",
-      zh_title: "AWS跨区域复制",
+      zh_title: "AWS 跨分区复制",
       en_content:
         "Copy S3 objects or ECR images between AWS standard regions and AWS China regions.",
-      zh_content: "在AWS标准区域和AWS中国区域之间复制S3对象或ECR镜像。",
+      zh_content: "在 AWS 标准区域和 AWS 中国区域之间复制 S3 对象或 ECR 镜像。",
     },
     {
       en_title: "Open Source & Free",
@@ -76,7 +76,7 @@ export const BENIFITS_AND_FEATURES = {
       en_content:
         "All codes of Data Transfer Hub has been open-sourced on GitHub. You are free to use and customize according to your needs.",
       zh_content:
-        "Data Transfer Hub的所有代码已在GitHub上开源。 您可以根据需要自由使用和自定义。",
+        "Data Transfer Hub 的所有代码已在 GitHub 上开源。 您可以根据需要自由使用和二次开发。",
     },
   ],
 };
@@ -87,17 +87,17 @@ export const GET_START_LINKS = {
   list: [
     {
       en_name: "What is Data Transfer Hub?",
-      zh_name: "什么是Data Transfer Hub?",
+      zh_name: "什么是 Data Transfer Hub ?",
       link: WHAT_IS_LINK,
     },
     {
       en_name: "Copy Amazon S3 objects from U.S. Regions to China regions.",
-      zh_name: "Amazon S3从美国区域复制到中国区域",
+      zh_name: "从美国区域复制 Amazon S3 对象到中国区域.",
       link: COPY_BETWEEN_LINK,
     },
     {
-      en_name: "Migration from Aliyun OSS to Amazon S3.",
-      zh_name: "将阿里云OSS的数据复制至Amazon S3",
+      en_name: "Migration from Alibaba Cloud OSS to Amazon S3.",
+      zh_name: "将阿里云 OSS 的数据复制至 Amazon S3.",
       link: COPY_OSS_S3_LINK,
     },
   ],

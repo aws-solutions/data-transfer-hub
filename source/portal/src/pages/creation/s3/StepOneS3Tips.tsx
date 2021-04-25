@@ -37,6 +37,10 @@ const StepOneS3Tips: React.FC = () => {
             <span>•</span>
             {t("creation.s3plugin.feat7")}
           </li>
+          <li>
+            <span>•</span>
+            {t("creation.s3plugin.feat8")}
+          </li>
         </ul>
       </div>
     </div>
