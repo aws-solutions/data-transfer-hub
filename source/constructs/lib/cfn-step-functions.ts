@@ -160,7 +160,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     }))
     queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      resources: [`arn:${cdk.Aws.PARTITION}:cloudformation:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stack/DRH*`],
+      resources: [`arn:${cdk.Aws.PARTITION}:cloudformation:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stack/DTH*`],
       actions: [
         'cloudformation:DescribeStacks'
       ]
