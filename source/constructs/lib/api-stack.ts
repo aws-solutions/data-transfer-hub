@@ -27,7 +27,7 @@ import { TableEncryption } from '@aws-cdk/aws-dynamodb';
 export interface ApiProps {
   readonly authType: string,
   readonly oidcProvider: CfnParameter | null,
-  readonly usernameParameter: CfnParameter
+  readonly usernameParameter: CfnParameter | null,
 }
 
 export class ApiStack extends Construct {
@@ -182,11 +182,11 @@ export class ApiStack extends Construct {
       // resolution: create a custom lambda to set user password
       new cognito.CfnUserPoolUser(this, 'AdminUser', {
         userPoolId: this.userPool.userPoolId,
-        username: props.usernameParameter.valueAsString,
+        username: props?.usernameParameter?.valueAsString,
         userAttributes: [
           {
             name: 'email',
-            value: props.usernameParameter.valueAsString
+            value: props?.usernameParameter?.valueAsString
           }
         ]
       })

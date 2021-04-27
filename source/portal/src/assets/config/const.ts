@@ -61,15 +61,11 @@ export const CUR_SUPPORT_LANGS: string[] = ["zh", "en"];
 
 export const GLOBAL_STR = "global";
 export const CHINA_STR = "china";
-export const DRH_REGION_TYPE_NAME = "drh-region-type";
-export const DRH_CONFIG_JSON_NAME = "drh-config-json";
-export const DRH_REGION_NAME = "drh-cur-region";
-export const DRH_API_HEADER = "drh-api-header";
-export const DRH_ID_TOKEN = "drh-id-token";
-export const AUTH_TYPE_NAME = "auth-type";
-export const OPEN_ID_TYPE = "OPENID";
-export const OPENID_SIGNIN_URL = "DRH_OPENID_SIGNIN_URL";
-export const OPENID_SIGNOUT_URL = "DRH_OPENID_SIGNOUT_URL";
+export const DRH_REGION_TYPE_NAME = "DTH_REGION_TYPE";
+export const DRH_CONFIG_JSON_NAME = "DTH_CONFIG_JSON";
+export const DRH_REGION_NAME = "DTH_CUR_REGION";
+export const AUTH_TYPE_NAME = "DTH_AUTH_TYPE";
+export const AUTH_USER_EMAIL = "DTH_AUTH_USER_EMAIL";
 
 export const MenuProps: any = {
   getContentAnchorEl: null,

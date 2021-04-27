@@ -35,10 +35,9 @@ interface CustomResourceConfig {
 
 export interface PortalStackProps {
   auth_type: string,
+  aws_oidc_customer_domain: string,
   aws_oidc_provider: string,
-  aws_oidc_login_url: string,
-  aws_oidc_logout_url: string,
-  aws_oidc_token_validation_url: string,
+  aws_oidc_client_id: string,
   aws_user_pools_id: string,
   aws_user_pools_web_client_id: string,
   aws_appsync_graphqlEndpoint: string,
@@ -70,6 +69,13 @@ export class PortalStack extends cdk.Construct {
         enableIpv6: false,
         enableLogging: true,  //Enable access logging for the distribution.
         comment: 'Data Transfer Hub Portal Distribution',
+        errorResponses: [
+          {
+            httpStatus: 403,
+            responseHttpStatus: 200,
+            responsePagePath: "/index.html",
+          }
+        ]
       },
       insertHttpSecurityHeaders: false,
     });
@@ -166,6 +172,8 @@ export class PortalStack extends cdk.Construct {
       prune: false,
     })
 
+    this.websiteURL = website.cloudFrontWebDistribution.distributionDomainName
+
     // CustomResourceConfig
     this.createCustomResource('CustomResourceConfig', customResourceFunction, {
       properties: [
@@ -174,16 +182,16 @@ export class PortalStack extends cdk.Construct {
           path: 'configItem', value: {
             aws_project_region: cdk.Aws.REGION,
             aws_cognito_region: cdk.Aws.REGION,
+            aws_cloudfront_url: this.websiteURL,
             aws_user_pools_id: props.aws_user_pools_id,
             aws_user_pools_web_client_id: props.aws_user_pools_web_client_id,
             oauth: {},
+            aws_oidc_customer_domain: props.aws_oidc_customer_domain,
             aws_oidc_provider: props.aws_oidc_provider,
-            aws_oidc_login_url: props.aws_oidc_login_url,
-            aws_oidc_logout_url: props.aws_oidc_logout_url,
-            aws_oidc_token_validation_url: props.aws_oidc_token_validation_url,
+            aws_oidc_client_id: props.aws_oidc_client_id,
             aws_appsync_graphqlEndpoint: props.aws_appsync_graphqlEndpoint,
             aws_appsync_region: cdk.Aws.REGION,
-            aws_appsync_authenticationType: props.auth_type === AuthType.OPENID ? 'OPENID' : 'AMAZON_COGNITO_USER_POOLS',
+            aws_appsync_authenticationType: props.auth_type === AuthType.OPENID ? 'OPENID_CONNECT' : 'AMAZON_COGNITO_USER_POOLS',
             taskCluster: props.taskCluster
           }
         },
@@ -193,8 +201,6 @@ export class PortalStack extends cdk.Construct {
       ],
       dependencies: [cfnCustomResourceRole, cfnCustomResourcePolicy]
     });
-
-    this.websiteURL = website.cloudFrontWebDistribution.distributionDomainName
 
   }
 

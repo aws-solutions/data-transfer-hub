@@ -1,57 +1,29 @@
-import React, { useState } from "react";
-import jwt_decode from "jwt-decode";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { AUTH_TYPE } from "aws-appsync";
 
 import "./TopBar.scss";
 
 import Logo from "../assets/images/logo.svg";
 import DRHSignOut from "./comp/SignOut";
-import {
-  DRH_API_HEADER,
-  DRH_ID_TOKEN,
-  OPEN_ID_TYPE,
-  OPENID_SIGNIN_URL,
-  OPENID_SIGNOUT_URL,
-  AUTH_TYPE_NAME,
-} from "../assets/config/const";
+import { AUTH_TYPE_NAME, AUTH_USER_EMAIL } from "../assets/config/const";
 
 const authType = localStorage.getItem(AUTH_TYPE_NAME);
-const SignInUrl = localStorage.getItem(OPENID_SIGNIN_URL) || "/";
-const SignOutUrl = localStorage.getItem(OPENID_SIGNOUT_URL) || "/";
+interface TopBarProps {
+  logout: any;
+}
 
-const TopBar: React.FC = () => {
+const TopBar: React.FC<TopBarProps> = (props) => {
   const { t } = useTranslation();
+  const { logout } = props;
   const [curUserEmail, setCurUserEmail] = useState("");
-  React.useEffect(() => {
+
+  useEffect(() => {
     setTimeout(() => {
-      if (authType === OPEN_ID_TYPE) {
-        const userIdToken = localStorage.getItem(DRH_ID_TOKEN) || "";
-        // const myDecodedToken = decodedToken(userIdToken);
-        if (userIdToken) {
-          const myDecodedToken: any = jwt_decode(userIdToken);
-          setCurUserEmail(myDecodedToken?.email);
-        }
-      } else {
-        const authDataEmail = localStorage.getItem("authDataEmail");
-        if (authDataEmail) {
-          setCurUserEmail(authDataEmail);
-        }
-      }
+      const authDataEmail = localStorage.getItem(AUTH_USER_EMAIL);
+      setCurUserEmail(authDataEmail || "");
     }, 100);
   }, []);
-
-  const openInNewTab = () => {
-    const popWin = window.open(SignOutUrl, "_blank");
-    popWin?.blur();
-    window.location.href = SignInUrl;
-    window.focus();
-  };
-
-  const openIdSignOut = () => {
-    localStorage.removeItem(DRH_API_HEADER);
-    localStorage.removeItem(DRH_ID_TOKEN);
-    openInNewTab();
-  };
 
   return (
     <div className="drh-top-bar">
@@ -63,8 +35,13 @@ const TopBar: React.FC = () => {
         {/* <div className="item">Language</div> */}
         <div className="user-item">{curUserEmail}</div>
         <div className="logout-item">
-          {authType === OPEN_ID_TYPE ? (
-            <div className="logout-btn-style" onClick={openIdSignOut}>
+          {authType === AUTH_TYPE.OPENID_CONNECT ? (
+            <div
+              className="logout-btn-style"
+              onClick={() => {
+                logout();
+              }}
+            >
               (<span>{t("signOut")}</span>)
             </div>
           ) : (

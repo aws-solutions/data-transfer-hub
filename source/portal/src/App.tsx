@@ -1,18 +1,19 @@
-import React, { Suspense, useState, useEffect, useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import React, { Suspense, useState, useEffect } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import { AWSAppSyncClient, AUTH_TYPE } from "aws-appsync";
-
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 
 import Amplify, { Auth } from "aws-amplify";
 import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react";
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Axios from "axios";
-import jwt_decode from "jwt-decode";
+
+import {
+  AuthenticationProvider,
+  oidcLog,
+  OidcSecure,
+  InMemoryWebStorage,
+  useReactOidc,
+} from "@axa-fr/react-oidc-context";
 
 import ClientContext from "./common/context/ClientContext";
 
@@ -32,17 +33,14 @@ import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
 import { EnumTaskType } from "./assets/types/index";
 import {
-  DRH_API_HEADER,
-  DRH_ID_TOKEN,
-  OPEN_ID_TYPE,
-  OPENID_SIGNIN_URL,
-  OPENID_SIGNOUT_URL,
+  // OPEN_ID_TYPE,
   AUTH_TYPE_NAME,
   DRH_REGION_NAME,
   DRH_CONFIG_JSON_NAME,
   DRH_REGION_TYPE_NAME,
   CHINA_STR,
   GLOBAL_STR,
+  AUTH_USER_EMAIL,
 } from "./assets/config/const";
 
 import "./App.scss";
@@ -62,22 +60,10 @@ const App: React.FC = () => {
   const [user, setUser] = useState<any | undefined>();
   const [loadingConfig, setLoadingConfig] = useState<boolean>(true);
   const [authType, setAuthType] = useState<string>("");
-  const [tokenIsValid, setTokenIsValid] = useState(true);
-  const [loginUrl, setLoginUrl] = useState("");
-  const [client, setClient] = useState<any>(null);
-  const { t } = useTranslation();
 
-  const getUrlToken = (name: string, str: string) => {
-    const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`);
-    const r = str.substr(1).match(reg);
-    if (r != null) return decodeURIComponent(r[2]);
-    return "";
-  };
-
-  const redirectToLogin = useCallback(() => {
-    setLoadingConfig(false);
-    window.location.href = loginUrl;
-  }, [loginUrl]);
+  const [oidcConfig, setOidcConfig] = useState({});
+  const [appSyncEndpoint, setAppSyncEndpoint] = useState("");
+  const [appSyncRegion, setAppSyncRegion] = useState("");
 
   useEffect(() => {
     const timeStamp = new Date().getTime();
@@ -85,6 +71,8 @@ const App: React.FC = () => {
       const ConfigObj = res.data;
       const AuthType = ConfigObj.aws_appsync_authenticationType;
       setAuthType(AuthType);
+      setAppSyncEndpoint(ConfigObj.aws_appsync_graphqlEndpoint);
+      setAppSyncRegion(ConfigObj.aws_appsync_region);
       Amplify.configure(ConfigObj);
       localStorage.setItem(DRH_CONFIG_JSON_NAME, JSON.stringify(ConfigObj));
       localStorage.setItem(AUTH_TYPE_NAME, AuthType);
@@ -93,68 +81,51 @@ const App: React.FC = () => {
         DRH_REGION_TYPE_NAME,
         ConfigObj.aws_project_region?.startsWith("cn") ? CHINA_STR : GLOBAL_STR
       );
-      if (AuthType === OPEN_ID_TYPE) {
-        const OIDC_LOGIN_URL = ConfigObj.aws_oidc_login_url;
-        setLoginUrl(OIDC_LOGIN_URL);
-        const OIDC_LOGOUT_URL = ConfigObj.aws_oidc_logout_url;
-        const OIDC_VALIDATE_URL = ConfigObj.aws_oidc_token_validation_url;
-        const token = getUrlToken("access_token", window.location.hash);
-        const id_token = getUrlToken("id_token", window.location.hash);
-        localStorage.setItem(OPENID_SIGNIN_URL, OIDC_LOGIN_URL);
-        localStorage.setItem(OPENID_SIGNOUT_URL, OIDC_LOGOUT_URL);
-        // First Login and got tokens
-        if (token) {
-          localStorage.setItem(DRH_API_HEADER, token);
-          localStorage.setItem(DRH_ID_TOKEN, id_token);
-          window.location.href = "/";
+      if (AuthType === AUTH_TYPE.OPENID_CONNECT) {
+        console.info("Open ID");
+        const oidcProvider = ConfigObj.aws_oidc_provider;
+        const oidcClientId = ConfigObj.aws_oidc_client_id;
+        const oidcUserDomain = ConfigObj.aws_oidc_customer_domain
+          ? ConfigObj.aws_oidc_customer_domain
+          : ConfigObj.aws_cloudfront_url;
+        // Open Id Config
+        const odicConfiguration = {
+          client_id: oidcClientId,
+          // redirect_uri: oidcUserDomain,
+          redirect_uri: oidcUserDomain + "/authentication/callback",
+          response_type: "id_token token",
+          scope: "openid profile email offline_access",
+          authority: oidcProvider,
+          silent_redirect_uri:
+            oidcUserDomain + "/#/authentication/silent_callback",
+          loadUserInfo: true,
+        };
+
+        if (oidcProvider.toLowerCase().indexOf("auth0.com") > 0) {
+          // Auth0 Need metadata, otherwise could not logout
+          console.info("OIDC Provider is Auth0");
+          const metaDataForAuth0 = {
+            metadata: {
+              authorization_endpoint: oidcProvider + "/authorize",
+              end_session_endpoint:
+                oidcProvider +
+                "/v2/logout?client_id=" +
+                oidcClientId +
+                "&returnTo=" +
+                oidcUserDomain,
+              issuer: oidcProvider,
+              jwks_uri: oidcProvider + "/.well-known/jwks.json",
+              userinfo_endpoint: oidcProvider + "/userinfo",
+            },
+          };
+          setOidcConfig({ ...odicConfiguration, ...metaDataForAuth0 });
         } else {
-          // get token form local storage and validate it
-          const curToken = localStorage.getItem(DRH_API_HEADER);
-          if (curToken) {
-            // if got token to validate it
-            Axios.get(OIDC_VALIDATE_URL + "?access_token=" + curToken)
-              .then((res) => {
-                if (res.data.iss) {
-                  // Token is valid
-                  // Create OIDC Appsync Client
-                  const cognitoClient = new AWSAppSyncClient({
-                    disableOffline: true,
-                    url: ConfigObj.aws_appsync_graphqlEndpoint,
-                    region: ConfigObj.aws_appsync_region,
-                    auth: {
-                      // OPENID
-                      type: AUTH_TYPE.OPENID_CONNECT,
-                      jwtToken: curToken,
-                    },
-                  });
-                  setClient(cognitoClient);
-                  setLoadingConfig(false);
-                } else {
-                  window.location.href = OIDC_LOGIN_URL;
-                }
-              })
-              .catch((err) => {
-                console.error(err);
-                window.location.href = OIDC_LOGIN_URL;
-              });
-          } else {
-            window.location.href = OIDC_LOGIN_URL;
-          }
+          setOidcConfig(odicConfiguration);
         }
+        setLoadingConfig(false);
       } else {
-        // Cognito User Pool
-        const cognitoClient = new AWSAppSyncClient({
-          disableOffline: true,
-          url: ConfigObj.aws_appsync_graphqlEndpoint,
-          region: ConfigObj.aws_appsync_region,
-          auth: {
-            // COGNITO USER POOLS
-            type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
-            jwtToken: async () =>
-              (await Auth.currentSession()).getAccessToken().getJwtToken(),
-          },
-        });
-        setClient(cognitoClient);
+        console.info("Cognito:Cognito");
+        // Cognito
         setLoadingConfig(false);
       }
     });
@@ -165,114 +136,125 @@ const App: React.FC = () => {
       setAuthState(nextAuthState);
       setUser(authData);
       if (authData && authData.hasOwnProperty("attributes")) {
-        localStorage.setItem("authDataEmail", authData.attributes.email);
+        localStorage.setItem(AUTH_USER_EMAIL, authData.attributes.email);
       }
     });
-  }, []);
-
-  // Check Token Expire when OPENID
-  useEffect(() => {
-    const authType = localStorage.getItem(AUTH_TYPE_NAME);
-    if (authType === OPEN_ID_TYPE) {
-      const interval = setInterval(() => {
-        const curToken = localStorage.getItem(DRH_API_HEADER);
-        if (curToken) {
-          const myDecodedToken: any = jwt_decode(curToken);
-          if (myDecodedToken.exp * 1000 < new Date().getTime()) {
-            setTokenIsValid(false);
-          } else {
-            setTokenIsValid(true);
-          }
-        }
-      }, 3000);
-      return () => clearInterval(interval);
-    }
   }, []);
 
   if (loadingConfig) {
     return <Loader />;
   }
 
-  return authType === OPEN_ID_TYPE ||
-    (authState === AuthState.SignedIn && user) ? (
-    <div className="bp3-dark">
-      {!tokenIsValid && (
-        <div className="over-mask">
-          <div className="card">
-            <Card>
-              <CardContent>
-                <Typography
-                  style={{
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "10px",
-                  }}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  {t("reLogin")}
-                </Typography>
-                <Typography variant="h5" component="h2"></Typography>
-                <Typography variant="body2" component="p">
-                  {t("reLoignTips")}
-                </Typography>
-              </CardContent>
-              <div className="text-right relogin-botton">
-                <Button
-                  onClick={redirectToLogin}
-                  variant="contained"
-                  color="primary"
-                >
-                  {t("btn.reLogin")}
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-      )}
-      <TopBar />
-      <ClientContext.Provider value={client}>
-        <HashRouter>
-          <Route path="/" exact component={Home}></Route>
-          <Route path="/home" exact component={Home}></Route>
-          <Route path="/create/step1/:type" exact component={StepOne}></Route>
-          <Route
-            path="/create/step1/:type/:engine"
-            exact
-            component={StepOne}
-          ></Route>
-          <Route
-            path={`/create/step2/${EnumTaskType.S3}/:engine`}
-            exact
-            component={StepTwoS3}
-          ></Route>
-          <Route
-            path={`/create/step2/${EnumTaskType.ECR}`}
-            exact
-            component={StepTwoECR}
-          ></Route>
-          <Route
-            path={`/create/step3/${EnumTaskType.S3}/:engine`}
-            exact
-            component={StepThreeS3}
-          ></Route>
-          <Route
-            path={`/create/step3/${EnumTaskType.ECR}`}
-            exact
-            component={StepThreeECR}
-          ></Route>
-          <Route path="/task/list" exact component={List}></Route>
-          <Route
-            path={`/task/detail/s3/:type/:id`}
-            exact
-            component={DetailS3}
-          ></Route>
-          <Route
-            path={`/task/detail/${EnumTaskType.ECR}/:id`}
-            exact
-            component={DetailECR}
-          ></Route>
-        </HashRouter>
+  const AppRoute = () => {
+    return (
+      <HashRouter>
+        <Route path="/" exact component={Home}></Route>
+        <Route path="/home" exact component={Home}></Route>
+        <Route path="/create/step1/:type" exact component={StepOne}></Route>
+        <Route
+          path="/create/step1/:type/:engine"
+          exact
+          component={StepOne}
+        ></Route>
+        <Route
+          path={`/create/step2/${EnumTaskType.S3}/:engine`}
+          exact
+          component={StepTwoS3}
+        ></Route>
+        <Route
+          path={`/create/step2/${EnumTaskType.ECR}`}
+          exact
+          component={StepTwoECR}
+        ></Route>
+        <Route
+          path={`/create/step3/${EnumTaskType.S3}/:engine`}
+          exact
+          component={StepThreeS3}
+        ></Route>
+        <Route
+          path={`/create/step3/${EnumTaskType.ECR}`}
+          exact
+          component={StepThreeECR}
+        ></Route>
+        <Route path="/task/list" exact component={List}></Route>
+        <Route
+          path={`/task/detail/s3/:type/:id`}
+          exact
+          component={DetailS3}
+        ></Route>
+        <Route
+          path={`/task/detail/${EnumTaskType.ECR}/:id`}
+          exact
+          component={DetailECR}
+        ></Route>
+      </HashRouter>
+    );
+  };
+
+  const OidcRouter = () => {
+    const { oidcUser, logout } = useReactOidc();
+    // Set User to localstorage
+    localStorage.setItem(
+      AUTH_USER_EMAIL,
+      oidcUser?.profile?.email?.toString() || ""
+    );
+    const openIdToken = oidcUser.id_token;
+    const openIdAppSyncClient: any = new AWSAppSyncClient({
+      disableOffline: true,
+      url: appSyncEndpoint,
+      region: appSyncRegion,
+      auth: {
+        type: AUTH_TYPE.OPENID_CONNECT,
+        jwtToken: openIdToken,
+      },
+    });
+    return (
+      <ClientContext.Provider value={openIdAppSyncClient}>
+        <TopBar logout={logout} />
+        <AppRoute />
       </ClientContext.Provider>
+    );
+  };
+
+  const AmplifyRouter = () => {
+    const amplifyAppSyncClient: any = new AWSAppSyncClient({
+      disableOffline: true,
+      url: appSyncEndpoint,
+      region: appSyncRegion,
+      auth: {
+        // COGNITO
+        type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
+        jwtToken: async () =>
+          (await Auth.currentSession()).getAccessToken().getJwtToken(),
+      },
+    });
+    return (
+      <ClientContext.Provider value={amplifyAppSyncClient}>
+        <TopBar logout={null} />
+        <AppRoute />
+      </ClientContext.Provider>
+    );
+  };
+
+  return authType === AUTH_TYPE.OPENID_CONNECT ? (
+    <div>
+      <AuthenticationProvider
+        configuration={oidcConfig}
+        loggerLevel={oidcLog.ERROR}
+        isEnabled={true}
+        callbackComponentOverride={Loader}
+        notAuthenticated={Loader}
+        authenticating={Loader}
+        UserStore={InMemoryWebStorage}
+      >
+        <OidcSecure>
+          <OidcRouter />
+        </OidcSecure>
+      </AuthenticationProvider>
+    </div>
+  ) : authState === AuthState.SignedIn && user ? (
+    <div>
+      <AmplifyRouter />
     </div>
   ) : (
     <div className="login-wrap">

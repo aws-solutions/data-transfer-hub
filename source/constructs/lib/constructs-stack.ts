@@ -21,7 +21,7 @@ const { VERSION } = process.env;
 
 export const enum AuthType {
   COGNITO = "cognito",
-  OPENID = "openid"
+  OPENID = "openid",
 }
 
 /**
@@ -48,58 +48,48 @@ export class ConstructsStack extends cdk.Stack {
     super(scope, id, props);
 
     const authType = this.node.tryGetContext('authType') || AuthType.COGNITO
+    let usernameParameter: CfnParameter | null = null;
     let oidcProvider: CfnParameter | null = null;
-    let oidcLoginUrl: CfnParameter | null = null;
-    let oidcLogoutUrl: CfnParameter | null = null;
-    let oidcTokenValidationUrl: CfnParameter | null = null;
+    let oidcClientId: CfnParameter | null = null;
+    let oidcCustomerDomain: CfnParameter | null = null;
 
     // CFN parameters
-    const usernameParameter = new CfnParameter(this, 'AdminEmail', {
-      type: 'String',
-      description: 'The email of Admin user',
-      allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
-    });
-
     if (authType === AuthType.OPENID) {
       oidcProvider = new CfnParameter(this, 'OidcProvider', {
         type: 'String',
-        description: 'OIDC Provider',
+        description: 'Open Id Connector Provider Issuer',
         default: ''
       });
 
-      oidcLoginUrl = new CfnParameter(this, 'OidcLoginUrl', {
+      oidcClientId = new CfnParameter(this, 'OidcClientId', {
         type: 'String',
-        description: 'OIDC Login URL',
+        description: 'Open Id Connector Client Id',
         default: '',
       });
 
-      oidcLogoutUrl = new CfnParameter(this, 'OidcLogoutUrl', {
+      oidcCustomerDomain = new CfnParameter(this, 'OidcCustomerDomain', {
         type: 'String',
-        description: 'OIDC Logout URL',
+        description: 'Customer Domain for Data Transfer Hub',
         default: '',
       });
 
-      oidcTokenValidationUrl = new CfnParameter(this, 'OidcTokenValidationUrl', {
-        type: 'String',
-        description: 'OIDC Token Validation URL',
-        default: '',
-      });
       // CFN metadata
       this.templateOptions.metadata = {
         'AWS::CloudFormation::Interface': {
           ParameterGroups: [
             {
-              Label: { default: 'User Pool' },
-              Parameters: [usernameParameter.logicalId]
-            },
-            {
               Label: { default: 'OIDC Settings' },
-              Parameters: [oidcProvider.logicalId, oidcLoginUrl.logicalId, oidcLogoutUrl.logicalId, oidcTokenValidationUrl.logicalId]
+              Parameters: [ oidcProvider.logicalId, oidcClientId.logicalId, oidcCustomerDomain.logicalId ]
             }
           ]
         }
       };
     } else {
+      usernameParameter = new CfnParameter(this, 'AdminEmail', {
+        type: 'String',
+        description: 'The email of Admin user',
+        allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
+      });
       // CFN metadata
       this.templateOptions.metadata = {
         'AWS::CloudFormation::Interface': {
@@ -135,7 +125,7 @@ export class ConstructsStack extends cdk.Stack {
     const drhProps: ApiProps = {
       authType,
       oidcProvider,
-      usernameParameter
+      usernameParameter,
     }
     // API Stack
     const apiStack = new ApiStack(this, 'API', drhProps);
@@ -143,10 +133,9 @@ export class ConstructsStack extends cdk.Stack {
     // Portal - S3 Static Website
     const portal = new PortalStack(this, 'Portal', {
       auth_type: authType,
+      aws_oidc_customer_domain: oidcCustomerDomain?.valueAsString || '',
       aws_oidc_provider: oidcProvider?.valueAsString || '',
-      aws_oidc_login_url: oidcLoginUrl?.valueAsString || '',
-      aws_oidc_logout_url: oidcLogoutUrl?.valueAsString || '',
-      aws_oidc_token_validation_url: oidcTokenValidationUrl?.valueAsString || '',
+      aws_oidc_client_id: oidcClientId?.valueAsString || '',
       aws_appsync_graphqlEndpoint: apiStack.api.graphqlUrl,
       aws_user_pools_id: apiStack.userPool?.userPoolId || '',
       aws_user_pools_web_client_id: apiStack.userPoolApiClient?.userPoolClientId || '',
@@ -181,7 +170,7 @@ export class ConstructsStack extends cdk.Stack {
       description: 'User pool domain'
     }).overrideLogicalId('UserPoolDomain')
     new cdk.CfnOutput(this, 'AdminUsernameOutput', {
-      value: usernameParameter.valueAsString,
+      value: usernameParameter?.valueAsString || '',
       description: 'Admin username'
     }).overrideLogicalId('AdminUsername')
     new cdk.CfnOutput(this, 'ApiEndpointOutput', {
