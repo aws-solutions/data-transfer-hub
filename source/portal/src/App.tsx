@@ -97,7 +97,7 @@ const App: React.FC = () => {
           scope: "openid profile email offline_access",
           authority: oidcProvider,
           silent_redirect_uri:
-            oidcUserDomain + "/#/authentication/silent_callback",
+            oidcUserDomain + "/authentication/silent_callback",
           loadUserInfo: true,
         };
 
