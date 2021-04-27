@@ -532,11 +532,6 @@ export const emailIsValid = (email: string): boolean => {
   return re.test(String(email).toLowerCase());
 };
 
-export const destBucketPrefixValid = (prifix: string): boolean => {
-  const REG = /.*(?<!a)$/.test(prifix);
-  return !REG;
-};
-
 export const bucketNameIsValid = (bucketName: string): boolean => {
   // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const REG1 = bucketName && /^[a-z\d.-]*$/.test(bucketName);
