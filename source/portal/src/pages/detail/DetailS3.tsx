@@ -347,9 +347,12 @@ const Detail: React.FC = (props: any) => {
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.sourceType")}</div>
                     <div>
-                      {curTaskInfo.sourceType || curTaskInfo.srcEndpoint !== "-"
-                        ? EnumSourceType.S3_COMPATIBLE
-                        : curTaskInfo.srcType}
+                      {curTaskInfo.type === EnumTaskType.S3 &&
+                        curTaskInfo.sourceType}
+                      {curTaskInfo.type === EnumTaskType.S3_EC2 &&
+                        (curTaskInfo.srcEndpoint !== "-"
+                          ? EnumSourceType.S3_COMPATIBLE
+                          : curTaskInfo.srcType)}
                     </div>
                   </div>
                   <div className="split-item">
@@ -423,6 +426,15 @@ const Detail: React.FC = (props: any) => {
                                 <br />
                               </>
                             )}
+                          {curTaskInfo.srcRegion && (
+                            <>
+                              <div className="sub-name">
+                                {t("taskDetail.srcRegion")}
+                              </div>
+                              <div>{curTaskInfo.srcRegion}</div>
+                              <br />
+                            </>
+                          )}
                           <div className="sub-name">
                             {t("taskDetail.srcName")}
                           </div>
@@ -489,6 +501,15 @@ const Detail: React.FC = (props: any) => {
                             )}
                         </div>
                         <div className="split-item">
+                          {curTaskInfo.destRegion && (
+                            <>
+                              <div className="sub-name">
+                                {t("taskDetail.destS3Region")}
+                              </div>
+                              <div>{curTaskInfo.destRegion}</div>
+                              <br />
+                            </>
+                          )}
                           <div className="sub-name">
                             {t("taskDetail.destName")}
                           </div>

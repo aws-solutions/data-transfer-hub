@@ -62,7 +62,9 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [showDestRegion, setShowDestRegion] = useState(false);
   const [showDestInAccount, setShowDestInAccount] = useState(true);
 
-  const [destInAccount, setDestInAccount] = useState<string>(YES_NO.YES);
+  const [destInAccount, setDestInAccount] = useState<string>(
+    tmpTaskInfo.parametersObj?.destInAccount || YES_NO.YES
+  );
 
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
   const [destBucketFormatError, setDestBucketFormatError] = useState(false);
