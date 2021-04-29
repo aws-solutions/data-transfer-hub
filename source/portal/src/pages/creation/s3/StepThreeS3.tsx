@@ -67,7 +67,7 @@ const StepThreeS3: React.FC = () => {
   }, [i18n.language]);
 
   const { tmpTaskInfo } = useMappedState(mapState);
-  const [paramsList, setParamList] = useState<any>([]);
+  const [paramShowList, setParamShowList] = useState<any>([]);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -84,6 +84,13 @@ const StepThreeS3: React.FC = () => {
       });
     }
   }, [history, tmpTaskInfo]);
+
+  const getParamsValueByName = (name: string, paramList: any) => {
+    return (
+      paramList.find((item: any) => item.ParameterKey === name)
+        ?.ParameterValue || ""
+    );
+  };
 
   const buildLambdaParams = (parametersObj: any) => {
     const taskParamArr = [];
@@ -184,10 +191,7 @@ const StepThreeS3: React.FC = () => {
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
       ParameterKey: "srcType",
-      ParameterValue:
-        parametersObj.sourceType === EnumSourceType.S3_COMPATIBLE
-          ? EnumSourceType.S3
-          : parametersObj.sourceType,
+      ParameterValue: parametersObj.sourceType,
     });
     taskParamArr.push({
       ParameterKey: "srcEndpoint",
@@ -293,11 +297,26 @@ const StepThreeS3: React.FC = () => {
     let taskParamArr: any = [];
     if (engine === S3_ENGINE_TYPE.LAMBDA) {
       taskParamArr = buildLambdaParams(parametersObj);
+      setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
     }
     if (engine === S3_ENGINE_TYPE.EC2) {
       taskParamArr = buildEC2Params(parametersObj);
+      setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
+
+      if (
+        getParamsValueByName("srcType", taskParamArr) ===
+        EnumSourceType.S3_COMPATIBLE
+      ) {
+        // set value to Amazon_S3 when src Type is Amazon_S3_Compatible
+        const srcTypeIndex = taskParamArr.findIndex(
+          (param: any) => param.ParameterKey === "srcType"
+        );
+        taskParamArr[srcTypeIndex] = {
+          ParameterKey: "srcType",
+          ParameterValue: EnumSourceType.S3,
+        };
+      }
     }
-    setParamList(taskParamArr);
 
     // Add Cluster Data
     const configJson: any = JSON.parse(
@@ -423,10 +442,10 @@ const StepThreeS3: React.FC = () => {
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
                     {engine === S3_ENGINE_TYPE.LAMBDA && (
-                      <span>({paramsList.length - 4})</span>
+                      <span>({paramShowList.length - 1})</span>
                     )}
                     {engine === S3_ENGINE_TYPE.EC2 && (
-                      <span>({paramsList.length - 3})</span>
+                      <span>({paramShowList.length})</span>
                     )}
                   </div>
                   <div className="option-content padding0">
@@ -440,7 +459,7 @@ const StepThreeS3: React.FC = () => {
                             {t("creation.step3.step2Value")}
                           </div>
                         </div>
-                        {paramsList.map((element: any, index: any) => {
+                        {paramShowList.map((element: any, index: any) => {
                           return (
                             S3_PARAMS_LIST_MAP[element.ParameterKey] && (
                               <div

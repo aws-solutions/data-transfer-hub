@@ -104,7 +104,7 @@ You can either deploy the solution in U.S. regions or deploy the solution in Chi
 **Q. Can I deploy the solution in AWS Account A, and transfer Amazon S3 objects from Account B to Account C?**</br>
 Yes. In this case, you will need to store the [AccessKeyID and SecretAccessKey](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys) 
 for Account B and C in the [Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html) 
-of Account C.
+of Account A.
 
 ## More Resources
 

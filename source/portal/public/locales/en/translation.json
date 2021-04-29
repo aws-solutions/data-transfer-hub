@@ -261,6 +261,7 @@
     "inProgress": "Replicating in progress",
     "totalObjects": "Total Objects",
     "repObjects": "Replicated Objects",
+    "srcEndpoint": "Source Endpoint URL",
     "srcName": "Source Bucket Name",
     "srcPrefix": "Source Bucket Prefix",
     "srcInThisAccount": "Bucket in This Account?",

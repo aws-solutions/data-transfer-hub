@@ -10,8 +10,7 @@ export const COPY_OSS_S3_LINK =
   GITHUB_LINK + "/docs/tutortial-migration-oss-to-s3.md";
 
 export const DOCUMENT_LINK = GITHUB_LINK + "#readme";
-export const FAQ_LINK =
-  "https://www.amazonaws.cn/en/solutions/data-replication-hub/resources/";
+export const FAQ_LINK = GITHUB_LINK + "#faq";
 export const REPORT_ISSUE_LINK = GITHUB_LINK + "/issues/new";
 
 // URL to be done

@@ -346,7 +346,11 @@ const Detail: React.FC = (props: any) => {
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.sourceType")}</div>
-                    <div>{curTaskInfo.sourceType || curTaskInfo.srcType}</div>
+                    <div>
+                      {curTaskInfo.sourceType || curTaskInfo.srcEndpoint !== "-"
+                        ? EnumSourceType.S3_COMPATIBLE
+                        : curTaskInfo.srcType}
+                    </div>
                   </div>
                   <div className="split-item">
                     <div className="sub-name">{t("taskDetail.repStatus")}</div>
@@ -409,6 +413,16 @@ const Detail: React.FC = (props: any) => {
                           </div>
                         </div>
                         <div className="split-item">
+                          {curTaskInfo.srcEndpoint &&
+                            curTaskInfo.srcEndpoint !== "-" && (
+                              <>
+                                <div className="sub-name">
+                                  {t("taskDetail.srcEndpoint")}
+                                </div>
+                                <div>{curTaskInfo.srcEndpoint}</div>
+                                <br />
+                              </>
+                            )}
                           <div className="sub-name">
                             {t("taskDetail.srcName")}
                           </div>

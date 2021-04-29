@@ -57,6 +57,7 @@ import {
   ECREnumSourceType,
   ACTION_TYPE,
   S3_ENGINE_TYPE,
+  EnumSourceType,
 } from "assets/types/index";
 import {
   YES_NO,
@@ -546,6 +547,13 @@ const List: React.FC = () => {
 
   const buildTaskSource = (item: any) => {
     if (item.type === EnumTaskType.S3_EC2) {
+      if (getParamsValueByName("srcEndpoint", item.parameters)) {
+        return (
+          EnumSourceType.S3_COMPATIBLE +
+          "/" +
+          getParamsValueByName("srcBucket", item.parameters)
+        );
+      }
       return (
         getParamsValueByName("srcType", item.parameters) +
         "/" +

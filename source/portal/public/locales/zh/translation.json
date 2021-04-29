@@ -261,6 +261,7 @@
     "inProgress": "数据复制中",
     "totalObjects": "总对象数量",
     "repObjects": "已复制对象数量",
+    "srcEndpoint": "源数据端点URL",
     "srcName": "源数据桶名称",
     "srcPrefix": "源数据对象前缀",
     "srcInThisAccount": "该数据桶在当前账户吗?",
