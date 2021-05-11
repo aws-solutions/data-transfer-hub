@@ -24,7 +24,7 @@
 
 ![Create App](./images/create-app.jpg)
 
-在创建应用表单中，依次输入应用名称，认证地址以及回调链接 您部署Data Transfer Hub的域名/authentication/callback，点击 **创建** 按钮。
+在创建应用表单中，依次输入应用名称，认证地址以及回调链接(https:// 您部署Data Transfer Hub的域名/authentication/callback)，点击 **创建** 按钮。
 
 ![Create App](./images/create-app2.jpg)
 
@@ -34,7 +34,7 @@
 
 ![Normal Setting](./images/settings.jpg)
 
-在应用配置Tab页面中，基础设置部分的 默认协议类型 选择 OIDC，修改完成后点击右方的保存按钮。在授权设置部分中，id_token的签名算法设置为 RS256，授权模式修改为 Implicit, 返回类型修改为code id_token token。点击右方的 **保存** 按钮。
+在应用配置Tab页面中，基础设置部分的 默认协议类型 选择 OIDC，修改完成后点击右方的保存按钮。在授权设置部分中，id_token的签名算法设置为 RS256，授权模式修改为 Implicit, 返回类型修改为 id_token。点击右方的 **保存** 按钮。
 
 ![Grant Types](./images/settings2.jpg)
 
