@@ -5,10 +5,12 @@ Config
 node_modules/
 package-lock.json
 
+docs/
 docs/UserManual.md
 source/portal/src/common/info/CredentialInfo.tsx
+README.md
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 source/portal/src/pages/creation/ecr/StepTwoECR.tsx
 source/portal/src/pages/creation/s3/StepTwoS3.tsx
-source/portal/src/pages/creation/s3/comps/MoreSettings.tsx 
+source/portal/src/pages/creation/s3/comps/MoreSettings.tsx

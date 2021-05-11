@@ -19,7 +19,10 @@ const global_s3_assets = '../global-s3-assets';
 
 // For each template in global_s3_assets ...
 fs.readdirSync(global_s3_assets).forEach(file => {
-
+  const isTemplate = file.endsWith('.template') || file.endsWith('.template.json');
+  if (!isTemplate) {
+    return
+  }
   // Import and parse template file
   const raw_template = fs.readFileSync(`${global_s3_assets}/${file}`);
   let template = JSON.parse(raw_template);

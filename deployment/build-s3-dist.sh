@@ -23,7 +23,7 @@
 set -e
 
 run() {
-    >&2 echo ::$*
+    >&2 echo "[run] $*"
     $*
 }
 
@@ -36,14 +36,19 @@ sedi() {
 cdk_version=1.64.1
 #
 # Check to see if the required parameters have been provided:
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+if [ -z "$1" ] || [ -z "$2" ]; then
     echo "Please provide the base source bucket name, trademark approved solution name and version where the lambda code will eventually reside."
     echo "For example: ./build-s3-dist.sh solutions trademarked-solution-name v1.0.0"
     exit 1
 fi
+if [ -z "$3" ]; then
+    export VERSION=$(git describe --tags || echo v0.0.0)
+else
+    export VERSION=$3
+fi
 
 # Get reference for all important folders
-template_dir="$PWD"
+template_dir="$(cd "$(dirname $0)";pwd)"
 staging_dist_dir="$template_dir/staging"
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
@@ -65,6 +70,9 @@ echo "rm -rf $staging_dist_dir"
 rm -rf $staging_dist_dir
 echo "mkdir -p $staging_dist_dir"
 mkdir -p $staging_dist_dir
+
+echo "VERSION=${VERSION}"
+echo "${VERSION}" > $template_dist_dir/version
 
 echo "------------------------------------------------------------------------------"
 echo "[Init] Install dependencies for the cdk-solution-helper"
@@ -133,7 +141,7 @@ replace="s/%%BUCKET_NAME%%/$1/g"
 run sedi $replace $template_dist_dir/*.template
 replace="s/%%SOLUTION_NAME%%/$2/g"
 run sedi $replace $template_dist_dir/*.template
-replace="s/%%VERSION%%/$3/g"
+replace="s/%%VERSION%%/$VERSION/g"
 run sedi $replace $template_dist_dir/*.template
 
 
