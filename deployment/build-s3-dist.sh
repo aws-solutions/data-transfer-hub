@@ -42,9 +42,9 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     exit 1
 fi
 if [ -z "$3" ]; then
-    VERSION=$(git describe --tags || echo latest)
+    export VERSION=$(git describe --tags || echo v0.0.0)
 else
-    VERSION=$3
+    export VERSION=$3
 fi
 
 # Get reference for all important folders
@@ -112,6 +112,7 @@ run npx cdk synth --output=$staging_dist_dir --json true > $template_dist_dir/Da
 run npx cdk synth -c authType=openid --output=$staging_dist_dir --json true > $template_dist_dir/DataTransferHub-openid.template
 
 ls -l $template_dist_dir
+cat $template_dist_dir/DataTransferHub-cognito.template
 
 # Remove unnecessary output files
 echo "cd $staging_dist_dir"
