@@ -31,6 +31,7 @@ export enum ACTION_TYPE {
   SET_CREATE_TASK_FLAG = "set create task flag",
   HIDE_CREATE_TASK_FLAG = "hide create task flag",
   SET_INFO_SPAN_TYPE = "set info span type",
+  SET_AUTH0_LOGOUT_URL = "set Auth0 logout url",
 }
 
 // Task Tyep Enum

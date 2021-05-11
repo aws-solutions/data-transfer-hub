@@ -8,6 +8,7 @@ export interface IState {
   tmpTaskInfo: any;
   infoIsOpen?: boolean;
   isOpen: boolean;
+  auth0LogoutUrl: string;
 }
 
 export type Action =
@@ -36,6 +37,10 @@ export type Action =
   | {
       type: ACTION_TYPE.SET_INFO_SPAN_TYPE;
       spanType: string;
+    }
+  | {
+      type: ACTION_TYPE.SET_AUTH0_LOGOUT_URL;
+      logoutUrl: string;
     };
 
 export function makeStore(): any {
@@ -45,6 +50,7 @@ export function makeStore(): any {
     tmpTaskInfo: {},
     infoIsOpen: false,
     isOpen: false,
+    auth0LogoutUrl: "",
     // isOpen: localStorage.getItem("drhIsOpen") ? true : false
   });
 }

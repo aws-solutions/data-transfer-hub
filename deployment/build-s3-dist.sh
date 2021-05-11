@@ -100,8 +100,8 @@ npm install
 echo "npm run build"
 npm run build
 
-run npx cdk synth --output=$staging_dist_dir --json true > $template_dist_dir/AwsDataReplicationHub-cognito.template
-run npx cdk synth -c authType=openid --output=$staging_dist_dir --json true > $template_dist_dir/AwsDataReplicationHub-openid.template
+run npx cdk synth --output=$staging_dist_dir --json true > $template_dist_dir/DataTransferHub-cognito.template
+run npx cdk synth -c authType=openid --output=$staging_dist_dir --json true > $template_dist_dir/DataTransferHub-openid.template
 
 ls -l $template_dist_dir
 

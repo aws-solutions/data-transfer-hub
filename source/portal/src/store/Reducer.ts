@@ -58,6 +58,12 @@ export default function reducer(
         infoSpanType: action.spanType,
       };
     }
+    case ACTION_TYPE.SET_AUTH0_LOGOUT_URL: {
+      return {
+        ...state,
+        auth0LogoutUrl: action.logoutUrl,
+      };
+    }
     default:
       return state;
   }

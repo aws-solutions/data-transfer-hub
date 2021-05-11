@@ -1,6 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import { AWSAppSyncClient, AUTH_TYPE } from "aws-appsync";
+import { useDispatch } from "redux-react-hook";
 
 import Amplify, { Auth } from "aws-amplify";
 import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react";
@@ -31,7 +32,7 @@ import StepThreeS3 from "./pages/creation/s3/StepThreeS3";
 import StepTwoECR from "./pages/creation/ecr/StepTwoECR";
 import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
-import { EnumTaskType } from "./assets/types/index";
+import { ACTION_TYPE, EnumTaskType } from "./assets/types/index";
 import {
   // OPEN_ID_TYPE,
   AUTH_TYPE_NAME,
@@ -46,14 +47,17 @@ import {
 import "./App.scss";
 
 // loading component for suspense fallback
-const Loader = () => (
-  <div className="App">
-    <div className="app-loading">
-      <DataLoading />
-      Data Transfer Hub is loading...
+const Loader = () => {
+  // console.info("window.location:", JSON.parse(JSON.stringify(window.location)));
+  return (
+    <div className="App">
+      <div className="app-loading">
+        <DataLoading />
+        Data Transfer Hub is loading...
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const App: React.FC = () => {
   const [authState, setAuthState] = useState<AuthState>();
@@ -65,6 +69,8 @@ const App: React.FC = () => {
   const [appSyncEndpoint, setAppSyncEndpoint] = useState("");
   const [appSyncRegion, setAppSyncRegion] = useState("");
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const timeStamp = new Date().getTime();
     Axios.get("/aws-exports.json?timeStamp=" + timeStamp).then((res) => {
@@ -73,7 +79,6 @@ const App: React.FC = () => {
       setAuthType(AuthType);
       setAppSyncEndpoint(ConfigObj.aws_appsync_graphqlEndpoint);
       setAppSyncRegion(ConfigObj.aws_appsync_region);
-      Amplify.configure(ConfigObj);
       localStorage.setItem(DRH_CONFIG_JSON_NAME, JSON.stringify(ConfigObj));
       localStorage.setItem(AUTH_TYPE_NAME, AuthType);
       localStorage.setItem(DRH_REGION_NAME, ConfigObj.aws_project_region);
@@ -87,48 +92,36 @@ const App: React.FC = () => {
         const oidcClientId = ConfigObj.aws_oidc_client_id;
         const oidcUserDomain = ConfigObj.aws_oidc_customer_domain
           ? ConfigObj.aws_oidc_customer_domain
-          : ConfigObj.aws_cloudfront_url;
+          : "https://" + ConfigObj.aws_cloudfront_url;
         // Open Id Config
         const odicConfiguration = {
           client_id: oidcClientId,
-          // redirect_uri: oidcUserDomain,
           redirect_uri: oidcUserDomain + "/authentication/callback",
-          response_type: "id_token token",
+          response_type: "id_token",
           scope: "openid profile email offline_access",
           authority: oidcProvider,
           silent_redirect_uri:
             oidcUserDomain + "/authentication/silent_callback",
           loadUserInfo: true,
+          // extraQueryParams: { audience: "" },
         };
-
+        // If Provider is auth0, set logout url
         if (oidcProvider.toLowerCase().indexOf("auth0.com") > 0) {
-          // Auth0 Need metadata, otherwise could not logout
-          console.info("OIDC Provider is Auth0");
-          const metaDataForAuth0 = {
-            metadata: {
-              authorization_endpoint: oidcProvider + "/authorize",
-              end_session_endpoint:
-                oidcProvider +
-                "/v2/logout?client_id=" +
-                oidcClientId +
-                "&returnTo=" +
-                oidcUserDomain,
-              issuer: oidcProvider,
-              jwks_uri: oidcProvider + "/.well-known/jwks.json",
-              userinfo_endpoint: oidcProvider + "/userinfo",
-            },
-          };
-          setOidcConfig({ ...odicConfiguration, ...metaDataForAuth0 });
-        } else {
-          setOidcConfig(odicConfiguration);
+          dispatch({
+            type: ACTION_TYPE.SET_AUTH0_LOGOUT_URL,
+            logoutUrl: `${oidcProvider}/v2/logout?client_id=${oidcClientId}&returnTo=${oidcUserDomain}`,
+          });
         }
+        setOidcConfig(odicConfiguration);
         setLoadingConfig(false);
       } else {
-        console.info("Cognito:Cognito");
         // Cognito
+        console.info("Cognito:Cognito");
+        Amplify.configure(ConfigObj);
         setLoadingConfig(false);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

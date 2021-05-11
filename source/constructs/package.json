@@ -1,5 +1,5 @@
 {
-  "name": "aws-data-replication-hub",
+  "name": "data-transfer-hub",
   "version": "0.1.0",
   "bin": {
     "cdk-solution": "bin/cdk-solution.js"

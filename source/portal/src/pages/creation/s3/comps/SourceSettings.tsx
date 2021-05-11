@@ -118,7 +118,9 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
     // Update tmpTaskInfo
     updateTmpTaskInfo("sourceType", sourceType);
     // Set Endpoint to empty
-    setSrcEndpoint("");
+    if (sourceType !== EnumSourceType.S3_COMPATIBLE) {
+      setSrcEndpoint("");
+    }
     // Set Is Bucket In Account to No
     if (
       sourceType !== EnumSourceType.S3 ||

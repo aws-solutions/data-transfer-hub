@@ -29,11 +29,11 @@ import {
   emailIsValid,
   urlIsValid,
 } from "assets/config/const";
+import { EnumSourceType, S3_ENGINE_TYPE } from "assets/types";
 
 import "../Creation.scss";
 
 import { IState } from "store/Store";
-import { EnumSourceType, S3_ENGINE_TYPE } from "assets/types";
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });

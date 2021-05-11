@@ -333,7 +333,17 @@ const List: React.FC = () => {
             element.ParameterValue;
 
           if (element.ParameterKey === "srcType") {
-            tmpTaskInfo.parametersObj.sourceType = element.ParameterValue;
+            // set src type to Amazon_S3_Compatibale when endpointUrl not empty
+            const srcEndpoint = getParamsValueByName(
+              "srcEndpoint",
+              curSelectTask.parameters
+            );
+            if (srcEndpoint) {
+              tmpTaskInfo.parametersObj.sourceType =
+                EnumSourceType.S3_COMPATIBLE;
+            } else {
+              tmpTaskInfo.parametersObj.sourceType = element.ParameterValue;
+            }
           }
           if (element.ParameterKey === "srcBucket") {
             tmpTaskInfo.parametersObj.srcBucketName = element.ParameterValue;
