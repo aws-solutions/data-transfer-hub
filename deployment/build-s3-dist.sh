@@ -42,9 +42,9 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     exit 1
 fi
 if [ -z "$3" ]; then
-    export VERSION=$(git describe --tags || echo latest)
+    VERSION=$(git describe --tags || echo latest)
 else
-    export VERSION=$3
+    VERSION=$3
 fi
 
 # Get reference for all important folders
@@ -141,7 +141,7 @@ replace="s/%%BUCKET_NAME%%/$1/g"
 run sedi $replace $template_dist_dir/*.template
 replace="s/%%SOLUTION_NAME%%/$2/g"
 run sedi $replace $template_dist_dir/*.template
-replace="s/%%VERSION%%/$3/g"
+replace="s/%%VERSION%%/$VERSION/g"
 run sedi $replace $template_dist_dir/*.template
 
 
