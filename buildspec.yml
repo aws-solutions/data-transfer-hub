@@ -16,11 +16,12 @@ phases:
   post_build:
     commands:
       - echo "Retrieving next stage buildspec `date` in `pwd`"
-      - aws s3 cp s3://solutions-build-assets/changelog-spec.yml ../buildspec.yml
+      - aws s3 cp s3://solutions-build-assets/changelog-spec.yml ../buildspec.yml || true
       - echo "Retrieving next stage buildspec complete"
       - echo "Post build completed on `date`"
 artifacts:
   files:
+    - .git/**/*
     - deployment/**/*
     - buildspec.yml
     - CHANGELOG.md
