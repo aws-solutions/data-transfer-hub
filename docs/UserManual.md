@@ -1,5 +1,6 @@
 # Data Transfer Hub User Guide
 
+[中文](./UserManual_CN.md)
 ## Login to Data Transfer Hub Portal
 
 Once the cloudformation stack is created successfully, you will receive an email notification that contains a temporary password for login, the username is the AdminEmail you set while you launch the cloudformation.
@@ -48,8 +49,14 @@ For other cloud providers, the credentials format should remain the same.
 1. Choose **Amazon S3** for on the **Select engine type** page, and choose **Next**.
 1. Specify **Source Type**.
 1. Fill the fields on task details page, and click **Next**. For Amazon S3 source type, you should select 
-**Which bucket in current AWS account?**. 
+**Is Bucket in this account?**. 
 1. Review the task details and click **Create Task** button.
 1. The browser will be redirected to the Task List page.
 
+## More tutorial
+
+1. [Transfer Amazon S3 Objects from Beijing to Oregon](./tutortial-beijing-to-oregon-s3.md)
+2. [Migration from Alibaba Cloud OSS to Amazon S3](./tutortial-migration-oss-to-s3.md)
+3. [Deploy Data Transfer Hub in AWS China Region](./DeployInChinaWithAuthing_EN.md)
+4. [Deploy the solution via CDK](./deploy-via-cdk.md)
 

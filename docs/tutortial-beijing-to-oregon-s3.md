@@ -1,6 +1,8 @@
-# Transfer Amazon S3 Objects from Oregon to Beijing
+# Transfer Amazon S3 Objects from Beijing to Oregon
 
-This tutortial is the guide to transfer Amazon S3 Objects from **Oregon (us-west-2)** to **Beijing (cn-north-1)**. 
+[中文](./tutortial-beijing-to-oregon-s3_CN.md)
+
+This tutortial is the guide to transfer Amazon S3 Objects from **Beijing (cn-north-1)** to **Oregon (us-west-2)**. 
 
 We assume that you have already finished the deployment of the Data Transfer Hub Solution. And the solution is deployed in **Oregon (us-west-2)** region. 
 
@@ -59,5 +61,7 @@ The portal url can be found in the outputs tab of the cloudformation stack, see 
 
 
 ## Monitoring via Cloudwatch Dashboard
+
+Click the CloudWatch link under the task to monitor the task. Note that when the task is created for the first time, the monitoring data of the CloudWatch may be delayed by about 5 minutes.
 
 ![portal](images/tutortial/us-west-2-to-cn-north-1/task_result_2.png)
