@@ -67,16 +67,6 @@ export class TaskCluster extends cdk.Construct {
       trafficType: ec2.FlowLogTrafficType.REJECT
     })
 
-
-
-    const cfnVpc = vpc.node.defaultChild as ec2.CfnVPC
-    addCfnNagSuppressRules(cfnVpc, [
-      {
-        id: 'W60',
-        reason: 'Custom Logs are generated as required, hence Flow Log is not atttached'
-      }
-    ])
-
     vpc.publicSubnets.forEach((subnet) => {
       const cfnSubnet = subnet.node.defaultChild as ec2.CfnSubnet
       addCfnNagSuppressRules(cfnSubnet, [
