@@ -228,8 +228,8 @@ export const ECR_PARAMS_LIST_MAP: any = {
     zh_name: "源仓库区域",
   },
   srcAccountId: {
-    en_name: "Source AWS Account ID",
-    zh_name: "源AWS账户ID",
+    en_name: "Source Amazon Web Services Account ID",
+    zh_name: "源Amazon Web Services账户ID",
   },
   srcList: {
     en_name: "Type of Source Image List",
@@ -248,16 +248,16 @@ export const ECR_PARAMS_LIST_MAP: any = {
     zh_name: "数据源在当前账户吗？",
   },
   destRegion: {
-    en_name: "Destination AWS Region",
-    zh_name: "目的仓库AWS区域",
+    en_name: "Destination Amazon Web Services Region",
+    zh_name: "目的仓库Amazon Web Services区域",
   },
   destInAccount: {
     en_name: "Destination In Account?",
     zh_name: "目的仓库在当前账户吗？",
   },
   destAccountId: {
-    en_name: "Destination AWS Account ID",
-    zh_name: "目的仓库AWS账户ID",
+    en_name: "Destination Amazon Web Services Account ID",
+    zh_name: "目的仓库Amazon Web Services账户ID",
   },
   sourceType: {
     en_name: "Source Type",

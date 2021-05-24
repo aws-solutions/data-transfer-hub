@@ -84,7 +84,7 @@ export class ApiStack extends Construct {
     const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
         bundling: {
-          image: lambda.Runtime.NODEJS_12_X.bundlingImage,
+          image: lambda.Runtime.NODEJS_14_X.bundlingImage,
           command: [
             'bash', '-c', [
               `cd /asset-output/`,
@@ -97,7 +97,7 @@ export class ApiStack extends Construct {
           user: 'root'
         }
       }),
-      compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
       description: 'Data Transfer Hub - Lambda Layer'
     })
 
@@ -285,7 +285,7 @@ export class ApiStack extends Construct {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['cdk/*', 'layer/*']
       }),
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'api/api-task.handler',
       timeout: Duration.seconds(10),
       memorySize: 512,
@@ -348,8 +348,20 @@ export class ApiStack extends Construct {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['cdk/*', 'layer/*']
       }),
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'api/api-ssm-param.handler',
+      timeout: Duration.seconds(60),
+      memorySize: 128,
+    })
+
+
+    // Create Lambda Data Source
+    const secretManagerHandlerFn = new lambda.Function(this, 'SecretManagerHandlerFn', {
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+        exclude: ['cdk/*', 'layer/*']
+      }),
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'api/api-sm-param.handler',
       timeout: Duration.seconds(60),
       memorySize: 128,
     })
@@ -371,6 +383,15 @@ export class ApiStack extends Construct {
       ]
     }))
 
+    const secretManagerReadOnlyPolicy = new iam.Policy(this, 'secretManagerReadOnlyPolicy')
+    secretManagerReadOnlyPolicy.addStatements(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ['*'],
+      actions: [
+        "secretsmanager:ListSecrets",
+      ]
+    }))
+
     const cfnSsmReadOnlyPolicy = ssmReadOnlyPolicy.node.defaultChild as iam.CfnPolicy
     addCfnNagSuppressRules(cfnSsmReadOnlyPolicy, [
       {
@@ -380,9 +401,14 @@ export class ApiStack extends Construct {
     ])
 
     ssmHandlerFn.role?.attachInlinePolicy(ssmReadOnlyPolicy)
+    secretManagerHandlerFn.role?.attachInlinePolicy(secretManagerReadOnlyPolicy)
 
     const ssmLambdaDS = this.api.addLambdaDataSource('ssmLambdaDS', ssmHandlerFn, {
       description: 'Lambda Resolver Datasource for SSM parameters'
+    });
+
+    const secretManagerLambdaDS = this.api.addLambdaDataSource('secretManagerLambdaDS', secretManagerHandlerFn, {
+      description: 'Lambda Resolver Datasource for Secret Manager parameters'
     });
 
     ssmLambdaDS.createResolver({
@@ -392,6 +418,12 @@ export class ApiStack extends Construct {
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })
 
+    secretManagerLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'listSecretManagerParameters',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
 
   }
 }

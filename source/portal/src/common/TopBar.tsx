@@ -35,8 +35,8 @@ const TopBar: React.FC<TopBarProps> = (props) => {
   return (
     <div className="drh-top-bar">
       <div className="logo">
-        <img width="20" alt="AWS Solutions" src={Logo} />
-        <span>AWS Solutions</span>
+        <img width="20" alt="Data Transfer Hub" src={Logo} />
+        <span>Data Transfer Hub</span>
       </div>
       <div className="options">
         <div className="user-item">{curUserEmail}</div>

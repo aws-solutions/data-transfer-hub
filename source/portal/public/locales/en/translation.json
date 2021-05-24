@@ -41,7 +41,7 @@
     "s3plugin": {
       "name": "Amazon S3 Transfer Engine",
       "desc": "Transfer objects from different sources into Amazon S3.",
-      "feat1": "Transfer S3 objects between AWS standard regions and AWS China regions",
+      "feat1": "Transfer S3 objects between Amazon Web Services standard regions and Amazon Web Services China regions",
       "feat2": "Transfer objects from Aliyun OSS / Tencent COS / Qiniu Kodo",
       "feat3": "Large file support",
       "feat4": "Support S3 Event trigger",
@@ -54,7 +54,7 @@
     "ecrPlugin": {
       "name": "Amazon ECR Transfer Engine",
       "desc": "Amazon ECR engine is used for replicating Docker images from different Docker Registry.",
-      "feat1": "Replication between AWS standard partition and AWS CN paritition",
+      "feat1": "Replication between Amazon Web Services standard partition and Amazon Web Services CN paritition",
       "feat2": "Replication from Docker Hub, GCR.io, Quay.io",
       "feat3": "Parallel replication",
       "feat4": "Support public Docker images",
@@ -91,7 +91,7 @@
           "srcEndpointDesc": "Source Endpoint URL, leave blank unless you want to use a custom Endpoint URL.",
           "bucketDesc": "Input the bucket name.",
           "srcInAccount": "Is Bucket in this account?",
-          "srcInAccountDesc": "Select Yes, if the bucket is in the same AWS account as Data Transfer Hub.",
+          "srcInAccountDesc": "Select Yes, if the bucket is in the same Amazon Web Services account as Data Transfer Hub.",
           "srcRegionName": "Region Name",
           "srcRegionNameDesc": "You can enter region name or region code.",
           "enableS3Event": "Enable S3 Event?",
@@ -114,7 +114,7 @@
           "bucketName": "Bucket Name",
           "bucketDesc": "Input the bucket name.",
           "destInAccount": "Is Bucket in this account?",
-          "destInAccountDesc": "Select Yes, if the bucket is in the same AWS account as Data Transfer Hub.",
+          "destInAccountDesc": "Select Yes, if the bucket is in the same Amazon Web Services account as Data Transfer Hub.",
           "objectPrefix": "Prefix to Insert",
           "prefixDesc": "The data transfer engine will insert this prefix for all objects. It will automatically append ‘/‘.",
           "storageClass": "Storage Class",
@@ -124,7 +124,7 @@
         },
         "credential": {
           "title": "Credentials",
-          "whitch": "Which bucket in current AWS account?",
+          "whitch": "Which bucket in current Amazon Web Services account?",
           "whitchDesc": "Select Source if your source bucket is in the same account as Data Transfer Hub. Otherwise, select Destination.",
           "store": "Parameter Store name for Credentials",
           "storeDesc": "Choose the SSM Parameter Store which holds the credentials."
@@ -173,8 +173,8 @@
           "sourceRegionDesc": "You can enter region name or region code.",
           "sourceInAccount": "Is source in this account?",
           "sourceInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
-          "accountId": "AWS Account ID",
-          "accountIdTips": "Enter the AWS Account ID (12 digits).",
+          "accountId": "Amazon Web Services Account ID",
+          "accountIdTips": "Enter the Amazon Web Services Account ID (12 digits).",
           "credentialsStore": "Credentials Store ",
           "tips": "Please select a parameter store",
           "dockerImages": "Docker Images",
@@ -222,7 +222,7 @@
       "step2Params": "Parameter",
       "step2Value": "Value",
       "credential": "Credentials",
-      "credentialDesc": "Please create a parameter in Parameter Store from AWS Systems Manager, you can use default name drh-credentials (optional), select SecureString as its type, and put a Value following below format.",
+      "credentialDesc": "Please create a parameter in Parameter Store from Amazon Systems Manager, you can use default name drh-credentials (optional), select SecureString as its type, and put a Value following below format.",
       "credentialCopied": "Copied"
     }
   },
@@ -282,7 +282,7 @@
     "srcCredential": "Source Credential",
     "destRegion": "Destination Region",
     "destInAccount": "Is Destination in current account?",
-    "accountId": "AWS Account ID",
+    "accountId": "Amazon Web Services Account ID",
     "credentialStore": "Credential Store",
     "prefix": "Prefix",
     "taskMetrics": "Task Metrics",
@@ -354,7 +354,7 @@
     "engineSettings": {
       "name": "Engine settings",
       "tip1": "This is the advanced settings to tune the performance of the application.",
-      "tip2": "Recommend to adjust this settings only under the guidance of AWS Solutions Architect."
+      "tip2": "Recommend to adjust this settings only under the guidance of Amazon Web Services Solutions Architect."
     },
     "engineEdition": {
       "name": "Engine Edition",
@@ -362,7 +362,7 @@
       "tip1": "Choose the right data transfer engine for the task.",
       "tip2": "Use the Graviton2 instances to read and write to the buckets.",
       "tip3": "is enabled in this edition which can provide better network performance. Especially recommend for data transfer between China regions and standard regions.",
-      "tip4": "AWS Lambda has its advantage in concurrency. Every AWS Account can have 1000 maximum concurrency by default.",
+      "tip4": "Amazon Lambda has its advantage in concurrency. Every Amazon Web Services Account can have 1000 maximum concurrency by default.",
       "learnMoreTitle": "How to enable TCP BBR to improve network speed on Linux?"
     },
     "s3BucketSrcPrefix": {
@@ -387,7 +387,7 @@
     "engineSettingsEC2": {
       "name": "Engine settings",
       "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimun,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
-      "tip2": "You can adjust these numbers on AWS Console after creating the task.",
+      "tip2": "You can adjust these numbers on Amazon Web Services Console after creating the task.",
       "linkName": "Adjust the Auto Scaling Group to change the transfer concurrency."
     }
   }

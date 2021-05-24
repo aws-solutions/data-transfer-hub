@@ -64,3 +64,11 @@ export const listParameters = /* GraphQL */ `
     }
   }
 `;
+export const listSecretManagerParameters = /* GraphQL */ `
+  query ListSecretManagerParameters {
+    listSecretManagerParameters {
+      name
+      description
+    }
+  }
+`;

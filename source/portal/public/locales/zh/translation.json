@@ -1,5 +1,5 @@
 {
-  "title": "AWS DData Transfer Hub",
+  "title": "Data Transfer Hub",
   "yes": "是",
   "no": "否",
   "signOut": "退出登录",
@@ -41,7 +41,7 @@
     "s3plugin": {
       "name": "Amazon S3 传输引擎",
       "desc": "将对象从不同来源转移到Amazon S3.",
-      "feat1": "在AWS标准区域和AWS中国区域之间传输S3对象",
+      "feat1": "在Amazon Web Services标准区域和Amazon Web Services中国区域之间传输S3对象",
       "feat2": "从阿里云OSS /腾讯COS /七牛Kodo/ Google GCS 转移对象",
       "feat3": "大文件支持",
       "feat4": "支持S3事件触发",
@@ -54,7 +54,7 @@
     "ecrPlugin": {
       "name": "Amazon ECR 传输引擎",
       "desc": "Amazon ECR引擎用于从不同的Docker Registry复制Docker镜像.",
-      "feat1": "AWS标准区域和AWS中国区域之间的复制.",
+      "feat1": "Amazon Web Services标准区域和Amazon Web Services中国区域之间的复制.",
       "feat2": "从Docker Hub，GCR.io，Quay.io复制",
       "feat3": "并行复制",
       "feat4": "支持公共Docker镜像",
@@ -173,8 +173,8 @@
           "sourceRegionDesc": "您可以输入区域名称或区域代码",
           "sourceInAccount": "源仓库在当前账户吗?",
           "sourceInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
-          "accountId": "AWS账户ID",
-          "accountIdTips": "输入AWS账户ID (12位数字).",
+          "accountId": "Amazon Web Services账户ID",
+          "accountIdTips": "输入Amazon Web Services账户ID (12位数字).",
           "credentialsStore": "凭据",
           "tips": "请选择凭据",
           "dockerImages": "Docker镜像",
@@ -222,7 +222,7 @@
       "step2Params": "参数",
       "step2Value": "值",
       "credential": "凭证",
-      "credentialDesc": "请在AWS Systems Manager 的参数存储区创建一个参数，您可以使用默认名称drh-credentials（可选），选择 SecureString 作为其类型，然后按照以下格式提供相应的值.",
+      "credentialDesc": "请在Amazon Systems Manager 的参数存储区创建一个参数，您可以使用默认名称drh-credentials（可选），选择 SecureString 作为其类型，然后按照以下格式提供相应的值.",
       "credentialCopied": "已复制"
     }
   },
@@ -354,7 +354,7 @@
     "engineSettings": {
       "name": "引擎设置",
       "tip1": "这是用于调整应用程序性能的高级设置.",
-      "tip2": "建议在 AWS Solutions Architect 的指导下调整此设置."
+      "tip2": "建议在 Amazon Web Services Solutions Architect 的指导下调整此设置."
     },
     "engineEdition": {
       "name": "引擎版本",
@@ -362,7 +362,7 @@
       "tip1": "为任务选择合适的数据传输引擎.",
       "tip2": "使用Graviton2实例读取和写入S3存储桶.",
       "tip3": "的启用，可以提供更好的网络性能。 特别推荐用于中国区域和标准区域之间的数据传输.",
-      "tip4": "AWS Lambda在并发方面具有优势。 默认情况下，每个AWS账户最多可具有1000个并发.",
+      "tip4": "Amazon Lambda在并发方面具有优势。 默认情况下，每个Amazon Web Services账户最多可具有1000个并发.",
       "learnMoreTitle": "如何在Linux上启用TCP BBR以提高网络速度?"
     },
     "s3BucketSrcPrefix": {
@@ -387,7 +387,7 @@
     "engineSettingsEC2": {
       "name": "引擎设置",
       "tip1": "S3传输引擎在 包含 Amazon EC2 Graviton2 机型的 Auto Scaling 组进行对象传输。 您可以通过设置最小实例数，最大实例数和所需实例数来调整并发性。 传输引擎将在最小值和最大值之间自动缩放.",
-      "tip2": "创建任务后，您可以在 AWS Console 上调整这些数字.",
+      "tip2": "创建任务后，您可以在 Amazon Web Services Console 上调整这些数字.",
       "linkName": "调整 Auto Scaling 组以更改传输并发."
     }
   }

@@ -34,6 +34,11 @@ type Query {
     Get a list of parameters in System Manager
     """
     listParameters: [Parameter]
+
+    """
+    Get a list of parameters in Secret Manager
+    """
+    listSecretManagerParameters: [Parameter]
 }
 
 type Mutation {

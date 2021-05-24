@@ -34,7 +34,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     super(scope, id);
 
     const createTaskCfnFn = new lambda.Function(this, 'CreateTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -57,7 +57,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     ])
 
     const stopTaskCfnFn = new lambda.Function(this, 'StopTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -128,7 +128,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     ])
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),

@@ -11,12 +11,13 @@ import {
 export const TOP_TITLE_INFO = {
   en_title: "Data Transfer Hub",
   zh_title: "Data Transfer Hub",
-  en_subTitle: "Easily move data into and out of AWS China regions",
-  zh_subTitle: "轻松将数据传入和传出AWS中国区域",
+  en_subTitle:
+    "Easily move data into and out of Amazon Web Services China regions",
+  zh_subTitle: "轻松将数据传入和传出Amazon Web Services中国区域",
   en_desc:
-    "Data Transfer Hub helps you create, monitor and manage data transfer task. You can easily move data into and out of AWS China regions from and to other AWS standard regions, or from other cloud providers to AWS.",
+    "Data Transfer Hub helps you create, monitor and manage data transfer task. You can easily move data into and out of Amazon Web Services China regions from and to other Amazon Web Services standard regions, or from other cloud providers to Amazon Web Services.",
   zh_desc:
-    "Data Transfer Hub帮助您创建，监控和管理数据复制任务，您可以很容易地在AWS上跨区域复制数据，也可以从其他云服务商中将数据复制到AWS",
+    "Data Transfer Hub帮助您创建，监控和管理数据复制任务，您可以很容易地在Amazon Web Services上跨区域复制数据，也可以从其他云服务商中将数据复制到Amazon Web Services",
 };
 
 export const HOW_IT_WORKS = {
@@ -58,17 +59,18 @@ export const BENIFITS_AND_FEATURES = {
     },
     {
       en_title: "Migration from other cloud",
-      zh_title: "从其他云服务商中将数据复制至 AWS",
+      zh_title: "从其他云服务商中将数据复制至 Amazon Web Services",
       en_content:
         "Copy objects from other cloud providers’ object storage services to Amazon S3.",
       zh_content: "从其它云厂商的对象存储服务复制数据到 Amazon S3。",
     },
     {
       en_title: "Cross-partition transfer",
-      zh_title: "AWS 跨分区复制",
+      zh_title: "Amazon Web Services 跨分区复制",
       en_content:
-        "Copy S3 objects or ECR images between AWS standard regions and AWS China regions.",
-      zh_content: "在 AWS 标准区域和 AWS 中国区域之间复制 S3 对象或 ECR 镜像。",
+        "Copy S3 objects or ECR images between Amazon Web Services standard regions and Amazon Web Services China regions.",
+      zh_content:
+        "在 Amazon Web Services 标准区域和 Amazon Web Services 中国区域之间复制 S3 对象或 ECR 镜像。",
     },
     {
       en_title: "Open Source & Free",

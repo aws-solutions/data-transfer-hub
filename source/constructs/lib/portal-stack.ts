@@ -134,7 +134,7 @@ export class PortalStack extends cdk.Construct {
 
     const customResourceFunction = new lambda.Function(this, 'CustomHandler', {
       description: 'Data Transfer Hub - Custom resource',
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'index.handler',
       timeout: cdk.Duration.seconds(30),
       memorySize: 512,
@@ -142,7 +142,7 @@ export class PortalStack extends cdk.Construct {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/'),
         {
           bundling: {
-            image: lambda.Runtime.NODEJS_12_X.bundlingImage,
+            image: lambda.Runtime.NODEJS_14_X.bundlingImage,
             command: [
               'bash', '-c', [
                 `cd /asset-output/`,

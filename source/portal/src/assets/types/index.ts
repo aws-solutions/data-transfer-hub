@@ -151,7 +151,7 @@ export const ECR_SOURCE_TYPE = [
     en_name: "Amazon ECR",
     zh_name: "Amazon ECR",
     value: ECREnumSourceType.ECR,
-    en_desc: "Amazon ECR replication between AWS partitions.",
+    en_desc: "Amazon ECR replication between Amazon Web Services partitions.",
     zh_desc: "Amazon ECR的标准区和中国区之间的复制.",
   },
   {
