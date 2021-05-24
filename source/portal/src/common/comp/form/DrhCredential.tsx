@@ -11,7 +11,7 @@ import SelectInput from "common/comp/SelectInput";
 import InfoSpan from "common/InfoSpan";
 import NormalButton from "common/comp/NormalButton";
 
-import { listParameters } from "graphql/queries";
+import { listSecretManagerParameters } from "graphql/queries";
 import gql from "graphql-tag";
 import ClientContext from "common/context/ClientContext";
 import DescLink from "common/comp/DescLink";
@@ -45,7 +45,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
 
   async function getSSMParamsList() {
     setLoadingData(true);
-    const query = gql(listParameters);
+    const query = gql(listSecretManagerParameters);
     const apiData: any = await client?.query({
       fetchPolicy: "no-cache",
       query: query,
@@ -62,10 +62,10 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
     if (
       apiData &&
       apiData.data &&
-      apiData.data.listParameters &&
-      apiData.data.listParameters.length > 0
+      apiData.data.listSecretManagerParameters &&
+      apiData.data.listSecretManagerParameters.length > 0
     ) {
-      setSSMParamList(apiData.data.listParameters);
+      setSSMParamList(apiData.data.listSecretManagerParameters);
     }
   }
 
