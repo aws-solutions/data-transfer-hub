@@ -68,21 +68,6 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "listParameters",
-          "description" : null,
-          "args" : [ ],
-          "type" : {
-            "kind" : "LIST",
-            "name" : null,
-            "ofType" : {
-              "kind" : "OBJECT",
-              "name" : "Parameter",
-              "ofType" : null
-            }
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
           "name" : "listSecretManagerParameters",
           "description" : null,
           "args" : [ ],

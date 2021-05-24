@@ -342,19 +342,6 @@ export class ApiStack extends Construct {
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })
 
-
-    // Create Lambda Data Source
-    const ssmHandlerFn = new lambda.Function(this, 'SSMHandlerFn', {
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: ['cdk/*', 'layer/*']
-      }),
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'api/api-ssm-param.handler',
-      timeout: Duration.seconds(60),
-      memorySize: 128,
-    })
-
-
     // Create Lambda Data Source
     const secretManagerHandlerFn = new lambda.Function(this, 'SecretManagerHandlerFn', {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
@@ -366,22 +353,13 @@ export class ApiStack extends Construct {
       memorySize: 128,
     })
 
-    const cfnSsmHandlerFn = ssmHandlerFn.node.defaultChild as lambda.CfnFunction
-    addCfnNagSuppressRules(cfnSsmHandlerFn, [
+    const cfnSecretManagerHandlerFn = secretManagerHandlerFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnSecretManagerHandlerFn, [
       {
         id: 'W58',
         reason: 'Lambda function already has permission to write CloudWatch Logs'
       }
     ])
-
-    const ssmReadOnlyPolicy = new iam.Policy(this, 'ssmReadOnlyPolicy')
-    ssmReadOnlyPolicy.addStatements(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      resources: ['*'],
-      actions: [
-        "ssm:DescribeParameters",
-      ]
-    }))
 
     const secretManagerReadOnlyPolicy = new iam.Policy(this, 'secretManagerReadOnlyPolicy')
     secretManagerReadOnlyPolicy.addStatements(new iam.PolicyStatement({
@@ -392,31 +370,19 @@ export class ApiStack extends Construct {
       ]
     }))
 
-    const cfnSsmReadOnlyPolicy = ssmReadOnlyPolicy.node.defaultChild as iam.CfnPolicy
-    addCfnNagSuppressRules(cfnSsmReadOnlyPolicy, [
+    const cfnSecretManagerReadOnlyPolicy = secretManagerReadOnlyPolicy.node.defaultChild as iam.CfnPolicy
+    addCfnNagSuppressRules(cfnSecretManagerReadOnlyPolicy, [
       {
         id: 'W12',
-        reason: 'Need to be able to list all ssm parameter names'
+        reason: 'Need to be able to list all secret manager parameter names'
       },
     ])
 
-    ssmHandlerFn.role?.attachInlinePolicy(ssmReadOnlyPolicy)
     secretManagerHandlerFn.role?.attachInlinePolicy(secretManagerReadOnlyPolicy)
-
-    const ssmLambdaDS = this.api.addLambdaDataSource('ssmLambdaDS', ssmHandlerFn, {
-      description: 'Lambda Resolver Datasource for SSM parameters'
-    });
 
     const secretManagerLambdaDS = this.api.addLambdaDataSource('secretManagerLambdaDS', secretManagerHandlerFn, {
       description: 'Lambda Resolver Datasource for Secret Manager parameters'
     });
-
-    ssmLambdaDS.createResolver({
-      typeName: 'Query',
-      fieldName: 'listParameters',
-      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
-      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
-    })
 
     secretManagerLambdaDS.createResolver({
       typeName: 'Query',

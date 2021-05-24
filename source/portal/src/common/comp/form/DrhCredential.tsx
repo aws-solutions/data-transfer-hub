@@ -51,13 +51,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
       query: query,
       variables: {},
     });
-    // const apiData: any = await API.graphql(
-    //   {
-    //     query: listParameters,
-    //     variables: {},
-    //   },
-    //   authType === OPEN_ID_TYPE ? openIdHeader : undefined
-    // );
+
     setLoadingData(false);
     if (
       apiData &&
