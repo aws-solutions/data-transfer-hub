@@ -15,6 +15,7 @@ import * as cdk from '@aws-cdk/core'
 import * as ecs from '@aws-cdk/aws-ecs'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import { SubnetType } from "@aws-cdk/aws-ec2";
+import { LogGroup, RetentionDays, CfnLogGroup } from "@aws-cdk/aws-logs";
 import { addCfnNagSuppressRules } from "./constructs-stack";
 
 interface TaskClusterPros {
@@ -47,10 +48,26 @@ export class TaskCluster extends cdk.Construct {
       natGateways: 0,
     })
 
+    const vpcLogGroup = new LogGroup(this, 'VPCLogGroup', {
+      retention: RetentionDays.TWO_WEEKS,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    });
+
+    const cfnVpcLG = vpcLogGroup.node.defaultChild as CfnLogGroup
+    addCfnNagSuppressRules(cfnVpcLG, [
+      {
+        id: 'W84',
+        reason: 'log group is encrypted with the default master key'
+      }
+    ])
+
+
     vpc.addFlowLog('FlowLogCW', {
-      destination: ec2.FlowLogDestination.toCloudWatchLogs(),
+      destination: ec2.FlowLogDestination.toCloudWatchLogs(vpcLogGroup),
       trafficType: ec2.FlowLogTrafficType.REJECT
     })
+
+
 
     const cfnVpc = vpc.node.defaultChild as ec2.CfnVPC
     addCfnNagSuppressRules(cfnVpc, [
