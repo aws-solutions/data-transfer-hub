@@ -79,30 +79,241 @@ export class CloudFormationStateMachine extends cdk.Construct {
       }
     ])
 
-    const taskFnPolicy = new iam.Policy(this, 'TaskFnPolicy')
-    taskFnPolicy.addStatements(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      resources: ['*'],
-      actions: [
-        "cloudformation:Create*",
-        "cloudformation:Update*",
-        "cloudformation:Delete*",
-        "dynamodb:*",
-        "states:*",
-        "s3:*",
-        "sqs:*",
-        "sns:*",
-        "ec2:*",
-        "autoscaling:*",
-        "ecs:*",
-        "logs:*",
-        "cloudwatch:*",
-        "events:*",
-        "lambda:*",
-        "iam:*",
-        "ssm:*"
+    const taskFnPolicy = new iam.Policy(this, 'TaskFnPolicy', {
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "states:CreateStateMachine",
+            "states:DeleteStateMachine",
+            "states:TagResource",
+          ],
+          resources: [
+            `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:a1ctivity:DTH*`,
+            `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stateMachine:DTH*`,
+          ]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "autoscaling:CreateLaunchConfiguration",
+            "autoscaling:CreateAutoScalingGroup",
+            "autoscaling:DeleteAutoScalingGroup",
+            "autoscaling:DeleteLaunchConfiguration",
+            "autoscaling:UpdateAutoScalingGroup",
+            "autoscaling:DescribeAutoScalingGroups",
+            "autoscaling:DescribeLaunchConfigurations",
+            "autoscaling:EnableMetricsCollection",
+            "autoscaling:DescribeScalingActivities",
+            "autoscaling:PutScalingPolicy",
+            "autoscaling:DeletePolicy",
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "SNS:CreateTopic",
+            "SNS:GetTopicAttributes",
+            "SNS:DeleteTopic",
+            "SNS:Subscribe",
+            "SNS:Unsubscribe",
+          ],
+          resources: [`arn:${cdk.Aws.PARTITION}:sns:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:DTH*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "ssm:GetParameters",
+            "ssm:PutParameter",
+            "ssm:AddTagsToResource",
+            "ssm:DeleteParameter",
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "events:PutRule",
+            "events:RemoveTargets",
+            "events:DescribeRule",
+            "events:PutTargets",
+            "events:DeleteRule",
+          ],
+          resources: [`arn:${cdk.Aws.PARTITION}:events:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:rule/DTH*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "cloudformation:Create*",
+            "cloudformation:Update*",
+            "cloudformation:Delete*",
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "s3:PutBucketNotification",
+            "s3:GetBucketNotification",
+            "s3:GetObject",
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "dynamodb:CreateTable",
+            "dynamodb:DescribeTable",
+            "dynamodb:DeleteTable",
+            "dynamodb:UpdateItem",
+            "dynamodb:DescribeContinuousBackups",
+            "dynamodb:UpdateContinuousBackups",
+          ],
+          resources: [`arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "sqs:SendMessage",
+            "sqs:CreateQueue",
+            "sqs:GetQueueAttributes",
+            "sqs:SetQueueAttributes",
+            "sqs:DeleteQueue",
+          ],
+          resources: [`arn:${cdk.Aws.PARTITION}:sqs:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:DTH*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "ec2:createTags",
+            "ec2:DescribeImages",
+            "ec2:DescribeVpcs",
+            "ec2:DescribeSubnets",
+            "ec2:DescribeVolumes",
+            "ec2:DescribeTags",
+            "ec2:CreateSecurityGroup",
+            "ec2:DeleteSecurityGroup",
+            "ec2:DescribeSecurityGroups",
+            "ec2:RevokeSecurityGroupEgress",
+            "ec2:AuthorizeSecurityGroupEgress",            
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "ecs:RunTask",
+            "ecs:ListTasks",
+            "ecs:RegisterTaskDefinition",
+            "ecs:DeregisterTaskDefinition",
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "logs:CreateLogGroup",
+            "logs:DeleteLogGroup",
+            "logs:DeleteLogStream",
+            "logs:CreateLogStream",
+            "logs:PutRetentionPolicy",
+            "logs:DescribeLogGroups",
+            "logs:DescribeLogStreams",
+            "logs:GetLogEvents",
+            "logs:PutMetricFilter",
+            "logs:DeleteMetricFilter",
+          ],
+          resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "cloudwatch:ListMetrics",
+            "cloudwatch:GetMetricStatistics",
+            "cloudwatch:Describe*",
+            "cloudwatch:PutMetricData",
+            "cloudwatch:PutMetricAlarm",
+            "cloudwatch:GetDashboard",
+            "cloudwatch:DeleteDashboards",
+            "cloudwatch:DeleteAlarms",
+            "cloudwatch:PutDashboard",
+            "cloudwatch:ListDashboards",
+          ],
+          resources: [
+            `*`
+          ]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "iam:CreateInstanceProfile",
+            "iam:CreateRole",
+            "iam:PutRolePolicy",
+            "iam:PassRole",
+            "iam:AttachRolePolicy",
+            "iam:AddRoleToInstanceProfile",
+            "iam:RemoveRoleFromInstanceProfile",
+            "iam:DeleteInstanceProfile",
+            "iam:GetRole",
+            "iam:GetPolicy",
+            "iam:GetRolePolicy",
+            "iam:ListRoles",
+            "iam:ListPolicies",
+            "iam:ListRolePolicies",
+            "iam:DeleteRole",
+            "iam:DeleteRolePolicy",
+            "iam:DetachRolePolicy",
+          ],
+          resources: [
+            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:instance-profile/DTH*`,
+            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:role/DTH*`,
+            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:policy/DTH*`,
+          ]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "lambda:InvokeFunction",
+            "lambda:AddPermission",
+            "lambda:CreateFunction",
+            "lambda:CreateEventSourceMapping",
+            "lambda:DeleteFunction",
+            "lambda:RemovePermission",
+            "lambda:UpdateFunctionConfiguration",
+            "lambda:UpdateFunctionCode",
+            "lambda:PublishVersion",
+            "lambda:Get*",
+            "lambda:List*",
+          ],
+          resources: [
+            `*`
+          ]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "kms:CreateKey",
+            "kms:CreateAlias",
+            "kms:CreateGrant",
+            "kms:DeleteAlias",
+            "kms:DescribeKey",
+            "kms:DisableKey",
+            "kms:EnableKey",
+            "kms:EnableKeyRotation",
+            "kms:GetKeyRotationStatus",
+            "kms:GetKeyPolicy",
+            "kms:GetParametersForImport",
+            "kms:ImportKeyMaterial",
+            "kms:PutKeyPolicy",
+            "kms:TagResource",
+            "kms:UntagResource",
+            "kms:UpdateAlias",
+          ],
+          resources: [
+            `*`,
+        ]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "ecr:CreateRepository",
+            "ecr:CompleteLayerUpload",
+            "ecr:UploadLayerPart",
+            "ecr:InitiateLayerUpload",
+            "ecr:PutImage",
+            "ecr:BatchCheckLayerAvailability",
+            "ecr:GetDownloadUrlForLayer",
+            "ecr:BatchGetImage",
+            "ecr:GetAuthorizationToken"
+          ],
+          resources: [`*`]
+        }),
       ]
-    }))
+    });
 
     createTaskCfnFn.role?.attachInlinePolicy(taskFnPolicy)
     stopTaskCfnFn.role?.attachInlinePolicy(taskFnPolicy)
