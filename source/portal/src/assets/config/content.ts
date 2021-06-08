@@ -26,8 +26,8 @@ export const HOW_IT_WORKS = {
   list: [
     {
       en_name:
-        "Create the cloud credentials and save it in the System Manager Parameter Store.",
-      zh_name: "创建云凭证并将其保存在 System Manager Parameter Store 中。",
+        "Create the cloud credentials and save it in the Secrets Manager.",
+      zh_name: "在 Secrets Manager 中创建密钥。",
     },
     {
       en_name: "Choose a task type, and specify the source and destination.",

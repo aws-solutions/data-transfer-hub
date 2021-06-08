@@ -70,9 +70,9 @@
       "compatibleName": "Amazon S3 Compatible Storage"
     },
     "tips": {
-      "requiredCredential": "Please select a parameter store",
+      "requiredCredential": "Please select a Secret Key in Secrets Manager",
       "store1": "Select the",
-      "store2": "Parameter Store",
+      "store2": "Secrets Manager",
       "store3": "which stores the credentials. Leave it blank for open bucket."
     },
     "step1": {
@@ -126,8 +126,8 @@
           "title": "Credentials",
           "whitch": "Which bucket in current Amazon Web Services account?",
           "whitchDesc": "Select Source if your source bucket is in the same account as Data Transfer Hub. Otherwise, select Destination.",
-          "store": "Parameter Store name for Credentials",
-          "storeDesc": "Choose the SSM Parameter Store which holds the credentials."
+          "store": "Secret key name in Secrets Manager",
+          "storeDesc": "Choose the Secret key in Secrets Manager."
         },
         "advance": {
           "title": "Engine settings",
@@ -176,7 +176,7 @@
           "accountId": "Amazon Web Services Account ID",
           "accountIdTips": "Enter the Amazon Web Services Account ID (12 digits).",
           "credentialsStore": "Credentials Store ",
-          "tips": "Please select a parameter store",
+          "tips": "Please select a Secret Key in Secrets Manager",
           "dockerImages": "Docker Images",
           "dockerImagesDesc": "Select the docker images to replicate.",
           "imageList": "Image List",
@@ -193,7 +193,7 @@
           "destInAccount": "Is destination in this account?",
           "destInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
           "credentialsStore": "Credentials Store ",
-          "tips": "Please select a parameter store",
+          "tips": "Please select a Secret Key",
           "prefix": "Prefix",
           "optional": "optional",
           "prefixDesc": "Add the prefix to all images. Default is none."
@@ -222,7 +222,7 @@
       "step2Params": "Parameter",
       "step2Value": "Value",
       "credential": "Credentials",
-      "credentialDesc": "Please create a parameter in Parameter Store from Amazon Systems Manager, you can use default name drh-credentials (optional), select SecureString as its type, and put a Value following below format.",
+      "credentialDesc": "Please create a Secret Key in Secrets Manager, you can use default name drh-credentials (optional), select SecureString as its type, and put a Value following below format.",
       "credentialCopied": "Copied"
     }
   },
@@ -335,21 +335,21 @@
       "destPrefixInvalid": "Do not append / at the end of the prefix",
       "emailRequired": "Alarm Email is required",
       "emailValidate": "Alarm Email must be validate",
-      "credentialRequired": "Parameter Store Credential is Required"
+      "credentialRequired": "Secret Key is Required"
     }
   },
   "comps": {
     "credential": {
-      "name": "Credentials Store",
+      "name": "Credentials",
       "create": "Create a",
-      "store": "Parameter Store",
-      "save1": "to save your credentials. Select ",
-      "save2": "SecureString",
+      "store": "Secret Key",
+      "save1": "in Secrets Manager. Select ",
+      "save2": " Other type of secrets ",
       "save3": " as the type.",
       "format": "Format",
-      "formatDesc": "Copy the following credential, and replace with your own value.",
+      "formatDesc": "Copy the following credential, and replace with your own value in the plaintext tab.",
       "learnMore": "Learn more ",
-      "createStore": "Create a Credential Store"
+      "createStore": "Creating a secret"
     },
     "engineSettings": {
       "name": "Engine settings",

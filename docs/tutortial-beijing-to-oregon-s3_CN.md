@@ -22,21 +22,23 @@
 ![portal](images/tutortial/us-west-2-to-cn-north-1/portal_login.png)
 
 ## 配置凭证
-1. 打开 **[Systems Manager](https://us-west-2.console.aws.amazon.com/systems-manager/home?region=us-west-2#)** 控制台
-![portal](images/tutortial/us-west-2-to-cn-north-1/ssm.png)
-2. 点击左侧边栏的 **Parameter Store** 
-3. 点击 **Create parameter** 按钮
-![portal](images/tutortial/us-west-2-to-cn-north-1/ssm_parameter_1.png)
-4. 输入参数名称 **Name**, 例如: `drh-credentials`
-5. 在参数类型上，选择 **SecureString**
-6. 在 **Value**部分输入您的中国区账户的AKSK, 该凭证需要按以下的格式
-```
-{
-  "access_key_id": "<Your Access Key ID>",
-  "secret_access_key": "<Your Access Key Secret>"
-}
-```
-![portal](images/tutortial/us-west-2-to-cn-north-1/ssm_parameter_2.png)
+
+1. 打开 **[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home#)** 控制台
+1. 点击左侧边栏的 **Secrets**
+1. 点击 **Store a new secret** 按钮
+1. 在密钥类型中，选择 **Other type of secrets**
+1. 在 **Plaintext** 选项卡中输入AKSK, 该凭证需要按以下的格式
+    ```
+    {
+      "access_key_id": "<Your Access Key ID>",
+      "secret_access_key": "<Your Access Key Secret>"
+    }
+    ```
+1. 点击 **Next**
+1. 输入密钥名称 **Secret name**, 例如: `drh-credentials`
+1. 点击 **Next**
+1. 选择 **Disable automatic rotation**
+1. 点击 **Store** 完成创建
 
 ## 在网页界面中创建数据迁移任务
 1. 回到 Data Transfer Hub 网页界面, 选择Amazon S3 然后点击 **Next Step**.

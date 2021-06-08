@@ -52,7 +52,7 @@ input UpdateTaskProgressInput {
 
 
 """
-Parameter in System Manager Parameter Store
+Secret in Secrets Manager
 """
 type Parameter @aws_iam @aws_cognito_user_pools @aws_oidc{
     "Parameter Name."
