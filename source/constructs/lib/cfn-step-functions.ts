@@ -88,7 +88,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "states:TagResource",
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:a1ctivity:DTH*`,
+            `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:activity:DTH*`,
             `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stateMachine:DTH*`,
           ]
         }),
@@ -162,7 +162,10 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "dynamodb:DescribeContinuousBackups",
             "dynamodb:UpdateContinuousBackups",
           ],
-          resources: [`arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/*`]
+          resources: [
+            `arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/DTH*`,
+            `arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/DataTransferHub*`
+          ]
         }),
         new iam.PolicyStatement({
           actions: [
@@ -263,6 +266,9 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "lambda:AddPermission",
             "lambda:CreateFunction",
             "lambda:CreateEventSourceMapping",
+            "lambda:DeleteEventSourceMapping",
+            "lambda:PublishLayerVersion",
+            "lambda:DeleteLayerVersion",
             "lambda:DeleteFunction",
             "lambda:RemovePermission",
             "lambda:UpdateFunctionConfiguration",
