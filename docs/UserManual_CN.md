@@ -23,22 +23,26 @@ S3复制任务支持以下数据源：
 * 七牛云Kodo
 * Google存储服务（仅适用于Amazon S3全球区域）
 
-S3插件使用凭证从AWS另一个区的Amazon S3或其他云提供商中复制数据。 您的凭据将存储在 [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html).
+S3插件使用凭证从AWS另一个区的Amazon S3或其他云提供商中复制数据。 您的凭据将存储在 [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html).
 
 ### 配置凭证
 
-1. 打开 **[Systems Manager](https://us-west-2.console.aws.amazon.com/systems-manager/home?region=us-west-2#)** 控制台
-2. 点击左侧边栏的 **Parameter Store** 
-3. 点击 **Create parameter** 按钮
-4. 输入参数名称 **Name**, 例如: `drh-credentials`
-5. 在参数类型上，选择 **SecureString**
-6. 在 **Value**部分输入AKSK, 该凭证需要按以下的格式
-```
-{
-  "access_key_id": "<Your Access Key ID>",
-  "secret_access_key": "<Your Access Key Secret>"
-}
-```
+1. 打开 **[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home#)** 控制台
+1. 点击左侧边栏的 **Secrets**
+1. 点击 **Store a new secret** 按钮
+1. 在密钥类型中，选择 **Other type of secrets**
+1. 在 **Plaintext** 选项卡中输入AKSK, 该凭证需要按以下的格式
+    ```
+    {
+      "access_key_id": "<Your Access Key ID>",
+      "secret_access_key": "<Your Access Key Secret>"
+    }
+    ```
+1. 点击 **Next**
+1. 输入密钥名称 **Secret name**, 例如: `drh-credentials`
+1. 点击 **Next**
+1. 选择 **Disable automatic rotation**
+1. 点击 **Store** 完成创建
 
 对于其他云提供商，凭据格式应保持不变。
 

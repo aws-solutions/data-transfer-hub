@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
 import LeftMenu from "common/LeftMenu";
-import InfoBar, { EnumSpanType } from "common/InfoBar";
+import InfoBar from "common/InfoBar";
 
 import Bottom from "common/Bottom";
 import Step from "./comps/Step";
@@ -26,9 +26,7 @@ import {
   EnumTaskType,
   ACTION_TYPE,
   S3_ENGINE_TYPE,
-  S3_EDITION_LIST,
 } from "assets/types/index";
-import InfoSpan from "common/InfoSpan";
 
 const StepOne: React.FC = (props: any) => {
   const { t } = useTranslation();
@@ -107,10 +105,6 @@ const StepOne: React.FC = (props: any) => {
     }
   }, [taskType, editionType]);
 
-  const handleEditionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditionType((event.target as HTMLInputElement).value);
-  };
-
   return (
     <div className="drh-page">
       <LeftMenu />
@@ -176,36 +170,6 @@ const StepOne: React.FC = (props: any) => {
                   <div>
                     {taskType === EnumTaskType.ECR && <StepOneECRTips />}
                   </div>
-
-                  {taskType === EnumTaskType.S3 && (
-                    <div className="edition">
-                      <div className="title">
-                        {t("creation.s3plugin.edition")}{" "}
-                        <InfoSpan spanType={EnumSpanType.ENGINE_EDITION} />
-                      </div>
-                      <div>
-                        {S3_EDITION_LIST.map((item, index) => {
-                          return (
-                            <div key={index} className="item">
-                              <label>
-                                <input
-                                  onChange={handleEditionChange}
-                                  value={item.value}
-                                  checked={editionType === item.value}
-                                  name="edition-type"
-                                  type="radio"
-                                />
-                                &nbsp;{item.name}{" "}
-                                {item.recommened && (
-                                  <span>({t("recommened")})</span>
-                                )}
-                              </label>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="buttons">

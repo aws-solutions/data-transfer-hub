@@ -71,9 +71,9 @@
     },
     "tips": {
       "requiredCredential": "请选择凭证参数",
-      "store1": "选择存储凭据的",
-      "store2": "Parameter Store",
-      "store3": ". 如果数据桶是公开数据桶则可以为空."
+      "store1": "选择",
+      "store2": "Secrets Manager",
+      "store3": "中的密钥. 如果数据桶是公开数据桶则可以为空."
     },
     "step1": {
       "engineType": "选择引擎类型",
@@ -175,8 +175,8 @@
           "sourceInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
           "accountId": "Amazon Web Services账户ID",
           "accountIdTips": "输入Amazon Web Services账户ID (12位数字).",
-          "credentialsStore": "凭据",
-          "tips": "请选择凭据",
+          "credentialsStore": "凭证",
+          "tips": "请选择凭证",
           "dockerImages": "Docker镜像",
           "dockerImagesDesc": "请选择需要复制的镜像.",
           "imageList": "镜像列表",
@@ -192,8 +192,8 @@
           "regionRequired": "目的仓库区域不能为空",
           "destInAccount": "目的仓库在当前账户吗?",
           "destInAccountDesc": "如果 Amazon ECR 在当前账户中，请选择 YES.",
-          "credentialsStore": "凭据",
-          "tips": "请选择凭据",
+          "credentialsStore": "凭证",
+          "tips": "请选择凭证",
           "prefix": "前缀",
           "optional": "可选",
           "prefixDesc": "给所有镜像添加前缀, 默认为空."
@@ -222,7 +222,7 @@
       "step2Params": "参数",
       "step2Value": "值",
       "credential": "凭证",
-      "credentialDesc": "请在Amazon Systems Manager 的参数存储区创建一个参数，您可以使用默认名称drh-credentials（可选），选择 SecureString 作为其类型，然后按照以下格式提供相应的值.",
+      "credentialDesc": "请在Secrets Manager的参数存储区创建一个参数，您可以使用默认名称drh-credentials（可选），选择 SecureString 作为其类型，然后按照以下格式提供相应的值.",
       "credentialCopied": "已复制"
     }
   },
@@ -340,16 +340,16 @@
   },
   "comps": {
     "credential": {
-      "name": "参数仓库",
+      "name": "凭证",
       "create": "创建一个",
-      "store": "Parameter Store",
-      "save1": "用于保存凭证. 选择 ",
-      "save2": "SecureString",
+      "store": "Secret Key",
+      "save1": "用于凭证. 选择 ",
+      "save2": " 其他类型的密钥 ",
       "save3": " 作为类型.",
       "format": "格式",
-      "formatDesc": "复制以下凭据，然后替换为您自己实际的值.",
+      "formatDesc": "复制以下凭证，然后在明文选项中替换为您自己实际的值.",
       "learnMore": "了解更多",
-      "createStore": "创建一个凭据"
+      "createStore": "创建一个密钥"
     },
     "engineSettings": {
       "name": "引擎设置",

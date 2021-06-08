@@ -101,6 +101,11 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
           }}
           input={<SelectInput style={{ width: 490 }} />}
         >
+          <MenuItem
+            key={-999}
+            className="font14px credential-empty"
+            value=""
+          ></MenuItem>
           {ssmParamList.map((param: any, index: number) => {
             return (
               <MenuItem key={index} className="font14px" value={param.name}>

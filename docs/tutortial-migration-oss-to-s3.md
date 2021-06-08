@@ -23,21 +23,22 @@ The portal url can be found in the outputs tab of the cloudformation stack, see 
 ![portal](images/tutortial/OSS-to-s3/portal_login.png)
 
 ## Configure Credentials
-1. Open **[Systems Manager](https://us-west-2.console.aws.amazon.com/systems-manager/home?region=us-west-2#)** console
-![portal](images/tutortial/OSS-to-s3/ssm.png)
-2. Choose **Parameter Store** in the left navigation bar
-3. Click **Create parameter** button
-![portal](images/tutortial/OSS-to-s3/ssm_parameter_1.png)
-4. Input a **Name**, for example: `oss-credentials`
-5. select **SecureString** as type
-6. Input the **credentials of AlibabaCloud** as text in **Value**, the credentials format should follow
-```
-{
-  "access_key_id": "<Your Access Key ID>",
-  "secret_access_key": "<Your Access Key Secret>"
-}
-```
-![portal](images/tutortial/OSS-to-s3/ssm_parameter_2.png)
+1. Open **[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home#)** console
+1. Choose **Secrets** in the left navigation bar
+1. Click **Store a new secret** button
+1. Select **Other type of secrets** as type
+1. Input the **credentials of AlibabaCloud** as text in **Plaintext**, the credentials format should follow
+    ```
+    {
+      "access_key_id": "<Your Access Key ID>",
+      "secret_access_key": "<Your Access Key Secret>"
+    }
+    ```
+1. Click **Next**
+1. Input **Secret name**, for example: `drh-credentials`
+1. Click **Next**
+1. Select **Disable automatic rotation**
+1. Click **Store**
 
 ## Create Replication Task from Web Portal
 1. Go back to Data Transfer Hub portal, choose Amazon S3 and click **Next Step**.

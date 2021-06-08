@@ -18,8 +18,8 @@ export const URL = "";
 export const URL_FEEDBACK = GITHUB_LINK + "/issues/new";
 export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
 export const SSM_LINK_MAP: any = {
-  china: "https://console.amazonaws.cn/systems-manager/parameters",
-  global: "https://console.aws.amazon.com/systems-manager/parameters",
+  china: "https://console.amazonaws.cn/secretsmanager",
+  global: "https://console.aws.amazon.com/secretsmanager",
 };
 
 export const CLOUD_WATCH_DASHBOARD_LINK_MAP: any = {
@@ -29,9 +29,9 @@ export const CLOUD_WATCH_DASHBOARD_LINK_MAP: any = {
 
 export const SSM_PARASTORE_HELP_LINK_MAP: any = {
   china:
-    "https://docs.aws.amazon.com/zh_cn/systems-manager/latest/userguide/systems-manager-parameter-store.html",
+    "https://docs.aws.amazon.com/zh_cn/secretsmanager/latest/userguide/manage_create-basic-secret.html",
   global:
-    "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html",
+    "https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html",
 };
 
 export const S3_BUCKET_PREFIX_LINK =
@@ -125,8 +125,8 @@ export const S3_PARAMS_LIST_MAP: any = {
     zh_name: "源数据区域名称",
   },
   srcCredentials: {
-    en_name: "Source Parameter Store Name for Credentials",
-    zh_name: "源数据凭证中的参数存储名称",
+    en_name: "Source Secret Key for Credential in Secrets Manager",
+    zh_name: "源数据凭证中的密钥名称名称",
   },
   destBucketName: {
     en_name: "Destination Bucket Name",
@@ -161,12 +161,12 @@ export const S3_PARAMS_LIST_MAP: any = {
     zh_name: "目标区域名称",
   },
   credentialsParameterStore: {
-    en_name: "Parameter Store name for Credentials",
-    zh_name: "凭证中的参数存储名称",
+    en_name: "Secret key for Credentials",
+    zh_name: "密钥名称",
   },
   destCredentials: {
-    en_name: "Destination Parameter Store name for Credentials",
-    zh_name: "目标区域凭证中的参数存储名称",
+    en_name: "Destination Secret key for Credentials",
+    zh_name: "目标区域的密钥名称",
   },
   includeMetadata: {
     en_name: "Include Metadata",
@@ -521,13 +521,15 @@ export const CREATE_USE_LESS_PROPERTY = [
 ];
 
 export const urlIsValid = (url: string): boolean => {
-  const REG = /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/;
+  const REG =
+    /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/;
   return REG.test(url);
 };
 
 export const emailIsValid = (email: string): boolean => {
   // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
 
