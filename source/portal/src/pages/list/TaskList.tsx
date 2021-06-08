@@ -483,7 +483,7 @@ const List: React.FC = () => {
     // Redirect to Create S3 Task Step two
     let toPath = `/create/step2/${curSelectTask.type}`;
     if (curSelectTask.type === EnumTaskType.S3) {
-      toPath = `/create/step2/s3/${S3_ENGINE_TYPE.LAMBDA}`;
+      toPath = `/create/step2/s3/${S3_ENGINE_TYPE.EC2}`;
     }
     if (curSelectTask.type === EnumTaskType.S3_EC2) {
       toPath = `/create/step2/s3/${S3_ENGINE_TYPE.EC2}`;
