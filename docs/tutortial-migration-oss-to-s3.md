@@ -24,7 +24,6 @@ The portal url can be found in the outputs tab of the cloudformation stack, see 
 
 ## Configure Credentials
 1. Open **[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home#)** console
-    ![portal](images/tutortial/OSS-to-s3/ssm.png)
 1. Choose **Secrets** in the left navigation bar
 1. Click **Store a new secret** button
 1. Select **Other type of secrets** as type
