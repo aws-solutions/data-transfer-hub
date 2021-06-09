@@ -54,7 +54,7 @@ aws s3 sync ./regional-s3-assets/ s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERS
 
 * Copy the CloudFormation template to Amazon S3 bucket in your account.
 ```
-aws s3 cp ./global-s3-assets/AwsDataReplicationHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control
+aws s3 cp ./global-s3-assets/DataTransferHub.template s3://$BUCKET_NAME-$REGION/$SOLUTION_NAME/$VERSION/ --acl bucket-owner-full-control
 ```
 
 * Get the link of the solution template uploaded to your Amazon S3 bucket.
