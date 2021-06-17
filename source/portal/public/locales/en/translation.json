@@ -31,7 +31,7 @@
   },
   "home": {
     "title": {
-      "createTitle": "Create Replication Task",
+      "createTitle": "Create Transfer Task",
       "quickStart": "Quick Start",
       "moreResouce": "More Resources",
       "destinationType": "Destination Type"
@@ -45,7 +45,7 @@
       "feat2": "Transfer objects from Aliyun OSS / Tencent COS / Qiniu Kodo",
       "feat3": "Large file support",
       "feat4": "Support S3 Event trigger",
-      "feat5": "Support replication with object metadata",
+      "feat5": "Support Transfer with object metadata",
       "feat6": "Support incremental data transfer",
       "feat7": "Support transfer from S3 compatible storage",
       "feat8": "Auto retry and error handling",
@@ -54,9 +54,9 @@
     "ecrPlugin": {
       "name": "Amazon ECR Transfer Engine",
       "desc": "Amazon ECR engine is used for replicating Docker images from different Docker Registry.",
-      "feat1": "Replication between Amazon Web Services standard partition and Amazon Web Services CN paritition",
-      "feat2": "Replication from Docker Hub, GCR.io, Quay.io",
-      "feat3": "Parallel replication",
+      "feat1": "Transfer Amazon S3 objects between Amazon Web Services regions.",
+      "feat2": "Transfer from Docker Hub, GCR.io, Quay.io",
+      "feat3": "Parallel Transfer",
       "feat4": "Support public Docker images",
       "feat5": "Support Selective Docker images",
       "feat6": "Serverless architect, no minimum cost"
@@ -204,7 +204,7 @@
           "descriptionDesc": "Description about this task",
           "email": "Alarm Notification",
           "optional": "optional",
-          "emailDesc": "Receive notificaiton when replication failed."
+          "emailDesc": "Receive notificaiton when transfer failed."
         }
       }
     },
@@ -213,8 +213,8 @@
       "step1Title": "Step 1: Select engine type",
       "step1Engine": "Engine",
       "step1EngineSubEngine": "Engine",
-      "step1EngineSubEngineDesc": "Amazon S3 Replication Engine V1.3",
-      "step1EngineSubEngineECRDesc": "Amazon ECR Replication Engine v1.0",
+      "step1EngineSubEngineDesc": "Amazon S3 Transfer Engine V1.3",
+      "step1EngineSubEngineECRDesc": "Amazon ECR Transfer Engine v1.0",
       "step1Type": "type",
       "step1TypeDesc": "Serverless Edition. Serverless edition is ideal for real-time transfer, and you pay as you go.",
       "step2Detail": "Step 2: Specify task details",
@@ -250,7 +250,7 @@
     "stopTaskTips": "Are you sure you want to stop this Task?",
     "generalConfig": "General configuration",
     "engine": "Engine",
-    "plugin": "S3 Replication Plugin v1.3",
+    "plugin": "S3 Transfer Plugin v1.3",
     "pluginECR": "Amazon ECR Plugin v1.0",
     "sourceType": "Source Type",
     "repStatus": "Status",

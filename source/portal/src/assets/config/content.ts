@@ -17,7 +17,7 @@ export const TOP_TITLE_INFO = {
   en_desc:
     "Data Transfer Hub helps you create, monitor and manage data transfer task. You can easily move data into and out of Amazon Web Services China regions from and to other Amazon Web Services standard regions, or from other cloud providers to Amazon Web Services.",
   zh_desc:
-    "Data Transfer Hub帮助您创建，监控和管理数据复制任务，您可以很容易地在Amazon Web Services上跨区域复制数据，也可以从其他云服务商中将数据复制到Amazon Web Services",
+    "Data Transfer Hub帮助您创建，监控和管理数据传输任务，您可以很容易地在Amazon Web Services上跨区域传输数据，也可以从其他云服务商中将数据传输到Amazon Web Services",
 };
 
 export const HOW_IT_WORKS = {
@@ -40,7 +40,7 @@ export const HOW_IT_WORKS = {
     },
     {
       en_name: "The data transfer engine starts to copy data.",
-      zh_name: "数据传输引擎开始复制数据。",
+      zh_name: "数据传输引擎开始传输数据。",
     },
   ],
 };
@@ -59,18 +59,17 @@ export const BENIFITS_AND_FEATURES = {
     },
     {
       en_title: "Migration from other cloud",
-      zh_title: "从其他云服务商中将数据复制至 Amazon Web Services",
+      zh_title: "从其他云服务商中将数据传输至 Amazon Web Services",
       en_content:
         "Copy objects from other cloud providers’ object storage services to Amazon S3.",
-      zh_content: "从其它云厂商的对象存储服务复制数据到 Amazon S3。",
+      zh_content: "从其它云厂商的对象存储服务传输数据到 Amazon S3。",
     },
     {
       en_title: "Cross-partition transfer",
-      zh_title: "Amazon Web Services 跨分区复制",
+      zh_title: "在 Amazon Web Services 之间传输对象",
       en_content:
-        "Copy S3 objects or ECR images between Amazon Web Services standard regions and Amazon Web Services China regions.",
-      zh_content:
-        "在 Amazon Web Services 标准区域和 Amazon Web Services 中国区域之间复制 S3 对象或 ECR 镜像。",
+        "Copy S3 objects or ECR images between Amazon Web Services regions.",
+      zh_content: "在 Amazon Web Services 区域之间传输 S3 对象或 ECR 镜像。",
     },
     {
       en_title: "Open Source & Free",
@@ -94,12 +93,12 @@ export const GET_START_LINKS = {
     },
     {
       en_name: "Copy Amazon S3 objects from U.S. Regions to China regions.",
-      zh_name: "从美国区域复制 Amazon S3 对象到中国区域.",
+      zh_name: "从美国区域传输 Amazon S3 对象到中国区域.",
       link: COPY_BETWEEN_LINK,
     },
     {
       en_name: "Migration from Alibaba Cloud OSS to Amazon S3.",
-      zh_name: "将阿里云 OSS 的数据复制至 Amazon S3.",
+      zh_name: "将阿里云 OSS 的数据传输至 Amazon S3.",
       link: COPY_OSS_S3_LINK,
     },
   ],

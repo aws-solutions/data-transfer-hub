@@ -151,16 +151,16 @@ export const ECR_SOURCE_TYPE = [
     en_name: "Amazon ECR",
     zh_name: "Amazon ECR",
     value: ECREnumSourceType.ECR,
-    en_desc: "Amazon ECR replication between Amazon Web Services partitions.",
-    zh_desc: "Amazon ECR的标准区和中国区之间的复制.",
+    en_desc: "Transfer Amazon ECR Images between Amazon Web Services regions.",
+    zh_desc: "在 Amazon ECR 之间传输容器镜像.",
   },
   {
     id: "2",
     en_name: "Public Container Registry",
     zh_name: "公共容器仓库",
     value: ECREnumSourceType.PUBLIC,
-    en_desc: "Replication from a standard Public Container Registry..",
-    zh_desc: "从标准公共容器仓库复制镜像到ECR.",
+    en_desc: "Transfer from a standard Public Container Registry..",
+    zh_desc: "从标准公共容器仓库传输镜像到ECR.",
   },
 ];
 
@@ -172,7 +172,7 @@ export const DOCKER_IMAGE_TYPE = [
     zh_name: "全部",
     value: EnumDockerImageType.ALL,
     en_desc: "Replicate all images in the source.",
-    zh_desc: "复制源地址所有镜像",
+    zh_desc: "传输源地址所有镜像",
   },
   {
     id: 2,
@@ -180,6 +180,6 @@ export const DOCKER_IMAGE_TYPE = [
     zh_name: "选择镜像",
     value: EnumDockerImageType.SELECTED,
     en_desc: "Replicate only selected Docker Images.",
-    zh_desc: "只复制所选择需要复制的镜像.",
+    zh_desc: "只传输所选择需要传输的镜像.",
   },
 ];
