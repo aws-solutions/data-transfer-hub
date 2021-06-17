@@ -171,7 +171,7 @@ export const DOCKER_IMAGE_TYPE = [
     en_name: "All",
     zh_name: "全部",
     value: EnumDockerImageType.ALL,
-    en_desc: "Replicate all images in the source.",
+    en_desc: "Transfer all images in the source.",
     zh_desc: "传输源地址所有镜像",
   },
   {
@@ -179,7 +179,7 @@ export const DOCKER_IMAGE_TYPE = [
     en_name: "Selected Images",
     zh_name: "选择镜像",
     value: EnumDockerImageType.SELECTED,
-    en_desc: "Replicate only selected Docker Images.",
+    en_desc: "Transfer only selected Container Images.",
     zh_desc: "只传输所选择需要传输的镜像.",
   },
 ];

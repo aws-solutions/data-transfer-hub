@@ -53,12 +53,12 @@
     },
     "ecrPlugin": {
       "name": "Amazon ECR 传输引擎",
-      "desc": "Amazon ECR引擎用于从不同的Docker Registry传输Docker镜像.",
+      "desc": "Amazon ECR引擎用于从不同的container registry传输容器镜像.",
       "feat1": "Amazon Web Services区域之间的传输.",
       "feat2": "从Docker Hub，GCR.io，Quay.io传输",
       "feat3": "并行传输",
-      "feat4": "支持公共Docker镜像",
-      "feat5": "支持选择性的Docker镜像",
+      "feat4": "支持公共容器镜像",
+      "feat5": "支持选择性的容器镜像",
       "feat6": "无服务器架构，无最低成本"
     },
     "sourceType": {
@@ -177,7 +177,7 @@
           "accountIdTips": "输入Amazon Web Services账户ID (12位数字).",
           "credentialsStore": "凭证",
           "tips": "请选择凭证",
-          "dockerImages": "Docker镜像",
+          "dockerImages": "容器镜像",
           "dockerImagesDesc": "请选择需要传输的镜像.",
           "imageList": "镜像列表",
           "image1": "输入镜像名称",
@@ -213,7 +213,6 @@
       "step1Title": "步骤一: 选择引擎类型",
       "step1Engine": "引擎",
       "step1EngineSubEngine": "引擎",
-      "step1EngineSubEngineDesc": "Amazon S3 传输引擎 V1.3",
       "step1EngineSubEngineECRDesc": "Amazon ECR 传输引擎 v1.0",
       "step1Type": "类型",
       "step1TypeDesc": "无服务器版本. 无服务器版是实时传输的理想之选，只需要为您所使用的付费.",
