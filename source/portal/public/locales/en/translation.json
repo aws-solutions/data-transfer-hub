@@ -55,7 +55,7 @@
       "name": "Amazon ECR Transfer Engine",
       "desc": "Amazon ECR engine is used for transfer container images from different container registry.",
       "feat1": "Transfer Amazon S3 objects between Amazon Web Services regions.",
-      "feat2": "Transfer from Docker Hub, GCR.io, Quay.io",
+      "feat2": "Transfer from Docker Hub, GCR.io, Quay.io etc.",
       "feat3": "Parallel Transfer",
       "feat4": "Support public container images",
       "feat5": "Support Selective container images",
