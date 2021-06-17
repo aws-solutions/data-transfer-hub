@@ -55,7 +55,7 @@
       "name": "Amazon ECR 传输引擎",
       "desc": "Amazon ECR引擎用于从不同的container registry传输容器镜像.",
       "feat1": "Amazon Web Services区域之间的传输.",
-      "feat2": "从Docker Hub，GCR.io，Quay.io传输",
+      "feat2": "从Docker Hub，GCR.io，Quay.io等传输到Amazon ECR",
       "feat3": "并行传输",
       "feat4": "支持公共容器镜像",
       "feat5": "支持选择性的容器镜像",
