@@ -41,7 +41,7 @@
     "s3plugin": {
       "name": "Amazon S3 Transfer Engine",
       "desc": "Transfer objects from different sources into Amazon S3.",
-      "feat1": "Transfer S3 objects between Amazon Web Services standard regions and Amazon Web Services China regions",
+      "feat1": "Transfer Amazon S3 objects between Amazon Web Services regions",
       "feat2": "Transfer objects from Aliyun OSS / Tencent COS / Qiniu Kodo",
       "feat3": "Large file support",
       "feat4": "Support S3 Event trigger",
@@ -361,7 +361,7 @@
       "learnMore": "Learn more ",
       "tip1": "Choose the right data transfer engine for the task.",
       "tip2": "Use the Graviton2 instances to read and write to the buckets.",
-      "tip3": "is enabled in this edition which can provide better network performance. Especially recommend for data transfer between China regions and standard regions.",
+      "tip3": "is enabled in this edition which can provide better network performance. Especially recommend for data transfer between Amazon Web Services regions.",
       "tip4": "Amazon Lambda has its advantage in concurrency. Every Amazon Web Services Account can have 1000 maximum concurrency by default.",
       "learnMoreTitle": "How to enable TCP BBR to improve network speed on Linux?"
     },
