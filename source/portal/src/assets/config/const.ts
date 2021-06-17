@@ -233,11 +233,11 @@ export const ECR_PARAMS_LIST_MAP: any = {
   },
   srcList: {
     en_name: "Type of Source Image List",
-    zh_name: "源镜像类型",
+    zh_name: "源容器镜像类型",
   },
   srcImageList: {
     en_name: "Source Image List",
-    zh_name: "镜像列表",
+    zh_name: "容器镜像列表",
   },
   srcCredential: {
     en_name: "Source Credential Parameter Name",
@@ -265,7 +265,7 @@ export const ECR_PARAMS_LIST_MAP: any = {
   },
   destPrefix: {
     en_name: "Destination Image Prefix",
-    zh_name: "目标镜像前缀",
+    zh_name: "目标容器镜像前缀",
   },
   destCredential: {
     en_name: "Destination Credential Parameter Name",

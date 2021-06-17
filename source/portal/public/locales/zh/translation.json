@@ -178,9 +178,9 @@
           "credentialsStore": "凭证",
           "tips": "请选择凭证",
           "dockerImages": "容器镜像",
-          "dockerImagesDesc": "请选择需要传输的镜像.",
-          "imageList": "镜像列表",
-          "image1": "输入镜像名称",
+          "dockerImagesDesc": "请选择需要传输的容器镜像.",
+          "imageList": "容器镜像列表",
+          "image1": "输入容器镜像名称",
           "image2": "image-name",
           "image3": "tag",
           "image4": "使用逗号分隔. 如果不指定tag, 则默认为latest."
@@ -196,7 +196,7 @@
           "tips": "请选择凭证",
           "prefix": "前缀",
           "optional": "可选",
-          "prefixDesc": "给所有镜像添加前缀, 默认为空."
+          "prefixDesc": "给所有容器镜像添加前缀, 默认为空."
         },
         "more": {
           "title": "更多",
@@ -270,7 +270,7 @@
     "destPrefix": "目标数据对象前缀",
     "destInThisAccount": "该数据桶在当前账户吗?",
     "credentials": "凭证参数存储名称",
-    "images": "镜像",
+    "images": "容器镜像",
     "option": "其他选项",
     "description": "描述",
     "alarmEmail": "通知邮箱",

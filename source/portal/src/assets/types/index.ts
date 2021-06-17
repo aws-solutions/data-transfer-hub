@@ -160,7 +160,7 @@ export const ECR_SOURCE_TYPE = [
     zh_name: "公共容器仓库",
     value: ECREnumSourceType.PUBLIC,
     en_desc: "Transfer from a standard Public Container Registry..",
-    zh_desc: "从标准公共容器仓库传输镜像到ECR.",
+    zh_desc: "从标准公共容器仓库传输容器镜像到ECR.",
   },
 ];
 
@@ -172,14 +172,14 @@ export const DOCKER_IMAGE_TYPE = [
     zh_name: "全部",
     value: EnumDockerImageType.ALL,
     en_desc: "Transfer all images in the source.",
-    zh_desc: "传输源地址所有镜像",
+    zh_desc: "传输源地址所有容器镜像",
   },
   {
     id: 2,
     en_name: "Selected Images",
-    zh_name: "选择镜像",
+    zh_name: "选择容器镜像",
     value: EnumDockerImageType.SELECTED,
     en_desc: "Transfer only selected Container Images.",
-    zh_desc: "只传输所选择需要传输的镜像.",
+    zh_desc: "只传输所选择需要传输的容器镜像.",
   },
 ];

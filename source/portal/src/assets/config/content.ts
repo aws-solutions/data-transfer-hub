@@ -69,7 +69,8 @@ export const BENIFITS_AND_FEATURES = {
       zh_title: "在 Amazon Web Services 之间传输对象",
       en_content:
         "Copy S3 objects or ECR images between Amazon Web Services regions.",
-      zh_content: "在 Amazon Web Services 区域之间传输 S3 对象或 ECR 镜像。",
+      zh_content:
+        "在 Amazon Web Services 区域之间传输 S3 对象或 ECR 容器镜像。",
     },
     {
       en_title: "Open Source & Free",
