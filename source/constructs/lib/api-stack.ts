@@ -47,9 +47,8 @@ export class ApiStack extends Construct {
     });
 
     const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
-    const PLUGIN_TEMPLATE_S3 = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-s3/v1.3.0/Aws-data-replication-component-s3.template`;
     const PLUGIN_TEMPLATE_S3EC2 = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-s3/v2.0.2/DataTransferS3Stack-ec2.template`;
-    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-ecr/v1.0.0/AwsDataReplicationComponentEcrStack.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-ecr/v1.0.1/AwsDataReplicationComponentEcrStack.template`;
 
     // Create the Progress DynamoDB Table
     this.taskTable = new ddb.Table(this, 'TaskTable', {
@@ -292,7 +291,6 @@ export class ApiStack extends Construct {
       environment: {
         STATE_MACHINE_ARN: stateMachine.stateMachineArn,
         TASK_TABLE: this.taskTable.tableName,
-        PLUGIN_TEMPLATE_S3: PLUGIN_TEMPLATE_S3,
         PLUGIN_TEMPLATE_S3EC2: PLUGIN_TEMPLATE_S3EC2,
         PLUGIN_TEMPLATE_ECR: PLUGIN_TEMPLATE_ECR,
         DRY_RUN: isDryRun ? 'True' : 'False'
