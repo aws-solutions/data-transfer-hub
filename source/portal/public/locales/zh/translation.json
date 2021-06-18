@@ -42,7 +42,7 @@
       "name": "Amazon S3 传输引擎",
       "desc": "将对象从不同来源传输到Amazon S3.",
       "feat1": "在 Amazon S3 之间传输对象",
-      "feat2": "从阿里云OSS /腾讯COS /七牛Kodo/ Google GCS 传输对象",
+      "feat2": "从阿里云OSS /腾讯COS /七牛Kodo 传输对象",
       "feat3": "大文件支持",
       "feat4": "支持S3事件触发",
       "feat5": "支持对象元数据传输",
