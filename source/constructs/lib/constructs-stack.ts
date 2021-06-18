@@ -104,7 +104,7 @@ export class ConstructsStack extends cdk.Stack {
     }
 
     // CFN description
-    this.templateOptions.description = `(SO8001) - Data Transfer Hub with aws-solutions-constructs: This template deploys an one-stop toolset for replicating data from different sources into AWS. Template version ${VERSION}`;
+    this.templateOptions.description = `(SO8001) - Data Transfer Hub with aws-solutions-constructs: This template deploys an one-stop toolset for transferring data from different sources into AWS. Template version ${VERSION}`;
 
     // CFN template format version
     this.templateOptions.templateFormatVersion = '2010-09-09';
