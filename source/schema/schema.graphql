@@ -115,7 +115,6 @@ The set of task types supported by Data Transfer Hub.
 """
 enum TaskType {
     S3EC2
-    DynamoDB
     ECR
 }
 

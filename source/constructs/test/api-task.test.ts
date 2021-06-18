@@ -9,7 +9,6 @@ beforeAll(async (done) => {
   process.env.AWS_REGION = 'us-west-2'
   process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
   process.env.TASK_TABLE = 'TaskTable'
-  process.env.PLUGIN_TEMPLATE_S3 = 'https://s3.amazonaws.com/solutions-reference/serverless-image-handler/latest/serverless-image-handler.template'
   AWSMock.setSDKInstance(AWS)
   done()
 })
@@ -54,7 +53,6 @@ test('createTask', async () => {
   console.log(createTaskOutput);
 
   expect(createTaskOutput).toHaveProperty('id')
-  expect(createTaskOutput).toHaveProperty('templateUrl', process.env.PLUGIN_TEMPLATE_S3)
   expect(createTaskOutput).toHaveProperty('createdAt')
   expect(createTaskOutput).toHaveProperty('executionArn', executionArn)
   expect(createTaskOutput).toHaveProperty('type', 'S3')
@@ -179,7 +177,6 @@ test('updateTaskProgress', async () => {
 test('Unknown task operation, updateTask', async () => {
   process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
   process.env.TASK_TABLE = 'TaskTable'
-  process.env.PLUGIN_TEMPLATE_S3 = 'https://s3.amazonaws.com/solutions-reference/serverless-image-handler/latest/serverless-image-handler.template'
 
   const updateTaskInput: task.AppSyncEvent = {
     info: {

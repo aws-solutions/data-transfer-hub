@@ -37,7 +37,6 @@ interface AppSyncEvent {
  * @param context
  */
 const handler = async function (event: AppSyncEvent, context?: Context) {
-  assert(process.env.PLUGIN_TEMPLATE_S3 !== undefined, 'no environment variable PLUGIN_TEMPLATE_S3 found')
   assert(process.env.AWS_REGION !== undefined, 'NO AWS_REGION')
   pprint('EVENT', event)
   pprint('CONTEXT', context)

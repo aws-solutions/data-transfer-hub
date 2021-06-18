@@ -48,7 +48,7 @@ export class ApiStack extends Construct {
 
     const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
     const PLUGIN_TEMPLATE_S3EC2 = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-s3/v2.0.2/DataTransferS3Stack-ec2.template`;
-    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/Aws-data-replication-component-ecr/v1.0.1/AwsDataReplicationComponentEcrStack.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-ecr/v1.0.1/DataTransferECRStack.template`;
 
     // Create the Progress DynamoDB Table
     this.taskTable = new ddb.Table(this, 'TaskTable', {
