@@ -100,6 +100,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "autoscaling:DeleteLaunchConfiguration",
             "autoscaling:UpdateAutoScalingGroup",
             "autoscaling:DescribeAutoScalingGroups",
+            "autoscaling:DescribeAutoScalingInstances",
             "autoscaling:DescribeLaunchConfigurations",
             "autoscaling:EnableMetricsCollection",
             "autoscaling:DescribeScalingActivities",
@@ -189,7 +190,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "ec2:DeleteSecurityGroup",
             "ec2:DescribeSecurityGroups",
             "ec2:RevokeSecurityGroupEgress",
-            "ec2:AuthorizeSecurityGroupEgress",            
+            "ec2:AuthorizeSecurityGroupEgress",
           ],
           resources: [`*`]
         }),
@@ -302,7 +303,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
           ],
           resources: [
             `*`,
-        ]
+          ]
         }),
         new iam.PolicyStatement({
           actions: [
