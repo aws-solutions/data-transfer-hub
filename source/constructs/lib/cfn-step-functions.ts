@@ -183,6 +183,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "ec2:createTags",
             "ec2:DescribeImages",
             "ec2:DescribeVpcs",
+            "ec2:DescribeInstances",
             "ec2:DescribeSubnets",
             "ec2:DescribeVolumes",
             "ec2:DescribeTags",
