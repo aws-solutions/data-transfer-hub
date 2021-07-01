@@ -80,11 +80,11 @@
 
     中国区
 
-    [![Launch Stack](../../../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Data-Transfer-hub/latest/DataTransferHub-openid.template)
+    [![Launch Stack](../../../launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template)
 
     海外区
 
-    [![Launch Stack](../../../launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Data-Transfer-hub/latest/DataTransferHub-openid.template)
+    [![Launch Stack](../../../launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template)
 
 3. 点击 **下一步**
 

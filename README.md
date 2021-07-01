@@ -67,7 +67,7 @@ Follow the step-by-step instructions to configure and deploy the Data Transfer H
 1. Make sure you have sign in AWS Console already.
 1. Click the following button to launch the CloudFormation Stack in your account.
 
-    [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Data-Transfer-hub/latest/DataTransferHub-cognito.template)
+    [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
 1. Input **AdminEmail** parameter. An email containing the temporary password will be sent to this email. You need to 
    this email to 
 1. Click **Next** and select **Create Stack**.
