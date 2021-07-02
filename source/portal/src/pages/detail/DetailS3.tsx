@@ -402,7 +402,7 @@ const Detail: React.FC = (props: any) => {
                                   CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
                                 }?region=${curRegion}#dashboards:name=${
                                   curTaskInfo?.stackId?.split("/")[1]
-                                }-Dashboard`}
+                                }-Dashboard-${curRegion}`}
                               >
                                 {t("taskDetail.dashboard")}{" "}
                                 <OpenInNewIcon
