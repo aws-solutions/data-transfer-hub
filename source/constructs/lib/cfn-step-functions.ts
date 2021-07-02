@@ -165,7 +165,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
           ],
           resources: [
             `arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/DTH*`,
-            `arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/DataTransferHub*`
+            props.taskTableArn
           ]
         }),
         new iam.PolicyStatement({
