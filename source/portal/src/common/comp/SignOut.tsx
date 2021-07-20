@@ -9,8 +9,9 @@ type propsType = {
 const DRHSignOut: React.FC<propsType> = (props: propsType) => {
   const { t } = useTranslation();
 
-  const signOut = () => {
-    Auth.signOut();
+  const signOut = async () => {
+    await Auth.signOut();
+    window.location.reload();
   };
 
   return (
