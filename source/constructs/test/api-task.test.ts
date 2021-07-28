@@ -2,7 +2,7 @@ import * as task from '../lambda/api/api-task'
 import { TaskType } from '../lambda/common'
 import * as AWSMock from 'aws-sdk-mock'
 import * as AWS from 'aws-sdk'
-import {StartExecutionOutput} from "aws-sdk/clients/stepfunctions"
+import { StartExecutionOutput } from "aws-sdk/clients/stepfunctions"
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 beforeAll(async (done) => {
@@ -129,74 +129,74 @@ test('stopTask', async () => {
 
 })
 
-test('updateTaskProgress', async () => {
-  const taskId = 'task-id'
+// test('updateTaskProgress', async () => {
+//   const taskId = 'task-id'
 
-  AWSMock.mock('DynamoDB.DocumentClient', 'update', (callback: Function) => {
-    const output: DocumentClient.UpdateItemOutput = {
-      Attributes: {
-        progress: 'InProgress',
-        id: taskId,
-        progressInfo: {
-          replicated: 100
-        }
-      }
-    }
-    callback(null, output)
-  })
+//   AWSMock.mock('DynamoDB.DocumentClient', 'update', (callback: Function) => {
+//     const output: DocumentClient.UpdateItemOutput = {
+//       Attributes: {
+//         progress: 'InProgress',
+//         id: taskId,
+//         progressInfo: {
+//           replicated: 100
+//         }
+//       }
+//     }
+//     callback(null, output)
+//   })
 
 
-  const updateTaskInput: task.AppSyncEvent = {
-    info: {
-      fieldName: 'updateTaskProgress',
-      parentTypeName: 'Mutation',
-      variables: {}
-    },
-    arguments: {
-      id: taskId,
-      input: {
-        replicated: 100
-      }
-    }
-  }
+//   const updateTaskInput: task.AppSyncEvent = {
+//     info: {
+//       fieldName: 'updateTaskProgress',
+//       parentTypeName: 'Mutation',
+//       variables: {}
+//     },
+//     arguments: {
+//       id: taskId,
+//       input: {
+//         replicated: 100
+//       }
+//     }
+//   }
 
-  const updatedTask = await task.handler(updateTaskInput)
+//   const updatedTask = await task.handler(updateTaskInput)
 
-  expect(updatedTask).toBeTruthy()
-  // @ts-ignore
-  expect(updatedTask.id).toEqual(taskId)
-  // @ts-ignore
-  expect(updatedTask).toHaveProperty('progressInfo')
-  // @ts-ignore
-  expect(updatedTask.progressInfo.replicated).toEqual(100)
+//   expect(updatedTask).toBeTruthy()
+//   // @ts-ignore
+//   expect(updatedTask.id).toEqual(taskId)
+//   // @ts-ignore
+//   expect(updatedTask).toHaveProperty('progressInfo')
+//   // @ts-ignore
+//   expect(updatedTask.progressInfo.replicated).toEqual(100)
 
-  AWSMock.restore()
+//   AWSMock.restore()
 
-})
+// })
 
-test('Unknown task operation, updateTask', async () => {
-  process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
-  process.env.TASK_TABLE = 'TaskTable'
+// test('Unknown task operation, updateTask', async () => {
+//   process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
+//   process.env.TASK_TABLE = 'TaskTable'
 
-  const updateTaskInput: task.AppSyncEvent = {
-    info: {
-      fieldName: 'updateTask',
-      parentTypeName: 'Mutation',
-      variables: {}
-    },
-    arguments: {
-      input: {
-        type: TaskType.S3,
-        parameters: [
-          {
-            ParameterKey: "SourceBuckets",
-            ParameterValue: "joeshi"
-          }
-        ]
-      }
-    }
-  }
+//   const updateTaskInput: task.AppSyncEvent = {
+//     info: {
+//       fieldName: 'updateTask',
+//       parentTypeName: 'Mutation',
+//       variables: {}
+//     },
+//     arguments: {
+//       input: {
+//         type: TaskType.S3,
+//         parameters: [
+//           {
+//             ParameterKey: "SourceBuckets",
+//             ParameterValue: "joeshi"
+//           }
+//         ]
+//       }
+//     }
+//   }
 
-  await expect(task.handler(updateTaskInput)).rejects.toThrow(new Error('Unknown field, unable to resolve updateTask'))
+//   await expect(task.handler(updateTaskInput)).rejects.toThrow(new Error('Unknown field, unable to resolve updateTask'))
 
-})
+// })

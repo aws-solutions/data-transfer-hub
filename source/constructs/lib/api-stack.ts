@@ -322,7 +322,7 @@ export class ApiStack extends Construct {
     lambdaDS.createResolver({
       typeName: 'Mutation',
       fieldName: 'createTask',
-      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(path.join(__dirname, '../../schema/vtl/CreateTask.vtl')),
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })
 
@@ -333,12 +333,12 @@ export class ApiStack extends Construct {
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })
 
-    lambdaDS.createResolver({
-      typeName: 'Mutation',
-      fieldName: 'updateTaskProgress',
-      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
-      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
-    })
+    // lambdaDS.createResolver({
+    //   typeName: 'Mutation',
+    //   fieldName: 'updateTaskProgress',
+    //   requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+    //   responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    // })
 
     // Create Lambda Data Source
     const secretManagerHandlerFn = new lambda.Function(this, 'SecretManagerHandlerFn', {
@@ -372,19 +372,19 @@ export class ApiStack extends Construct {
     addCfnNagSuppressRules(cfnSecretManagerReadOnlyPolicy, [
       {
         id: 'W12',
-        reason: 'Need to be able to list all secret manager parameter names'
+        reason: 'Need to be able to list all secrets in Secrets Manager'
       },
     ])
 
     secretManagerHandlerFn.role?.attachInlinePolicy(secretManagerReadOnlyPolicy)
 
     const secretManagerLambdaDS = this.api.addLambdaDataSource('secretManagerLambdaDS', secretManagerHandlerFn, {
-      description: 'Lambda Resolver Datasource for Secret Manager parameters'
+      description: 'Lambda Resolver Datasource for Secret Manager'
     });
 
     secretManagerLambdaDS.createResolver({
       typeName: 'Query',
-      fieldName: 'listSecretManagerParameters',
+      fieldName: 'listSecrets',
       requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
     })

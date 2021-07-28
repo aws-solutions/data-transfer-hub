@@ -1,0 +1,29 @@
+#if( !$util.matches("[^${}\[\]<\\]?", $ctx.args.input.description))
+    $util.error("Value for description field must not contain special characters such as ${}[]<\ etc.")
+#end
+
+#if( $ctx.args.input.description.length() > 250)
+    $util.error("Value for description field cannot exceed 250 characters.")
+#end
+
+
+#set($type=$ctx.args.input.type)
+
+#foreach( $param in $ctx.args.input.parameters )
+    #if( $param.ParameterKey == "srcBucket" || $param.ParameterKey == "destBucket" )
+        $util.validate($util.matches("[a-z0-9][a-z0-9\.\-]+", $param.ParameterValue), "Invalid Bucket Name")
+	#elseif ($param.ParameterKey == "srcRegion" || $param.ParameterKey == "destRegion" )
+    	$util.validate($util.matches("[a-z\-]+", $param.ParameterValue), "Invalid Region Name")
+    #elseif ($param.ParameterKey == "srcInCurrentAccount")
+        $util.validate($util.matches("(true)|(false)", $param.ParameterValue), "Value for srcInCurrentAccount must be true or false")
+    #elseif ($param.ParameterKey == "destInCurrentAccount")
+        $util.validate($util.matches("(true)|(false)", $param.ParameterValue), "Value for destInCurrentAccount must be true or false")
+  	#elseif ($param.ParameterKey == "alarmEmail")
+        $util.validate($util.matches("\w*@([A-Za-z0-9]+\.)+[A-Za-z]+", $param.ParameterValue), "Invalid Alarm Email Address")
+    #elseif ($param.ParameterKey == "ecsVpcId")
+        $util.validate($util.matches("^vpc-[0-9a-z]", $param.ParameterValue), "Invalid VPC ID")
+    #end
+
+#end
+
+{"version": "2017-02-28", "operation": "Invoke", "payload": $util.toJson($ctx)}
