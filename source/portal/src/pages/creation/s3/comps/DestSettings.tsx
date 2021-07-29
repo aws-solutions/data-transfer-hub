@@ -77,7 +77,9 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   );
 
   const [destBucketPrefix, setDestBucketPrefix] = useState(
-    tmpTaskInfo.parametersObj?.destBucketPrefix || ""
+    tmpTaskInfo.parametersObj?.destBucketPrefix
+      ? decodeURI(tmpTaskInfo.parametersObj.destBucketPrefix)
+      : ""
   );
 
   const [destStorageClass, setDestStorageClass] = useState(
@@ -89,10 +91,8 @@ const DestSettings: React.FC<DestPropType> = (props) => {
     tmpTaskInfo.parametersObj?.destAcl || "bucket-owner-full-control"
   );
 
-  const [
-    destCredentialsParameterStore,
-    setDestCredentialsParameterStore,
-  ] = useState(tmpTaskInfo.parametersObj?.destCredentialsParameterStore || "");
+  const [destCredentialsParameterStore, setDestCredentialsParameterStore] =
+    useState(tmpTaskInfo.parametersObj?.destCredentialsParameterStore || "");
 
   const [destRegionObj, setDestRegionObj] = useState<IRegionType | null>(
     tmpTaskInfo.parametersObj?.destRegionObj || null
@@ -161,7 +161,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   }, [destBucketName]);
 
   useEffect(() => {
-    updateTmpTaskInfo("destBucketPrefix", destBucketPrefix);
+    updateTmpTaskInfo("destBucketPrefix", encodeURI(destBucketPrefix));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destBucketPrefix]);
 

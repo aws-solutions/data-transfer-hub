@@ -65,10 +65,8 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
     tmpTaskInfo.parametersObj?.sourceType || EnumSourceType.S3
   );
 
-  const [
-    srcCredentialsParameterStore,
-    setSrcCredentialsParameterStore,
-  ] = useState(tmpTaskInfo.parametersObj?.srcCredentialsParameterStore || "");
+  const [srcCredentialsParameterStore, setSrcCredentialsParameterStore] =
+    useState(tmpTaskInfo.parametersObj?.srcCredentialsParameterStore || "");
 
   const [sourceInAccount, setSourceInAccount] = useState<string>(
     tmpTaskInfo.parametersObj?.sourceInAccount || YES_NO.NO
@@ -104,7 +102,9 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [srcRegionReqired, setSrcRegionReqired] = useState(false);
   const [srcEndpointFormatError, setSrcEndpointFormatError] = useState(false);
   const [srcBucketPrefix, setSrcBucketPrefix] = useState(
-    tmpTaskInfo.parametersObj?.srcBucketPrefix || ""
+    tmpTaskInfo.parametersObj?.srcBucketPrefix
+      ? decodeURI(tmpTaskInfo.parametersObj.srcBucketPrefix)
+      : ""
   );
 
   const [regionList, setRegionList] = useState<IRegionType[]>([]);
@@ -221,7 +221,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   }, [srcBucketName]);
 
   useEffect(() => {
-    updateTmpTaskInfo("srcBucketPrefix", srcBucketPrefix);
+    updateTmpTaskInfo("srcBucketPrefix", encodeURI(srcBucketPrefix));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketPrefix]);
 

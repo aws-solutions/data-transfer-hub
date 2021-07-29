@@ -520,6 +520,12 @@ export const CREATE_USE_LESS_PROPERTY = [
   "__typename",
 ];
 
+// export const fixedEncodeURIComponent = (str: string) => {
+//   return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+//     return "%" + c.charCodeAt(0).toString(16);
+//   });
+// };
+
 export const urlIsValid = (url: string): boolean => {
   const REG =
     /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/;

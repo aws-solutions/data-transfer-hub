@@ -70,9 +70,8 @@ const StepTwoECR: React.FC = () => {
   const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
 
   const [classSourceRegion, setClassSourceRegion] = useState("form-items");
-  const [classIsSourceInAccount, setClassIsSourceAccount] = useState(
-    "form-items"
-  );
+  const [classIsSourceInAccount, setClassIsSourceAccount] =
+    useState("form-items");
   const [classSrcAccountId, setClassSrcAccountId] = useState("form-items");
   const [classSrcCredential, setClassSrcCredential] = useState("form-items");
   const [classDockerImage, setClassDockerImage] = useState("form-items");
@@ -115,7 +114,7 @@ const StepTwoECR: React.FC = () => {
     tmpTaskInfo.parametersObj?.destPrefix || ""
   );
   const [description, setDescription] = useState(
-    tmpTaskInfo.parametersObj?.description || ""
+    decodeURI(tmpTaskInfo.parametersObj?.description) || ""
   );
   const [alarmEmail, setAlarmEmail] = useState(
     tmpTaskInfo.parametersObj?.alarmEmail || ""
@@ -329,7 +328,7 @@ const StepTwoECR: React.FC = () => {
 
   useEffect(() => {
     // Update tmpTaskInfo
-    updateTmpTaskInfo("description", description);
+    updateTmpTaskInfo("description", encodeURI(description));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 
@@ -462,6 +461,7 @@ const StepTwoECR: React.FC = () => {
                           ) => {
                             setSrcAccountId(event.target.value);
                           }}
+                          inputType="number"
                           inputName="srcAccountId"
                           inputValue={srcAccountId}
                           placeholder="123456789012"
@@ -609,6 +609,7 @@ const StepTwoECR: React.FC = () => {
                           ) => {
                             setDestAccountId(event.target.value);
                           }}
+                          inputType="number"
                           isOptional={true}
                           inputName="destAccountId"
                           inputValue={destAccountId}

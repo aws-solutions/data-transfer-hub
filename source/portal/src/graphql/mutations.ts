@@ -27,31 +27,6 @@ export const createTask = /* GraphQL */ `
     }
   }
 `;
-export const updateTaskProgress = /* GraphQL */ `
-  mutation UpdateTaskProgress($id: String, $input: UpdateTaskProgressInput) {
-    updateTaskProgress(id: $id, input: $input) {
-      id
-      description
-      type
-      templateUrl
-      parameters {
-        ParameterKey
-        ParameterValue
-      }
-      createdAt
-      stoppedAt
-      progress
-      progressInfo {
-        total
-        replicated
-      }
-      stackId
-      stackStatus
-      stackStatusReason
-      executionArn
-    }
-  }
-`;
 export const stopTask = /* GraphQL */ `
   mutation StopTask($id: String) {
     stopTask(id: $id) {

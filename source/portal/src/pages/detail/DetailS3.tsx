@@ -446,8 +446,8 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.srcPrefix")}
                           </div>
                           <div>
-                            {curTaskInfo.srcBucketPrefix ||
-                              curTaskInfo.srcPrefix}
+                            {decodeURI(curTaskInfo.srcPrefix) ||
+                              decodeURI(curTaskInfo.srcBucketPrefix)}
                           </div>
                           <br />
                           <div className="sub-name">
@@ -522,8 +522,8 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.destPrefix")}
                           </div>
                           <div>
-                            {curTaskInfo.destBucketPrefix ||
-                              curTaskInfo.destPrefix}
+                            {decodeURI(curTaskInfo.destPrefix) ||
+                              decodeURI(curTaskInfo.destBucketPrefix)}
                           </div>
                           <br />
                           <div className="sub-name">
@@ -627,7 +627,7 @@ const Detail: React.FC = (props: any) => {
                                   setAdvancedShow(true);
                                 }}
                                 className="option-title-icon"
-                                fontSize="default"
+                                fontSize="medium"
                               />
                             )}
                             {advancedShow && (
@@ -636,7 +636,7 @@ const Detail: React.FC = (props: any) => {
                                   setAdvancedShow(false);
                                 }}
                                 className="option-title-icon"
-                                fontSize="default"
+                                fontSize="medium"
                               />
                             )}
                             {t("taskDetail.advancedSettings")}
@@ -678,7 +678,7 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.description")}
                           </div>
-                          <div>{curTaskInfo.description}</div>
+                          <div>{decodeURI(curTaskInfo.description)}</div>
                           <br />
                         </div>
                         <div className="split-item">

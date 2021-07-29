@@ -387,7 +387,7 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.description")}
                           </div>
-                          <div>{curTaskInfo.description || "-"}</div>
+                          <div>{decodeURI(curTaskInfo.description) || "-"}</div>
                           <br />
                         </div>
                         <div className="split-item">
