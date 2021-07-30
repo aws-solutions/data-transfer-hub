@@ -5,7 +5,6 @@ import { useMappedState } from "redux-react-hook";
 
 import "./TopBar.scss";
 
-import Logo from "../assets/images/logo.svg";
 import DRHSignOut from "./comp/SignOut";
 import { AUTH_TYPE_NAME, AUTH_USER_EMAIL } from "../assets/config/const";
 
@@ -35,7 +34,6 @@ const TopBar: React.FC<TopBarProps> = (props) => {
   return (
     <div className="drh-top-bar">
       <div className="logo">
-        <img width="20" alt="Data Transfer Hub" src={Logo} />
         <span>Data Transfer Hub</span>
       </div>
       <div className="options">
