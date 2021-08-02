@@ -103,7 +103,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [srcEndpointFormatError, setSrcEndpointFormatError] = useState(false);
   const [srcBucketPrefix, setSrcBucketPrefix] = useState(
     tmpTaskInfo.parametersObj?.srcBucketPrefix
-      ? decodeURI(tmpTaskInfo.parametersObj.srcBucketPrefix)
+      ? decodeURIComponent(tmpTaskInfo.parametersObj.srcBucketPrefix)
       : ""
   );
 
@@ -221,7 +221,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   }, [srcBucketName]);
 
   useEffect(() => {
-    updateTmpTaskInfo("srcBucketPrefix", encodeURI(srcBucketPrefix));
+    updateTmpTaskInfo("srcBucketPrefix", encodeURIComponent(srcBucketPrefix));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketPrefix]);
 

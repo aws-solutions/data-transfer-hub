@@ -114,7 +114,7 @@ const StepTwoECR: React.FC = () => {
     tmpTaskInfo.parametersObj?.destPrefix || ""
   );
   const [description, setDescription] = useState(
-    decodeURI(tmpTaskInfo.parametersObj?.description) || ""
+    decodeURIComponent(tmpTaskInfo.parametersObj?.description) || ""
   );
   const [alarmEmail, setAlarmEmail] = useState(
     tmpTaskInfo.parametersObj?.alarmEmail || ""
@@ -328,7 +328,7 @@ const StepTwoECR: React.FC = () => {
 
   useEffect(() => {
     // Update tmpTaskInfo
-    updateTmpTaskInfo("description", encodeURI(description));
+    updateTmpTaskInfo("description", encodeURIComponent(description));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 

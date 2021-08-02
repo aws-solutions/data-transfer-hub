@@ -78,7 +78,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
 
   const [destBucketPrefix, setDestBucketPrefix] = useState(
     tmpTaskInfo.parametersObj?.destBucketPrefix
-      ? decodeURI(tmpTaskInfo.parametersObj.destBucketPrefix)
+      ? decodeURIComponent(tmpTaskInfo.parametersObj.destBucketPrefix)
       : ""
   );
 
@@ -161,7 +161,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   }, [destBucketName]);
 
   useEffect(() => {
-    updateTmpTaskInfo("destBucketPrefix", encodeURI(destBucketPrefix));
+    updateTmpTaskInfo("destBucketPrefix", encodeURIComponent(destBucketPrefix));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destBucketPrefix]);
 

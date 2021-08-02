@@ -479,7 +479,9 @@ const StepThreeS3: React.FC = () => {
                                     </span>
                                   ) : (
                                     <span>
-                                      {decodeURI(element.ParameterValue)}
+                                      {decodeURIComponent(
+                                        element.ParameterValue
+                                      )}
                                     </span>
                                   )}
                                 </div>

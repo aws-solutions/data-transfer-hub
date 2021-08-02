@@ -446,8 +446,8 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.srcPrefix")}
                           </div>
                           <div>
-                            {decodeURI(curTaskInfo.srcPrefix) ||
-                              decodeURI(curTaskInfo.srcBucketPrefix)}
+                            {decodeURIComponent(curTaskInfo.srcPrefix) ||
+                              decodeURIComponent(curTaskInfo.srcBucketPrefix)}
                           </div>
                           <br />
                           <div className="sub-name">
@@ -522,8 +522,8 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.destPrefix")}
                           </div>
                           <div>
-                            {decodeURI(curTaskInfo.destPrefix) ||
-                              decodeURI(curTaskInfo.destBucketPrefix)}
+                            {decodeURIComponent(curTaskInfo.destPrefix) ||
+                              decodeURIComponent(curTaskInfo.destBucketPrefix)}
                           </div>
                           <br />
                           <div className="sub-name">
@@ -678,7 +678,9 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.description")}
                           </div>
-                          <div>{decodeURI(curTaskInfo.description)}</div>
+                          <div>
+                            {decodeURIComponent(curTaskInfo.description)}
+                          </div>
                           <br />
                         </div>
                         <div className="split-item">
