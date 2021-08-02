@@ -274,7 +274,7 @@ export class ApiStack extends Construct {
       typeName: 'Query',
       fieldName: 'getTask',
       requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem('id', 'id'),
-      responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem()
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(path.join(__dirname, '../../schema/vtl/GetTaskResult.vtl'))
     })
 
 

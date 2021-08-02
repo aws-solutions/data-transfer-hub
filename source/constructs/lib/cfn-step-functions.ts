@@ -85,6 +85,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
           actions: [
             "states:CreateStateMachine",
             "states:DeleteStateMachine",
+            "states:DescribeStateMachine",
             "states:TagResource",
           ],
           resources: [
