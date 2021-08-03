@@ -57,7 +57,7 @@ export class PortalStack extends cdk.Construct {
 
     const website = new CloudFrontToS3(this, 'Web', {
       bucketProps: {
-        versioned: false,
+        versioned: true,
         encryption: s3.BucketEncryption.S3_MANAGED,
         accessControl: s3.BucketAccessControl.PRIVATE,
         enforceSSL: true,
