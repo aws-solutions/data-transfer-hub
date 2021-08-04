@@ -66,6 +66,7 @@ export class PortalStack extends cdk.Construct {
       },
       cloudFrontDistributionProps: {
         priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
+        minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
         enableIpv6: false,
         enableLogging: true,  //Enable access logging for the distribution.
         comment: 'Data Transfer Hub Portal Distribution',
@@ -84,7 +85,7 @@ export class PortalStack extends cdk.Construct {
     const websiteDist = website.cloudFrontWebDistribution.node.defaultChild as cloudfront.CfnDistribution
 
     if (props.auth_type === AuthType.OPENID) {
-      // Currently, CachePolicy is not available in Cloudfront in China Regions.
+      // Currently, CachePolicy and Cloudfront Function is not available in Cloudfront in China Regions.
       // Need to override the default CachePolicy to use ForwardedValues to support both China regions and Global regions.
       // This should be updated in the future once the feature is landed in China regions.
       websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.CachePolicyId', undefined)
@@ -97,15 +98,21 @@ export class PortalStack extends cdk.Construct {
     } else {
       const cfFunction = new cloudfront.Function(this, "DataTransferHubSecurityHeader", {
         functionName: `DTHSecHdr${this.node.addr}`,
-        code: cloudfront.FunctionCode.fromInline("function handler(event) { var response = event.response; \
-          var headers = response.headers; \
-          headers['strict-transport-security'] = { value: 'max-age=63072000; includeSubdomains; preload'}; \
-          headers['content-security-policy'] = { value: \"upgrade-insecure-requests; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:\"}; \
-          headers['x-content-type-options'] = { value: 'nosniff'}; \
-          headers['x-frame-options'] = {value: 'DENY'}; \
-          headers['x-xss-protection'] = {value: '1; mode=block'}; \
-          return response; \
-        }")
+        code: cloudfront.FunctionCode.fromInline(`
+function handler(event) {
+    var response = event.response;
+    var headers = response.headers;
+    headers['strict-transport-security'] = { value: 'max-age=63072000; includeSubdomains; preload' };
+    headers['content-security-policy'] = { value: "default-src 'self'; upgrade-insecure-requests; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ${props.aws_appsync_graphqlEndpoint} https://cognito-idp.${cdk.Aws.REGION}.amazonaws.com/" };
+    headers['x-content-type-options'] = { value: 'nosniff' };
+    headers['x-frame-options'] = { value: 'DENY' };
+    headers['x-xss-protection'] = { value: '1; mode=block' };
+
+    // Set the cache-control header
+    headers['cache-control'] = { value: 'public, max-age=604800;' };
+    return response;
+}`
+        )
 
 
       });
