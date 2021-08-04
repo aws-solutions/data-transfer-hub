@@ -9,13 +9,15 @@ beforeAll(async (done) => {
   process.env.AWS_REGION = 'us-west-2'
   process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
   process.env.TASK_TABLE = 'TaskTable'
+  process.env.PLUGIN_TEMPLATE_S3EC2 = 'http://dth.s3.amazonaws.com/S3EC2.template'
+  process.env.PLUGIN_TEMPLATE_ECR = 'http://dth.s3.amazonaws.com/ECR.template'
   AWSMock.setSDKInstance(AWS)
   done()
 })
 
 test('createTask', async () => {
   const executionArn = 'arn:aws:states:us-west-2:12345678901:execution:state-machine-name:3a35b25f-05a6-4ba9-a0e3-1312166e85f3'
-  AWSMock.mock('StepFunctions', 'startExecution', (callback: Function) => {
+  AWSMock.mock('StepFunctions', 'startExecution', ({ }, callback: Function) => {
     const output: StartExecutionOutput = {
       executionArn: executionArn,
       startDate: new Date()
@@ -39,10 +41,15 @@ test('createTask', async () => {
     arguments: {
       input: {
         type: TaskType.S3,
+        description: "Test",
         parameters: [
           {
-            ParameterKey: "SourceBuckets",
-            ParameterValue: "joeshi"
+            ParameterKey: "srcBucket",
+            ParameterValue: "test-src"
+          },
+          {
+            ParameterKey: "destBucket",
+            ParameterValue: "test-dest"
           }
         ]
       }
@@ -50,16 +57,21 @@ test('createTask', async () => {
   }
 
   const createTaskOutput = await task.handler(createTaskInput)
+  console.log("createTaskOutput");
   console.log(createTaskOutput);
 
   expect(createTaskOutput).toHaveProperty('id')
   expect(createTaskOutput).toHaveProperty('createdAt')
   expect(createTaskOutput).toHaveProperty('executionArn', executionArn)
-  expect(createTaskOutput).toHaveProperty('type', 'S3')
+  expect(createTaskOutput).toHaveProperty('type', 'S3EC2')
   expect(createTaskOutput).toHaveProperty('parameters', [
     {
-      ParameterKey: "SourceBuckets",
-      ParameterValue: "joeshi"
+      ParameterKey: "srcBucket",
+      ParameterValue: "test-src"
+    },
+    {
+      ParameterKey: "destBucket",
+      ParameterValue: "test-dest"
     }
   ])
 
@@ -71,7 +83,7 @@ test('createTask', async () => {
 test('stopTask', async () => {
   const taskId = 'this-is-an-id'
 
-  AWSMock.mock('DynamoDB.DocumentClient', 'query', (callback: Function) => {
+  AWSMock.mock('DynamoDB.DocumentClient', 'query', ({ }, callback: Function) => {
     const output: DocumentClient.QueryOutput = {
       Items: [
         {
@@ -84,7 +96,7 @@ test('stopTask', async () => {
   })
 
   const executionArn = 'arn:aws:states:us-west-2:12345678901:execution:state-machine-name:3a35b25f-05a6-4ba9-a0e3-1312166e85f3'
-  AWSMock.mock('StepFunctions', 'startExecution', (callback: Function) => {
+  AWSMock.mock('StepFunctions', 'startExecution', ({ }, callback: Function) => {
     const output: StartExecutionOutput = {
       executionArn: executionArn,
       startDate: new Date()
@@ -92,7 +104,7 @@ test('stopTask', async () => {
     callback(null, output)
   })
 
-  AWSMock.mock('DynamoDB.DocumentClient', 'update', (callback: Function) => {
+  AWSMock.mock('DynamoDB.DocumentClient', 'update', ({ }, callback: Function) => {
     const output: DocumentClient.UpdateItemOutput = {
       Attributes: {
         progress: 'STOPPING',
@@ -128,75 +140,3 @@ test('stopTask', async () => {
   AWSMock.restore()
 
 })
-
-// test('updateTaskProgress', async () => {
-//   const taskId = 'task-id'
-
-//   AWSMock.mock('DynamoDB.DocumentClient', 'update', (callback: Function) => {
-//     const output: DocumentClient.UpdateItemOutput = {
-//       Attributes: {
-//         progress: 'InProgress',
-//         id: taskId,
-//         progressInfo: {
-//           replicated: 100
-//         }
-//       }
-//     }
-//     callback(null, output)
-//   })
-
-
-//   const updateTaskInput: task.AppSyncEvent = {
-//     info: {
-//       fieldName: 'updateTaskProgress',
-//       parentTypeName: 'Mutation',
-//       variables: {}
-//     },
-//     arguments: {
-//       id: taskId,
-//       input: {
-//         replicated: 100
-//       }
-//     }
-//   }
-
-//   const updatedTask = await task.handler(updateTaskInput)
-
-//   expect(updatedTask).toBeTruthy()
-//   // @ts-ignore
-//   expect(updatedTask.id).toEqual(taskId)
-//   // @ts-ignore
-//   expect(updatedTask).toHaveProperty('progressInfo')
-//   // @ts-ignore
-//   expect(updatedTask.progressInfo.replicated).toEqual(100)
-
-//   AWSMock.restore()
-
-// })
-
-// test('Unknown task operation, updateTask', async () => {
-//   process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
-//   process.env.TASK_TABLE = 'TaskTable'
-
-//   const updateTaskInput: task.AppSyncEvent = {
-//     info: {
-//       fieldName: 'updateTask',
-//       parentTypeName: 'Mutation',
-//       variables: {}
-//     },
-//     arguments: {
-//       input: {
-//         type: TaskType.S3,
-//         parameters: [
-//           {
-//             ParameterKey: "SourceBuckets",
-//             ParameterValue: "joeshi"
-//           }
-//         ]
-//       }
-//     }
-//   }
-
-//   await expect(task.handler(updateTaskInput)).rejects.toThrow(new Error('Unknown field, unable to resolve updateTask'))
-
-// })
