@@ -79,19 +79,43 @@ export class PortalStack extends cdk.Construct {
       },
       insertHttpSecurityHeaders: false,
     });
-    const websiteBucket = website.s3Bucket as s3.Bucket;
 
-    // Currently, CachePolicy is not available in Cloudfront in China Regions.
-    // Need to override the default CachePolicy to use ForwardedValues to support both China regions and Global regions.
-    // This should be updated in the future once the feature is landed in China regions.
+    const websiteBucket = website.s3Bucket as s3.Bucket;
     const websiteDist = website.cloudFrontWebDistribution.node.defaultChild as cloudfront.CfnDistribution
-    websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.CachePolicyId', undefined)
-    websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.ForwardedValues', {
-      "Cookies": {
-        "Forward": "none"
-      },
-      "QueryString": false
-    })
+
+    if (props.auth_type === AuthType.OPENID) {
+      // Currently, CachePolicy is not available in Cloudfront in China Regions.
+      // Need to override the default CachePolicy to use ForwardedValues to support both China regions and Global regions.
+      // This should be updated in the future once the feature is landed in China regions.
+      websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.CachePolicyId', undefined)
+      websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.ForwardedValues', {
+        "Cookies": {
+          "Forward": "none"
+        },
+        "QueryString": false
+      })
+    } else {
+      const cfFunction = new cloudfront.Function(this, "DataTransferHubSecurityHeader", {
+        functionName: `DTHSecHdr${this.node.addr}`,
+        code: cloudfront.FunctionCode.fromInline("function handler(event) { var response = event.response; \
+          var headers = response.headers; \
+          headers['strict-transport-security'] = { value: 'max-age=63072000; includeSubdomains; preload'}; \
+          headers['content-security-policy'] = { value: \"upgrade-insecure-requests; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:\"}; \
+          headers['x-content-type-options'] = { value: 'nosniff'}; \
+          headers['x-frame-options'] = {value: 'DENY'}; \
+          headers['x-xss-protection'] = {value: '1; mode=block'}; \
+          return response; \
+        }")
+
+
+      });
+      websiteDist.addPropertyOverride('DistributionConfig.DefaultCacheBehavior.FunctionAssociations', [
+        {
+          "EventType": "viewer-response",
+          "FunctionARN": cfFunction.functionArn,
+        }
+      ])
+    }
 
     // CustomResourceRole
     const customResourceRole = new iam.Role(this, 'CustomResourceRole', {
