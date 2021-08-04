@@ -5,7 +5,7 @@
 
 #foreach( $param in $ctx.args.input.parameters )
     #if( $param.ParameterKey == "srcBucket" || $param.ParameterKey == "destBucket" )
-        $util.validate($util.matches("^(?!(^((\d{1,3}[.]){3}\d{1,3}$)|.*\.\.|.*\.-|.*-\.|.*\._|.*_\.))[A-Za-z\d][\w.-]{1,253}[A-Za-z\d]$", $param.ParameterValue), "Invalid Bucket Name")
+        $util.validate($util.matches("^(?!(^((\d{1,3}[.]){3}\d{1,3}$)|.*\.\.|.*\.-|.*-\.|.*\._|.*_\.))[a-z\d][\w.-]{1,253}[a-z\d]$", $param.ParameterValue), "Invalid Bucket Name")
     #elseif( $param.ParameterKey == "srcPrefix" || $param.ParameterKey == "destPrefix" )
     	#set($param.ParameterValue = $util.urlDecode($param.ParameterValue))
         $util.validate($util.matches("^.{0,1024}$", $param.ParameterValue), "Invalid Prefix")
