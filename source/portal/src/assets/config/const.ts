@@ -16,7 +16,6 @@ export const REPORT_ISSUE_LINK = GITHUB_LINK + "/issues/new";
 // URL to be done
 export const URL = "";
 export const URL_FEEDBACK = GITHUB_LINK + "/issues/new";
-export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
 export const SSM_LINK_MAP: any = {
   china: "https://console.amazonaws.cn/secretsmanager",
   global: "https://console.aws.amazon.com/secretsmanager",
