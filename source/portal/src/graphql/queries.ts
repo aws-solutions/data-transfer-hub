@@ -55,10 +55,9 @@ export const getTask = /* GraphQL */ `
     }
   }
 `;
-
-export const listSecretManagerParameters = /* GraphQL */ `
-  query ListSecretManagerParameters {
-    listSecretManagerParameters {
+export const listSecrets = /* GraphQL */ `
+  query ListSecrets {
+    listSecrets {
       name
       description
     }

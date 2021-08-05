@@ -7,11 +7,6 @@ directive @aws_subscribe on FIELD_DEFINITION
 schema {
     query: Query
     mutation: Mutation
-    subscription: Subscription
-}
-
-type Subscription {
-    updateTaskProgress: Task @aws_subscribe(mutations: ["updateTaskProgress"])
 }
 
 
@@ -23,7 +18,7 @@ type Query {
     limit: The max number of items to return. Default 20.
     nextToken: Pagination token. Optional.
     """
-    listTasks(limit: Int = 20, nextToken: String): ModelTaskConnection
+    listTasks(limit: Int = 20, nextToken: String): ListTasksResponse
 
     """
     Get a task object by ID.
@@ -31,22 +26,29 @@ type Query {
     getTask(id: ID!): Task
 
     """
-    Get a list of parameters in Secret Manager
+    Get the list of Secrets names from Secret Manager
     """
-    listSecretManagerParameters: [Parameter]
+    listSecrets: [Secret]
 }
 
 type Mutation {
+    """
+    Start a transfer task. 
+    This is to start a cloudformation deployment of plugins
+
+    Arguments
+    input: parameters value set to start a transfer task.
+    """
     createTask(input: CreateTaskInput!): Task @aws_iam @aws_cognito_user_pools @aws_oidc
-    # updateTask(id: String, input: UpdateTaskInput!): Task @aws_iam @aws_cognito_user_pools
-    updateTaskProgress(id: String, input: UpdateTaskProgressInput): Task @aws_iam
+
+    """
+    Stop a transfer task.
+    This is to delete a cloudformation deployment of plugins
+
+    Arguments
+    id: A unique ID of the task
+    """
     stopTask(id: String): Task @aws_iam @aws_cognito_user_pools @aws_oidc
-}
-
-
-input UpdateTaskProgressInput {
-    total: Int
-    replicated: Int
 }
 
 
@@ -54,14 +56,11 @@ input UpdateTaskProgressInput {
 """
 Secret in Secrets Manager
 """
-type Parameter @aws_iam @aws_cognito_user_pools @aws_oidc{
-    "Parameter Name."
+type Secret @aws_iam @aws_cognito_user_pools @aws_oidc{
+    "Secret Name."
     name: String!
 
-    "Parameter Type"
-    type: String!
-
-    "Parameter Description"
+    "Secret Description"
     description: String
 
 }
@@ -94,7 +93,7 @@ type Task @aws_iam @aws_cognito_user_pools @aws_oidc{
     "Task progress indicator."
     progress: TaskProgress
 
-    "Task progress information."
+    "Task progress information.  Not used for now"
     progressInfo: CommonProgressInfo
 
     "CloudFormation Stack ID"
@@ -155,7 +154,7 @@ type TaskParameter {
     ParameterValue: String
 }
 
-type ModelTaskConnection {
+type ListTasksResponse {
     items: [Task],
     nextToken: String
 }
@@ -167,11 +166,6 @@ input TaskParameterInput {
 
 input CreateTaskInput {
     type: TaskType!
-    description: String
-    parameters: [ TaskParameterInput ]
-}
-
-input UpdateTaskInput {
     description: String
     parameters: [ TaskParameterInput ]
 }

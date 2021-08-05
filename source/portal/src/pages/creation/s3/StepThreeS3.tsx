@@ -478,7 +478,11 @@ const StepThreeS3: React.FC = () => {
                                       {JOB_TYPE_MAP[element.ParameterValue]}
                                     </span>
                                   ) : (
-                                    <span>{element.ParameterValue}</span>
+                                    <span>
+                                      {decodeURIComponent(
+                                        element.ParameterValue
+                                      )}
+                                    </span>
                                   )}
                                 </div>
                               </div>

@@ -16,7 +16,6 @@ export const REPORT_ISSUE_LINK = GITHUB_LINK + "/issues/new";
 // URL to be done
 export const URL = "";
 export const URL_FEEDBACK = GITHUB_LINK + "/issues/new";
-export const URL_YOUTUBE = "https://www.youtube.com/embed/hTcn604Pc4k";
 export const SSM_LINK_MAP: any = {
   china: "https://console.amazonaws.cn/secretsmanager",
   global: "https://console.aws.amazon.com/secretsmanager",
@@ -519,6 +518,12 @@ export const CREATE_USE_LESS_PROPERTY = [
   "templateUrl",
   "__typename",
 ];
+
+// export const fixedEncodeURIComponent = (str: string) => {
+//   return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+//     return "%" + c.charCodeAt(0).toString(16);
+//   });
+// };
 
 export const urlIsValid = (url: string): boolean => {
   const REG =
