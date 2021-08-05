@@ -30,6 +30,8 @@ artifacts:
     - .git/**/*
     - deployment/**/*
     - source/**/*
+    - .gitignore
+    - sonar-project.properties
     - buildspec.yml
     - CHANGELOG.md
-    - .cfnnagignore
+    - .cfnnag_*
