@@ -26,6 +26,10 @@ S3 Replication Task supports the following sources:
 
 The S3 Plugin uses credentials to replicate data from Amazon S3 in another partition or other cloud providers. Store your credentials in [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html).
 
+
+### Create Credentials
+Please refer to the [DTH S3 Credential Setup Guide](./IAM-Policy.md).
+
 ### Configure Credentials
 
 1. Open **[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home#)** console

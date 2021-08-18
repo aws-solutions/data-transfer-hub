@@ -25,6 +25,9 @@ S3复制任务支持以下数据源：
 
 S3插件使用凭证从AWS另一个区的Amazon S3或其他云提供商中复制数据。 您的凭据将存储在 [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html).
 
+### 创建凭证
+请参考 [DTH S3 凭证设置教程](./IAM-Policy_CN.md).
+
 ### 配置凭证
 
 1. 打开 **[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home#)** 控制台

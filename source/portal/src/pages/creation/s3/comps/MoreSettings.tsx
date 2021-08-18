@@ -27,7 +27,9 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
   const { showAlramEmailRequireError, showAlarmEmailFormatError } = props;
 
   const [description, setDescription] = useState(
-    tmpTaskInfo.parametersObj?.description || ""
+    tmpTaskInfo.parametersObj?.description
+      ? decodeURIComponent(tmpTaskInfo.parametersObj.description)
+      : ""
   );
   const [alarmEmail, setAlarmEmail] = useState(
     tmpTaskInfo.parametersObj?.alarmEmail || ""
@@ -63,7 +65,7 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
 
   // Monitor Data Change
   useEffect(() => {
-    updateTmpTaskInfo("description", description);
+    updateTmpTaskInfo("description", encodeURIComponent(description));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 

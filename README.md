@@ -8,10 +8,12 @@ allows you to easily create and manage different types of data transfer tasks fr
 Amazon Web Services cloud-native services. You can launch this solution and start to replicate data within a few minutes.
 
 With Data Transfer Hub, you can perform any of the following tasks:
-* Copy Amazon S3 objects between AWS commercial regions and AWS China regions.
-* Copy data from other cloud providers’ object storage services (incl. Alibaba Cloud OSS, Tencent COS, Qiniu Kodo, Google GCS) to Amazon S3. 
-* Transfer Amazon ECR images between AWS commercial regions and AWS China regions. 
-* Transfer Dockers image from public docker registry (e.g. Docker Hub, Google gcr.io, Red Hat Quay.io) to Amazon ECR.
+- Transfer Amazon S3 objects between AWS China Regions and AWS Standard Regions.
+- Transfer data from other cloud providers’ object storage services (including Alibaba
+Cloud OSS, Tencent COS, Qiniu Kodo, and S3 Compatible storage) to Amazon S3.
+- Transfer Amazon ECR images between AWS China Regions and AWS Standard Regions.
+- Transfer container images from public container registries (e.g., Docker Hub, Google
+gcr.io, Red Hat Quay.io) to Amazon ECR.
 
 ![](docs/images/homepage.png)
 
@@ -26,8 +28,6 @@ With Data Transfer Hub, you can perform any of the following tasks:
     - [x] Data transfer from Alibaba Cloud OSS to Amazon S3
     - [x] Data transfer from Tencent COS to Amazon S3
     - [x] Data transfer from Qiniu Kodo to Amazon S3
-    - [x] Data transfer from Google Cloud Storage to Amazon S3 (Global)
-    - [ ] Data transfer from Huawei Cloud OBS
     - [x] Support data transfer with Metadata
     - [x] Support S3 Events to trigger data transfer
     - [x] [BBR](https://www.techrepublic.com/article/how-to-enable-tcp-bbr-to-improve-network-speed-on-linux/) enabled.
@@ -35,7 +35,6 @@ With Data Transfer Hub, you can perform any of the following tasks:
 - [x] ECR Plugin
     - [x] Amazon ECR images copy between AWS standard regions and AWS China regions
     - [x] Public docker registry to AWS ECR images copy
-    - [ ] Private docker registry to AWS ECR images copy
     - [x] Copy all images or only selected Images
     - [x] Support One-time images copy
     - [x] Support Incremental images copy
@@ -68,8 +67,7 @@ Follow the step-by-step instructions to configure and deploy the Data Transfer H
 1. Click the following button to launch the CloudFormation Stack in your account.
 
     [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
-1. Input **AdminEmail** parameter. An email containing the temporary password will be sent to this email. You need to 
-   this email to 
+1. Input **AdminEmail** parameter. An email containing the temporary password will be sent to this email. You need to this email to sign in.
 1. Click **Next** and select **Create Stack**.
 
 ### Login into the Data Transfer Hub Portal

@@ -28,7 +28,7 @@ import {
   RESOURCE_LINKS,
 } from "assets/config/content";
 
-import { CUR_SUPPORT_LANGS, URL_YOUTUBE } from "assets/config/const";
+import { CUR_SUPPORT_LANGS } from "assets/config/const";
 
 const mapState = (state: IState) => ({
   isOpen: state.isOpen,
@@ -103,17 +103,6 @@ const Home: React.FC = () => {
           <div className={contentClass}>
             <div className="left-info">
               <div className="title">{howItWorks[titleStr]}</div>
-              <div className="video">
-                <iframe
-                  title="video"
-                  width="560"
-                  height="315"
-                  src={URL_YOUTUBE}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
               <div className="features box-info">
                 {howItWorks.list.map((element: any, index: any) => {
                   return (

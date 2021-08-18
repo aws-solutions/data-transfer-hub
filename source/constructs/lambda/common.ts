@@ -1,4 +1,4 @@
-import {AssertionError} from "assert";
+import { AssertionError } from "assert";
 
 interface Task {
   id: string,
@@ -32,8 +32,7 @@ enum TaskProgress {
 }
 
 enum TaskType {
-  S3 = 'S3',
-  DynamoDB = 'DynamoDB',
+  S3 = 'S3EC2',
   ECR = 'ECR'
 }
 
@@ -85,13 +84,13 @@ function pprint(prefix: string, object: any) {
  * @param length
  */
 function makeid(length: number) {
-  let result           = '';
-  const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
 }
 
-export {Task, TaskType, Parameter, CreateTaskInput, UpdateTaskInput, CommonTaskProgress, TaskProgress, assert, pprint, makeid }
+export { Task, TaskType, Parameter, CreateTaskInput, UpdateTaskInput, CommonTaskProgress, TaskProgress, assert, pprint, makeid }

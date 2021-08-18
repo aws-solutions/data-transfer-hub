@@ -22,13 +22,13 @@ if [ "$?" = "1" ]; then
 fi
 
 # Test the attached Lambda function
-cd lambda/example-function-js
-npm install
-npm run test
-if [ "$?" = "1" ]; then
-	echo "(source/run-all-tests.sh) ERROR: there is likely output above." 1>&2
-	exit 1
-fi
+# cd lambda/example-function-js
+# npm install
+# npm run test
+# if [ "$?" = "1" ]; then
+# 	echo "(source/run-all-tests.sh) ERROR: there is likely output above." 1>&2
+# 	exit 1
+# fi
 
 # Return to the source/ level
 cd $source_dir

@@ -58,6 +58,7 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
       <div className="desc">{optionDesc}</div>
       <div>
         <input
+          maxLength={255}
           defaultValue={defaultValue}
           min={inputType === "number" ? 0 : undefined}
           value={inputValue}

@@ -102,7 +102,7 @@ async function stopTask(taskId: string) {
     }
   }).promise()
 
-  assert(taskList.Items && taskList.Items[0], `Cannot the task with id ${taskId}`)
+  assert(taskList.Items && taskList.Items[0], `Cannot find the task with id ${taskId}`)
   const task = taskList.Items[0]
 
   const sfnRes = !isDryRun ? await sfn.startExecution({
