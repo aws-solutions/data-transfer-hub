@@ -46,7 +46,6 @@ _Note_: 如果是针对中国地区的 S3 存储桶，请确保您更改为使�
             "Effect": "Allow",
             "Action": [
                 "s3:PutObject",
-                "s3:GetObject",
                 "s3:ListBucket",
                 "s3:PutObjectAcl",
                 "s3:AbortMultipartUpload",
