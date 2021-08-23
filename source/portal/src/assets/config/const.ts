@@ -321,8 +321,8 @@ export const AWS_REGION_LIST = [
   { value: "eu-north-1", name: "Stockholm(eu-north-1)" },
   { value: "me-south-1", name: "Bahrain(me-south-1)" },
   { value: "sa-east-1", name: "São Paulo(sa-east-1)" },
-  { value: "us-gov-west-1", name: "GovCloud(US-West)" },
-  { value: "us-gov-east-1", name: "GovCloud(US-East)" }
+  { value: "us-gov-west-1", name: "US-Gov-West(us-gov-west-1)" },
+  { value: "us-gov-east-1", name: "US-Gov-East(us-gov-east-1)" },
 ];
 
 export const ALICLOUD_REGION_LIST = [

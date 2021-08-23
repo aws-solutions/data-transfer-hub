@@ -12,8 +12,8 @@ export const TOP_TITLE_INFO = {
   en_title: "Data Transfer Hub",
   zh_title: "Data Transfer Hub",
   en_subTitle:
-    "Easily move data into and out of Amazon Web Services China regions",
-  zh_subTitle: "轻松将数据传入和传出Amazon Web Services中国区域",
+    "Easily move data into and out of Amazon Web Services Partitions",
+  zh_subTitle: "轻松将数据传入和传出Amazon Web Services的不同区域",
   en_desc:
     "Data Transfer Hub helps you create, monitor and manage data transfer task. You can easily transfer data between Amazon Web Services regions, or from other cloud providers to Amazon Web Services.",
   zh_desc:
