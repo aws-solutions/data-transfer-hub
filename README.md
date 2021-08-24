@@ -9,6 +9,7 @@ Amazon Web Services cloud-native services. You can launch this solution and star
 
 With Data Transfer Hub, you can perform any of the following tasks:
 - Transfer Amazon S3 objects between AWS China Regions and AWS Standard Regions.
+- Transfer Amazon S3 objects between AWS GovCloud and AWS Standard Regions.
 - Transfer data from other cloud providers’ object storage services (including Alibaba
 Cloud OSS, Tencent COS, Qiniu Kodo, and S3 Compatible storage) to Amazon S3.
 - Transfer Amazon ECR images between AWS China Regions and AWS Standard Regions.
@@ -25,6 +26,7 @@ gcr.io, Red Hat Quay.io) to Amazon ECR.
 - [x] CloudFormation Deployment
 - [x] S3 Plugin
     - [x] Amazon S3 object copy between AWS standard regions and AWS China regions
+    - [x] Amazon S3 object copy between AWS standard regions and AWS GovCloud
     - [x] Data transfer from Alibaba Cloud OSS to Amazon S3
     - [x] Data transfer from Tencent COS to Amazon S3
     - [x] Data transfer from Qiniu Kodo to Amazon S3
