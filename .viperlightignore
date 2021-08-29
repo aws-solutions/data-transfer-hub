@@ -1,16 +1,23 @@
-# Ignore Config used with code.amazon.com
-Config
+README.md:105
+CODE_OF_CONDUCT.md:4
+CONTRIBUTING.md:51
+docs/UserManual.md
+docs/UserManual_CN.md
+docs/S3-SSE-KMS-Policy.md:40
+docs/tutortial-beijing-to-oregon-s3.md
+docs/tutortial-beijing-to-oregon-s3_CN.md
+docs/tutortial-migration-oss-to-s3.md
+docs/tutortial-migration-oss-to-s3_CN.md
 
-^dist/
-node_modules/
+source/portal/src/pages/creation/ecr/StepTwoECR.tsx
+source/portal/src/pages/creation/s3/comps/MoreSettings.tsx
+source/portal/src/common/info/CredentialInfo.tsx
+
+
 package-lock.json
 
-docs/
-docs/UserManual.md
-source/portal/src/common/info/CredentialInfo.tsx
-README.md
-CODE_OF_CONDUCT.md
-CONTRIBUTING.md
-source/portal/src/pages/creation/ecr/StepTwoECR.tsx
-source/portal/src/pages/creation/s3/StepTwoS3.tsx
-source/portal/src/pages/creation/s3/comps/MoreSettings.tsx
+Config
+node_modules/
+build/
+cdk.out
+deployment/regional-s3-assets/
