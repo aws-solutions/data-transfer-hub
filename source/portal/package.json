@@ -21,7 +21,7 @@
     "@types/react-router-dom": "^5.1.8",
     "aws-amplify": "^3.3.27",
     "aws-appsync": "^4.0.3",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "classnames": "^2.3.1",
     "graphql-tag": "^2.11.0",
     "i18next": "^20.2.1",
