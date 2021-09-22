@@ -216,6 +216,14 @@ Click the **创建触发器/create trigger** to create the trigger for the funct
 
 ![portal](images/tutortial/OSS-to-s3/aliyun_create_trigger.png)
 
-Then config the trigger as the picture show below.
+Then config the trigger as the picture show below. For **触发事件/Trigger Event**, please choose:
+
+```
+oss:ObjectCreated:PutObject
+oss:ObjectCreated:PostObject 
+oss:ObjectCreated:CopyObject
+oss:ObjectCreated:CompleteMultipartUpload
+oss:ObjectCreated:AppendObject
+```
 
 ![portal](images/tutortial/OSS-to-s3/aliyun_trigger_config.png)

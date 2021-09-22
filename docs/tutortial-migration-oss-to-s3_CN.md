@@ -1,4 +1,7 @@
 # 将阿里云 OSS 中的数据迁移到 Amazon S3
+
+[English](./tutortial-migration-oss-to-s3.md)
+
 本教程为将数据从 **阿里云 OSS** 中的数据传输到的 **Amazon S3** 指南。
 
 我们假设您已经完成了Data Transfer Hub解决方案的部署。 并将解决方案部署在 **俄勒冈州（us-west-2）** 区域。
@@ -221,6 +224,14 @@ zip -r code.zip *
 
 ![portal](images/tutortial/OSS-to-s3/aliyun_create_trigger.png)
 
-然后配置触发器，如下图所示。
+然后配置触发器，如下图所示。 **触发事件**, 请选择:
+
+```
+oss:ObjectCreated:PutObject
+oss:ObjectCreated:PostObject 
+oss:ObjectCreated:CopyObject
+oss:ObjectCreated:CompleteMultipartUpload
+oss:ObjectCreated:AppendObject
+```
 
 ![portal](images/tutortial/OSS-to-s3/aliyun_trigger_config.png)
