@@ -202,6 +202,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "ecs:ListTasks",
             "ecs:RegisterTaskDefinition",
             "ecs:DeregisterTaskDefinition",
+            "ecs:DescribeTaskDefinition",
           ],
           resources: [`*`]
         }),
@@ -320,6 +321,14 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "ecr:GetAuthorizationToken"
           ],
           resources: [`*`]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "iam:CreateServiceLinkedRole",
+          ],
+          resources: [
+            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling`
+          ]
         }),
       ]
     });

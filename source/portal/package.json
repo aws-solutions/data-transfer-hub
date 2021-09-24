@@ -19,7 +19,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-loader-spinner": "^4.0.0",
     "@types/react-router-dom": "^5.1.8",
-    "aws-amplify": "^3.3.27",
+    "aws-amplify": "^3.4.3",
     "aws-appsync": "^4.0.3",
     "axios": "^0.21.4",
     "classnames": "^2.3.1",
