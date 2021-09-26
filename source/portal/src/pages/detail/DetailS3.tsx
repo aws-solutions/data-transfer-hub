@@ -242,7 +242,7 @@ const Detail: React.FC = (props: any) => {
       setOpen(false);
       fetchNotes(id);
       console.info(stopResData);
-    } catch (error) {
+    } catch (error: any) {
       console.error("error:", error.errors[0].message.toString());
     }
   }

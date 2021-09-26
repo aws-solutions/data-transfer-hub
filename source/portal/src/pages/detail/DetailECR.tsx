@@ -163,7 +163,7 @@ const Detail: React.FC = (props: any) => {
       setOpen(false);
       fetchNotes(props.match.params.id);
       console.info(stopResData);
-    } catch (error) {
+    } catch (error: any) {
       console.error("error:", error.errors[0].message.toString());
     }
   }
@@ -387,7 +387,9 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.description")}
                           </div>
-                          <div>{decodeURIComponent(curTaskInfo.description) || "-"}</div>
+                          <div>
+                            {decodeURIComponent(curTaskInfo.description) || "-"}
+                          </div>
                           <br />
                         </div>
                         <div className="split-item">

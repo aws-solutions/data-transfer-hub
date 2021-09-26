@@ -227,7 +227,7 @@ const List: React.FC = () => {
       setOpen(false);
       refreshData();
       console.info("stopResData:", stopResData);
-    } catch (error) {
+    } catch (error: any) {
       console.error(
         "error:",
         error?.errors?.[0]?.message?.toString() || "Error"
