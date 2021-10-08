@@ -5,14 +5,14 @@ import * as AWS from 'aws-sdk'
 import { StartExecutionOutput } from "aws-sdk/clients/stepfunctions"
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
-beforeAll(async (done) => {
+beforeAll(async () => {
   process.env.AWS_REGION = 'us-west-2'
   process.env.STATE_MACHINE_ARN = 'arn:aws:states:us-west-2:12345678901:state-machine-name'
   process.env.TASK_TABLE = 'TaskTable'
   process.env.PLUGIN_TEMPLATE_S3EC2 = 'http://dth.s3.amazonaws.com/S3EC2.template'
   process.env.PLUGIN_TEMPLATE_ECR = 'http://dth.s3.amazonaws.com/ECR.template'
   AWSMock.setSDKInstance(AWS)
-  done()
+  // done()
 })
 
 test('createTask', async () => {
