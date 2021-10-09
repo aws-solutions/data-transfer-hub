@@ -97,7 +97,7 @@ export class PortalStack extends cdk.Construct {
       })
     } else {
       const cfFunction = new cloudfront.Function(this, "DataTransferHubSecurityHeader", {
-        functionName: `DTHSecHdr${this.node.addr}`,
+        functionName: `DTHSecHdr${cdk.Aws.REGION}${cdk.Aws.STACK_NAME}`,
         code: cloudfront.FunctionCode.fromInline(`
 function handler(event) {
     var response = event.response;
