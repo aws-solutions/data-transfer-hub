@@ -12,7 +12,7 @@
 
 ### 在Authing中创建用户池
 
-账号创建成功后，登陆Authing控制台。
+账号创建成功后，登录Authing控制台。
 
 在首次登录的时候，需要创建一个用户池
 
@@ -77,7 +77,7 @@
 
 #### 使用 Cloudformation 一键部署 Data Transfer Hub
 
-1. 确保您已经登陆到AWS控制台.
+1. 确保您已经登录到AWS控制台.
 
     [中国区](https://console.amazonaws.cn/console/home)
 

@@ -70,7 +70,7 @@
 
 #### 使用 Cloudformation 一键部署 Data Transfer Hub
 
-1. 确保您已经登陆到AWS控制台.
+1. 确保您已经登录到AWS控制台.
 
     [中国区](https://console.amazonaws.cn/console/home)
 
