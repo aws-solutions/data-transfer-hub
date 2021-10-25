@@ -9,14 +9,14 @@
 您可以预先参考[部署指南](../README.md)部署该解决方案.
 
 
-## 登陆到 Data Transfer Hub 界面
+## 登录到 Data Transfer Hub 界面
 成功创建cloudformation堆栈后，您将收到一封电子邮件通知，其中包含用于登录的临时密码，用户名是您启动cloudformation时设置的AdminEmail。
 
 界面的网址可在cloudformation堆栈的输出选项中找到，请参见以下屏幕截图：
 
 ![portal](images/portal.jpg)
 
-### 登陆界面
+### 登录界面
 
 1. 在浏览器中输入界面的URL
 2. 使用您的用户名和临时密码登录

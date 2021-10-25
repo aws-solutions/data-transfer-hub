@@ -40,7 +40,7 @@
 
 #### 使用 Cloudformation 一键部署 Data Transfer Hub
 
-1. 确保您已经登陆到AWS控制台.
+1. 确保您已经登录到AWS控制台.
 
     [中国区](https://console.amazonaws.cn/console/home)
 
@@ -102,7 +102,7 @@
 
 **关闭 Google Oauth2认证登录**
 
-在应用管理详情的 Connections Tab页面的Social部分，关闭google-oauth2认证登陆
+在应用管理详情的 Connections Tab页面的Social部分，关闭google-oauth2认证登录
 
   ![Disable Google](./images/disable-google.jpg)
 
