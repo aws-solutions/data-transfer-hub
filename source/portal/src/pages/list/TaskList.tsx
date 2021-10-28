@@ -5,6 +5,7 @@ import classNames from "classnames";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import Moment from "react-moment";
+import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -141,38 +142,43 @@ const List: React.FC = () => {
     console.info("getTaskList:getTaskList:", token, direction);
     console.info("client:", client);
     setIsLoading(true);
-    const query = gql(listTasks);
-    const apiData: any = await client?.query({
-      fetchPolicy: "no-cache",
-      query: query,
-      variables: {
-        limit: 30,
-        nextToken: token,
-      },
-    });
-    // Build Pagination Data
-    // First build Table Data
-    // const dataListArr: any = [];
-    // If click the next, set New Next token
-    setIsLoading(false);
-    if (direction === "next") {
-      if (apiData?.data?.listTasks?.nextToken) {
-        setNextToken(apiData.data.listTasks.nextToken);
-      } else {
-        setIsLast(true);
+    try {
+      const query = gql(listTasks);
+      const apiData: any = await client?.query({
+        fetchPolicy: "no-cache",
+        query: query,
+        variables: {
+          limit: 30,
+          nextToken: token,
+        },
+      });
+      // Build Pagination Data
+      // First build Table Data
+      // const dataListArr: any = [];
+      // If click the next, set New Next token
+      setIsLoading(false);
+      if (direction === "next") {
+        if (apiData?.data?.listTasks?.nextToken) {
+          setNextToken(apiData.data.listTasks.nextToken);
+        } else {
+          setIsLast(true);
+        }
       }
-    }
-    if (
-      apiData &&
-      apiData.data &&
-      apiData.data.listTasks &&
-      apiData.data.listTasks.items
-    ) {
-      const orderedList = apiData.data.listTasks.items;
-      orderedList.sort((a: any, b: any) =>
-        a.createdAt < b.createdAt ? 1 : -1
-      );
-      setTaskListData(orderedList);
+      if (
+        apiData &&
+        apiData.data &&
+        apiData.data.listTasks &&
+        apiData.data.listTasks.items
+      ) {
+        const orderedList = apiData.data.listTasks.items;
+        orderedList.sort((a: any, b: any) =>
+          a.createdAt < b.createdAt ? 1 : -1
+        );
+        setTaskListData(orderedList);
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+      Swal.fire("Oops...", error.message, "error");
     }
   }
 
@@ -228,15 +234,12 @@ const List: React.FC = () => {
       refreshData();
       console.info("stopResData:", stopResData);
     } catch (error: any) {
-      console.error(
-        "error:",
-        error?.errors?.[0]?.message?.toString() || "Error"
-      );
       const errorMsg = error?.errors?.[0]?.message?.toString() || "Error";
       setIsStopLoading(false);
       setMessageOpen(true);
       setErrorMessage(errorMsg);
       showErrorMessage();
+      Swal.fire("Oops...", error.message, "error");
     }
   }
 

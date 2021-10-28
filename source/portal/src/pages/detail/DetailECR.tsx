@@ -7,6 +7,7 @@ import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import Moment from "react-moment";
+import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -118,25 +119,30 @@ const Detail: React.FC = (props: any) => {
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
-    const query = gql(getTask);
-    const apiData: any = await client?.query({
-      fetchPolicy: "no-cache",
-      query: query,
-      variables: {
-        id: taskId,
-      },
-    });
-    const tmpCurTask = apiData.data.getTask;
-
-    if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
-      tmpCurTask.parameters.forEach((element: any) => {
-        tmpCurTask[element.ParameterKey] = element.ParameterValue
-          ? element.ParameterValue
-          : "-";
+    try {
+      const query = gql(getTask);
+      const apiData: any = await client?.query({
+        fetchPolicy: "no-cache",
+        query: query,
+        variables: {
+          id: taskId,
+        },
       });
+      const tmpCurTask = apiData.data.getTask;
+
+      if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
+        tmpCurTask.parameters.forEach((element: any) => {
+          tmpCurTask[element.ParameterKey] = element.ParameterValue
+            ? element.ParameterValue
+            : "-";
+        });
+      }
+      setCurTaskInfo(tmpCurTask);
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      Swal.fire("Oops...", error.message, "error");
     }
-    setCurTaskInfo(tmpCurTask);
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -164,7 +170,8 @@ const Detail: React.FC = (props: any) => {
       fetchNotes(props.match.params.id);
       console.info(stopResData);
     } catch (error: any) {
-      console.error("error:", error.errors[0].message.toString());
+      setIsLoading(false);
+      Swal.fire("Oops...", error.message, "error");
     }
   }
 
