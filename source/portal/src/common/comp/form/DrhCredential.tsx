@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-// import { API } from "aws-amplify";
+import Swal from "sweetalert2";
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -45,21 +45,26 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
 
   async function getSSMParamsList() {
     setLoadingData(true);
-    const query = gql(listSecrets);
-    const apiData: any = await client?.query({
-      fetchPolicy: "no-cache",
-      query: query,
-      variables: {},
-    });
+    try {
+      const query = gql(listSecrets);
+      const apiData: any = await client?.query({
+        fetchPolicy: "no-cache",
+        query: query,
+        variables: {},
+      });
 
-    setLoadingData(false);
-    if (
-      apiData &&
-      apiData.data &&
-      apiData.data.listSecrets &&
-      apiData.data.listSecrets.length > 0
-    ) {
-      setSSMParamList(apiData.data.listSecrets);
+      setLoadingData(false);
+      if (
+        apiData &&
+        apiData.data &&
+        apiData.data.listSecrets &&
+        apiData.data.listSecrets.length > 0
+      ) {
+        setSSMParamList(apiData.data.listSecrets);
+      }
+    } catch (error: any) {
+      setLoadingData(false);
+      Swal.fire("Oops...", error.message, "error");
     }
   }
 

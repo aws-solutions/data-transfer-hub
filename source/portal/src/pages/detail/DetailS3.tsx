@@ -8,6 +8,7 @@ import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import Moment from "react-moment";
+import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -50,6 +51,7 @@ import {
   GLOBAL_STR,
   CLOUD_WATCH_DASHBOARD_LINK_MAP,
   S3_EVENT_OPTIONS,
+  S3_EVENT_OPTIONS_EC2,
   S3_STORAGE_CLASS_OPTIONS,
   YES_NO,
 } from "assets/config/const";
@@ -140,6 +142,7 @@ const converListToMap = (list: ItemType[]): ObjectType => {
 };
 
 const S3_EVENT_OPTIONS_MAP = converListToMap(S3_EVENT_OPTIONS);
+const S3_EVENT_OPTIONS_EC2_MAP = converListToMap(S3_EVENT_OPTIONS_EC2);
 const S3_STORAGE_CLASS_OPTIONS_MAP = converListToMap(S3_STORAGE_CLASS_OPTIONS);
 
 const Detail: React.FC = (props: any) => {
@@ -160,53 +163,57 @@ const Detail: React.FC = (props: any) => {
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
-    const query = gql(getTask);
-    const apiData: any = await client?.query({
-      fetchPolicy: "no-cache",
-      query: query,
-      variables: {
-        id: taskId,
-      },
-    });
-
-    const tmpCurTask = apiData.data.getTask;
-
-    if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
-      tmpCurTask.parameters.forEach((element: any) => {
-        tmpCurTask[element.ParameterKey] = element.ParameterValue
-          ? element.ParameterValue
-          : "-";
+    try {
+      const query = gql(getTask);
+      const apiData: any = await client?.query({
+        fetchPolicy: "no-cache",
+        query: query,
+        variables: {
+          id: taskId,
+        },
       });
-    }
-    // if the task engine is lambda
-    if (tmpCurTask.type === EnumTaskType.S3) {
-      if (tmpCurTask.jobType === "PUT") {
-        setAccountInSrc(YES_NO.YES);
-        setAccountInDest(YES_NO.NO);
-      }
-      if (tmpCurTask.jobType === "GET") {
-        setAccountInSrc(YES_NO.NO);
-        setAccountInDest(YES_NO.YES);
-      }
-    }
-    // if the task engine is ec2
-    if (tmpCurTask.type === EnumTaskType.S3_EC2) {
-      if (tmpCurTask.srcInCurrentAccount === "true") {
-        setAccountInSrc(YES_NO.YES);
-      }
-      if (tmpCurTask.srcInCurrentAccount === "false") {
-        setAccountInSrc(YES_NO.NO);
-      }
-      if (tmpCurTask.destInCurrentAccount === "true") {
-        setAccountInDest(YES_NO.YES);
-      }
-      if (tmpCurTask.destInCurrentAccount === "false") {
-        setAccountInDest(YES_NO.NO);
-      }
-    }
 
-    setCurTaskInfo(tmpCurTask);
-    setIsLoading(false);
+      const tmpCurTask = apiData.data.getTask;
+
+      if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
+        tmpCurTask.parameters.forEach((element: any) => {
+          tmpCurTask[element.ParameterKey] = element.ParameterValue
+            ? element.ParameterValue
+            : "-";
+        });
+      }
+      // if the task engine is lambda
+      if (tmpCurTask.type === EnumTaskType.S3) {
+        if (tmpCurTask.jobType === "PUT") {
+          setAccountInSrc(YES_NO.YES);
+          setAccountInDest(YES_NO.NO);
+        }
+        if (tmpCurTask.jobType === "GET") {
+          setAccountInSrc(YES_NO.NO);
+          setAccountInDest(YES_NO.YES);
+        }
+      }
+      // if the task engine is ec2
+      if (tmpCurTask.type === EnumTaskType.S3_EC2) {
+        if (tmpCurTask.srcInCurrentAccount === "true") {
+          setAccountInSrc(YES_NO.YES);
+        }
+        if (tmpCurTask.srcInCurrentAccount === "false") {
+          setAccountInSrc(YES_NO.NO);
+        }
+        if (tmpCurTask.destInCurrentAccount === "true") {
+          setAccountInDest(YES_NO.YES);
+        }
+        if (tmpCurTask.destInCurrentAccount === "false") {
+          setAccountInDest(YES_NO.NO);
+        }
+      }
+      setCurTaskInfo(tmpCurTask);
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      Swal.fire("Oops...", error.message, "error");
+    }
   }
 
   useEffect(() => {
@@ -243,7 +250,8 @@ const Detail: React.FC = (props: any) => {
       fetchNotes(id);
       console.info(stopResData);
     } catch (error: any) {
-      console.error("error:", error.errors[0].message.toString());
+      setIsStopLoading(false);
+      Swal.fire("Oops...", error.message, "error");
     }
   }
 
@@ -480,12 +488,14 @@ const Detail: React.FC = (props: any) => {
                                   {t("taskDetail.enableS3Event")}
                                 </div>
                                 <div>
-                                  {
-                                    S3_EVENT_OPTIONS_MAP[
+                                  {S3_EVENT_OPTIONS_MAP[
+                                    curTaskInfo.enableS3Event ||
+                                      curTaskInfo.srcEvent
+                                  ] ||
+                                    S3_EVENT_OPTIONS_EC2_MAP[
                                       curTaskInfo.enableS3Event ||
                                         curTaskInfo.srcEvent
-                                    ]
-                                  }
+                                    ]}
                                 </div>
 
                                 <br />

@@ -114,7 +114,9 @@ const StepTwoECR: React.FC = () => {
     tmpTaskInfo.parametersObj?.destPrefix || ""
   );
   const [description, setDescription] = useState(
-    decodeURIComponent(tmpTaskInfo.parametersObj?.description) || ""
+    tmpTaskInfo.parametersObj?.description
+      ? decodeURIComponent(tmpTaskInfo.parametersObj?.description)
+      : ""
   );
   const [alarmEmail, setAlarmEmail] = useState(
     tmpTaskInfo.parametersObj?.alarmEmail || ""

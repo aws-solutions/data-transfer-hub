@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -352,22 +353,27 @@ const StepThreeS3: React.FC = () => {
 
   async function createTask() {
     setIsCreating(true);
-    const mutationCreate = gql(createTaskMutaion);
-    const createTaskData: any = await client?.mutate({
-      fetchPolicy: "no-cache",
-      mutation: mutationCreate,
-      variables: { input: createTaskGQL },
-    });
+    try {
+      const mutationCreate = gql(createTaskMutaion);
+      const createTaskData: any = await client?.mutate({
+        fetchPolicy: "no-cache",
+        mutation: mutationCreate,
+        variables: { input: createTaskGQL },
+      });
 
-    console.info("createTaskData:", createTaskData);
-    dispatch({
-      type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
-    });
-    // Redirect to task list page
-    const toPath = "/task/list";
-    history.push({
-      pathname: toPath,
-    });
+      console.info("createTaskData:", createTaskData);
+      dispatch({
+        type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
+      });
+      // Redirect to task list page
+      const toPath = "/task/list";
+      history.push({
+        pathname: toPath,
+      });
+    } catch (error: any) {
+      setIsCreating(false);
+      Swal.fire("Oops...", error.message, "error");
+    }
   }
 
   const goToHomePage = () => {
