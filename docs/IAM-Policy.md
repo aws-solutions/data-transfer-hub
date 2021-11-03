@@ -33,7 +33,7 @@ _Note_: If it's for S3 buckets in China regions, please make sure you also chang
 ```
 
 
-- ### For Desination Bucket
+- ### For Destination Bucket
 
 ```
 {
