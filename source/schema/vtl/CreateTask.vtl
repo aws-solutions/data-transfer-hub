@@ -10,11 +10,11 @@
     	#set($param.ParameterValue = $util.urlDecode($param.ParameterValue))
         $util.validate($util.matches("^.{0,1024}$", $param.ParameterValue), "Invalid Prefix")
     #elseif( $param.ParameterKey == "srcAccountId" || $param.ParameterKey == "destAccountId" )
-        $util.validate($util.matches("^\d{12}$", $param.ParameterValue), "Invalid Account ID")
+        $util.validate($util.matches("^\d{12}$", $util.defaultIfNullOrEmpty($param.ParameterValue, '123456789012'), "Invalid Account ID")
     #elseif( $param.ParameterKey == "srcCredential" || $param.ParameterKey == "destCredential" )
         $util.validate($util.matches("^[\w/+=.@-]{0,1024}$", $param.ParameterValue), "Invalid Credential")
 	#elseif ($param.ParameterKey == "srcRegion" || $param.ParameterKey == "destRegion" )
-    	$util.validate($util.matches("^(?!(.*--))(?!(.*-$))[a-z0-9]([a-z0-9-]){0,62}$", $param.ParameterValue), "Invalid Region Name")
+    	$util.validate($util.matches("^(?!(.*--))(?!(.*-$))[a-z0-9]([a-z0-9-]){0,62}$", $util.defaultIfNullOrEmpty($param.ParameterValue,'us-west-2')), "Invalid Region Name")
     #elseif ($param.ParameterKey == "ecsClusterName" )
     	$util.validate($util.matches("[a-zA-Z0-9-]{1,1024}", $param.ParameterValue), "Invalid ECS Cluster Name")
     #end
