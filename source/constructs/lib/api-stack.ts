@@ -47,9 +47,21 @@ export class ApiStack extends Construct {
       expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn')
     });
 
+    const pluginBucket = process.env.DIST_OUTPUT_BUCKET || 'aws-gcr-solutions'
+
     const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
-    const PLUGIN_TEMPLATE_S3EC2 = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-s3/v2.0.2/DataTransferS3Stack-ec2.template`;
-    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-ecr/v1.0.1/DataTransferECRStack.template`;
+
+    let s3PluginVersion = 'v1.0.0'
+    let ecrPluginVersion = 'v1.0.0'
+    let suffix = '-plugin'
+    if (pluginBucket === 'aws-gcr-solutions') {
+      s3PluginVersion = 'v2.0.2'
+      ecrPluginVersion = 'v1.0.1'
+      suffix = ''
+    }
+
+    const PLUGIN_TEMPLATE_S3EC2 = `https://${pluginBucket}.${s3Domain}/data-transfer-hub-s3${suffix}/${s3PluginVersion}/DataTransferS3Stack-ec2.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://${pluginBucket}.${s3Domain}/data-transfer-hub-ecr${suffix}/${ecrPluginVersion}/DataTransferECRStack.template`;
 
     // This Lambda is to create the AppSync Service Linked Role
     const appSyncServiceLinkRoleFn = new lambda.Function(this, 'AppSyncServiceLinkRoleFn', {
