@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws, RemovalPolicy } from '@aws-cdk/core';
+import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws, RemovalPolicy, CustomResource } from '@aws-cdk/core';
 import * as ddb from '@aws-cdk/aws-dynamodb';
 import * as cognito from '@aws-cdk/aws-cognito';
 import * as appsync from '@aws-cdk/aws-appsync';
@@ -19,6 +19,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as path from 'path';
 import * as cfnSate from './cfn-step-functions';
 import * as iam from '@aws-cdk/aws-iam';
+import * as cr from "@aws-cdk/custom-resources";
 import { AuthType } from './constructs-stack';
 import { addCfnNagSuppressRules } from "./constructs-stack";
 import { TableEncryption } from '@aws-cdk/aws-dynamodb';
@@ -46,9 +47,65 @@ export class ApiStack extends Construct {
       expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn')
     });
 
+    const pluginBucket = process.env.DIST_OUTPUT_BUCKET || 'aws-gcr-solutions'
+
     const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
-    const PLUGIN_TEMPLATE_S3EC2 = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-s3/v2.0.2/DataTransferS3Stack-ec2.template`;
-    const PLUGIN_TEMPLATE_ECR = `https://aws-gcr-solutions.${s3Domain}/data-transfer-hub-ecr/v1.0.1/DataTransferECRStack.template`;
+
+    let s3PluginVersion = 'v1.0.0'
+    let ecrPluginVersion = 'v1.0.0'
+    let suffix = '-plugin'
+    if (pluginBucket === 'aws-gcr-solutions') {
+      s3PluginVersion = 'v2.0.2'
+      ecrPluginVersion = 'v1.0.1'
+      suffix = ''
+    }
+
+    const PLUGIN_TEMPLATE_S3EC2 = `https://${pluginBucket}.${s3Domain}/data-transfer-hub-s3${suffix}/${s3PluginVersion}/DataTransferS3Stack-ec2.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://${pluginBucket}.${s3Domain}/data-transfer-hub-ecr${suffix}/${ecrPluginVersion}/DataTransferECRStack.template`;
+
+    // This Lambda is to create the AppSync Service Linked Role
+    const appSyncServiceLinkRoleFn = new lambda.Function(this, 'AppSyncServiceLinkRoleFn', {
+      runtime: lambda.Runtime.PYTHON_3_8,
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/custom-resource')),
+      handler: 'crete_service_linked_role.lambda_handler',
+      timeout: Duration.seconds(60),
+      memorySize: 128,
+      description: 'Data Transfer Hub - Service Linked Role Create Handler'
+    });
+
+    // Grant IAM Policy to the appSyncServiceLinkRoleFn lambda
+    const serviceLikedRolePolicy = new iam.Policy(this, 'serviceLikedRolePolicy', {
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            'iam:GetRole',
+            'iam:CreateServiceLinkedRole'
+          ],
+          resources: [
+            '*'
+          ]
+        }),
+      ]
+    });
+    appSyncServiceLinkRoleFn.role?.attachInlinePolicy(serviceLikedRolePolicy)
+    addCfnNagSuppressRules(serviceLikedRolePolicy.node.defaultChild as iam.CfnPolicy, [
+      {
+        id: 'W12',
+        reason: 'This policy needs to be able to have access to all resources'
+      }
+    ])
+
+    const appSyncServiceLinkRoleFnProvider = new cr.Provider(this, 'appSyncServiceLinkRoleFnProvider', {
+      onEventHandler: appSyncServiceLinkRoleFn,
+    });
+
+    appSyncServiceLinkRoleFnProvider.node.addDependency(appSyncServiceLinkRoleFn)
+
+    const appSyncServiceLinkRoleFnTrigger = new CustomResource(this, 'appSyncServiceLinkRoleFnTrigger', {
+      serviceToken: appSyncServiceLinkRoleFnProvider.serviceToken,
+    });
+
+    appSyncServiceLinkRoleFnTrigger.node.addDependency(appSyncServiceLinkRoleFnProvider)
 
     // Create the Progress DynamoDB Table
     this.taskTable = new ddb.Table(this, 'TaskTable', {
@@ -260,6 +317,7 @@ export class ApiStack extends Construct {
       },
       xrayEnabled: true
     })
+    this.api.node.addDependency(appSyncServiceLinkRoleFnTrigger);
 
     const taskDS = this.api.addDynamoDbDataSource('TaskTableDS', this.taskTable)
 
