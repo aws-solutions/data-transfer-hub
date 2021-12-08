@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { Construct, CfnParameter, CfnCondition, Fn, Duration, Stack, Aws, RemovalPolicy, CustomResource } from '@aws-cdk/core';
+import { Construct, CfnParameter, Duration, Stack, RemovalPolicy, CustomResource } from '@aws-cdk/core';
 import * as ddb from '@aws-cdk/aws-dynamodb';
 import * as cognito from '@aws-cdk/aws-cognito';
 import * as appsync from '@aws-cdk/aws-appsync';
@@ -43,14 +43,8 @@ export class ApiStack extends Construct {
   constructor(scope: Construct, id: string, props: ApiProps) {
     super(scope, id);
 
-    const isCN = new CfnCondition(this, 'IsChinaRegionCondition', {
-      expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn')
-    });
-
     // Can define custom bucket to hold the plugin url. Default to aws-gcr-solutions
     const templateBucket = process.env.TEMPLATE_OUTPUT_BUCKET || 'aws-gcr-solutions'
-
-    const s3Domain = Fn.conditionIf(isCN.logicalId, 's3.cn-north-1.amazonaws.com.cn', 's3.amazonaws.com').toString();
 
     let s3PluginVersion = 'v1.0.0'
     let ecrPluginVersion = 'v1.0.0'
@@ -61,8 +55,8 @@ export class ApiStack extends Construct {
       suffix = ''
     }
 
-    const PLUGIN_TEMPLATE_S3EC2 = `https://${templateBucket}.${s3Domain}/data-transfer-hub-s3${suffix}/${s3PluginVersion}/DataTransferS3Stack-ec2.template`;
-    const PLUGIN_TEMPLATE_ECR = `https://${templateBucket}.${s3Domain}/data-transfer-hub-ecr${suffix}/${ecrPluginVersion}/DataTransferECRStack.template`;
+    const PLUGIN_TEMPLATE_S3EC2 = `https://${templateBucket}.s3.amazonaws.com/data-transfer-hub-s3${suffix}/${s3PluginVersion}/DataTransferS3Stack-ec2.template`;
+    const PLUGIN_TEMPLATE_ECR = `https://${templateBucket}.s3.amazonaws.com/data-transfer-hub-ecr${suffix}/${ecrPluginVersion}/DataTransferECRStack.template`;
 
     // This Lambda is to create the AppSync Service Linked Role
     const appSyncServiceLinkRoleFn = new lambda.Function(this, 'AppSyncServiceLinkRoleFn', {
