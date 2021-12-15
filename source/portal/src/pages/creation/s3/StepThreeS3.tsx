@@ -189,6 +189,9 @@ const StepThreeS3: React.FC = () => {
     const tmpIncludeMetaData =
       parametersObj.includeMetadata === YES_NO.YES ? "true" : "false";
 
+    const tmpSrcSkipCompare =
+      parametersObj.srcSkipCompare === YES_NO.YES ? "true" : "false";
+
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
       ParameterKey: "srcType",
@@ -205,6 +208,10 @@ const StepThreeS3: React.FC = () => {
     taskParamArr.push({
       ParameterKey: "srcPrefix",
       ParameterValue: parametersObj.srcBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcPrefixsListFile",
+      ParameterValue: parametersObj.srcPrefixsListFile,
     });
     taskParamArr.push({
       ParameterKey: "srcEvent",
@@ -256,6 +263,10 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.destAcl,
     });
     taskParamArr.push({
+      ParameterKey: "ecsCronExpression",
+      ParameterValue: parametersObj.ecsCronExpression,
+    });
+    taskParamArr.push({
       ParameterKey: "maxCapacity",
       ParameterValue: parametersObj.maxCapacity,
     });
@@ -268,12 +279,20 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.desiredCapacity,
     });
     taskParamArr.push({
+      ParameterKey: "srcSkipCompare",
+      ParameterValue: tmpSrcSkipCompare,
+    });
+    taskParamArr.push({
       ParameterKey: "finderDepth",
       ParameterValue: parametersObj.finderDepth,
     });
     taskParamArr.push({
       ParameterKey: "finderNumber",
       ParameterValue: parametersObj.finderNumber,
+    });
+    taskParamArr.push({
+      ParameterKey: "ecsFargateMemory",
+      ParameterValue: parametersObj.ecsFargateMemory,
     });
     taskParamArr.push({
       ParameterKey: "workerNumber",

@@ -12,6 +12,15 @@ import { EnumSpanType } from "common/InfoBar";
 import { ACTION_TYPE } from "assets/types";
 
 import { IState } from "store/Store";
+import DrhSelect from "common/comp/form/DrhSelect";
+import {
+  CRON_HELP_LINK,
+  ECS_FARGATE_MEMORY_LIST,
+  YES_NO,
+  YES_NO_LIST,
+} from "assets/config/const";
+import DrhCron from "common/comp/form/DrhCron";
+import DescLink from "common/comp/DescLink";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -44,6 +53,16 @@ const OptionSettings: React.FC = () => {
   );
   const [workerNumber, setWorkerNumber] = useState(
     tmpTaskInfo.parametersObj?.setWorkerNumber || 4
+  );
+
+  const [srcSkipCompare, setSrcSkipCompare] = useState<string>(
+    tmpTaskInfo.parametersObj?.srcSkipCompare || YES_NO.NO
+  );
+  const [ecsFargateMemory, setEcsFargateMemory] = useState(
+    tmpTaskInfo.parametersObj?.ecsFargateMemory || "8192"
+  );
+  const [ecsCronExpression, setEcsCronExpression] = useState(
+    tmpTaskInfo.parametersObj?.ecsCronExpression || ""
   );
 
   const updateTmpTaskInfo = (key: string, value: any) => {
@@ -87,6 +106,21 @@ const OptionSettings: React.FC = () => {
     updateTmpTaskInfo("workerNumber", workerNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workerNumber]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("srcSkipCompare", srcSkipCompare);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcSkipCompare]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("ecsFargateMemory", ecsFargateMemory);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ecsFargateMemory]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("ecsCronExpression", ecsCronExpression);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ecsCronExpression]);
 
   return (
     <div className="box-shadow card-list">
@@ -169,6 +203,23 @@ const OptionSettings: React.FC = () => {
               />
             </div>
 
+            <div className="form-items">
+              <DrhCron
+                onChange={(expression) => {
+                  setEcsCronExpression(expression);
+                }}
+                optionTitle={"Transfer Task Type"}
+                optionDesc="Select transfer task type, if transfer only one time, select One Time Transfer"
+                optionDescHtml={[
+                  "Select transfer task type, if just transfer only one time, select One Time Transfer, please refer ",
+                  <DescLink title={"this guide"} link={CRON_HELP_LINK} />,
+                  " to create cron expression",
+                ]}
+                cronValue={ecsCronExpression}
+                // optionList={}
+              />
+            </div>
+
             <div>
               <div className="profession-title padding-left">
                 {!professionShow && (
@@ -194,6 +245,19 @@ const OptionSettings: React.FC = () => {
               </div>
               {professionShow && (
                 <div>
+                  <div className="form-items">
+                    <DrhSelect
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        setSrcSkipCompare(event.target.value);
+                      }}
+                      optionTitle="Skip Data Comparison"
+                      optionDesc="Skip the data comparison in task finding process? If yes, all data in the source will be sent to the destination"
+                      selectValue={srcSkipCompare}
+                      optionList={YES_NO_LIST}
+                    />
+                  </div>
                   <div className="form-items">
                     <DrhInput
                       inputType="number"
@@ -231,6 +295,20 @@ const OptionSettings: React.FC = () => {
                       inputName="finderNumber"
                       inputValue={finderNumber}
                       placeholder="finderNumber"
+                    />
+                  </div>
+
+                  <div className="form-items">
+                    <DrhSelect
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        setEcsFargateMemory(event.target.value);
+                      }}
+                      optionTitle="ECS Fargate Finder Memory"
+                      optionDesc="The amount of memory used by the Finder task."
+                      selectValue={ecsFargateMemory}
+                      optionList={ECS_FARGATE_MEMORY_LIST}
                     />
                   </div>
 

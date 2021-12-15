@@ -22,15 +22,17 @@
     "tasks": "Tasks"
   },
   "step": {
-    "oneTitle": "Step1",
+    "oneTitle": "Step 1",
     "oneDesc": "Select engine type",
-    "twoTitle": "Step2",
+    "twoTitle": "Step 2",
     "twoDesc": "Specify task details",
-    "threeTitle": "Step3",
+    "threeTitle": "Step 3",
     "threeDesc": "Review and create"
   },
   "home": {
     "title": {
+      "getStarted": "Get started",
+      "getStartedDesc": "Transfer data across partitions, or move from other cloud providers.",
       "createTitle": "Create Transfer Task",
       "quickStart": "Quick Start",
       "moreResouce": "More Resources",
@@ -303,7 +305,7 @@
     "workerThreadsNumber": "Worker Threads Number"
   },
   "bottom": {
-    "copy": "© 2008 - 2021, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
+    "copy": "Amazon Web Services, Inc. or its affiliates. All rights reserved.",
     "feedback": "Feedback",
     "privacy": "Privacy Policy",
     "use": "Terms of Use"
@@ -320,7 +322,8 @@
     "taskAction": "Task Action",
     "stopTask": "Stop Task",
     "cloneTask": "Clone Task",
-    "reLogin": "Login Again"
+    "reLogin": "Login Again",
+    "createTransferTask": "Start a new transfer task"
   },
   "tips": {
     "error": {

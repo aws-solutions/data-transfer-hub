@@ -31,6 +31,8 @@
   },
   "home": {
     "title": {
+      "getStarted": "开始使用",
+      "getStartedDesc": "跨区域数据传输，或从其他云厂商迁移数据。",
       "createTitle": "创建任务",
       "quickStart": "快速开始",
       "moreResouce": "更多资源",
@@ -303,7 +305,7 @@
     "workerThreadsNumber": "工作线程数"
   },
   "bottom": {
-    "copy": "© 2008 - 2021, Amazon Web Services, Inc. 或其子公司.保留所有权利.",
+    "copy": "Amazon Web Services, Inc. 或其子公司.保留所有权利.",
     "feedback": "反馈",
     "privacy": "隐私政策",
     "use": "使用条款"
@@ -320,7 +322,8 @@
     "taskAction": "操作",
     "stopTask": "停止任务",
     "cloneTask": "复制任务",
-    "reLogin": "重新登录"
+    "reLogin": "重新登录",
+    "createTransferTask": "创建新任务"
   },
   "tips": {
     "error": {

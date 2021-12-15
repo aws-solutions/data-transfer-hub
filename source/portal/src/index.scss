@@ -75,6 +75,14 @@ code {
   }
 }
 
+.flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
 .over-mask {
   position: fixed;
   z-index: 9999;
@@ -250,6 +258,13 @@ code {
       height: 30px;
       background-color: #232f3e;
     }
+  }
+}
+
+.drh-input-radio-item {
+  margin-right: 20px;
+  input {
+    margin-right: 3px;
   }
 }
 

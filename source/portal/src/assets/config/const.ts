@@ -55,6 +55,9 @@ export const DEST_OBJECT_ACL_LINK =
 export const AUTO_SCALING_LINK =
   "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html";
 
+export const CRON_HELP_LINK =
+  "https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions";
+
 export const CUR_SUPPORT_LANGS: string[] = ["zh", "en"];
 
 export const GLOBAL_STR = "global";
@@ -106,6 +109,10 @@ export const S3_PARAMS_LIST_MAP: any = {
   srcPrefix: {
     en_name: "Source Bucket Object Prefix",
     zh_name: "源数据桶对象前缀",
+  },
+  srcPrefixsListFile: {
+    en_name: "Object Prefixes File",
+    zh_name: "源数据桶多对象前缀文件",
   },
   enableS3Event: {
     en_name: "Enable S3 Event",
@@ -183,6 +190,10 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Finder Number",
     zh_name: "查找器数量",
   },
+  ecsFargateMemory: {
+    en_name: "Finder Memory",
+    zh_name: "查找器内存大小",
+  },
   workerNumber: {
     en_name: "Worker Number",
     zh_name: "工作线程数",
@@ -198,6 +209,14 @@ export const S3_PARAMS_LIST_MAP: any = {
   desiredCapacity: {
     en_name: "Desired Capacity",
     zh_name: "所需容量",
+  },
+  ecsCronExpression: {
+    en_name: "Cron Expression",
+    zh_name: "Cron表达式",
+  },
+  srcSkipCompare: {
+    en_name: "Skip Data Comparison",
+    zh_name: "跳过文件对比",
   },
   lambdaMemory: {
     en_name: "Lambda Memory",
@@ -281,6 +300,12 @@ export enum YES_NO {
   NO = "No",
 }
 
+export enum CRON_TYPE {
+  ONE_TIME = "ONE_TIME",
+  FIXED_RATE = "FIXED_RATE",
+  CRON_EXPRESS = "CRON_EXPRESS",
+}
+
 export enum S3_EVENT_TYPE {
   NO = "No",
   CREATE_ONLY = "Create_Only",
@@ -290,12 +315,39 @@ export enum S3_EVENT_TYPE {
   CREATE_AND_DELETE_EC2 = "CreateAndDelete",
 }
 
+export enum S3SourcePrefixType {
+  FullBucket = "FullBucket",
+  SinglePrefix = "SinglePrefix",
+  MultiplePrefix = "MultiplePrefix",
+}
+
 export enum S3_STORAGE_CLASS_TYPE {
   STANDARD = "STANDARD",
   STANDARD_IA = "STANDARD_IA",
   ONEZONE_IA = "ONEZONE_IA",
   INTELLIGENT_TIERING = "INTELLIGENT_TIERING",
 }
+
+export enum CRON_FIX_UNIT {
+  DAYS = "DAYS",
+  MINUTES = "MINUTES",
+  HOURS = "HOURS",
+}
+
+export const S3SourcePrefixTypeList = [
+  {
+    value: S3SourcePrefixType.FullBucket,
+    name: "Full Bucket",
+  },
+  {
+    value: S3SourcePrefixType.SinglePrefix,
+    name: "Objects with a specific prefix",
+  },
+  {
+    value: S3SourcePrefixType.MultiplePrefix,
+    name: "Objects with defferent prefixes",
+  },
+];
 
 export const AWS_REGION_LIST = [
   { value: "us-east-2", name: "Ohio(us-east-2)" },
@@ -442,6 +494,27 @@ export const MAXTHREADS_OPTIONS = [
   { name: 10, value: 10 },
   { name: 20, value: 20 },
   { name: 50, value: 50 },
+];
+
+export const ECS_FARGATE_MEMORY_LIST = [
+  { name: "8G", value: "8192" },
+  { name: "12G", value: "12288" },
+  { name: "16G", value: "16384" },
+  { name: "20G", value: "20480" },
+  { name: "24G", value: "24576" },
+  { name: "30G", value: "30720" },
+];
+
+export const CRON_TYPE_LIST = [
+  { name: "One Time Transfer", value: CRON_TYPE.ONE_TIME },
+  { name: "Fixed Rate", value: CRON_TYPE.FIXED_RATE },
+  { name: "Cron Expression", value: CRON_TYPE.CRON_EXPRESS },
+];
+
+export const CRON_UNIT_LIST = [
+  { name: "Days", value: CRON_FIX_UNIT.DAYS },
+  { name: "Minutes", value: CRON_FIX_UNIT.MINUTES },
+  { name: "Hours", value: CRON_FIX_UNIT.HOURS },
 ];
 
 export const OBJECT_ACL_LIST = [
