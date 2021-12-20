@@ -158,7 +158,7 @@
           "workerThreadsNumber": "Worker Threads Number",
           "workerThreadsNumberDesc": "The number of worker threads to run in one insance.",
           "schedulingSettings": "Task Scheduling Settings",
-          "schedulingSettingsDesc1": "Set task scheduling by selecting fixed rate manually or using CRON expression. Please select 'One time transfer' if its an one-time task. See",
+          "schedulingSettingsDesc1": "Set task scheduling by selecting fixed rate manually or using CRON expression. Please select 'One time transfer' if it is an one-time task. See",
           "schedulingSettingsDesc2": "to understand CRON expression.",
           "skipComparison": "Need Data Comparison before Transfer",
           "skipComparisonDesc": "If select yes, a finder will execute data comparison before transferring to avoid duplicated transfer. If select no, a worker will start transfer directly.",
@@ -418,7 +418,7 @@
       "ex1": "Example 1: ",
       "ex2": "Example 2: ",
       "tip1": "If there're 10 subdirectories with over 100k files each, it's recommended to set finderDepth=1 and finderNumber=10",
-      "tip2": "If the transferred files are under two tier subdirectories, with 10 tier 1 subdirectories and 15 tier 2 subdirectories incl. over 100k leaf objects each. Its' recommended to set finderDepth=2，finderNumber=10*15=150"
+      "tip2": "If the transferred files are under two tier subdirectories, with 10 tier 1 subdirectories and 15 tier 2 subdirectories incl. over 100k leaf objects each. It is recommended to set finderDepth=2，finderNumber=10*15=150"
     },
     "finderMemory": {
       "name": "Finder Memory",

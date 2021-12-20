@@ -56,7 +56,7 @@ const OptionSettings: React.FC = () => {
   );
 
   const [srcSkipCompare, setSrcSkipCompare] = useState<string>(
-    tmpTaskInfo.parametersObj?.srcSkipCompare || YES_NO.NO
+    tmpTaskInfo.parametersObj?.srcSkipCompare || YES_NO.YES
   );
   const [ecsFargateMemory, setEcsFargateMemory] = useState(
     tmpTaskInfo.parametersObj?.ecsFargateMemory || "8192"

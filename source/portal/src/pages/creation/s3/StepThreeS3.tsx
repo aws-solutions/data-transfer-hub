@@ -190,7 +190,7 @@ const StepThreeS3: React.FC = () => {
       parametersObj.includeMetadata === YES_NO.YES ? "true" : "false";
 
     const tmpSrcSkipCompare =
-      parametersObj.srcSkipCompare === YES_NO.YES ? "true" : "false";
+      parametersObj.srcSkipCompare === YES_NO.YES ? "false" : "true";
 
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
@@ -419,6 +419,18 @@ const StepThreeS3: React.FC = () => {
     }
     if (key === "ecsFargateMemory") {
       return parseInt(value) / 1024 + "G";
+    }
+    if (key === "srcInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "destInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "includeMetadata") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "srcSkipCompare") {
+      return value === "true" ? YES_NO.NO : YES_NO.YES;
     }
     return decodeURIComponent(value);
   };

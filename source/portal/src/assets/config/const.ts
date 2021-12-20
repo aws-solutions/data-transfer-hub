@@ -215,8 +215,8 @@ export const S3_PARAMS_LIST_MAP: any = {
     zh_name: "Cron表达式",
   },
   srcSkipCompare: {
-    en_name: "Skip Data Comparison",
-    zh_name: "跳过文件对比",
+    en_name: "Need Data Comparison before Transfer",
+    zh_name: "是否需要数据比对",
   },
   lambdaMemory: {
     en_name: "Lambda Memory",
