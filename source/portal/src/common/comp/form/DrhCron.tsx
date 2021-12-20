@@ -78,7 +78,7 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
             })
           : optionDesc}
       </div>
-      <div className="flex">
+      <div className="flex drh-cron">
         <div style={{ width: 200 }}>
           <Select
             MenuProps={MenuProps}
@@ -115,10 +115,11 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
             />
           )}
           {cronType === CRON_TYPE.FIXED_RATE && (
-            <div className="flex">
-              <div style={{ paddingTop: 7 }}>Every </div>
+            <div className="flex fix-rate">
+              <div>Every </div>
               <div className="margin-left-10">
                 <input
+                  min={1}
                   value={cronFixValue}
                   onChange={(event) => {
                     setCronFixValue(event?.target.value);

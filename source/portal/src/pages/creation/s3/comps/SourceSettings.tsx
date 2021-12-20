@@ -352,8 +352,8 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setSrcPrefixType(event.target.value);
               }}
-              optionTitle={"Transfer Object"}
-              optionDesc={""}
+              optionTitle={t("creation.step2.settings.source.transferType")}
+              optionDesc=""
               selectValue={srcPrefixType}
               optionList={S3SourcePrefixTypeList}
             />
@@ -364,8 +364,8 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               <DrhInput
                 showInfo={true}
                 infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
-                optionTitle="Object Prefix"
-                optionDesc="Transfer object with the provided prefix"
+                optionTitle={t("creation.step2.settings.source.objectPrefix")}
+                optionDesc={t("creation.step2.settings.source.prefixDesc")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setSrcBucketPrefix(event.target.value);
                 }}
@@ -380,15 +380,19 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
             <div className="form-items">
               <DrhInput
                 showInfo={true}
-                infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
-                optionTitle="Object Prefixes"
-                optionDesc="Upload a prefix list(.txt file with each line as a separate prefix with max 10mm lines) stored in the root directory of source S3. E.g. my_prefix_list.txt"
+                infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX_LIST}
+                optionTitle={t(
+                  "creation.step2.settings.source.nameOfPrefixList"
+                )}
+                optionDesc={t(
+                  "creation.step2.settings.source.nameOfPrefixListDesc"
+                )}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setSrcPrefixsListFile(event.target.value);
                 }}
                 inputName="srcPrefixsListFile"
                 inputValue={srcPrefixsListFile}
-                placeholder="my_prefix_list.txt"
+                placeholder="prefix_list.txt"
               />
             </div>
           )}
@@ -444,7 +448,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 setEnableS3Event(event.target.value);
               }}
               optionTitle={t("creation.step2.settings.source.enableS3Event")}
-              optionDesc="{t(creation.step2.settings.source.enableS3EventDesc)}"
+              optionDesc={t("creation.step2.settings.source.enableS3EventDesc")}
               optionDescHtml={[
                 t("creation.step2.settings.source.enableS3EventDesc1"),
                 <DescLink

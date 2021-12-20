@@ -28,6 +28,32 @@
   color: #61dafb;
 }
 
+.drh-cron {
+  // justify-content: center;
+  align-items: center;
+}
+
+.fix-rate {
+  align-items: center;
+}
+
+.info-table {
+  background-color: #ccc;
+  width: 100%;
+  th,
+  td {
+    text-align: left;
+    background-color: #fff;
+    padding: 2px 5px;
+  }
+  th {
+    font-size: 12px;
+  }
+  .object-number {
+    width: 80px;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
