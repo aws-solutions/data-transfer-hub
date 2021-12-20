@@ -413,6 +413,16 @@ const StepThreeS3: React.FC = () => {
     createTask();
   };
 
+  const buildDisplayValue = (key: string, value: string) => {
+    if (key === "jobType") {
+      return JOB_TYPE_MAP[key];
+    }
+    if (key === "ecsFargateMemory") {
+      return parseInt(value) / 1024 + "G";
+    }
+    return decodeURIComponent(value);
+  };
+
   return (
     <div className="drh-page">
       <LeftMenu />
@@ -498,17 +508,12 @@ const StepThreeS3: React.FC = () => {
                                     ]}
                                 </div>
                                 <div className="table-td value">
-                                  {element.ParameterKey === "jobType" ? (
-                                    <span>
-                                      {JOB_TYPE_MAP[element.ParameterValue]}
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      {decodeURIComponent(
-                                        element.ParameterValue
-                                      )}
-                                    </span>
-                                  )}
+                                  <span>
+                                    {buildDisplayValue(
+                                      element.ParameterKey,
+                                      element.ParameterValue
+                                    )}
+                                  </span>
                                 </div>
                               </div>
                             )
