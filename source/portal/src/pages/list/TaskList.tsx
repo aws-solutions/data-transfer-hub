@@ -446,7 +446,7 @@ const List: React.FC = () => {
           // Set Skip Comparsion
           if (element.ParameterKey === "srcSkipCompare") {
             tmpTaskInfo.parametersObj.srcSkipCompare =
-              element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
+              element.ParameterValue === "true" ? YES_NO.NO : YES_NO.YES;
           }
 
           // Set Description
