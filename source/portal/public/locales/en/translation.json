@@ -312,7 +312,12 @@
     "advancedSettings": "Advanced Settings",
     "finderDepth": "Finder Depth",
     "finderNumber": "Finder Number",
-    "workerThreadsNumber": "Worker Threads Number"
+    "workerThreadsNumber": "Worker Threads Number",
+    "transferType": "Transfer Type",
+    "nameOfPrefixList": "Name of Prefix List",
+    "schedulingSettings": "Task Scheduling Settings",
+    "finderMemory": "Finder Memory",
+    "skipComparison": "Need Data Comparison before Transfer"
   },
   "bottom": {
     "copy": "Amazon Web Services, Inc. or its affiliates. All rights reserved.",
