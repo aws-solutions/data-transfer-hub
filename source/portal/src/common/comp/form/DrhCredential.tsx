@@ -87,57 +87,61 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
         />
         {!hideBucket && t("creation.tips.store3")}
       </div>
-      <div>
-        <Select
-          MenuProps={MenuProps}
-          value={credentialValue}
-          displayEmpty
-          renderValue={
-            credentialValue !== ""
-              ? undefined
-              : () => (
-                  <div className="gray">
-                    {t("creation.step2ECR.settings.source.tips")}
-                  </div>
-                )
-          }
-          onChange={(event) => {
-            onChange(event);
-          }}
-          input={<SelectInput style={{ width: 490 }} />}
-        >
-          <MenuItem
-            key={-999}
-            className="font14px credential-empty"
-            value=""
-          ></MenuItem>
-          {ssmParamList.map((param: any, index: number) => {
-            return (
-              <MenuItem key={index} className="font14px" value={param.name}>
-                {param.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        {loadingData ? (
-          <NormalButton
-            className="margin-left-10"
-            style={{ width: 50, height: 32 }}
-            disabled={true}
-          >
-            <Loader type="ThreeDots" color="#888" height={10} />
-          </NormalButton>
-        ) : (
-          <NormalButton
-            style={{ height: 32 }}
-            className="margin-left-10"
-            onClick={() => {
-              getSSMParamsList();
+      <div className="flex">
+        <div>
+          <Select
+            MenuProps={MenuProps}
+            value={credentialValue}
+            displayEmpty
+            renderValue={
+              credentialValue !== ""
+                ? undefined
+                : () => (
+                    <div className="gray">
+                      {t("creation.step2ECR.settings.source.tips")}
+                    </div>
+                  )
+            }
+            onChange={(event) => {
+              onChange(event);
             }}
+            input={<SelectInput style={{ width: 490 }} />}
           >
-            <RefreshIcon width="10" />
-          </NormalButton>
-        )}
+            <MenuItem
+              key={-999}
+              className="font14px credential-empty"
+              value=""
+            ></MenuItem>
+            {ssmParamList.map((param: any, index: number) => {
+              return (
+                <MenuItem key={index} className="font14px" value={param.name}>
+                  {param.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </div>
+        <div>
+          {loadingData ? (
+            <NormalButton
+              className="margin-left-10"
+              style={{ width: 50, height: 32 }}
+              disabled={true}
+            >
+              <Loader type="ThreeDots" color="#888" height={10} />
+            </NormalButton>
+          ) : (
+            <NormalButton
+              style={{ height: 32 }}
+              className="margin-left-10"
+              onClick={() => {
+                getSSMParamsList();
+              }}
+            >
+              <RefreshIcon width="10" />
+            </NormalButton>
+          )}
+        </div>
       </div>
     </>
   );
