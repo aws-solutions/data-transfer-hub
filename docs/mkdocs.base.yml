@@ -9,6 +9,11 @@ theme:
     - search.highlight
 plugins:
   - search
+  - macros
+  
+markdown_extensions:
+  - admonition
+  - attr_list
 extra:
   alternate:
     - name: English

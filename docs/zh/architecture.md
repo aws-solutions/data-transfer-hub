@@ -8,14 +8,16 @@
 
 1. 静态Web资源（前端用户界面）存储在[Amazon S3][s3]中，并通过[Amazon CloudFront][cloudfront]提供静态资源的分发。
 2. 通过[AWS AppSync][appsync] GraphQL提供后端API。
-3. 如果部署在全球区域，用户通过[Amazon Cognito][cognito]用户池进行身份验证；如果部署在中国区域，用户通过OpenID Connect供应商进行身份验证，例如Authing、Auth0等。
+3. 如果部署在全球区域，用户通过[Amazon Cognito][cognito]用户池进行身份验证；如果部署在中国区域，用户通过OpenID Connect供应商进行身份验证，例如[Authing](https://www.authing.cn/)、[Auth0](https://auth0.com/)等。
 4. AWS AppSync通过运行[AWS Lambda][lambda]来调用后端API。
 5. AWS Lambda启动[AWS Step Functions][stepfunction]工作流，该工作流使用[AWS CloudFormation][cloudformation]启动或停止/删除ECR或S3插件模板。
 6. 插件模板集中托管于Amazon S3存储桶中。
 7. 预置的一个[Amazon ECS][ecs]集群运行插件模板使用的容器镜像，并且容器镜像托管在[Amazon ECR][ecr]中。
 8. 数据传输任务的信息存储在[Amazon DynamoDB][dynamodb]中。
 
->*注意：如果您在由光环新网运营的亚马逊云科技中国（北京）区域或由西云数据运营的亚马逊云科技中国（宁夏）区域部署本解决方案，您需要预先准备具有ICP记录的域，然后才能访问网页控制台。*
+!!! note "注意"
+
+    如果您在由光环新网运营的亚马逊云科技中国（北京）区域或由西云数据运营的亚马逊云科技中国（宁夏）区域部署本解决方案，您需要预先准备具有ICP记录的域，然后才能访问网页控制台。
 
 网页控制台用于集中创建和管理所有数据传输任务。每种数据类型（例如，Amazon S3或Amazon ECR）都是插件，并打包为AWS CloudFormation模板，托管在Amazon S3存储桶中。当您创建传输任务时，AWS Lambda函数会启动AWS CloudFormation模板，并且每个任务的状态都会存储并显示在Amazon DynamoDB表中。
 
@@ -29,14 +31,16 @@
 使用Amazon S3插件的工作流程如下：
 
 1. Event Bridge规则定时触发AWS Fargate任务，默认每小时运行一次。
-2. Fargate任务列出源和目标存储桶中的所有对象，并确定传输对象。
-3. Fargate为每个将传输到Amazon SQS的对象发送一条消息。同时该方案还支持Amazon S3事件消息，以实现更实时的数据传输；每当有对象上传到源存储桶时，事件消息就会被发送到同一个SQS队列。
+2. Fargate任务列出源和目标存储桶中的所有对象，进行比较并确定传输对象。
+3. Fargate 为每一个需要传输的对象发送一条消息到 Amazon SQS 队列中。同时该方案还支持Amazon S3事件消息，以实现更实时的数据传输；每当有对象上传到源存储桶时，事件消息就会被发送到同一个SQS队列。
 4. 在Amazon EC2中运行的JobWorker使用SQS中的消息，并将对象从源存储桶传输到目标存储桶。该方案将使用Auto Scaling Group来控制EC2实例的数量，并根据业务需要传输数据。
 5. 每个对象的传输状态记录存储在Amazon DynamoDB中。
 6. Amazon EC2实例将根据SQS消息从源存储桶中获取（下载）对象。
 7. Amazon EC2实例将根据SQS消息将对象放入（上传）到目标存储桶。
 
-> *注意：如果对象（或对象的一部分）传输失败，JobWorker释放队列中的消息，待消息在队列中可见后再次传输对象（默认可见性超时设置为15分钟）。如果传输再次失败，消息将发送到死信队列，同时还将发送通知警报。*
+!!! note "注意"
+
+    如果对象（或对象的一部分）传输失败，JobWorker释放队列中的消息，待消息在队列中可见后再次传输对象（默认可见性超时设置为15分钟）。如果传输再次失败，消息将发送到死信队列，同时还将发送通知警报。
 
 ## Amazon ECR插件
 

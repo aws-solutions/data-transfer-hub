@@ -1,5 +1,7 @@
 要卸载数据传输解决方案，请删除CloudFormation堆栈。您可以使用亚马逊云科技管理控制台或CLI删除CloudFormation堆栈。
-> *注意：在卸载之前，您必须手动停止任何活动的数据传输任务。*
+!!! note "注意"
+
+    在卸载之前，您必须手动停止任何活动的数据传输任务。
 ## 使用亚马逊云科技管理控制台删除堆栈
 
 1. 登录[AWS CloudFormation](https://console.aws.amazon.com/cloudformation/home?)控制台。
