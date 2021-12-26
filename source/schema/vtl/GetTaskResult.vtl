@@ -1,9 +1,0 @@
-#set($ctx.result.description = $util.urlEncode($ctx.result.description))
-
-#foreach( $param in $ctx.result.parameters )
-    #if( $param.ParameterKey == "srcPrefix" || $param.ParameterKey == "destPrefix" )
-    	#set($param.ParameterValue = $util.urlEncode($param.ParameterValue))
-    #end
-#end
-
-$util.toJson($ctx.result)
