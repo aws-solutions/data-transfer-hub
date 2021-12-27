@@ -8,8 +8,8 @@ Use the following steps to deploy this solution on AWS. For detailed instruction
 - Step 1. Launch the stack
     - [(Option 1) Deploy the AWS CloudFormation template in AWS Regions](#launch-cognito)
     - [(Option 2) Deploy the AWS CloudFormation template in AWS China Regions](#launch-openid)
-- Step 2. Launch the web console
-- Step 3. Create a transfer task
+- Step 2. [Launch the web console](#launch-web-console)
+- Step 3. [Create a transfer task](#create-task)
 
 
 ## Step 1. (Option 1) Launch the stack in AWS Regions <a name="launch-cognito"></a>
@@ -23,9 +23,9 @@ Use the following steps to deploy this solution on AWS. For detailed instruction
 
     You are responsible for the cost of the AWS services used while running this solution. For more details, visit the Cost section in this guide, and refer to the pricing webpage for each AWS service used in this solution. 
 
-1. Sign in to the AWS Management Console and select the button to launch the `DataTransferHub-cognito.template` AWS CloudFormation template. Alternatively, you can [download the template](https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template) as a starting point for your own implementation.
+1. Sign in to the AWS Management Console and select the button to launch the `DataTransferHub-cognito.template` AWS CloudFormation template. Alternatively, you can [download the template](https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template) as a starting point for your own implementation.
 
-    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
+    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
 
 2.	The template launches in the US East (N. Virginia) Region by default. To launch the solution in a different AWS Region, use the Region selector in the console navigation bar. 
 
@@ -131,9 +131,9 @@ This automated AWS CloudFormation template deploys Data Transfer in the AWS Clou
 
     You are responsible for the cost of the AWS services used while running this solution. For more details, visit the Cost section in this guide, and refer to the pricing webpage for each AWS service used in this solution. 
 
-1. Sign in to the AWS Management Console and select the button to launch the `DataTransferHub-openid.template` AWS CloudFormation template. Alternatively, you can [download the template](https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template) as a starting point for your own implementation. 
+1. Sign in to the AWS Management Console and select the button to launch the `DataTransferHub-openid.template` AWS CloudFormation template. Alternatively, you can [download the template](https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template) as a starting point for your own implementation. 
 
-    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template)
+    [![Launch Stack](./images/launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template)
 
 2. The template launches in your console’s default Region. To launch the solution in a different AWS Region, use the Region selector in the console navigation bar. 
 
@@ -158,7 +158,7 @@ This automated AWS CloudFormation template deploys Data Transfer in the AWS Clou
 9. Choose **Create Stack** to deploy the stack. 
     You can view the **status** of your stack in the AWS CloudFormation console in the Status column. You should receive a **CREATE_COMPLETE** status in approximately 15 minutes.
 
-## Step 2. Launch the web console
+## Step 2. Launch the web console <a name="launch-web-console"></a>
 
 After the stack is successfully created, navigate to the CloudFormation **Outputs** tab and select the **PortalUrl** value to access the Data Transfer Hub web console.
 
@@ -184,7 +184,7 @@ Depending on the region where you start the stack, you can choose to access the 
 2. Enter the username and password you registered when you deployed the solution, then choose Login. The system opens the Data Transfer Hub web console.
 3. Change your password and then sign in again. 
 
-## Step 3. Create a transfer task
+## Step 3. Create a transfer task <a name="create-task"></a>
 
 Use the web console to create a transfer task for Amazon S3 or Amazon ECR.
 

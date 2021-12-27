@@ -8,8 +8,8 @@
 - 步骤1：启动堆栈
     - [（选项 1）从全球区域启动堆栈](#launch-cognito)
     - [（选项 2）从中国区域启动堆栈](#launch-openid)
-- 步骤2：访问网页控制台
-- 步骤3：创建数据传输任务
+- 步骤2：[访问网页控制台](#launch-web-console)
+- 步骤3：[创建数据传输任务](#create-task)
 
 ## 步骤1.（选项1）从全球区域启动堆栈 <a name="launch-cognito"></a>
 
@@ -19,15 +19,13 @@
 
 **从全球区域部署AWS CloudFormation模板**
 
-此自动化AWS CloudFormation模板从亚马逊云科技全球区域部署数据传输解决方案。启动堆栈之前，请务必完成前提条件。
-
 !!! note "注意"
 
     您需要承担运行数据传输解决方案时使用亚马逊云科技各项服务的成本费用。想要了解详细信息，请参阅本实施指南中的成本章节，以及解决方案中使用的每项服务的定价页面。
 
-1. 登录到Amazon Web Services管理控制台，选择按钮以启动 `DataTransferHub-cognito.template` 模板。 您还可以选择直接[下载模板](https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)进行部署。
+1. 登录到Amazon Web Services管理控制台，选择按钮以启动 `DataTransferHub-cognito.template` 模板。 您还可以选择直接[下载模板](https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)进行部署。
 
-    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
+    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
 
 2. 默认情况下，该模板将在您登录控制台后默认的区域启动，即美国东部（弗吉尼亚北部）区域。若需在指定的区域中启动该解决方案，请在控制台导航栏中的区域下拉列表中选择。
 
@@ -127,9 +125,9 @@
 
     您需要承担运行数据传输解决方案时使用亚马逊云科技各项服务的成本费用。想要了解详细信息，请参阅本实施指南中的成本章节，以及解决方案中使用的每项服务的定价页面。
 
-1. 登录到Amazon Web Services管理控制台，选择按钮以启动 `DataTransferHub-openid.template` 模板。您还可以选择直接[下载模板](https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template)进行部署。
+1. 登录到Amazon Web Services管理控制台，选择按钮以启动 `DataTransferHub-openid.template` 模板。您还可以选择直接[下载模板](https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template)进行部署。
 
-    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template)
+    [![Launch Stack](./images/launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template)
 
 2. 模板将在您的默认区域启动。要在不同的区域中启动解决方案，请使用控制台导航栏中的区域选择器。
 3. 在**创建堆栈**页面上，确认Amazon S3 URL文本框中显示正确的模板URL，然后选择**下一步**。
@@ -149,7 +147,7 @@
 
 您可以在Amazon CloudFormation控制台的**状态**列中查看堆栈的状态。正常情况下，大约15分钟内可以看到状态为**CREATE_COMPLETE**。
 
-## 步骤2：访问网页控制台
+## 步骤2：访问网页控制台 <a name="launch-web-console"></a>
 
 在堆栈创建成功后，您可在AWS CloudFormation的**输出**标签页中查看访问网页控制台需要的信息（**PortalUrl**）。
 
@@ -173,7 +171,7 @@
     - 如果您是第一次登录，系统会打开Authing.cn登录界面。
 2. 输入您在部署解决方案时注册的用户名和密码，然后选择登录。系统将打开网页控制台。
 3. 更改您的密码，然后重新登录。
-## 步骤3：创建数据传输任务
+## 步骤3：创建数据传输任务 <a name="create-task"></a>
 您可以选择为Amazon S3或Amazon ECR创建传输任务。
 
 ![dth-console](./images/dth-console.png)
