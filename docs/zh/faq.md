@@ -100,10 +100,6 @@
 
 您可以通过点击网页控制台的Task Detail内的CloudWatch Dashboard链接，跳转至Amazon CloudWatch的定制化Dashboard内查看。您也可以直接前往CloudWatch进行查看。
 
-**8. 如何了解CloudWatch Dashboard里面有关图的相关信息？**</br>
-
-您可以通过点击网页控制台的Task Detail内的CloudWatch Dashboard链接，跳转至Amazon CloudWatch的定制化Dashboard内查看。您也可以直接前往Amazon CloudWatch进行查看。
-
 ## 其它相关问题
 **1. 出现403 GetObject Access Denied错误，如何解决？**</br>
 

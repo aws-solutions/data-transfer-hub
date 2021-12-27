@@ -6,12 +6,12 @@
 您可以在亚马逊云科技上部署并使用解决方案，过程如下：
 
 - 步骤1：启动堆栈
-    - （选项 1）从全球区域启动堆栈
-    - （选项 2）从中国区域启动堆栈
+    - [（选项 1）从全球区域启动堆栈](#launch-cognito)
+    - [（选项 2）从中国区域启动堆栈](#launch-openid)
 - 步骤2：访问网页控制台
 - 步骤3：创建数据传输任务
 
-## 步骤1.（选项1）从全球区域启动堆栈
+## 步骤1.（选项1）从全球区域启动堆栈 <a name="launch-cognito"></a>
 
 !!! warning "重要提示"
 
@@ -49,7 +49,7 @@
 9. 选择**创建堆栈**以部署堆栈。
 
 您可以在Amazon CloudFormation控制台的**状态**列中查看堆栈的状态。正常情况下，大约15分钟内可以看到状态为**CREATE_COMPLETE**。
-## 步骤1.（选项2）从中国区域启动堆栈
+## 步骤1.（选项2）从中国区域启动堆栈 <a name="launch-openid"></a>
 
 !!! warning "重要提示"
 
@@ -71,13 +71,13 @@
     3. 输入应用名称，并输入认证地址。
     4. 选择**创建**。
 5. 更新授权配置。
-    1. 从左侧边栏选择并进入**应序**界面，选择**应用配置**，然后选择**授权配置**。
+    1. 从左侧边栏选择并进入**应用**界面，选择**应用配置**，然后选择**授权配置**。
     2. **授权模式**选择**implicit**，返回类型选择**id_token**。
     3. id_token签名算法修改为**RS256**。
     4. 选择**保存**。
 
 6. 配置回调链接。
-    1. 从左侧边栏选择并进入**应序**界面，选择**应用配置**，然后选择**认证配置**。
+    1. 从左侧边栏选择并进入**应用**界面，选择**应用配置**，然后选择**认证配置**。
     2. 将登录回调URL修改为 `https://<your-custom-domain>/authentication/callback`。
     3. 选择**保存**。
     !!! note "注意"
@@ -85,7 +85,7 @@
         请确保您上面填写的域名已在中国区完成ICP备案。
 
 7. 更新登录控制。
-    1. 从左侧边栏选择并进入**应序**界面，选择**登录控制**，然后选择**登录注册方式**。
+    1. 从左侧边栏选择并进入**应用**界面，选择**登录控制**，然后选择**登录注册方式**。
     2. 登录方式请只选择**密码登录：邮箱**。
     3. 请**取消勾选**注册方式方式内的所有选项。
     4. 选择**保存**。
@@ -129,7 +129,7 @@
 
 1. 登录到Amazon Web Services管理控制台，选择按钮以启动 `DataTransferHub-openid.template` 模板。您还可以选择直接[下载模板](https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template)进行部署。
 
-    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
+    [![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template)
 
 2. 模板将在您的默认区域启动。要在不同的区域中启动解决方案，请使用控制台导航栏中的区域选择器。
 3. 在**创建堆栈**页面上，确认Amazon S3 URL文本框中显示正确的模板URL，然后选择**下一步**。

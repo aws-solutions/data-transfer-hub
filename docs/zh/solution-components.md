@@ -20,7 +20,7 @@ Amazon S3传输引擎运行Amazon S3插件，用于将对象从数据源传输�
 - 自动重试和错误处理
 
 ## Amazon ECR传输引擎
-Amazon ECR引擎运行Amazon ECR插件并用于从其他容器注册表传输容器景象。ECR插件支持以下功能：
+Amazon ECR引擎运行Amazon ECR插件并用于从其他容器注册表传输容器镜象。ECR插件支持以下功能：
 
 - 在中国区域和全球区域之间传输Amazon ECR镜像
 - 从公共容器仓库（例如Docker Hub、GCR.io、Quay.io）传输到Amazon ECR

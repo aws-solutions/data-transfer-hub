@@ -16,9 +16,9 @@ markdown_extensions:
   - attr_list
 extra:
   alternate:
-    # - name: English
-    #   link: /data-transfer-hub/en/
-    #   lang: en
+    - name: English
+      link: /data-transfer-hub/en/
+      lang: en
     - name: 简体中文
       link: /data-transfer-hub/zh/
       lang: zh-CN
