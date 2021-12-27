@@ -12,8 +12,9 @@
 如果您在中国区域没有经过ICP备案的域名，建议部署在全球区域。
 
 如果客户想在中国区域部署，但是没有域名，可以直接部署后端版本：
-- Amazon S3 Plugin: https://github.com/awslabs/amazon-s3-data-replication-hub-plugin 
-- Amazon ECR Plugin: https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin
+
+- Amazon S3 Plugin: [https://github.com/awslabs/amazon-s3-data-replication-hub-plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin) 
+- Amazon ECR Plugin: [https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
 
 **3. 是否需要分别在数据源和目标端各部署一次数据传输解决方案吗？**</br>
 
