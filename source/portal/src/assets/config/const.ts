@@ -215,8 +215,8 @@ export const S3_PARAMS_LIST_MAP: any = {
     zh_name: "Cron表达式",
   },
   srcSkipCompare: {
-    en_name: "Skip Data Comparison",
-    zh_name: "跳过文件对比",
+    en_name: "Need Data Comparison before Transfer",
+    zh_name: "是否需要数据比对",
   },
   lambdaMemory: {
     en_name: "Lambda Memory",
@@ -607,9 +607,7 @@ export const urlIsValid = (url: string): boolean => {
 };
 
 export const emailIsValid = (email: string): boolean => {
-  // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
   return re.test(String(email).toLowerCase());
 };
 

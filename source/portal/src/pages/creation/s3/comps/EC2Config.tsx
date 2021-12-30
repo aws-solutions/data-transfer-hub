@@ -56,7 +56,7 @@ const OptionSettings: React.FC = () => {
   );
 
   const [srcSkipCompare, setSrcSkipCompare] = useState<string>(
-    tmpTaskInfo.parametersObj?.srcSkipCompare || YES_NO.NO
+    tmpTaskInfo.parametersObj?.srcSkipCompare || YES_NO.YES
   );
   const [ecsFargateMemory, setEcsFargateMemory] = useState(
     tmpTaskInfo.parametersObj?.ecsFargateMemory || "8192"
@@ -208,12 +208,14 @@ const OptionSettings: React.FC = () => {
                 onChange={(expression) => {
                   setEcsCronExpression(expression);
                 }}
-                optionTitle={"Transfer Task Type"}
-                optionDesc="Select transfer task type, if transfer only one time, select One Time Transfer"
+                optionTitle={t(
+                  "creation.step2.settings.advance.schedulingSettings"
+                )}
+                optionDesc=""
                 optionDescHtml={[
-                  "Select transfer task type, if just transfer only one time, select One Time Transfer, please refer ",
-                  <DescLink title={"this guide"} link={CRON_HELP_LINK} />,
-                  " to create cron expression",
+                  t("creation.step2.settings.advance.schedulingSettingsDesc1"),
+                  <DescLink title={" this guide "} link={CRON_HELP_LINK} />,
+                  t("creation.step2.settings.advance.schedulingSettingsDesc2"),
                 ]}
                 cronValue={ecsCronExpression}
                 // optionList={}
@@ -247,19 +249,26 @@ const OptionSettings: React.FC = () => {
                 <div>
                   <div className="form-items">
                     <DrhSelect
+                      infoType={EnumSpanType.ENGINE_SETTINGS_COMPARISON}
                       onChange={(
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         setSrcSkipCompare(event.target.value);
                       }}
-                      optionTitle="Skip Data Comparison"
-                      optionDesc="Skip the data comparison in task finding process? If yes, all data in the source will be sent to the destination"
+                      optionTitle={t(
+                        "creation.step2.settings.advance.skipComparison"
+                      )}
+                      optionDesc={t(
+                        "creation.step2.settings.advance.skipComparisonDesc"
+                      )}
                       selectValue={srcSkipCompare}
                       optionList={YES_NO_LIST}
                     />
                   </div>
                   <div className="form-items">
                     <DrhInput
+                      showInfo
+                      infoType={EnumSpanType.ENGINE_SETTINGS_FINDER_DEPTH}
                       inputType="number"
                       optionTitle={t(
                         "creation.step2.settings.advance.finderDepth"
@@ -280,6 +289,8 @@ const OptionSettings: React.FC = () => {
 
                   <div className="form-items">
                     <DrhInput
+                      showInfo
+                      infoType={EnumSpanType.ENGINE_SETTINGS_FINDER_NUMBER}
                       inputType="number"
                       optionTitle={t(
                         "creation.step2.settings.advance.finderNumber"
@@ -300,13 +311,18 @@ const OptionSettings: React.FC = () => {
 
                   <div className="form-items">
                     <DrhSelect
+                      infoType={EnumSpanType.ENGINE_SETTINGS_FINDER_MEMORY}
                       onChange={(
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         setEcsFargateMemory(event.target.value);
                       }}
-                      optionTitle="ECS Fargate Finder Memory"
-                      optionDesc="The amount of memory used by the Finder task."
+                      optionTitle={t(
+                        "creation.step2.settings.advance.finderMemory"
+                      )}
+                      optionDesc={t(
+                        "creation.step2.settings.advance.finderMemoryDesc"
+                      )}
                       selectValue={ecsFargateMemory}
                       optionList={ECS_FARGATE_MEMORY_LIST}
                     />

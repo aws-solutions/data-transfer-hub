@@ -190,7 +190,7 @@ const StepThreeS3: React.FC = () => {
       parametersObj.includeMetadata === YES_NO.YES ? "true" : "false";
 
     const tmpSrcSkipCompare =
-      parametersObj.srcSkipCompare === YES_NO.YES ? "true" : "false";
+      parametersObj.srcSkipCompare === YES_NO.YES ? "false" : "true";
 
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
@@ -413,6 +413,28 @@ const StepThreeS3: React.FC = () => {
     createTask();
   };
 
+  const buildDisplayValue = (key: string, value: string) => {
+    if (key === "jobType") {
+      return JOB_TYPE_MAP[key];
+    }
+    if (key === "ecsFargateMemory") {
+      return parseInt(value) / 1024 + "G";
+    }
+    if (key === "srcInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "destInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "includeMetadata") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "srcSkipCompare") {
+      return value === "true" ? YES_NO.NO : YES_NO.YES;
+    }
+    return decodeURIComponent(value);
+  };
+
   return (
     <div className="drh-page">
       <LeftMenu />
@@ -498,17 +520,12 @@ const StepThreeS3: React.FC = () => {
                                     ]}
                                 </div>
                                 <div className="table-td value">
-                                  {element.ParameterKey === "jobType" ? (
-                                    <span>
-                                      {JOB_TYPE_MAP[element.ParameterValue]}
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      {decodeURIComponent(
-                                        element.ParameterValue
-                                      )}
-                                    </span>
-                                  )}
+                                  <span>
+                                    {buildDisplayValue(
+                                      element.ParameterKey,
+                                      element.ParameterValue
+                                    )}
+                                  </span>
                                 </div>
                               </div>
                             )

@@ -33,7 +33,7 @@ const mapState = (state: IState) => ({
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [titleStr, setTitleStr] = useState("en_title");
-  const [subTitleStr, setSubTitleStr] = useState("en_subTitle");
+  // const [subTitleStr, setSubTitleStr] = useState("en_subTitle");
   const [nameStr, setNameStr] = useState("en_name");
   const [descStr, setDescStr] = useState("en_desc");
   const [contentStr, setContentStr] = useState("en_content");
@@ -41,7 +41,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
       setTitleStr(i18n.language + "_title");
-      setSubTitleStr(i18n.language + "_subTitle");
+      // setSubTitleStr(i18n.language + "_subTitle");
       setNameStr(i18n.language + "_name");
       setDescStr(i18n.language + "_desc");
       setContentStr(i18n.language + "_content");
@@ -84,7 +84,7 @@ const Home: React.FC = () => {
           <div className={topShowClass}>
             <div className="intro">
               <div className="big">{topTitleInfo[titleStr]}</div>
-              <div className="medium">{topTitleInfo[subTitleStr]}</div>
+              {/* <div className="medium">{topTitleInfo[subTitleStr]}</div> */}
               <div className="small">{topTitleInfo[descStr]}</div>
             </div>
           </div>

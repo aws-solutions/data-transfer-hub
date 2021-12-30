@@ -7,7 +7,6 @@ import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import Moment from "react-moment";
 import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
@@ -19,10 +18,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-
-import ArrowRightSharpIcon from "@material-ui/icons/ArrowRightSharp";
-import ArrowDropDownSharpIcon from "@material-ui/icons/ArrowDropDownSharp";
 
 // import { API } from "aws-amplify";
 import { getTask } from "graphql/queries";
@@ -49,14 +44,13 @@ import {
   DRH_REGION_TYPE_NAME,
   DRH_REGION_NAME,
   GLOBAL_STR,
-  CLOUD_WATCH_DASHBOARD_LINK_MAP,
-  S3_EVENT_OPTIONS,
-  S3_EVENT_OPTIONS_EC2,
-  S3_STORAGE_CLASS_OPTIONS,
   YES_NO,
 } from "assets/config/const";
 
 import "./Detail.scss";
+import Details from "./tabs/Details";
+import Engine from "./tabs/Engine";
+import Options from "./tabs/Options";
 
 // const S3_EVENT_OPTIONS_MAP = ConverListToMap(S3_EVENT_OPTIONS);
 
@@ -124,27 +118,6 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-type ItemType = {
-  name: string;
-  value: string;
-};
-
-type ObjectType = {
-  [key: string]: string;
-};
-
-const converListToMap = (list: ItemType[]): ObjectType => {
-  const tmpMap: ObjectType = {};
-  list.forEach((element: ItemType) => {
-    tmpMap[element.value] = element.name;
-  });
-  return tmpMap;
-};
-
-const S3_EVENT_OPTIONS_MAP = converListToMap(S3_EVENT_OPTIONS);
-const S3_EVENT_OPTIONS_EC2_MAP = converListToMap(S3_EVENT_OPTIONS_EC2);
-const S3_STORAGE_CLASS_OPTIONS_MAP = converListToMap(S3_STORAGE_CLASS_OPTIONS);
-
 const Detail: React.FC = (props: any) => {
   const client: any = React.useContext(ClientContext);
   const { t } = useTranslation();
@@ -159,7 +132,6 @@ const Detail: React.FC = (props: any) => {
   const [accountInDest, setAccountInDest] = useState("-");
   const [curRegionType, setCurRegionType] = useState("");
   const [curRegion, setCurRegion] = useState("");
-  const [advancedShow, setAdvancedShow] = useState(false);
 
   async function fetchNotes(taskId: string) {
     // setIsLoading(true);
@@ -179,7 +151,7 @@ const Detail: React.FC = (props: any) => {
         tmpCurTask.parameters.forEach((element: any) => {
           tmpCurTask[element.ParameterKey] = element.ParameterValue
             ? element.ParameterValue
-            : "-";
+            : "";
         });
       }
       // if the task engine is lambda
@@ -358,7 +330,7 @@ const Detail: React.FC = (props: any) => {
                       {curTaskInfo.type === EnumTaskType.S3 &&
                         curTaskInfo.sourceType}
                       {curTaskInfo.type === EnumTaskType.S3_EC2 &&
-                        (curTaskInfo.srcEndpoint !== "-"
+                        (curTaskInfo.srcEndpoint !== ""
                           ? EnumSourceType.S3_COMPATIBLE
                           : curTaskInfo.srcType)}
                     </div>
@@ -379,328 +351,19 @@ const Detail: React.FC = (props: any) => {
                     <AntTab label={t("taskDetail.option")} />
                   </AntTabs>
                   <TabPanel value={value} index={0}>
-                    <div className="general-info tab-padding box-shadow">
-                      <div className="title">{t("taskDetail.details")}</div>
-                      <div className="general-info-content">
-                        <div className="split-item">
-                          <div className="sub-name">
-                            {t("taskDetail.taskId")}
-                          </div>
-                          <div>{curTaskInfo.id}</div>
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.createdAt")}
-                          </div>
-                          <div>
-                            <Moment format="YYYY-MM-DD HH:mm:ss">
-                              {curTaskInfo.createdAt}
-                            </Moment>
-                          </div>
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.taskMetrics")}
-                          </div>
-                          <div>
-                            {curTaskInfo.stackId ? (
-                              <a
-                                className="a-link"
-                                rel="noopener noreferrer"
-                                target="_blank"
-                                href={`${
-                                  CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                                }?region=${curRegion}#dashboards:name=${
-                                  curTaskInfo?.stackId?.split("/")[1]
-                                }-Dashboard-${curRegion}`}
-                              >
-                                {t("taskDetail.dashboard")}{" "}
-                                <OpenInNewIcon
-                                  fontSize="small"
-                                  className="open-icon"
-                                />
-                              </a>
-                            ) : (
-                              "-"
-                            )}
-                          </div>
-                        </div>
-                        <div className="split-item">
-                          {curTaskInfo.srcEndpoint &&
-                            curTaskInfo.srcEndpoint !== "-" && (
-                              <>
-                                <div className="sub-name">
-                                  {t("taskDetail.srcEndpoint")}
-                                </div>
-                                <div>{curTaskInfo.srcEndpoint}</div>
-                                <br />
-                              </>
-                            )}
-                          {curTaskInfo.srcRegion && (
-                            <>
-                              <div className="sub-name">
-                                {t("taskDetail.srcRegion")}
-                              </div>
-                              <div>{curTaskInfo.srcRegion}</div>
-                              <br />
-                            </>
-                          )}
-                          <div className="sub-name">
-                            {t("taskDetail.srcName")}
-                          </div>
-                          <div>
-                            {curTaskInfo.srcBucketName || curTaskInfo.srcBucket}
-                          </div>
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.srcPrefix")}
-                          </div>
-                          <div>
-                            {decodeURIComponent(curTaskInfo.srcPrefix) ||
-                              decodeURIComponent(curTaskInfo.srcBucketPrefix)}
-                          </div>
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.srcInThisAccount")}
-                          </div>
-                          <div>{accountInSrc}</div>
-                          {accountInSrc === YES_NO.NO && (
-                            <div>
-                              <br />
-                              <div className="sub-name">
-                                {t("taskDetail.credentials")}
-                              </div>
-                              {/* <div>{curTaskInfo.credentialsParameterStore}</div> */}
-                              {curTaskInfo.type === EnumTaskType.S3 && (
-                                <div>
-                                  {curTaskInfo.credentialsParameterStore}
-                                </div>
-                              )}
-                              {curTaskInfo.type === EnumTaskType.S3_EC2 && (
-                                <div>{curTaskInfo.srcCredentials}</div>
-                              )}
-                            </div>
-                          )}
-                          {accountInSrc === YES_NO.YES &&
-                            (curTaskInfo.sourceType === EnumSourceType.S3 ||
-                              curTaskInfo.srcType === EnumSourceType.S3) && (
-                              <div>
-                                <br />
-                                <div className="sub-name">
-                                  {t("taskDetail.enableS3Event")}
-                                </div>
-                                <div>
-                                  {S3_EVENT_OPTIONS_MAP[
-                                    curTaskInfo.enableS3Event ||
-                                      curTaskInfo.srcEvent
-                                  ] ||
-                                    S3_EVENT_OPTIONS_EC2_MAP[
-                                      curTaskInfo.enableS3Event ||
-                                        curTaskInfo.srcEvent
-                                    ]}
-                                </div>
-
-                                <br />
-                                <div className="sub-name">
-                                  {t("taskDetail.copyMetadata")}
-                                </div>
-                                <div>
-                                  {curTaskInfo.includeMetadata === "true"
-                                    ? YES_NO.YES
-                                    : YES_NO.NO}
-                                </div>
-                              </div>
-                            )}
-                        </div>
-                        <div className="split-item">
-                          {curTaskInfo.destRegion && (
-                            <>
-                              <div className="sub-name">
-                                {t("taskDetail.destS3Region")}
-                              </div>
-                              <div>{curTaskInfo.destRegion}</div>
-                              <br />
-                            </>
-                          )}
-                          <div className="sub-name">
-                            {t("taskDetail.destName")}
-                          </div>
-                          <div>
-                            {curTaskInfo.destBucketName ||
-                              curTaskInfo.destBucket}
-                          </div>
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.destPrefix")}
-                          </div>
-                          <div>
-                            {decodeURIComponent(curTaskInfo.destPrefix) ||
-                              decodeURIComponent(curTaskInfo.destBucketPrefix)}
-                          </div>
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.destInThisAccount")}
-                          </div>
-                          <div>{accountInDest}</div>
-                          {accountInDest === YES_NO.NO && (
-                            <div>
-                              <br />
-                              <div className="sub-name">
-                                {t("taskDetail.credentials")}
-                              </div>
-                              {curTaskInfo.type === EnumTaskType.S3 && (
-                                <div>
-                                  {curTaskInfo.credentialsParameterStore}
-                                </div>
-                              )}
-                              {curTaskInfo.type === EnumTaskType.S3_EC2 && (
-                                <div>{curTaskInfo.destCredentials}</div>
-                              )}
-                            </div>
-                          )}
-                          <br />
-                          <div className="sub-name">
-                            {t("taskDetail.storageClass")}
-                          </div>
-                          <div>
-                            {
-                              S3_STORAGE_CLASS_OPTIONS_MAP[
-                                curTaskInfo.destStorageClass
-                              ]
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <Details
+                      curTaskInfo={curTaskInfo}
+                      curRegionType={curRegionType}
+                      curRegion={curRegion}
+                      accountInSrc={accountInSrc}
+                      accountInDest={accountInDest}
+                    />
                   </TabPanel>
                   <TabPanel value={value} index={1}>
-                    <div className="general-info tab-padding box-shadow">
-                      <div className="title">
-                        {t("taskDetail.engineSettings")}
-                      </div>
-
-                      {curTaskInfo.type === EnumTaskType.S3 && (
-                        <div className="general-info-content">
-                          <div className="split-item">
-                            <div className="sub-name">
-                              {t("taskDetail.lambdaMemory")}
-                            </div>
-                            <div>{curTaskInfo.lambdaMemory} MB</div>
-                            <br />
-                          </div>
-                          <div className="split-item">
-                            <div className="sub-name">
-                              {t("taskDetail.multipartUploadThreshold")}
-                            </div>
-                            <div>{curTaskInfo.multipartThreshold} MB</div>
-                          </div>
-                          <div className="split-item">
-                            <div className="sub-name">
-                              {t("taskDetail.chunkSize")}
-                            </div>
-                            <div>{curTaskInfo.chunkSize} MB</div>
-                          </div>
-                          <div className="split-item">
-                            <div className="sub-name">
-                              {t("taskDetail.chunkSize")}
-                            </div>
-                            <div>{curTaskInfo.maxThreads}</div>
-                          </div>
-                        </div>
-                      )}
-                      {curTaskInfo.type === EnumTaskType.S3_EC2 && (
-                        <>
-                          <div className="general-info-content">
-                            <div className="split-item">
-                              <div className="sub-name">
-                                {t("taskDetail.maximumInstances")}
-                              </div>
-                              <div>{curTaskInfo.maxCapacity}</div>
-                              <br />
-                            </div>
-                            <div className="split-item">
-                              <div className="sub-name">
-                                {t("taskDetail.minimumInstances")}
-                              </div>
-                              <div>{curTaskInfo.minCapacity}</div>
-                            </div>
-                            <div className="split-item">
-                              <div className="sub-name">
-                                {t("taskDetail.desiredInstances")}
-                              </div>
-                              <div>{curTaskInfo.desiredCapacity}</div>
-                            </div>
-                          </div>
-
-                          <div className="engine-title">
-                            {!advancedShow && (
-                              <ArrowRightSharpIcon
-                                onClick={() => {
-                                  setAdvancedShow(true);
-                                }}
-                                className="option-title-icon"
-                                fontSize="medium"
-                              />
-                            )}
-                            {advancedShow && (
-                              <ArrowDropDownSharpIcon
-                                onClick={() => {
-                                  setAdvancedShow(false);
-                                }}
-                                className="option-title-icon"
-                                fontSize="medium"
-                              />
-                            )}
-                            {t("taskDetail.advancedSettings")}
-                          </div>
-                          <div style={{ minHeight: 80 }}>
-                            {advancedShow && (
-                              <div className="general-info-content">
-                                <div className="split-item">
-                                  <div className="sub-name">
-                                    {t("taskDetail.finderDepth")}
-                                  </div>
-                                  <div>{curTaskInfo.finderDepth}</div>
-                                  <br />
-                                </div>
-                                <div className="split-item">
-                                  <div className="sub-name">
-                                    {t("taskDetail.finderNumber")}
-                                  </div>
-                                  <div>{curTaskInfo.finderNumber}</div>
-                                </div>
-                                <div className="split-item">
-                                  <div className="sub-name">
-                                    {t("taskDetail.workerThreadsNumber")}
-                                  </div>
-                                  <div>{curTaskInfo.workerNumber}</div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
+                    <Engine curTaskInfo={curTaskInfo} />
                   </TabPanel>
                   <TabPanel value={value} index={2}>
-                    <div className="general-info tab-padding box-shadow">
-                      <div className="title">{t("taskDetail.option")}</div>
-                      <div className="general-info-content">
-                        <div className="split-item">
-                          <div className="sub-name">
-                            {t("taskDetail.description")}
-                          </div>
-                          <div>
-                            {decodeURIComponent(curTaskInfo.description)}
-                          </div>
-                          <br />
-                        </div>
-                        <div className="split-item">
-                          <div className="sub-name">
-                            {t("taskDetail.alarmEmail")}
-                          </div>
-                          <div>{curTaskInfo.alarmEmail}</div>
-                        </div>
-                      </div>
-                    </div>
+                    <Options curTaskInfo={curTaskInfo} />
                   </TabPanel>
                 </div>
               </div>
