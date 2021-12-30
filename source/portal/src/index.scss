@@ -75,6 +75,14 @@ code {
   }
 }
 
+.flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
 .over-mask {
   position: fixed;
   z-index: 9999;
@@ -253,6 +261,28 @@ code {
   }
 }
 
+.drh-input-radio-item {
+  margin-right: 20px;
+  input {
+    margin-right: 3px;
+  }
+}
+
 .MuiButton-root {
   text-transform: none !important;
+}
+
+/**material ui*/
+.PrivateSwitchBase-root-1 {
+  padding: 0 !important;
+}
+
+.MuiList-padding {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.MuiAutocomplete-listbox {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }

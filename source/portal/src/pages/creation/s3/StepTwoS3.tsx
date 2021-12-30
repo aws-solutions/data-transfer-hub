@@ -50,9 +50,8 @@ const StepTwoS3: React.FC = () => {
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
   const [destBucketFormatError, setDestBucketFormatError] = useState(false);
   const [srcRegionRequiredError, setSrcRegionRequiredError] = useState(false);
-  const [srcShowEndPointFormatError, setSrcShowEndPointFormatError] = useState(
-    false
-  );
+  const [srcShowEndPointFormatError, setSrcShowEndPointFormatError] =
+    useState(false);
   const [destRegionRequiredError, setDestRegionRequiredError] = useState(false);
   const [destPrefixFormatError, setDestPrefixFormatError] = useState(false);
   const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);

@@ -1,0 +1,5 @@
+| Date | Description|
+|----------|--------|
+| January 2021 | Intitial release of version 1.0 |
+| July 2021 | Released version 2.0 <br> 1. Support general OIDC providers, including Authing, Auth0, okta, etc.<br> 2. Support transfer objects from more Amazon S3 compatible storage services, such as Huawei Cloud OBS Etc.<br> 3. Support setting the access control list (ACL) of the target bucket object<br> 4. Support deployment in account A, copy data from account B to account C<br> 5. Change to use Graviton 2 instance , And turn on BBR to transfer S3 objects to improve performance and save costs<br> 6. Change to use Secrets Manager to maintain credential information |
+| December 2021 | Released version 2.1 <br> 1. Supports custom Prefix list to filter transmission tasks<br> 2. Supports configuration of single-run file transmission tasks<br> 3. Supports configuration of tasks through custom CRON expressions Timetable<br> 4. Support custom opening or closing of data comparison function |

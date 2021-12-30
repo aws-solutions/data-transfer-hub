@@ -50,7 +50,7 @@ export class ApiStack extends Construct {
     let ecrPluginVersion = 'v1.0.0'
     let suffix = '-plugin'
     if (templateBucket === 'aws-gcr-solutions') {
-      s3PluginVersion = 'v2.0.2'
+      s3PluginVersion = 'v2.1.0'
       ecrPluginVersion = 'v1.0.1'
       suffix = ''
     }

@@ -89,7 +89,10 @@ const Bottom: React.FC = () => {
 
       <span className="privacy">{t("bottom.use")}</span>
       <span className="privacy">{t("bottom.privacy")}</span>
-      <span className="notice">{t("bottom.copy")}</span>
+      <span className="notice">
+        {`© 2008 -${new Date().getFullYear()}, `}
+        {t("bottom.copy")}
+      </span>
     </div>
   );
 };

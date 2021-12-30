@@ -189,6 +189,9 @@ const StepThreeS3: React.FC = () => {
     const tmpIncludeMetaData =
       parametersObj.includeMetadata === YES_NO.YES ? "true" : "false";
 
+    const tmpSrcSkipCompare =
+      parametersObj.srcSkipCompare === YES_NO.YES ? "false" : "true";
+
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
       ParameterKey: "srcType",
@@ -205,6 +208,10 @@ const StepThreeS3: React.FC = () => {
     taskParamArr.push({
       ParameterKey: "srcPrefix",
       ParameterValue: parametersObj.srcBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcPrefixsListFile",
+      ParameterValue: parametersObj.srcPrefixsListFile,
     });
     taskParamArr.push({
       ParameterKey: "srcEvent",
@@ -256,6 +263,10 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.destAcl,
     });
     taskParamArr.push({
+      ParameterKey: "ecsCronExpression",
+      ParameterValue: parametersObj.ecsCronExpression,
+    });
+    taskParamArr.push({
       ParameterKey: "maxCapacity",
       ParameterValue: parametersObj.maxCapacity,
     });
@@ -268,12 +279,20 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.desiredCapacity,
     });
     taskParamArr.push({
+      ParameterKey: "srcSkipCompare",
+      ParameterValue: tmpSrcSkipCompare,
+    });
+    taskParamArr.push({
       ParameterKey: "finderDepth",
       ParameterValue: parametersObj.finderDepth,
     });
     taskParamArr.push({
       ParameterKey: "finderNumber",
       ParameterValue: parametersObj.finderNumber,
+    });
+    taskParamArr.push({
+      ParameterKey: "ecsFargateMemory",
+      ParameterValue: parametersObj.ecsFargateMemory,
     });
     taskParamArr.push({
       ParameterKey: "workerNumber",
@@ -394,6 +413,28 @@ const StepThreeS3: React.FC = () => {
     createTask();
   };
 
+  const buildDisplayValue = (key: string, value: string) => {
+    if (key === "jobType") {
+      return JOB_TYPE_MAP[key];
+    }
+    if (key === "ecsFargateMemory") {
+      return parseInt(value) / 1024 + "G";
+    }
+    if (key === "srcInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "destInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "includeMetadata") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "srcSkipCompare") {
+      return value === "true" ? YES_NO.NO : YES_NO.YES;
+    }
+    return decodeURIComponent(value);
+  };
+
   return (
     <div className="drh-page">
       <LeftMenu />
@@ -479,17 +520,12 @@ const StepThreeS3: React.FC = () => {
                                     ]}
                                 </div>
                                 <div className="table-td value">
-                                  {element.ParameterKey === "jobType" ? (
-                                    <span>
-                                      {JOB_TYPE_MAP[element.ParameterValue]}
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      {decodeURIComponent(
-                                        element.ParameterValue
-                                      )}
-                                    </span>
-                                  )}
+                                  <span>
+                                    {buildDisplayValue(
+                                      element.ParameterKey,
+                                      element.ParameterValue
+                                    )}
+                                  </span>
                                 </div>
                               </div>
                             )

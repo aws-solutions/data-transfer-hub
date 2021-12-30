@@ -64,6 +64,7 @@ import {
   YES_NO,
   AWS_REGION_LIST,
   getRegionListBySourceType,
+  S3SourcePrefixType,
 } from "assets/config/const";
 
 const StyledMenu = withStyles({
@@ -330,6 +331,9 @@ const List: React.FC = () => {
     if (curSelectTask.type === EnumTaskType.S3_EC2) {
       // Clone EC2 Version Task
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
+        // Set Default src prefix type
+        tmpTaskInfo.parametersObj.srcPrefixType = S3SourcePrefixType.FullBucket;
+
         curSelectTask.parameters.forEach((element: any) => {
           // Set All Properties
           tmpTaskInfo.parametersObj[element.ParameterKey] =
@@ -421,6 +425,28 @@ const List: React.FC = () => {
           if (element.ParameterKey === "includeMetadata") {
             tmpTaskInfo.parametersObj.includeMetadata =
               element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
+          }
+
+          // set srcPrefixType = MultiplePrefix when srcPrefixsListFile has value
+          if (element.ParameterKey === "srcPrefixsListFile") {
+            if (element.ParameterValue) {
+              tmpTaskInfo.parametersObj.srcPrefixType =
+                S3SourcePrefixType.MultiplePrefix;
+            }
+          }
+
+          // set srcPrefixType = SinglePrefix when srcPrefixsListFile has value
+          if (element.ParameterKey === "srcPrefix") {
+            if (element.ParameterValue) {
+              tmpTaskInfo.parametersObj.srcPrefixType =
+                S3SourcePrefixType.SinglePrefix;
+            }
+          }
+
+          // Set Skip Comparsion
+          if (element.ParameterKey === "srcSkipCompare") {
+            tmpTaskInfo.parametersObj.srcSkipCompare =
+              element.ParameterValue === "true" ? YES_NO.NO : YES_NO.YES;
           }
 
           // Set Description

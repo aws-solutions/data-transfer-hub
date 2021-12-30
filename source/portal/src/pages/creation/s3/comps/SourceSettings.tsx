@@ -22,6 +22,8 @@ import {
   getRegionListBySourceType,
   METADATA_LINK,
   S3_EVENT_LINK,
+  S3SourcePrefixType,
+  S3SourcePrefixTypeList,
 } from "assets/config/const";
 
 import {
@@ -108,6 +110,12 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   );
 
   const [regionList, setRegionList] = useState<IRegionType[]>([]);
+  const [srcPrefixType, setSrcPrefixType] = useState<string>(
+    tmpTaskInfo.parametersObj?.srcPrefixType || S3SourcePrefixType.FullBucket
+  );
+  const [srcPrefixsListFile, setSrcPrefixsListFile] = useState(
+    tmpTaskInfo.parametersObj?.srcPrefixsListFile || ""
+  );
 
   // Monitor the sourceType change
   useEffect(() => {
@@ -249,6 +257,32 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [includeMetadata]);
 
+  useEffect(() => {
+    updateTmpTaskInfo("srcPrefixType", srcPrefixType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcPrefixType]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("srcPrefixsListFile", srcPrefixsListFile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcPrefixsListFile]);
+
+  useEffect(() => {
+    // Reset src bucket prefix and src prefix list file
+    if (srcPrefixType === S3SourcePrefixType.SinglePrefix) {
+      setSrcPrefixsListFile("");
+    }
+    if (srcPrefixType === S3SourcePrefixType.MultiplePrefix) {
+      setSrcBucketPrefix("");
+    }
+    if (srcPrefixType === S3SourcePrefixType.FullBucket) {
+      setSrcPrefixsListFile("");
+      setSrcBucketPrefix("");
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcPrefixType]);
+
   return (
     <div className="box-shadow card-list">
       <div className="option">
@@ -314,20 +348,54 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
           </div>
 
           <div className="form-items">
-            <DrhInput
-              showInfo={true}
-              infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
-              optionTitle={t("creation.step2.settings.source.objectPrefix")}
-              optionDesc={t("creation.step2.settings.source.prefixDesc")}
+            <DrhSelect
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setSrcBucketPrefix(event.target.value);
+                setSrcPrefixType(event.target.value);
               }}
-              isOptional={true}
-              inputName="srcBucketPrefix"
-              inputValue={srcBucketPrefix}
-              placeholder="object-prefix/"
+              optionTitle={t("creation.step2.settings.source.transferType")}
+              optionDesc=""
+              selectValue={srcPrefixType}
+              optionList={S3SourcePrefixTypeList}
             />
           </div>
+
+          {srcPrefixType === S3SourcePrefixType.SinglePrefix && (
+            <div className="form-items">
+              <DrhInput
+                showInfo={true}
+                infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
+                optionTitle={t("creation.step2.settings.source.objectPrefix")}
+                optionDesc={t("creation.step2.settings.source.prefixDesc")}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSrcBucketPrefix(event.target.value);
+                }}
+                inputName="srcBucketPrefix"
+                inputValue={srcBucketPrefix}
+                placeholder="object-prefix/"
+              />
+            </div>
+          )}
+
+          {srcPrefixType === S3SourcePrefixType.MultiplePrefix && (
+            <div className="form-items">
+              <DrhInput
+                showInfo={true}
+                infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX_LIST}
+                optionTitle={t(
+                  "creation.step2.settings.source.nameOfPrefixList"
+                )}
+                optionDesc={t(
+                  "creation.step2.settings.source.nameOfPrefixListDesc"
+                )}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSrcPrefixsListFile(event.target.value);
+                }}
+                inputName="srcPrefixsListFile"
+                inputValue={srcPrefixsListFile}
+                placeholder="prefix_list.txt"
+              />
+            </div>
+          )}
 
           <div className={sourceInAccountClass}>
             <DrhSelect
@@ -380,7 +448,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 setEnableS3Event(event.target.value);
               }}
               optionTitle={t("creation.step2.settings.source.enableS3Event")}
-              optionDesc="{t(creation.step2.settings.source.enableS3EventDesc)}"
+              optionDesc={t("creation.step2.settings.source.enableS3EventDesc")}
               optionDescHtml={[
                 t("creation.step2.settings.source.enableS3EventDesc1"),
                 <DescLink
