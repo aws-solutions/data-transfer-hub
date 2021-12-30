@@ -66,7 +66,7 @@
 
 **5. 支持SSE-S3，SSE-KMS，SSE-CMK吗？**</br>
 
-是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考[配置教程](https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md)。
+是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考[教程](https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md)。
 
 ## 功能相关问题
 
@@ -131,6 +131,6 @@
 
 **6. 部署完成后，为什么在两个CloudWatch日志组中找不到任何日志流？**</br>
 
-这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置（请参阅[部署指南](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/DEPLOYMENT_EN.md)第1步）。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
+这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
 
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario

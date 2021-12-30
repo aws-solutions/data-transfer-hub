@@ -1,6 +1,6 @@
 This solution uses services which may not be currently available in all AWS Regions. Launch this solution in an AWS Region where required services are available. For the most current availability by Region, refer to the AWS Regional Services List.
 
-## Supported regions for deployment in AWS Regions
+## Supported regions for deployment in AWS Standard Regions
 
 | Region Name | Region ID |
 |----------|--------|

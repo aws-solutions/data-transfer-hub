@@ -1,8 +1,8 @@
 You are responsible for the cost of the AWS services used while running this solution, which can vary based on whether you are transferring Amazon S3 objects or Amazon ECR images.
 
-The solution automatically deploys an additional Amazon CloudFront distribution and an Amazon S3 bucket for storing the static website assets in your account. You are responsible for the incurred variable charges from these services. For full details, refer to the pricing webpage for each AWS service you will be using in this solution. 
+The solution automatically deploys an additional Amazon CloudFront Distribution and an Amazon S3 bucket for storing the static website assets in your account. You are responsible for the incurred variable charges from these services. For full details, refer to the pricing webpage for each AWS service you will be using in this solution. 
 
-The following examples demonstrate how to estimate the cost. Two example estimates are for transferring S3 objects, and one is for transferring ECR images.
+The following three examples demonstrate how to estimate the cost. Two example estimates are for transferring S3 objects, and one is for transferring ECR images.
 
 ## Cost of an Amazon S3 transfer task
 
@@ -21,9 +21,9 @@ As of December 2021, the cost of using the solution to complete the transfer tas
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
 | Amazon EC2 | $0.0084 per hour (t4g.micro) |	$0.14
-| Amazon S3 |  ~ 12 GET requests + 10 PUT request per file <br> GET: $0.0004 per 1000 request <br> PUT: $0.005 per 1000 request | $0.11
+| Amazon S3 |  ~ 12 GET requests + 10 PUT requests per file <br> GET: $0.0004 per 1000 request <br> PUT: $0.005 per 1000 request | $0.11
 | Amazon DynamoDB | ~2 write requests per file <br>  $1.25 per million write |$0.01
-| Amazon SQS | ~2 request per file <br>  $0.40 per million requests | $0.01
+| Amazon SQS | ~2 request per file <br>  $0.40 per million request | $0.01
 | Data Transfer Out | 0.09 per GB | $92.16
 | Others (For example, CloudWatch, Secrets Manager, etc.)   |  |  $1
  | | **TOTAL** |  $93.43
@@ -43,7 +43,7 @@ As of December 2021, the cost of using the solution to complete the transfer tas
 | Amazon EC2 | $0.0084 per hour (t4g.micro) |	$25.20
 | Amazon S3 |  ~ 2 GET requests + 1 PUT request per file <br> GET: $0.0004 per 1000 request <br> PUT: $0.005 per 1000 request | $622.34
 | Amazon DynamoDB | ~2 write requests per file <br>  $1.25 per million write |$268.25
-| Amazon SQS | ~2 request per file <br>  $0.40 per million requests | $85.92
+| Amazon SQS | ~2 requests per file <br>  $0.40 per million request | $85.92
 | Data Transfer Out | 0.09 per GB | $92.16
 | Others (For example, CloudWatch, Secrets Manager, etc.)  |  | $20
  | | **TOTAL** | $1113.87

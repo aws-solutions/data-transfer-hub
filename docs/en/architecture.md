@@ -8,7 +8,7 @@ The solution automatically deploys and configures a serverless architecture with
 
 1.	The solution’s static web assets (frontend user interface) are stored in [Amazon S3][s3] and made available through [Amazon CloudFront][cloudfront].
 2.	The backend APIs are provided via [AWS AppSync][appsync] GraphQL.
-3.	Users are authenticated by either [Amazon Cognito][cognito] User Pool (in AWS Regions) or by an OpenID connect provider (in AWS China Regions) such as [Authing](https://www.authing.cn/), [Auth0](https://auth0.com/), etc.
+3.	Users are authenticated by either [Amazon Cognito][cognito] User Pool (in AWS Standard Regions) or by an OpenID connect provider (in AWS China Regions) such as [Authing](https://www.authing.cn/), [Auth0](https://auth0.com/), etc.
 4.	AWS AppSync runs [AWS Lambda][lambda] to call backend APIs.
 5.	Lambda starts an [AWS Step Functions][stepfunction] workflow that uses [AWS CloudFormation][cloudformation] to start or stop/delete the ECR or S3 plugin template.
 6.	The plugin templates are hosted in a centralized Amazon S3 bucket manged by AWS.
@@ -32,7 +32,7 @@ The Amazon S3 plugin runs the following workflows:
 
 1.	A time-based Event Bridge rule triggers the AWS Fargate task to run on an hourly basis. 
 2.	The Fargate task lists all the objects in the source and destination
-buckets and determines which objects should be transferred.
+buckets, makes comparisons among objects and determines which objects should be transferred.
 3.	Fargate sends a message for each object that will be transferred to Amazon Simple Queue Service (Amazon SQS). Amazon S3 event messages can also be supported for more real-time data transfer; whenever there is object uploaded to source bucket, the event message is sent to the same SQS queue.
 4.	A JobWorker running in EC2 consumes the messages in SQS and transfers the object from the source bucket to the destination bucket. You can use an Auto Scaling Group to control the number of EC2 instances to transfer the data based on business need.
 5.	A record with transfer status for each object is stored in Amazon DynamoDB. 
@@ -55,7 +55,7 @@ The Amazon ECR plugin runs the following workflows:
 2.	Step Functions invokes AWS Lambda to retrieve the list of images from the source.
 3.	Lambda will either list all the repository content in the source Amazon ECR, or get the stored image list from System Manager Parameter Store.
 4.	The transfer task will run within Fargate in a maximum concurrency of 10. If a transfer task failed for some reason, it will automatically retry three times.
-5.	Each task uses [skopeo](https://github.com/containers/skopeo) copy to copy the images into the target ECR.
+5.	Each task uses [skopeo](https://github.com/containers/skopeo) to copy the images into the target ECR.
 6.	After the copy completes, the status (either success or fail) is logged into DynamoDB for tracking purpose.
 
 

@@ -1,8 +1,8 @@
-You can uninstall the Data Transfer Hub solution from the AWS Management Console or by using the AWS Command Line Interface. You must manually stop any active transfer tasks before uninstalling. 
+You can uninstall the Data Transfer Hub solution from the AWS Management Console or by using the AWS Command Line Interface.  
 
 !!! note "Note"
 
-    Before uninstalling, you must manually stop any active data transfer tasks.
+    Before uninstalling the solution, you must manually stop any active data transfer tasks.
 
 ## Using the AWS Management Console
 
@@ -12,7 +12,7 @@ You can uninstall the Data Transfer Hub solution from the AWS Management Console
 
 ## Using AWS Command Line Interface 
 
-1. Determine whether the AWS Command Line Interface (AWS CLI) is available in your environment. For installation instructions, refer to What Is the AWS Command Line Interface in the [AWS CLI User Guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html). 
+1. Determine whether the AWS Command Line Interface (AWS CLI) is available in your environment. For installation instructions, refer to *What Is the AWS Command Line Interface* in the [AWS CLI User Guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html). 
 2. After confirming that the AWS CLI is available, run the following command.
 
 ```shell

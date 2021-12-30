@@ -6,18 +6,18 @@ Before you launch the solution, review the cost, architecture, network security,
 Use the following steps to deploy this solution on AWS. For detailed instructions, follow the links for each step.
 
 - Step 1. Launch the stack
-    - [(Option 1) Deploy the AWS CloudFormation template in AWS Regions](#launch-cognito)
+    - [(Option 1) Deploy the AWS CloudFormation template in AWS Standard Regions](#launch-cognito)
     - [(Option 2) Deploy the AWS CloudFormation template in AWS China Regions](#launch-openid)
 - Step 2. [Launch the web console](#launch-web-console)
 - Step 3. [Create a transfer task](#create-task)
 
 
-## Step 1. (Option 1) Launch the stack in AWS Regions <a name="launch-cognito"></a>
+## Step 1. (Option 1) Launch the stack in AWS Standard Regions <a name="launch-cognito"></a>
 
 !!! warning "Important"
-    The following deployment instructions apply to AWS Regions only. For deployment in AWS China Regions refer to Option 2.  
+    The following deployment instructions apply to AWS Standard Regions only. For deployment in AWS China Regions refer to Option 2.  
 
-**Deploy the AWS CloudFormation template for Option 1 – AWS Regions**
+**Deploy the AWS CloudFormation template for Option 1 – AWS Standard Regions**
 
 !!! note "Note"
 
@@ -46,6 +46,7 @@ Use the following steps to deploy this solution on AWS. For detailed instruction
 8.	On the **Review** page, review and confirm the settings. Check the box acknowledging that the template will create AWS Identity and Access Management (IAM) resources.
 
 9.	Choose **Create stack** to deploy the stack.
+
 You can view the status of the stack in the AWS CloudFormation console in the **Status** column. You should receive a **CREATE_COMPLETE** status in approximately 15 minutes.
 
 ## Step 1. (Option 2) Launch the stack in AWS China Regions <a name="launch-openid"></a>
@@ -101,14 +102,14 @@ In AWS Regions where Amazon Cognito is not yet available, you can use OIDC to pr
     5. Reset the user password.
 
     !!! note "Note"
-        Because this Solution does not support application roles, all the users will receive admin rights. 
+        Because this solution does not support application roles, all the users will receive admin rights. 
 
 ### Prerequisite 2: Configure domain name service resolution 
 Configure domain name service (DNS) resolution to point the ICP licensed domain to the CloudFront default domain name. Optionally, you can use your own DNS resolver. 
 
-The following is an example for configuration an Amazon Route 53.
+The following is an example for configuring an Amazon Route 53.
 
-1. Create a hosted zone in Amazon Route 53. For more information refer to the [Amazon Route 53 Developer Guide](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html).
+1. Create a hosted zone in Amazon Route 53. For more information, refer to the [Amazon Route 53 Developer Guide](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html).
 
 2. Create a CNAME record for the console URL.
 
@@ -125,7 +126,7 @@ The following is an example for configuration an Amazon Route 53.
 
 **Deploy the AWS CloudFormation template for Option 2 – AWS China Regions**
 
-This automated AWS CloudFormation template deploys Data Transfer in the AWS Cloud. You must Create an ODIC User Pool and Configure DNS resolution before launching the stack.
+This automated AWS CloudFormation template deploys Data Transfer Hub in the AWS Cloud. You must Create an ODIC User Pool and Configure DNS resolution before launching the stack.
 
 !!! note "Note"
 
@@ -147,7 +148,7 @@ This automated AWS CloudFormation template deploys Data Transfer in the AWS Clou
     |----------|--------|--------|
     | **OidcProvider** | <Requires input\> |	Refers to the Issuer shown in the OIDC application configuration.  
     | **OidcClientId** | <Requires input\> |	Refers to the App ID shown in the OIDC application configuration. 
-    | **OidcCustomerDomain** | <Requires input\> | Refers to the customer domain that has completed ICP registration in China, not the subdomain provided by Authing. <br> It must start with https://.
+    | **OidcCustomerDomain** | <Requires input\> | Refers to the customer domain that has completed ICP registration in China, not the subdomain provided by Authing. <br> It must start with `https://`.
 
 6. Choose **Next**.
 
@@ -156,7 +157,8 @@ This automated AWS CloudFormation template deploys Data Transfer in the AWS Clou
 8. On the **Review** page, review and confirm the settings. Check the box acknowledging that the template will create AWS Identity and Access Management (IAM) resources.
 
 9. Choose **Create Stack** to deploy the stack. 
-    You can view the **status** of your stack in the AWS CloudFormation console in the Status column. You should receive a **CREATE_COMPLETE** status in approximately 15 minutes.
+    
+You can view the **status** of your stack in the AWS CloudFormation console in the Status column. You should receive a **CREATE_COMPLETE** status in approximately 15 minutes.
 
 ## Step 2. Launch the web console <a name="launch-web-console"></a>
 
@@ -164,12 +166,12 @@ After the stack is successfully created, navigate to the CloudFormation **Output
 
 After successful deployment, an email containing the temporary login password will be sent to the email address provided.
 
-Depending on the region where you start the stack, you can choose to access the web console from the China region or the global region.
+Depending on the region where you start the stack, you can choose to access the web console from the AWS China Regions or the AWS Standard Regions.
 
-- [Log in with Amazon Cognito User Pool (for AWS Regions)](#cognito)
+- [Log in with Amazon Cognito User Pool (for AWS Standard Regions)](#cognito)
 - [Log in with OpenID using Authing.cn (for AWS China Regions)](#openid)
 
-### (Option 1) Log in using Amazon Cognito user pool for AWS Regions <a name="cognito"></a>
+### (Option 1) Log in using Amazon Cognito user pool for AWS Standard Regions <a name="cognito"></a>
 
 1. Using a web browser, enter the **PortalURL** from the CloudFormation **Output** tab, then navigate to the Amazon Cognito console. 
 
@@ -201,12 +203,12 @@ Figure 1: Data Transfer Hub web console
 3. Specify the transfer task details.
     - Under **Source Type**, select the data source, for example, **Amazon S3**. 
 
-4. Enter **bucket name** and choose to sync **whole bucket** or **objects with a specified prefix** or **multiple objects with a specified prefix**.
+4. Enter **bucket name** and choose to sync **Full Bucket** or **Objects with a specific prefix** or **Objects with different prefixes**.
     - If the data source bucket is also in the account deployed by the solution, please select **Yes**.
         - If you need to achieve real-time incremental data synchronization, please configure whether to enable S3 event notification. Note that this option can only be configured when the program and your data source are deployed in the same area of the same account.
         - If you do not enable S3 event notification, the program will periodically synchronize incremental data according to the scheduling frequency you configure in the future.
     - If the source bucket is not in the same account where Data Transfer Hub was deployed, select **No**, then specify the credentials for the source bucket. 
-    - If you choose to synchronize objects with multiple prefixes, please transfer the prefix list file separated by rows to the root directory of the data source bucket, and then fill in the name of the file. For details, please refer to [Multi-Prefix List Configuration Tutorial](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/r2_1/docs/USING_PREFIX_LIST_CN.md)。
+    - If you choose to synchronize objects with multiple prefixes, please transfer the prefix list file separated by rows to the root directory of the data source bucket, and then fill in the name of the file. For details, please refer to [Multi-Prefix List Configuration Tutorial](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/r2_1/docs/USING_PREFIX_LIST_EN.md)。
 
 5. To create credential information, select [Secrets Manager](https://console.aws.amazon.com/secretsmanager/home) to jump to the AWS Secrets Manager console in the current region.
     - From the left menu, select **Secrets**, then choose **Store a new secret** and select the **other type of secrets** key type.
@@ -226,9 +228,9 @@ Figure 1: Data Transfer Hub web console
 7. From **Engine settings**, verify the values and modify them if necessary. We recommend to have the **minimum capacity** set to at least 1 if for incremental data transfer.
 
 8. At **Task Scheduling Settings**, select your task scheduling configuration.
-     - If you want to configure the timed task at a fixed frequency to compare the data difference on both sides of the time, please select **Fixed Rate**.
-     - If you want to configure a scheduled task through [Cron Expression](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions) to achieve a scheduled comparison of data differences on both sides, please select **Cron Expression**.
-     - If you only want to perform the data synchronization task once, please select **One Time Transfer**.
+     - If you want to configure the timed task at a fixed frequency to compare the data difference on both sides of the time, select **Fixed Rate**.
+     - If you want to configure a scheduled task through [Cron Expression](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions) to achieve a scheduled comparison of data differences on both sides, select **Cron Expression**.
+     - If you only want to perform the data synchronization task once, select **One Time Transfer**.
 
 9. From **Advanced Options**, keep the default values.
 
