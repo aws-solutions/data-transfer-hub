@@ -113,6 +113,12 @@
             <ul class="md-select__list">
               
                 <li class="md-select__item">
+                  <a href="/data-transfer-hub/en/" hreflang="en" class="md-select__link">
+                    English
+                  </a>
+                </li>
+                
+                <li class="md-select__item">
                   <a href="/data-transfer-hub/zh/" hreflang="zh-CN" class="md-select__link">
                     简体中文
                   </a>
@@ -370,17 +376,17 @@
       
         <li class="md-nav__item">
   <a href="#11" class="md-nav__link">
-    步骤1.（选项1）从全球区域启动堆栈
+    步骤1.（选项1）从全球区域启动堆栈 
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#12" class="md-nav__link">
-    步骤1.（选项2）从中国区域启动堆栈
+    步骤1.（选项2）从中国区域启动堆栈 
   </a>
   
-    <nav class="md-nav" aria-label="步骤1.（选项2）从中国区域启动堆栈">
+    <nav class="md-nav" aria-label="步骤1.（选项2）从中国区域启动堆栈 ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -411,10 +417,10 @@
       
         <li class="md-nav__item">
   <a href="#2_1" class="md-nav__link">
-    步骤2：访问网页控制台
+    步骤2：访问网页控制台 
   </a>
   
-    <nav class="md-nav" aria-label="步骤2：访问网页控制台">
+    <nav class="md-nav" aria-label="步骤2：访问网页控制台 ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -438,10 +444,10 @@
       
         <li class="md-nav__item">
   <a href="#3" class="md-nav__link">
-    步骤3：创建数据传输任务
+    步骤3：创建数据传输任务 
   </a>
   
-    <nav class="md-nav" aria-label="步骤3：创建数据传输任务">
+    <nav class="md-nav" aria-label="步骤3：创建数据传输任务 ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -540,7 +546,7 @@
   
     <li class="md-nav__item">
       <a href="../revisions/" class="md-nav__link">
-        文档发布说明
+        版本发布说明
       </a>
     </li>
   
@@ -579,17 +585,17 @@
       
         <li class="md-nav__item">
   <a href="#11" class="md-nav__link">
-    步骤1.（选项1）从全球区域启动堆栈
+    步骤1.（选项1）从全球区域启动堆栈 
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#12" class="md-nav__link">
-    步骤1.（选项2）从中国区域启动堆栈
+    步骤1.（选项2）从中国区域启动堆栈 
   </a>
   
-    <nav class="md-nav" aria-label="步骤1.（选项2）从中国区域启动堆栈">
+    <nav class="md-nav" aria-label="步骤1.（选项2）从中国区域启动堆栈 ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -620,10 +626,10 @@
       
         <li class="md-nav__item">
   <a href="#2_1" class="md-nav__link">
-    步骤2：访问网页控制台
+    步骤2：访问网页控制台 
   </a>
   
-    <nav class="md-nav" aria-label="步骤2：访问网页控制台">
+    <nav class="md-nav" aria-label="步骤2：访问网页控制台 ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -647,10 +653,10 @@
       
         <li class="md-nav__item">
   <a href="#3" class="md-nav__link">
-    步骤3：创建数据传输任务
+    步骤3：创建数据传输任务 
   </a>
   
-    <nav class="md-nav" aria-label="步骤3：创建数据传输任务">
+    <nav class="md-nav" aria-label="步骤3：创建数据传输任务 ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -697,28 +703,27 @@
 <p>您可以在亚马逊云科技上部署并使用解决方案，过程如下：</p>
 <ul>
 <li>步骤1：启动堆栈<ul>
-<li>（选项 1）从全球区域启动堆栈</li>
-<li>（选项 2）从中国区域启动堆栈</li>
+<li><a href="#launch-cognito">（选项 1）从全球区域启动堆栈</a></li>
+<li><a href="#launch-openid">（选项 2）从中国区域启动堆栈</a></li>
 </ul>
 </li>
-<li>步骤2：访问网页控制台</li>
-<li>步骤3：创建数据传输任务</li>
+<li>步骤2：<a href="#launch-web-console">访问网页控制台</a></li>
+<li>步骤3：<a href="#create-task">创建数据传输任务</a></li>
 </ul>
-<h2 id="11">步骤1.（选项1）从全球区域启动堆栈</h2>
+<h2 id="11">步骤1.（选项1）从全球区域启动堆栈 <a name="launch-cognito"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">重要提示</p>
 <p>以下部署说明仅适用于全球区域。有关中国区域的部署说明，请参阅（选项2）从中国区域部署。</p>
 </div>
 <p><strong>从全球区域部署AWS CloudFormation模板</strong></p>
-<p>此自动化AWS CloudFormation模板从亚马逊云科技全球区域部署数据传输解决方案。启动堆栈之前，请务必完成前提条件。</p>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
 <p>您需要承担运行数据传输解决方案时使用亚马逊云科技各项服务的成本费用。想要了解详细信息，请参阅本实施指南中的成本章节，以及解决方案中使用的每项服务的定价页面。</p>
 </div>
 <ol>
 <li>
-<p>登录到Amazon Web Services管理控制台，选择按钮以启动 <code>DataTransferHub-cognito.template</code> 模板。 您还可以选择直接<a href="https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template">下载模板</a>进行部署。</p>
-<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
+<p>登录到Amazon Web Services管理控制台，选择按钮以启动 <code>DataTransferHub-cognito.template</code> 模板。 您还可以选择直接<a href="https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template">下载模板</a>进行部署。</p>
+<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&amp;templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
 </li>
 <li>
 <p>默认情况下，该模板将在您登录控制台后默认的区域启动，即美国东部（弗吉尼亚北部）区域。若需在指定的区域中启动该解决方案，请在控制台导航栏中的区域下拉列表中选择。</p>
@@ -762,7 +767,7 @@
 </li>
 </ol>
 <p>您可以在Amazon CloudFormation控制台的<strong>状态</strong>列中查看堆栈的状态。正常情况下，大约15分钟内可以看到状态为<strong>CREATE_COMPLETE</strong>。</p>
-<h2 id="12">步骤1.（选项2）从中国区域启动堆栈</h2>
+<h2 id="12">步骤1.（选项2）从中国区域启动堆栈 <a name="launch-openid"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">重要提示</p>
 <p>以下部署说明仅适用于中国区域。有关全球区域的部署说明，请参阅（选项1）从全球区域部署。</p>
@@ -788,7 +793,7 @@
 <li>
 <p>更新授权配置。</p>
 <ol>
-<li>从左侧边栏选择并进入<strong>应序</strong>界面，选择<strong>应用配置</strong>，然后选择<strong>授权配置</strong>。</li>
+<li>从左侧边栏选择并进入<strong>应用</strong>界面，选择<strong>应用配置</strong>，然后选择<strong>授权配置</strong>。</li>
 <li><strong>授权模式</strong>选择<strong>implicit</strong>，返回类型选择<strong>id_token</strong>。</li>
 <li>id_token签名算法修改为<strong>RS256</strong>。</li>
 <li>选择<strong>保存</strong>。</li>
@@ -797,7 +802,7 @@
 <li>
 <p>配置回调链接。</p>
 <ol>
-<li>从左侧边栏选择并进入<strong>应序</strong>界面，选择<strong>应用配置</strong>，然后选择<strong>认证配置</strong>。</li>
+<li>从左侧边栏选择并进入<strong>应用</strong>界面，选择<strong>应用配置</strong>，然后选择<strong>认证配置</strong>。</li>
 <li>将登录回调URL修改为 <code>https://&lt;your-custom-domain&gt;/authentication/callback</code>。</li>
 <li>选择<strong>保存</strong>。</li>
 </ol>
@@ -809,7 +814,7 @@
 <li>
 <p>更新登录控制。</p>
 <ol>
-<li>从左侧边栏选择并进入<strong>应序</strong>界面，选择<strong>登录控制</strong>，然后选择<strong>登录注册方式</strong>。</li>
+<li>从左侧边栏选择并进入<strong>应用</strong>界面，选择<strong>登录控制</strong>，然后选择<strong>登录注册方式</strong>。</li>
 <li>登录方式请只选择<strong>密码登录：邮箱</strong>。</li>
 <li>请<strong>取消勾选</strong>注册方式方式内的所有选项。</li>
 <li>选择<strong>保存</strong>。</li>
@@ -863,8 +868,8 @@
 </div>
 <ol>
 <li>
-<p>登录到Amazon Web Services管理控制台，选择按钮以启动 <code>DataTransferHub-openid.template</code> 模板。您还可以选择直接<a href="https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-openid.template">下载模板</a>进行部署。</p>
-<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
+<p>登录到Amazon Web Services管理控制台，选择按钮以启动 <code>DataTransferHub-openid.template</code> 模板。您还可以选择直接<a href="https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template">下载模板</a>进行部署。</p>
+<p><a href="https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&amp;templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
 </li>
 <li>
 <p>模板将在您的默认区域启动。要在不同的区域中启动解决方案，请使用控制台导航栏中的区域选择器。</p>
@@ -908,7 +913,7 @@
 <li>选择<strong>创建堆栈</strong>以部署堆栈。</li>
 </ol>
 <p>您可以在Amazon CloudFormation控制台的<strong>状态</strong>列中查看堆栈的状态。正常情况下，大约15分钟内可以看到状态为<strong>CREATE_COMPLETE</strong>。</p>
-<h2 id="2_1">步骤2：访问网页控制台</h2>
+<h2 id="2_1">步骤2：访问网页控制台 <a name="launch-web-console"></a></h2>
 <p>在堆栈创建成功后，您可在AWS CloudFormation的<strong>输出</strong>标签页中查看访问网页控制台需要的信息（<strong>PortalUrl</strong>）。</p>
 <p>成功部署后，包含临时登录密码的电子邮件将发送到提供的电子邮件地址。</p>
 <p>根据您启动堆栈的区域情况，您可以选择从中国区域或全球区域访问网页控制台。</p>
@@ -935,7 +940,7 @@
 <li>输入您在部署解决方案时注册的用户名和密码，然后选择登录。系统将打开网页控制台。</li>
 <li>更改您的密码，然后重新登录。</li>
 </ol>
-<h2 id="3">步骤3：创建数据传输任务</h2>
+<h2 id="3">步骤3：创建数据传输任务 <a name="create-task"></a></h2>
 <p>您可以选择为Amazon S3或Amazon ECR创建传输任务。</p>
 <p><img alt="dth-console" src="../images/dth-console.png" /></p>
 <p>图1：网页控制台</p>
