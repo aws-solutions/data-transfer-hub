@@ -1,0 +1,393 @@
+{
+  "title": "Data Transfer Hub",
+  "yes": "Yes",
+  "no": "No",
+  "signOut": "Sign Out",
+  "reLogin": "Login Again",
+  "reLoignTips": "This session has expired. To log in to Data Transfer Hub again, please click Login Again.",
+  "info": "Info",
+  "optional": "optional",
+  "recommened": "Recommened",
+  "top": {
+    "account": "Account"
+  },
+  "leftBar": {
+    "title": "Data Transfer Hub",
+    "taskList": "Tasks"
+  },
+  "breadCrumb": {
+    "home": "Data Transfer Hub",
+    "create": "Create Task",
+    "list": "List",
+    "tasks": "Tasks"
+  },
+  "step": {
+    "oneTitle": "Step1",
+    "oneDesc": "Select engine type",
+    "twoTitle": "Step2",
+    "twoDesc": "Specify task details",
+    "threeTitle": "Step3",
+    "threeDesc": "Review and create"
+  },
+  "home": {
+    "title": {
+      "createTitle": "Create Transfer Task",
+      "quickStart": "Quick Start",
+      "moreResouce": "More Resources",
+      "destinationType": "Destination Type"
+    }
+  },
+  "creation": {
+    "s3plugin": {
+      "name": "Amazon S3 Transfer Engine",
+      "desc": "Transfer objects from different sources into Amazon S3.",
+      "feat1": "Transfer Amazon S3 objects between Amazon Web Services regions",
+      "feat2": "Transfer objects from Aliyun OSS / Tencent COS / Qiniu Kodo",
+      "feat3": "Large file support",
+      "feat4": "Support S3 Event trigger",
+      "feat5": "Support Transfer with object metadata",
+      "feat6": "Support incremental data transfer",
+      "feat7": "Support transfer from S3 compatible storage",
+      "feat8": "Auto retry and error handling",
+      "edition": "Edition"
+    },
+    "ecrPlugin": {
+      "name": "Amazon ECR Transfer Engine",
+      "desc": "Transfer container images from different container registries into Amazon Elastic Container Registry (ECR).",
+      "feat1": "Transfer Amazon ECR images between Amazon Web Services regions.",
+      "feat2": "Transfer from Docker Hub, GCR.io, Quay.io etc.",
+      "feat3": "Parallel Transfer",
+      "feat4": "Support public container images",
+      "feat5": "Support Selective container images",
+      "feat6": "Serverless architect, no minimum cost"
+    },
+    "sourceType": {
+      "amazonS3Name": "Amazon S3",
+      "aliyunOSSName": "Aliyun OSS",
+      "qiniuKodoName": "Qiniu Kodo",
+      "tencentCOSName": "Tencent COS",
+      "googleGCSName": "Google GCS",
+      "compatibleName": "Amazon S3 Compatible Storage"
+    },
+    "tips": {
+      "requiredCredential": "Please select a Secret Key in Secrets Manager",
+      "store1": "Select the",
+      "store2": "Secrets Manager",
+      "store3": "which stores the credentials. Leave it blank for open bucket."
+    },
+    "step1": {
+      "engineType": "Select engine type",
+      "engineOptions": "Engine options"
+    },
+    "step2": {
+      "taskDetail": "Specify task details",
+      "sourceType": "Source Type",
+      "selectSourceType": "Select the source type among various providers.",
+      "settings": {
+        "source": {
+          "title": "Source settings",
+          "bucketName": "Bucket Name",
+          "srcEndpoint": "Endpoint URL",
+          "srcEndpointDesc": "Source Endpoint URL, leave blank unless you want to use a custom Endpoint URL.",
+          "bucketDesc": "Input the bucket name.",
+          "srcInAccount": "Is Bucket in this account?",
+          "srcInAccountDesc": "Select Yes, if the bucket is in the same Amazon Web Services account as Data Transfer Hub.",
+          "srcRegionName": "Region Name",
+          "srcRegionNameDesc": "You can enter region name or region code.",
+          "enableS3Event": "Enable S3 Event?",
+          "enableS3EventDesc1": "Whether to enable ",
+          "enableS3EventDesc2": "S3 Event Notifications",
+          "enableS3EventDesc3": " to trigger the transfer.",
+          "objectPrefix": "Bucket Object Prefix",
+          "prefixDesc": "It will only transfer objects with the provided prefix.",
+          "includeMetadata": "Include Object Metadata?",
+          "includeMetadataDesc1": "Copy of ",
+          "includeMetadataDesc2": "Object Metadata.",
+          "includeMetadataDesc3": " This will have additional API cost.",
+          "objectACL": "Object ACL",
+          "objectACLDesc1": "Select the ",
+          "objectACLDesc2": "Object ACL.",
+          "objectACLDesc3": " Use the default value if you don't want to set the object ACL."
+        },
+        "dest": {
+          "title": "Destination settings",
+          "bucketName": "Bucket Name",
+          "bucketDesc": "Input the bucket name.",
+          "destInAccount": "Is Bucket in this account?",
+          "destInAccountDesc": "Select Yes, if the bucket is in the same Amazon Web Services account as Data Transfer Hub.",
+          "objectPrefix": "Prefix to Insert",
+          "prefixDesc": "The data transfer engine will insert this prefix for all objects. It will automatically append ‘/‘.",
+          "storageClass": "Storage Class",
+          "storageClassDesc": "Objects will be stored with the selected storage class.",
+          "destRegionName": "Region Name",
+          "destRegionNameDesc": "You can enter region name or region code."
+        },
+        "credential": {
+          "title": "Credentials",
+          "whitch": "Which bucket in current Amazon Web Services account?",
+          "whitchDesc": "Select Source if your source bucket is in the same account as Data Transfer Hub. Otherwise, select Destination.",
+          "store": "Secret key name in Secrets Manager",
+          "storeDesc": "Choose the Secret key in Secrets Manager."
+        },
+        "advance": {
+          "title": "Engine settings",
+          "professionTitle": "Advanced Options",
+          "lambdaMemory": "Lambda Memory",
+          "LambdaMemoryDesc": "Set the default Lambda memory, default is 256 MB.",
+          "multipartThreshold": "Multipart Threshold",
+          "multipartThresholdDesc": "Threshold size for multipart upload in MB, default is 10 MB.",
+          "chunkSize": "Chunk Size",
+          "chunkSizeDesc": "Chunk size for multipart upload in MB, default is 5 MB.",
+          "maxThreads": "Max Threads",
+          "maxThreadsDesc": "Max threads to run multipart upload in Lambda, default is 10.",
+          "maximumCapacity": "Maximum Capacity",
+          "maximumCapacityDesc": "Maximum number of Graviton2 instances.",
+          "minimumCapacity": "Minimum Capacity",
+          "minimumCapacityDesc": "Minimum number of Graviton2 instances.",
+          "desiredCapacity": "Desired Capacity",
+          "desiredCapacityDesc": "Desired number of Graviton2 instances.",
+          "finderDepth": "Finder Depth",
+          "finderDepthDesc": "The depth of sub folders to compare in parallel. 0 means comparing all objects in sequence.",
+          "finderNumber": "Finder Number",
+          "finderNumberDesc": "The number of find threads to run in parrallel.",
+          "workerThreadsNumber": "Worker Threads Number",
+          "workerThreadsNumberDesc": "The number of worker threads to run in one insance."
+        },
+        "more": {
+          "title": "More",
+          "description": "Description",
+          "descriptionDesc": "Input the description of the task.",
+          "email": "Alarm Email",
+          "emailDesc": "Notification will be sent to this email if any errors."
+        }
+      }
+    },
+    "step2ECR": {
+      "taskDetail": "Specify task details",
+      "sourceType": "Source Type",
+      "selectContainerType": "Select container registry type",
+      "settings": {
+        "source": {
+          "title": "Source settings",
+          "sourceRegion": "Source Region",
+          "sourceRegionDesc": "You can enter region name or region code.",
+          "sourceInAccount": "Is source in this account?",
+          "sourceInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
+          "accountId": "Amazon Web Services Account ID",
+          "accountIdTips": "Enter the Amazon Web Services Account ID (12 digits).",
+          "credentialsStore": "Credentials Store ",
+          "tips": "Please select a Secret Key in Secrets Manager",
+          "dockerImages": "Container Images",
+          "dockerImagesDesc": "Select the container images to transfer.",
+          "imageList": "Image List",
+          "image1": "Enter all images in format of",
+          "image2": "image-name",
+          "image3": "tag",
+          "image4": "delimited by comma. If tag is ommited, the latest tag will be used."
+        },
+        "dest": {
+          "title": "Destination settings",
+          "destinationRegion": "Destination Region",
+          "destinationRegionDesc": "You can enter region name or region code.",
+          "regionRequired": "Destination region required",
+          "destInAccount": "Is destination in this account?",
+          "destInAccountDesc": "Select YES, if the Amazon ECR is in current account.",
+          "credentialsStore": "Credentials Store ",
+          "tips": "Please select a Secret Key",
+          "prefix": "Prefix",
+          "optional": "optional",
+          "prefixDesc": "Add the prefix to all images. Default is none."
+        },
+        "more": {
+          "title": "More",
+          "description": "Description",
+          "descriptionDesc": "Description about this task",
+          "email": "Alarm Notification",
+          "optional": "optional",
+          "emailDesc": "Receive notificaiton when transfer failed."
+        }
+      }
+    },
+    "step3": {
+      "reviewTitle": "Review task",
+      "step1Title": "Step 1: Select engine type",
+      "step1Engine": "Engine",
+      "step1EngineSubEngine": "Engine",
+      "step1EngineSubEngineECRDesc": "Amazon ECR Transfer Engine v1.0",
+      "step1Type": "type",
+      "step1TypeDesc": "Serverless Edition. Serverless edition is ideal for real-time transfer, and you pay as you go.",
+      "step2Detail": "Step 2: Specify task details",
+      "step2TaskParams": "Task Parameters",
+      "step2Params": "Parameter",
+      "step2Value": "Value",
+      "credential": "Credentials",
+      "credentialDesc": "Please create a Secret Key in Secrets Manager, you can use default name drh-credentials (optional), select SecureString as its type, and put a Value following below format.",
+      "credentialCopied": "Copied"
+    }
+  },
+  "taskList": {
+    "title": "Tasks",
+    "stopTask": "Stop Task",
+    "tips": {
+      "selectTask": "Please select a task",
+      "selectTaskStop": "Please select a task to stop",
+      "confimStop": "Are you sure you want to stop the Task",
+      "successMsg": "Task created successfully"
+    },
+    "table": {
+      "taskId": "Task ID",
+      "source": "Source",
+      "destination": "Destination",
+      "engineType": "Engine Type",
+      "status": "Status",
+      "createdTime": "Created time"
+    }
+  },
+  "taskDetail": {
+    "title": "",
+    "stopTask": "Stop Task",
+    "stopTaskTips": "Are you sure you want to stop this Task?",
+    "generalConfig": "General configuration",
+    "engine": "Engine",
+    "plugin": "S3 Transfer Plugin v1.3",
+    "pluginECR": "Amazon ECR Plugin v1.0",
+    "sourceType": "Source Type",
+    "repStatus": "Status",
+    "details": "Details",
+    "taskId": "Task ID",
+    "createdAt": "Created At",
+    "status": "Status",
+    "inProgress": "Transfer in progress",
+    "totalObjects": "Total Objects",
+    "repObjects": "Transfered Objects",
+    "srcEndpoint": "Source Endpoint URL",
+    "srcRegion": "Source Region",
+    "srcName": "Source Bucket Name",
+    "srcPrefix": "Source Bucket Prefix",
+    "srcInThisAccount": "Bucket in This Account?",
+    "destS3Region": "Destination Region",
+    "destName": "Destination Bucket Name",
+    "destPrefix": "Destination Bucket Prefix",
+    "destInThisAccount": "Bucket in This Account?",
+    "credentials": "Paramete Store for credentials",
+    "images": "Images",
+    "option": "Options",
+    "description": "Description",
+    "alarmEmail": "Alarm Email",
+    "alarmEmailECR": "Alarm Notification",
+    "sourceRegion": "Source Region",
+    "sourceInAccount": "Is Source in current account?",
+    "srcAccountId": "Source Account Id",
+    "srcCredential": "Source Credential",
+    "destRegion": "Destination Region",
+    "destInAccount": "Is Destination in current account?",
+    "accountId": "Amazon Web Services Account ID",
+    "credentialStore": "Credential Store",
+    "prefix": "Prefix",
+    "taskMetrics": "Task Metrics",
+    "dashboard": "CloudWatch Dashboard",
+    "enableS3Event": "Enable S3 Event?",
+    "storageClass": "Storage Class",
+    "copyMetadata": "Copy Metadata?",
+    "engineSettings": "Engine Settings",
+    "lambdaMemory": "Lambda Memory",
+    "multipartUploadThreshold": "Multipart Upload Threshold",
+    "chunkSize": "Chunk Size",
+    "maxThreads": "Max Threads",
+    "maximumInstances": "Maximum Instances",
+    "minimumInstances": "Minimum Instances",
+    "desiredInstances": "Desired Instances",
+    "advancedSettings": "Advanced Settings",
+    "finderDepth": "Finder Depth",
+    "finderNumber": "Finder Number",
+    "workerThreadsNumber": "Worker Threads Number"
+  },
+  "bottom": {
+    "copy": "© 2008 - 2021, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
+    "feedback": "Feedback",
+    "privacy": "Privacy Policy",
+    "use": "Terms of Use"
+  },
+  "btn": {
+    "next": "Next Step",
+    "prev": "Previous",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "copy": "Copy",
+    "stop": "Stop",
+    "createTask": "Create Task",
+    "viewDetail": "View Details",
+    "taskAction": "Task Action",
+    "stopTask": "Stop Task",
+    "cloneTask": "Clone Task",
+    "reLogin": "Login Again"
+  },
+  "tips": {
+    "error": {
+      "sourceBucketRequired": "Source Bucket Name is Required",
+      "sourceBucketNameInvalid": "Source Bucket Name is Invalid",
+      "destBucketRequired": "Destination Bucket Name is Required",
+      "destBucketNameInvalid": "Destination Bucket Name is Invalid",
+      "srcRegionRequired": "Source Region is Required",
+      "srcEndpointInvalid": "Endpoint URL is Invalid",
+      "destRegionRequired": "Destination Region is Required",
+      "destPrefixInvalid": "Do not append / at the end of the prefix",
+      "emailRequired": "Alarm Email is required",
+      "emailValidate": "Alarm Email must be validate",
+      "credentialRequired": "Secret Key is Required"
+    }
+  },
+  "comps": {
+    "credential": {
+      "name": "Credentials",
+      "create": "Create a",
+      "store": "Secret Key",
+      "save1": "in Secrets Manager. Select ",
+      "save2": " Other type of secrets ",
+      "save3": " as the type.",
+      "format": "Format",
+      "formatDesc": "Copy the following credential, and replace with your own value in the plaintext tab.",
+      "learnMore": "Learn more ",
+      "createStore": "Creating a secret"
+    },
+    "engineSettings": {
+      "name": "Engine settings",
+      "tip1": "This is the advanced settings to tune the performance of the application.",
+      "tip2": "Recommend to adjust this settings only under the guidance of Amazon Web Services Solutions Architect."
+    },
+    "engineEdition": {
+      "name": "Engine Edition",
+      "learnMore": "Learn more ",
+      "tip1": "Choose the right data transfer engine for the task.",
+      "tip2": "Use the Graviton2 instances to read and write to the buckets.",
+      "tip3": "is enabled in this edition which can provide better network performance. Especially recommend for data transfer between Amazon Web Services regions.",
+      "tip4": "Amazon Lambda has its advantage in concurrency. Every Amazon Web Services Account can have 1000 maximum concurrency by default.",
+      "learnMoreTitle": "How to enable TCP BBR to improve network speed on Linux?"
+    },
+    "s3BucketSrcPrefix": {
+      "name": "Object Prefix",
+      "desc": "The S3 transfer engine will transfer the objects with the certain prefix only. For example, prefix photos will match objects like photos/a.jpg, photos.jpg or photosa.jpg.",
+      "linkName": "Organizing objects using prefixes"
+    },
+    "s3BucketDestPrefix": {
+      "name": "Prefix to Insert",
+      "tips1": "The S3 transfer engine will insert the prefix before all objects. Leave it empty if you don’t want to insert prefix.",
+      "tips2": "For example, if the prefix is ",
+      "codeTips0": "prefix",
+      "tips2_1": " and the object key in source bucket is ",
+      "codeTips1": "abc/test.jpg",
+      "tips3": ". Then the object key in destination bucket is",
+      "codeTips2": "prefix/abc/test.jpg",
+      "tips4": "Do not include the ",
+      "codeTips3": "/",
+      "tips5": "at the end of the prefix. The engine will append it automatically.",
+      "linkName": "Organizing objects using prefixes"
+    },
+    "engineSettingsEC2": {
+      "name": "Engine settings",
+      "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimun,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
+      "tip2": "You can adjust these numbers on Amazon Web Services Console after creating the task.",
+      "linkName": "Adjust the Auto Scaling Group to change the transfer concurrency."
+    }
+  }
+}

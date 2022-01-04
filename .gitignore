@@ -1,0 +1,31 @@
+.vscode
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# aws-exports
+aws-exports.json
+
+
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+global-s3-assets
+regional-s3-assets
+
+# Parcel build directories
+.cache
+.build
+
+Config
+*.js

@@ -1,0 +1,8 @@
+{
+  "short_name": "dth",
+  "name": "Data Transfer Hub Portal",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
