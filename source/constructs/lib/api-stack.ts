@@ -398,8 +398,8 @@ export class ApiStack extends Construct {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['cdk/*', 'layer/*']
       }),
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'api/api-sm-param.handler',
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: 'api/api-sm-param.lambda_handler',
       timeout: Duration.seconds(60),
       memorySize: 128,
     })
