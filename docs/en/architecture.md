@@ -1,6 +1,6 @@
 Deploying the Data Transfer Hub solution with the default parameters builds the following environment in the AWS Cloud.
 
-![architecture](./images/arch.svg)
+![architecture](./images/arch-global.svg)
       
 Figure 1: Data Transfer Hub architecture on AWS
 
@@ -16,7 +16,7 @@ The solution automatically deploys and configures a serverless architecture with
 8.	The data transfer task information is stored in in [Amazon DynamoDB][dynamodb].
 
 !!! note "Important"
-    If you deploy this solution in AWS (Beijing) Region operated by Beijina Sinnet Technology Co., Ltd. (Sinnet), or the AWS (Ningxia) Region operated by Ningxia Western Cloud Data Technology Co., Ltd. ( ), you are required to provide a domain with ICP Recordal before you can access the web console.
+    If you deploy this solution in AWS (Beijing) Region operated by Beijing Sinnet Technology Co., Ltd. (Sinnet), or the AWS (Ningxia) Region operated by Ningxia Western Cloud Data Technology Co., Ltd. ( ), you are required to provide a domain with ICP Recordal before you can access the web console.
 
 The web console is a centralized place to create and manage all data transfer jobs. Each data type (for example, Amazon S3 or Amazon ECR) is a plugin for Data Transfer Hub, and is packaged as an AWS CloudFormation template hosted in an S3 bucket that AWS owns. When the you create a transfer task, an AWS Lambda function initiates the Amazon CloudFormation template, and state of each task is stored and displayed in the DynamoDB tables.
 

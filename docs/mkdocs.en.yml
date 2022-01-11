@@ -11,7 +11,7 @@ nav:
   - Solution components: solution-components.md
   - Security: security.md
   - Supported regions: regions.md
-  - AWS CloudFormation template: template.md
+  - CloudFormation template: template.md
   - Automated deployment: deployment.md
   - Additional resources: additional-resources.md
   - Uninstall the solution: uninstall.md

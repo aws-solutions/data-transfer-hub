@@ -1,6 +1,6 @@
 使用默认参数部署数据传输解决方案后，在亚马逊云科技中构建的环境如下图所示。
 
-![architecture-cn](./images/arch-cn.svg)
+![architecture-cn](./images/arch-global.svg)
       
 图1：解决方案架构
 

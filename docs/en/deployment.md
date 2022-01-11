@@ -53,7 +53,7 @@ You can view the status of the stack in the AWS CloudFormation console in the **
 
 !!! warning "Important"
 
-    The following deployment instructions apply to AWS China Regions only. For deployment in AWS Regions refer to Option 1.  
+    The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions refer to Option 1.  
 
 ### Prerequisites
 1.	Create an OIDC User Pool. 
@@ -235,8 +235,8 @@ Figure 1: Data Transfer Hub web console
 9. From **Advanced Options**, keep the default values.
 
 10. At **Need Data Comparison before Transfer**, select your task configuration.
-     -If you want to skip the data comparison process and transfer all files, please select **Yes**.
-     -If you only want to synchronize files with differences, please select **No**.
+     -If you want to skip the data comparison process and transfer all files, please select **No**.
+     -If you only want to synchronize files with differences, please select **Yes**.
 
 11. An email address must be provided in **Alarm Email**.
 

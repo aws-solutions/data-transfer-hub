@@ -51,7 +51,7 @@ For example, using the same configuration, the transfer speed with an average fi
 
  The solution adopts the following to ensure data security:
 
-- All data is transfered in the memory in the transfer node cluster, without being placed on the disk.
+- All data is transferred in the memory in the transfer node cluster, without being placed on the disk.
 - The external ports of all transfer nodes are closed, and there is no way to SSH into the transfer node.
 - All data download and upload bottom layers are calling AWS official API, and data transfer conforms to the **TLS protocol**.
 
@@ -83,7 +83,7 @@ The data difference between the data source and destination will be monitored co
 
 Moreover, when the default comparison task once an hour finds a difference, it will also transfer the difference data. Therefore, the status of the Task will always be in progress, unless the user manually terminates the task.
 
-Based on the built-in automatic expansion function of the solution, when there is no data to be transfered, the number of transfer working nodes will be automatically reduced to the minimum value configured by the user.
+Based on the built-in automatic expansion function of the solution, when there is no data to be transferred, the number of transfer working nodes will be automatically reduced to the minimum value configured by the user.
 
 **3. How often will the data difference between the data source and destination be compared？**</br>
 
@@ -92,7 +92,7 @@ By default, it runs hourly.
 At **Task Scheduling Settings**, you can make the task scheduling configuration.
 
 - If you want to configure the timed task at a fixed frequency to compare the data difference on both sides of the time, select **Fixed Rate**.
-- If you want to configure a scheduled task through [Cron Expression](https://docs.aws.amazon.com/AmazonCloudWatch/latest/eventScheduledEvents.html#CronExpressions) to achieve a scheduled comparison of data differences on both sides, select **CroExpression**.
+- If you want to configure a scheduled task through [Cron Expression](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions) to achieve a scheduled comparison of data differences on both sides, select **CroExpression**.
 - If you only want to perform the data synchronization task once, select **One Time Transfer**.
 
 **4. Is it possible for real-time synchronization of newly added files?**</br>
@@ -121,7 +121,7 @@ Please check whether the Credential stored in Secrets Manager has the proper per
 
 The Auto Scaling mechanism of the solution will enable automatic restart of a new working node. 
 
-However, if a sharding task being transfered in the node is mistakenly terminated, it may cause that the files to which the shard belongs cannot be merged on the destination side, and the error "api error NoSuchUpload: The specified upload does not exist. The upload ID may be invalid, or the upload may have been aborted or completed" occurs. You need to configure lifecycle rules for [Delete expired delete markers or incomplete multipart uploads](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html) in the Amazon S3 bucket. 
+However, if a sharding task being transferred in the node is mistakenly terminated, it may cause that the files to which the shard belongs cannot be merged on the destination side, and the error "api error NoSuchUpload: The specified upload does not exist. The upload ID may be invalid, or the upload may have been aborted or completed" occurs. You need to configure lifecycle rules for [Delete expired delete markers or incomplete multipart uploads](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html) in the Amazon S3 bucket. 
 
 **3. The Secrets configuration in Secrets Manager is wrong. How to resolve it?**</br>
 

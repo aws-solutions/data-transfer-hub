@@ -30,7 +30,7 @@ As of December 2021, the cost of using the solution to complete the transfer tas
 
 ### Example 2
 
-As of December 2021, transfer 1 TB of S3 files from AWS Oregon region (us-west-2) to Mainland China Beijing Region (cn-north-1), the average file size is **10KB**.
+As of December 2021, transfer 1 TB of S3 files from AWS Oregon region (us-west-2) to China Beijing Region (cn-north-1), the average file size is **10KB**.
 
 - Total files: ~107,400,000
 - Average speed per EC2 instance: ~6MB/min (~10 files per sec)
