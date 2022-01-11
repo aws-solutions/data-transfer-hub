@@ -35,3 +35,4 @@ artifacts:
     - buildspec.yml
     - CHANGELOG.md
     - .cfnnag_*
+    - docs/**/*
