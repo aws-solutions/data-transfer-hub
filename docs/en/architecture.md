@@ -2,7 +2,7 @@ Deploying the Data Transfer Hub solution with the default parameters builds the 
 
 ![architecture](./images/arch-global.svg)
       
-Figure 1: Data Transfer Hub architecture on AWS
+Figure 1: Data Transfer Hub architecture
 
 The solution automatically deploys and configures a serverless architecture with the following services: 
 
@@ -24,7 +24,7 @@ As of December 2021, the solution supports two data transfer plugins: an Amazon 
 
 ## Amazon S3 plugin
 
-![s3-architecture-cn](./images/s3-arch.svg)
+![s3-architecture](./images/s3-arch-global.svg)
 
 Figure 2: Data Transfer Hub Amazon S3 plugin architecture
 
@@ -45,7 +45,7 @@ buckets, makes comparisons among objects and determines which objects should be 
 
 ## Amazon ECR plugin
 
-![ecr-architecture](./images/ecr-arch.svg)
+![ecr-architecture](./images/ecr-arch-global.svg)
 
 Figure 3: Data Transfer Hub Amazon ECR plugin architecture
 
