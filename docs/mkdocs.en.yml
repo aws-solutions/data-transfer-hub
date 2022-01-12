@@ -1,5 +1,5 @@
 INHERIT: ./mkdocs.base.yml
-docs_dir: en
+docs_dir: en-base
 site_dir: ./site/en
 theme:
   language: en
