@@ -1,6 +1,6 @@
 Deploying the Data Transfer Hub solution with the default parameters builds the following environment in the Amazon Web Services Cloud.
 
-![architecture-cn](./images/arch-cn.svg)
+![architecture-cn](./images/arch-cn.png)
       
 Figure 1: Data Transfer Hub architecture on Amazon Web Services
 
@@ -24,7 +24,7 @@ As of December 2021, the solution supports two data transfer plugins: an Amazon 
 
 ## Amazon S3 plugin
 
-![s3-architecture-cn](./images/s3-arch-cn.svg)
+![s3-architecture-cn](./images/s3-arch-cn.png)
 
 Figure 2: Data Transfer Hub Amazon S3 plugin architecture
 
@@ -45,7 +45,7 @@ buckets, makes comparisons among objects and determines which objects should be 
 
 ## Amazon ECR plugin
 
-![ecr-architecture-cn](./images/ecr-arch-cn.svg)
+![ecr-architecture-cn](./images/ecr-arch-cn.png)
 
 Figure 3: Data Transfer Hub Amazon ECR plugin architecture
 
