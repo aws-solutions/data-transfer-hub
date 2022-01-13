@@ -1,6 +1,6 @@
 使用默认参数部署数据传输解决方案后，在亚马逊云科技中构建的环境如下图所示。
 
-![architecture](./images/arch-global.svg)
+![architecture](./images/arch-global.png)
       
 图1：解决方案架构
 
@@ -24,7 +24,7 @@
 截至2021年12月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。
 ## Amazon S3插件
 
-![s3-architecture](./images/s3-arch-global.svg)
+![s3-architecture](./images/s3-arch-global.png)
 
 图2：Amazon S3插件架构
 
@@ -44,7 +44,7 @@
 
 ## Amazon ECR插件
 
-![ecr-architecture](./images/ecr-arch-global.svg)
+![ecr-architecture](./images/ecr-arch-global.png)
 
 图3：Amazon ECR插件架构
 
