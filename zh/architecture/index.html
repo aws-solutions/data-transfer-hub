@@ -522,7 +522,7 @@
   <h1>架构概览</h1>
 
 <p>使用默认参数部署数据传输解决方案后，在亚马逊云科技中构建的环境如下图所示。</p>
-<p><img alt="architecture-cn" src="../images/arch-cn.svg" /></p>
+<p><img alt="architecture" src="../images/arch-global.png" /></p>
 <p>图1：解决方案架构</p>
 <p>本解决方案在您的亚马逊云科技账户中部署AWS CloudFormation模板并完成以下设置。</p>
 <ol>
@@ -542,7 +542,7 @@
 <p>网页控制台用于集中创建和管理所有数据传输任务。每种数据类型（例如，Amazon S3或Amazon ECR）都是插件，并打包为AWS CloudFormation模板，托管在Amazon S3存储桶中。当您创建传输任务时，AWS Lambda函数会启动AWS CloudFormation模板，并且每个任务的状态都会存储并显示在Amazon DynamoDB表中。</p>
 <p>截至2021年12月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。</p>
 <h2 id="amazon-s3">Amazon S3插件</h2>
-<p><img alt="s3-architecture-cn" src="../images/s3-arch-cn.svg" /></p>
+<p><img alt="s3-architecture" src="../images/s3-arch-global.png" /></p>
 <p>图2：Amazon S3插件架构</p>
 <p>使用Amazon S3插件的工作流程如下：</p>
 <ol>
@@ -559,7 +559,7 @@
 <p>如果对象（或对象的一部分）传输失败，JobWorker释放队列中的消息，待消息在队列中可见后再次传输对象（默认可见性超时设置为15分钟）。如果传输再次失败，消息将发送到死信队列，同时还将发送通知警报。</p>
 </div>
 <h2 id="amazon-ecr">Amazon ECR插件</h2>
-<p><img alt="ecr-architecture-cn" src="../images/ecr-arch-cn.svg" /></p>
+<p><img alt="ecr-architecture" src="../images/ecr-arch-global.png" /></p>
 <p>图3：Amazon ECR插件架构</p>
 <p>使用Amazon ECR插件的工作流程如下：</p>
 <ol>

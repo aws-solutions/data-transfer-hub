@@ -366,7 +366,7 @@
   
     <li class="md-nav__item">
       <a href="../template/" class="md-nav__link">
-        AWS CloudFormation template
+        CloudFormation template
       </a>
     </li>
   
@@ -520,8 +520,8 @@
   <h1>Architecture overview</h1>
 
 <p>Deploying the Data Transfer Hub solution with the default parameters builds the following environment in the AWS Cloud.</p>
-<p><img alt="architecture" src="../images/arch.svg" /></p>
-<p>Figure 1: Data Transfer Hub architecture on AWS</p>
+<p><img alt="architecture" src="../images/arch-global.png" /></p>
+<p>Figure 1: Data Transfer Hub architecture</p>
 <p>The solution automatically deploys and configures a serverless architecture with the following services: </p>
 <ol>
 <li>The solution’s static web assets (frontend user interface) are stored in <a href="https://www.amazonaws.cn/s3/?nc1=h_ls">Amazon S3</a> and made available through <a href="https://www.amazonaws.cn/cloudfront/?nc1=h_ls">Amazon CloudFront</a>.</li>
@@ -535,12 +535,12 @@
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Important</p>
-<p>If you deploy this solution in AWS (Beijing) Region operated by Beijina Sinnet Technology Co., Ltd. (Sinnet), or the AWS (Ningxia) Region operated by Ningxia Western Cloud Data Technology Co., Ltd. ( ), you are required to provide a domain with ICP Recordal before you can access the web console.</p>
+<p>If you deploy this solution in AWS (Beijing) Region operated by Beijing Sinnet Technology Co., Ltd. (Sinnet), or the AWS (Ningxia) Region operated by Ningxia Western Cloud Data Technology Co., Ltd. ( ), you are required to provide a domain with ICP Recordal before you can access the web console.</p>
 </div>
 <p>The web console is a centralized place to create and manage all data transfer jobs. Each data type (for example, Amazon S3 or Amazon ECR) is a plugin for Data Transfer Hub, and is packaged as an AWS CloudFormation template hosted in an S3 bucket that AWS owns. When the you create a transfer task, an AWS Lambda function initiates the Amazon CloudFormation template, and state of each task is stored and displayed in the DynamoDB tables.</p>
 <p>As of December 2021, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. </p>
 <h2 id="amazon-s3-plugin">Amazon S3 plugin</h2>
-<p><img alt="s3-architecture-cn" src="../images/s3-arch.svg" /></p>
+<p><img alt="s3-architecture" src="../images/s3-arch-global.png" /></p>
 <p>Figure 2: Data Transfer Hub Amazon S3 plugin architecture</p>
 <p>The Amazon S3 plugin runs the following workflows:</p>
 <ol>
@@ -558,7 +558,7 @@ buckets, makes comparisons among objects and determines which objects should be 
 <p>If an object (or part of an object) failed to transfer, the JobWorker releases the message in the queue, and the object is transferred again after the message is visible in the queue (default visibility timeout is set to 15 minutes). If the transfer fails again, the message is sent to the dead letter queue and a notification alarm is sent.</p>
 </div>
 <h2 id="amazon-ecr-plugin">Amazon ECR plugin</h2>
-<p><img alt="ecr-architecture" src="../images/ecr-arch.svg" /></p>
+<p><img alt="ecr-architecture" src="../images/ecr-arch-global.png" /></p>
 <p>Figure 3: Data Transfer Hub Amazon ECR plugin architecture</p>
 <p>The Amazon ECR plugin runs the following workflows:</p>
 <ol>
