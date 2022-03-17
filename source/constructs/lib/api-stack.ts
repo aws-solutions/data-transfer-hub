@@ -51,7 +51,7 @@ export class ApiStack extends Construct {
     let suffix = '-plugin'
     if (templateBucket === 'aws-gcr-solutions') {
       s3PluginVersion = 'v2.1.0'
-      ecrPluginVersion = 'v1.0.1'
+      ecrPluginVersion = 'v1.0.3'
       suffix = ''
     }
 
