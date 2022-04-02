@@ -29,3 +29,5 @@ regional-s3-assets
 
 Config
 *.js
+
+!source/portal/src/assets/config
