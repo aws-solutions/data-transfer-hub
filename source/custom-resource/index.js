@@ -19,7 +19,7 @@ const https = require('https');
 const url = require('url');
 const moment = require('moment');
 const S3Helper = require('./lib/s3-helper.js');
-const UsageMetrics = require('./lib/usage-metrics');
+const UsageMetrics = require('./lib/aws-usage-metrics');
 const uuidv4 = require('uuid/v4');
 
 /**
