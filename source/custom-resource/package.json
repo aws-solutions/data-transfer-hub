@@ -10,7 +10,7 @@
     "dependencies": {
         "moment": "^2.24.0",
         "uuid": "^3.3.3",
-        "usage-metrics": "file:lib/usage-metrics/"
+        "aws-usage-metrics": "file:lib/aws-usage-metrics/"
     },
     "devDependencies": {
         "aws-sdk": "*",
