@@ -218,6 +218,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "logs:GetLogEvents",
             "logs:PutMetricFilter",
             "logs:DeleteMetricFilter",
+            "logs:DeleteMetricFilter",
+            "logs:DescribeMetricFilters"
           ],
           resources: [`*`]
         }),
