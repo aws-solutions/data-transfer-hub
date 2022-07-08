@@ -1,3 +1,21 @@
+# Issue !!! 🚨
+Related issue: https://github.com/awslabs/data-transfer-hub/issues/89
+
+If you encounter the following error message when creating the S3 plugin:
+
+`is not authorized to perform: logs:DescribeMetricFilters on resource: arn:aws:logs:xxxxxx.`,
+
+this is because of a recent change on AWS service policy, please follow below actions to fix:
+
+1. Go to AWS [IAM role console](https://us-east-1.console.aws.amazon.com/iamv2/home#/roles), and search for `APICfnWorkflowCreateTaskCfnFnServi`, and choose the role which name is `DataTransferHub-APICfnWorkflowCreateTaskCfnFnServixxx-xxxxxxxxxxx`.
+
+2. Click **Add Permissions**, and choose **Attach Policies**.
+
+3. Search for **CloudWatchLogsFullAccess**, and click **Attach Policies**.
+
+This issue will be fixed in the next release.
+
+
 # Data Transfer Hub
 
 _Note_: If you have already deployed this solution, refer to the [User Guide](docs/UserManual.md).
