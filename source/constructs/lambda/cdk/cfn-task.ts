@@ -5,7 +5,8 @@ import { CreateTaskInput, pprint, assert, makeid, TaskProgress } from '../common
 interface QueryTaskCfnResponse {
   stackId: string,
   stackStatus: string,
-  stackStatusReason?: string
+  stackStatusReason?: string,
+  stackOutputs?: any
 }
 
 interface CfnTaskInput extends CreateTaskInput {
@@ -130,7 +131,8 @@ exports.queryTaskCfn = async function (input: QueryCfnTaskInput) {
     const queryResult: QueryTaskCfnResponse = {
       stackId: input.stackId,
       stackStatus: describeStackResult.Stacks[0].StackStatus,
-      stackStatusReason: describeStackResult.Stacks[0].StackStatusReason
+      stackStatusReason: describeStackResult.Stacks[0].StackStatusReason,
+      stackOutputs: describeStackResult.Stacks[0].Outputs
     }
 
     const getProgress = () => {
@@ -154,11 +156,12 @@ exports.queryTaskCfn = async function (input: QueryCfnTaskInput) {
       Key: {
         id: input.id
       },
-      UpdateExpression: 'set stackStatus = :stackStatus, progress = :progress',
+      UpdateExpression: 'set stackStatus = :stackStatus, progress = :progress, stackOutputs = :stackOutputs',
       ConditionExpression: `stackStatus <> ${queryResult.stackStatus}`,
       ExpressionAttributeValues: {
         ':stackStatus': queryResult.stackStatus,
-        ':progress': getProgress()
+        ':progress': getProgress(),
+        ':stackOutputs': queryResult.stackOutputs,
       },
       ReturnValues: "ALL_NEW"
     }).promise()

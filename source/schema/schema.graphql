@@ -21,6 +21,11 @@ type Query {
     listTasks(limit: Int = 20, nextToken: String): ListTasksResponse
 
     """
+    Get a task list v2.
+    """
+    listTasksV2(page: Int, count: Int): ListTasksResponseV2
+
+    """
     Get a task object by ID.
     """
     getTask(id: ID!): Task
@@ -99,6 +104,12 @@ type Task @aws_iam @aws_cognito_user_pools @aws_oidc{
     "CloudFormation Stack ID"
     stackId: String
 
+    "CloudFormation Stack Name."
+    stackName: String
+
+    "CloudFormation template parameters."
+    stackOutputs: [ StackOutputs ]
+
     "CloudFormation Stack status"
     stackStatus: String
 
@@ -149,6 +160,12 @@ type CommonProgressInfo @aws_iam @aws_cognito_user_pools @aws_oidc{
 }
 
 
+type StackOutputs {
+    Description: String
+    OutputKey: String
+    OutputValue: String
+}
+
 type TaskParameter {
     ParameterKey: String
     ParameterValue: String
@@ -157,6 +174,11 @@ type TaskParameter {
 type ListTasksResponse {
     items: [Task],
     nextToken: String
+}
+
+type ListTasksResponseV2 {
+    items: [Task],
+    total: Int
 }
 
 input TaskParameterInput {
