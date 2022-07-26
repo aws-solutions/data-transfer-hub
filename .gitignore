@@ -28,3 +28,21 @@ regional-s3-assets
 .build
 
 Config
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.venv*
+__pycache__/
+**__snapshots__/

@@ -62,7 +62,7 @@
      const appSyncServiceLinkRoleFn = new lambda.Function(this, 'AppSyncServiceLinkRoleFn', {
        runtime: lambda.Runtime.PYTHON_3_9,
        code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/custom-resource')),
-       handler: 'crete_service_linked_role.lambda_handler',
+       handler: 'create_service_linked_role.lambda_handler',
        timeout: Duration.seconds(60),
        memorySize: 128,
        description: 'Data Transfer Hub - Service Linked Role Create Handler'
@@ -399,7 +399,7 @@
          exclude: ['cdk/*', 'layer/*']
        }),
        runtime: lambda.Runtime.PYTHON_3_9,
-       handler: 'api/api-sm-param.lambda_handler',
+       handler: 'api/api_sm_param.lambda_handler',
        timeout: Duration.seconds(60),
        memorySize: 128,
      })
@@ -447,7 +447,7 @@
        code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api'), {
        }),
        runtime: lambda.Runtime.PYTHON_3_9,
-       handler: 'api-task-v2.lambda_handler',
+       handler: 'api_task_v2.lambda_handler',
        timeout: Duration.seconds(60),
        memorySize: 128,
        environment: {
