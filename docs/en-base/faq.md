@@ -4,7 +4,7 @@ The following are common issues you may face in deploying and using the solution
 
 **1. In which AWS Regions can this solution be deployed?**</br>
 
-Please refer to [Region Support](./regions.md).
+For the list of supported regions, refer to [supported regions](./regions.md).
 
 **2. When creating a transfer task, shall I deploy it on the data source side or the destination side?**</br>
 
@@ -69,7 +69,7 @@ By authentication through the Access Keyid and Access Key of the other party’s
 
 **5. Does the solution support SSE-S3, SSE-KMS, and SSE-CMK?**</br>
 
-Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, please refer to [Tutorial](https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md ).
+Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the [tutorial](https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md ).
 
 ## Features
 
@@ -97,7 +97,7 @@ At **Task Scheduling Settings**, you can make the task scheduling configuration.
 
 **4. Is it possible for real-time synchronization of newly added files?**</br>
 
-Near-real-time synchronization can be achieved, only if the Data Transfer Hub is deployed in the same AWS account and the same region as the data source. If the data source and the solution are not in the same account, you can configure it manually. For more information, refer to [Tutorial](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/s3-event-trigger-config.md).
+Near-real-time synchronization can be achieved, only if the Data Transfer Hub is deployed in the same AWS account and the same region as the data source. If the data source and the solution are not in the same account, you can configure it manually. For more information, refer to the [tutorial](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/s3-event-trigger-config.md).
 
 **5. Are there restrictions on the number of files and the size of files?**</br>
 
@@ -111,40 +111,67 @@ There will be 5 retries. After 5 retries without success, the task will be notif
 
 You can jump to the customized dashboard of Amazon CloudWatch by clicking the CloudWatch Dashboard link in Task Detail of the web console. You can also go directly to CloudWatch to view it.
 
+## Error messages
+
+After creating the task, you may encounter some error messages. The following list the error messages and provide general steps to troubleshoot them.
+
+**1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid**
+
+If you get this error message, confirm that your secret is configured in the following format. You can copy and paste it directly.
+
+```json
+{
+    "access_key_id": "<Your Access Key ID>",
+    "secret_access_key": "<Your Access Key Secret>"
+}
+```
+
+**2. StatusCode: 403, InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records**
+
+If you get this error message, check if your bucket name and region name are configured correctly.
+
+**3. StatusCode: 403, InvalidAccessKeyId: UnknownError**
+
+If you get this error message, check whether the Credential stored in Secrets Manager has the proper permissions. For more information, refer to [IAM Policy](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md).
+
+**4. StatusCode: 400, AccessDeniedException: Access to KMS is not allowed**
+
+If you get this error message, confirm that your secret is not encrypted by SSE-CMK. Currently, DTH does not support SSE-CMK encrypted secrets.
+
+**5. dial tcp: lookup xxx.xxxxx.xxxxx.xx (http://xxx.xxxxx.xxxxx.xx/) on xxx.xxx.xxx.xxx:53: no such host**
+
+If you get this error message, check if your endpoint is configured correctly.
+
 ## Others
-
-**1. I get a 403 GetObject Access Denied error. How to resolve it?**</br>
-
-Please check whether the Credential stored in Secrets Manager has the proper permissions. For more information, refer to [IAM Policy](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md).
-
-**2. The cluster node (EC2) is terminated by mistake. How to resolve it?**</br>
+**1. The cluster node (EC2) is terminated by mistake. How to resolve it?**</br>
 
 The Auto Scaling mechanism of the solution will enable automatic restart of a new working node. 
 
 However, if a sharding task being transferred in the node is mistakenly terminated, it may cause that the files to which the shard belongs cannot be merged on the destination side, and the error "api error NoSuchUpload: The specified upload does not exist. The upload ID may be invalid, or the upload may have been aborted or completed" occurs. You need to configure lifecycle rules for [Delete expired delete markers or incomplete multipart uploads](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html) in the Amazon S3 bucket. 
 
-**3. The Secrets configuration in Secrets Manager is wrong. How to resolve it?**</br>
+**2. The Secrets configuration in Secrets Manager is wrong. How to resolve it?**</br>
 
-Please update Secrets in Secrets Manager first, and then go to the EC2 console to Terminate all EC2 instances that have been started by the task. Later, the Auto Scaling mechanism of the solution will automatically start a new working node and update Secrets to it.
+You need to update Secrets in Secrets Manager first, and then go to the EC2 console to Terminate all EC2 instances that have been started by the task. Later, the Auto Scaling mechanism of the solution will automatically start a new working node and update Secrets to it.
 
-**4. How to find detailed transfer log?**</br>
+**3. How to find detailed transfer log?**</br>
 
 When deploying the stack, you will be asked to enter the stack name (`DTHS3Stack` by default), and most resources will be created with the name prefix as the stack name. For example, the format of the queue name is `<StackName>-S3TransferQueue-<random suffix>`. This plugin will create two main log groups.
 
-- If there is no data transfer, you need to check whether there is a problem in the ECS task log. The following is the log group for scheduling ECS tasks.
+- If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the [Error Code List](#error-code-list) section.
     
-    `<StackName>-ECSStackFinderLogGroup<random suffix>`
+    `<StackName>-EC2FinderLogGroup<random suffix>`
 
 - The following are the log groups of all EC2 instances, and you can find detailed transfer logs.
 
-    `<StackName>-EC2WorkerStackS3RepWorkerLogGroup\<random suffix>`
+    `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
 
-**5. How to make customized build?**</br>
+**4. How to make customized build?**</br>
 
-If you want to make customized changes to this plugin, please refer to [Custom Build](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md).
+If you want to make customized changes to this plugin, refer to [Custom Build](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md).
 
-**6. After the deployment is complete, why can't I find any log streams in the two CloudWatch log groups?**</br>
+**5. After the deployment is complete, why can't I find any log streams in the two CloudWatch log groups?**</br>
 
-This is because the subnet you selected when deploying this solution does not have public network access, so the Fargate task cannot pull the image, and EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Please check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Subsequently, the elastic scaling group will automatically start a new instance.
+This is because the subnet you selected when deploying this solution does not have public network access, and the EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Later, the elastic scaling group will automatically start a new instance.
+
 
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario

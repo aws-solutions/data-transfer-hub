@@ -100,37 +100,63 @@
 
 您可以通过点击网页控制台的Task Detail内的CloudWatch Dashboard链接，跳转至Amazon CloudWatch的定制化Dashboard内查看。您也可以直接前往CloudWatch进行查看。
 
-## 其它相关问题
-**1. 出现403 GetObject Access Denied错误，如何解决？**</br>
+## 错误消息列表 <a name="error-code-list"></a>
+
+**1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid**
+
+如果您收到此错误消息，请确认您的 Secret 配置为以下格式，建议您通过复制粘贴的方式创建。
+
+```json
+{
+    "access_key_id": "<Your Access Key ID>",
+    "secret_access_key": "<Your Access Key Secret>"
+}
+```
+
+**2. StatusCode: 403, InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records**
+
+如果您收到此错误消息，请检查您的存储桶名称和区域名称是否配置正确。
+
+**3. StatusCode: 403, InvalidAccessKeyId: UnknownError**
 
 请检查Secrets Manager中存放的Credential是否具有应有的权限，具体可参考[IAM Policy](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md)。
 
-**2. 集群节点（EC2）被失误Terminate了，如何解决？**</br>
+**4. StatusCode: 400, AccessDeniedException: Access to KMS is not allowed**
+
+如果您收到此错误消息，请确认您的密钥没有被SSE-CMK加密。目前，DTH不支持被SSE-CMK加密的密钥。
+
+**5. dial tcp: lookup xxx.xxxxx.xxxxx.xx (http://xxx.xxxxx.xxxxx.xx/) on xxx.xxx.xxx.xxx:53: no such host**
+
+如果您收到此错误消息，请检查您的端点URL是否配置正确。
+
+## 其它相关问题
+**1. 集群节点（EC2）被失误Terminate了，如何解决？**</br>
 
 数据传输解决方案的Auto Scaling机制可以自动重新启动一个新的工作节点。但如果被误关闭的节点内有在传输的分片任务，那么有可能会导致该分片所隶属的文件在目标端无法合并，并出现“api error NoSuchUpload: The specified upload does not exist. The upload ID may be invalid, or the upload may have been aborted or completed”的错误。需要在Amazon S3桶内对[删除过期的删除标记或未完成的分段上传](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html)配置生命周期的规则。
 
-**3. Secrets Manager中的Secrets配置错误了，如何解决？**</br>
+**2. Secrets Manager中的Secrets配置错误了，如何解决？**</br>
 
 请先在Secrets Manager中更新Secrets，然后前往EC2控制台，Terminate所有由该Task已经启动的EC2 instance，稍后数据传输解决方案的Auto Scaling机制会自动启动新的工作节点，并更新Secrets到其中。
 
-**4. 如何查找详细的传输日志？**</br>
+**3. 如何查找详细的传输日志？**</br>
 
 部署堆栈时，会要求您输入堆栈名称（默认为DTHS3Stack），大多数资源都会以名称前缀作为堆栈名称创建。例如，队列名称的格式为`<StackName>-S3TransferQueue-<random suffix>`。此插件将创建两个主要日志组。
 
-- 如果没有数据传输，您需要检查ECS任务日志中是否有问题。以下是调度ECS任务的日志组。
+- 如果没有数据传输，您需要检查ECS任务日志中是否有问题。以下是调度ECS任务的日志组。您可以在 [错误消息列表](#error-code-list) 中找到更多信息.
 
-* \<StackName>-ECSStackFinderLogGroup\<random suffix>
+    `<StackName>-EC2FinderLogGroup<random suffix>`
 
 - 以下是所有EC2实例的日志组，您可以找到详细的传输日志。
 
-* \<StackName>-EC2WorkerStackS3RepWorkerLogGroup\<random suffix>
+    `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
 
-**5. 如何进行自定义更改？**</br>
+**4. 如何进行自定义更改？**</br>
 
 如果要对此插件进行自定义更改，请参阅[自定义构建](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md)。
 
-**6. 部署完成后，为什么在两个CloudWatch日志组中找不到任何日志流？**</br>
+**5. 部署完成后，为什么在两个CloudWatch日志组中找不到任何日志流？**</br>
 
 这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
+
 
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario

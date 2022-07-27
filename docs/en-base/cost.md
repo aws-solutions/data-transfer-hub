@@ -10,13 +10,13 @@ For an Amazon S3 transfer task, the cost can vary based on the total number of f
 
 ### Example 1
 
-As of December 2021, transfer 1 TB of S3 files from AWS Oregon Region (us-west-2) to AWS Beijing Region (cn-north-1), the average file size is **50MB**.
+Transfer 1 TB of S3 files from AWS Oregon Region (us-west-2) to AWS Beijing Region (cn-north-1), the average file size is **50MB**.
 
 - Total files: ~2,048
 - Average speed per EC2 instance: ~1GB/min
 - Total EC2 instance hours: ~17 hours
 
-As of December 2021, the cost of using the solution to complete the transfer task is shown in the following table:
+As of July 2022, the cost of using the solution to complete the transfer task is shown in the following table:
 
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
@@ -30,13 +30,13 @@ As of December 2021, the cost of using the solution to complete the transfer tas
 
 ### Example 2
 
-As of December 2021, transfer 1 TB of S3 files from AWS Oregon region (us-west-2) to China Beijing Region (cn-north-1), the average file size is **10KB**.
+Transfer 1 TB of S3 files from AWS Oregon region (us-west-2) to China Beijing Region (cn-north-1), the average file size is **10KB**.
 
 - Total files: ~107,400,000
 - Average speed per EC2 instance: ~6MB/min (~10 files per sec)
 - Total EC2 instance hours: ~3000 hours
 
-As of December 2021, the cost of using the solution to complete the transfer task is shown in the following table:
+As of July 2022, the cost of using the solution to complete the transfer task is shown in the following table:
 
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
@@ -54,9 +54,9 @@ For an Amazon ECR transfer task, the cost can vary based on network speed and to
 
 ### Example 3
 
-As of December 2021, transfer 27 Amazon ECR images (~3 GB in total size) from AWS Ireland Region (eu-west-1) to AWS Beijing Region (cn-north-1). The total runtime is about 6 minutes. 
+Transfer 27 Amazon ECR images (~3 GB in total size) from AWS Ireland Region (eu-west-1) to AWS Beijing Region (cn-north-1). The total runtime is about 6 minutes. 
 
-As of December 2021, the cost of using the solution to complete the transfer task is shown in the following table:
+As of July 2022, the cost of using the solution to complete the transfer task is shown in the following table:
 
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|

@@ -7,13 +7,19 @@ theme:
     - tabs
     - search.suggest
     - search.highlight
+  favicon: images/aws-solutions.png
+  logo: images/aws-solutions.png
+  
 plugins:
   - search
+  - include-markdown
   - macros
   
 markdown_extensions:
   - admonition
   - attr_list
+  - pymdownx.details
+  - pymdownx.superfences
 extra:
   alternate:
     - name: English
