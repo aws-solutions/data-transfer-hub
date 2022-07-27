@@ -14,7 +14,9 @@ const Options: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
       <div className="general-info-content">
         <div className="split-item">
           <div className="sub-name">{t("taskDetail.description")}</div>
-          <div>{decodeURIComponent(curTaskInfo.description)}</div>
+          <div>
+            {decodeURIComponent(curTaskInfo.description.replaceAll("+", " "))}
+          </div>
           <br />
         </div>
         <div className="split-item">

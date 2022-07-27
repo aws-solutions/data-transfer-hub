@@ -298,6 +298,10 @@
     "prefix": "前缀",
     "taskMetrics": "任务指标",
     "dashboard": "CloudWatch 仪表盘",
+    "finderMetrics": "查找器指标",
+    "finderDashboard": "CloudWatch 仪表盘",
+    "workerMetrics": "工作线程指标",
+    "workerDashboard": "CloudWatch 仪表盘",
     "enableS3Event": "启用S3事件?",
     "storageClass": "存储类型",
     "copyMetadata": "传输元数据?",
@@ -430,7 +434,7 @@
       "tip1": "内存配置和需传输的文件总数有关详情见附下表:",
       "tableh1": "传输数量",
       "tableh2": "建议配置内存",
-      "notSupport": "暂不支持，建议分解成多个传输任务"
+      "notSupport": "暂不支持，建议分解成多个传输任务， 或者使用 Finder Depth 和 Finder Number 来调优任务。"
     }
   }
 }

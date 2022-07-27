@@ -190,7 +190,7 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Finder Number",
     zh_name: "查找器数量",
   },
-  ecsFargateMemory: {
+  finderEc2Memory: {
     en_name: "Finder Memory",
     zh_name: "查找器内存大小",
   },
@@ -210,7 +210,7 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Desired Capacity",
     zh_name: "所需容量",
   },
-  ecsCronExpression: {
+  ec2CronExpression: {
     en_name: "Cron Expression",
     zh_name: "Cron表达式",
   },
@@ -496,13 +496,13 @@ export const MAXTHREADS_OPTIONS = [
   { name: 50, value: 50 },
 ];
 
-export const ECS_FARGATE_MEMORY_LIST = [
-  { name: "8G", value: "8192" },
-  { name: "12G", value: "12288" },
-  { name: "16G", value: "16384" },
-  { name: "20G", value: "20480" },
-  { name: "24G", value: "24576" },
-  { name: "30G", value: "30720" },
+export const EC2_MEMORY_LIST = [
+  { name: "8G", value: "8" },
+  { name: "16G", value: "16" },
+  { name: "32GB", value: "32" },
+  { name: "64GB", value: "64" },
+  { name: "128GB", value: "128" },
+  { name: "256GB", value: "256" },
 ];
 
 export const CRON_TYPE_LIST = [
@@ -582,6 +582,8 @@ export const S3_EVENT_OPTIONS_EC2 = [
 // Clone task useless property
 export const CREATE_USE_LESS_PROPERTY = [
   "id",
+  "stackName",
+  "stackOutputs",
   "createdAt",
   "executionArn",
   "progress",

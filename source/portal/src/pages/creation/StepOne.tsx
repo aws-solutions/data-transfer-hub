@@ -40,17 +40,25 @@ const StepOne: React.FC = (props: any) => {
     let tmpTaskType = taskType;
     if (editionType === S3_ENGINE_TYPE.EC2) {
       tmpTaskType = EnumTaskType.S3_EC2;
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: { type: tmpTaskType },
+      });
     }
     if (editionType === S3_ENGINE_TYPE.LAMBDA) {
       tmpTaskType = EnumTaskType.S3;
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: { type: tmpTaskType },
+      });
     }
     if (taskType === EnumTaskType.ECR) {
       tmpTaskType = EnumTaskType.ECR;
+      dispatch({
+        type: ACTION_TYPE.UPDATE_ECR_TASK_INFO,
+        taskInfo: { type: tmpTaskType },
+      });
     }
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: { type: tmpTaskType },
-    });
   }, [dispatch, editionType, taskType]);
 
   // TaskType 变化时变化tmptaskinfo

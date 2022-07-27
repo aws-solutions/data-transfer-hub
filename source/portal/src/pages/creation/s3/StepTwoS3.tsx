@@ -59,7 +59,7 @@ const StepTwoS3: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
+    if (!tmpTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/S3/ec2";
       history.push({
         pathname: toPath,
@@ -69,64 +69,66 @@ const StepTwoS3: React.FC = () => {
   }, [tmpTaskInfo]);
 
   const validateInput = () => {
-    const paramsObj = tmpTaskInfo.parametersObj;
-    // Source Bucket Not Can Be Empty
+    const paramsObj = tmpTaskInfo?.parametersObj;
     let errorCount = 0;
-    if (!paramsObj.srcBucketName || paramsObj.srcBucketName.trim() === "") {
-      errorCount++;
-      setSrcBucketRequiredError(true);
-    } else if (!bucketNameIsValid(paramsObj.srcBucketName)) {
-      errorCount++;
-      setSrcBucketFormatError(true);
-    }
-
-    // Dest Bucket Not Can Be Empty
-    if (!paramsObj.destBucketName || paramsObj.destBucketName.trim() === "") {
-      errorCount++;
-      setDestBucketRequiredError(true);
-    } else if (!bucketNameIsValid(paramsObj.destBucketName)) {
-      errorCount++;
-      setDestBucketFormatError(true);
-    }
-
-    // If dest prefix is not empty, could not end with "/"
-    if (paramsObj.destBucketPrefix.endsWith("/")) {
-      errorCount++;
-      setDestPrefixFormatError(true);
-    }
-
-    // Alarm Email Not Can Be Empty
-    if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
-      errorCount++;
-      setAlramEmailRequireError(true);
-    } else if (!emailIsValid(paramsObj.alarmEmail)) {
-      // Alarm Email Not valid
-      errorCount++;
-      setAlarmEmailFormatError(true);
-    }
-
-    // If Engine is EC2, check source region and destination region required
-    if (engine === S3_ENGINE_TYPE.EC2) {
-      // Source Endpoint is not valid
-      if (
-        paramsObj.sourceType === EnumSourceType.S3_COMPATIBLE &&
-        !urlIsValid(paramsObj.srcEndpoint)
-      ) {
+    if (paramsObj) {
+      // Source Bucket Not Can Be Empty
+      if (!paramsObj.srcBucketName || paramsObj.srcBucketName.trim() === "") {
         errorCount++;
-        setSrcShowEndPointFormatError(true);
+        setSrcBucketRequiredError(true);
+      } else if (!bucketNameIsValid(paramsObj.srcBucketName)) {
+        errorCount++;
+        setSrcBucketFormatError(true);
       }
-      // Check Source Region
-      if (
-        !paramsObj.srcRegionName &&
-        paramsObj.sourceType !== EnumSourceType.S3_COMPATIBLE
-      ) {
+
+      // Dest Bucket Not Can Be Empty
+      if (!paramsObj.destBucketName || paramsObj.destBucketName.trim() === "") {
         errorCount++;
-        setSrcRegionRequiredError(true);
+        setDestBucketRequiredError(true);
+      } else if (!bucketNameIsValid(paramsObj.destBucketName)) {
+        errorCount++;
+        setDestBucketFormatError(true);
       }
-      // Check Destination Region
-      if (!paramsObj.destRegionName) {
+
+      // If dest prefix is not empty, could not end with "/"
+      if (paramsObj.destBucketPrefix.endsWith("/")) {
         errorCount++;
-        setDestRegionRequiredError(true);
+        setDestPrefixFormatError(true);
+      }
+
+      // Alarm Email Not Can Be Empty
+      if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
+        errorCount++;
+        setAlramEmailRequireError(true);
+      } else if (!emailIsValid(paramsObj.alarmEmail)) {
+        // Alarm Email Not valid
+        errorCount++;
+        setAlarmEmailFormatError(true);
+      }
+
+      // If Engine is EC2, check source region and destination region required
+      if (engine === S3_ENGINE_TYPE.EC2) {
+        // Source Endpoint is not valid
+        if (
+          paramsObj.sourceType === EnumSourceType.S3_COMPATIBLE &&
+          !urlIsValid(paramsObj.srcEndpoint)
+        ) {
+          errorCount++;
+          setSrcShowEndPointFormatError(true);
+        }
+        // Check Source Region
+        if (
+          !paramsObj.srcRegionName &&
+          paramsObj.sourceType !== EnumSourceType.S3_COMPATIBLE
+        ) {
+          errorCount++;
+          setSrcRegionRequiredError(true);
+        }
+        // Check Destination Region
+        if (!paramsObj.destRegionName) {
+          errorCount++;
+          setDestRegionRequiredError(true);
+        }
       }
     }
 

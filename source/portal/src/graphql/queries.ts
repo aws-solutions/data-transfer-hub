@@ -22,11 +22,51 @@ export const listTasks = /* GraphQL */ `
           replicated
         }
         stackId
+        stackName
+        stackOutputs {
+          Description
+          OutputKey
+          OutputValue
+        }
         stackStatus
         stackStatusReason
         executionArn
       }
       nextToken
+    }
+  }
+`;
+export const listTasksV2 = /* GraphQL */ `
+  query ListTasksV2($page: Int, $count: Int) {
+    listTasksV2(page: $page, count: $count) {
+      items {
+        id
+        description
+        type
+        templateUrl
+        parameters {
+          ParameterKey
+          ParameterValue
+        }
+        createdAt
+        stoppedAt
+        progress
+        progressInfo {
+          total
+          replicated
+        }
+        stackId
+        stackName
+        stackOutputs {
+          Description
+          OutputKey
+          OutputValue
+        }
+        stackStatus
+        stackStatusReason
+        executionArn
+      }
+      total
     }
   }
 `;
@@ -49,6 +89,12 @@ export const getTask = /* GraphQL */ `
         replicated
       }
       stackId
+      stackName
+      stackOutputs {
+        Description
+        OutputKey
+        OutputValue
+      }
       stackStatus
       stackStatusReason
       executionArn

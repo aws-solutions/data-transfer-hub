@@ -40,6 +40,12 @@ export default function reducer(
         tmpTaskInfo: action.taskInfo,
       };
     }
+    case ACTION_TYPE.UPDATE_ECR_TASK_INFO: {
+      return {
+        ...state,
+        tmpECRTaskInfo: action.taskInfo,
+      };
+    }
     case ACTION_TYPE.SET_CREATE_TASK_FLAG: {
       return {
         ...state,
