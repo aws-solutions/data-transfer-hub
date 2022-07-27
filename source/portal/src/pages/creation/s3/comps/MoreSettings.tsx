@@ -27,12 +27,12 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
   const { showAlramEmailRequireError, showAlarmEmailFormatError } = props;
 
   const [description, setDescription] = useState(
-    tmpTaskInfo.parametersObj?.description
-      ? decodeURIComponent(tmpTaskInfo.parametersObj.description)
+    tmpTaskInfo?.parametersObj?.description
+      ? decodeURIComponent(tmpTaskInfo?.parametersObj.description)
       : ""
   );
   const [alarmEmail, setAlarmEmail] = useState(
-    tmpTaskInfo.parametersObj?.alarmEmail || ""
+    tmpTaskInfo?.parametersObj?.alarmEmail || ""
   );
 
   const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);
@@ -53,14 +53,16 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
   }, [showAlarmEmailFormatError]);
 
   const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+    const param: any = { ...tmpTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpTaskInfo) {
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: Object.assign(tmpTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Data Change

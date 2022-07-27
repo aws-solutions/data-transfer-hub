@@ -39,6 +39,7 @@ import {
 } from "assets/config/const";
 import {
   ACTION_TYPE,
+  AmplifyJSONType,
   EnumSourceType,
   S3_ENGINE_TYPE,
   S3_TASK_TYPE_MAP,
@@ -78,7 +79,7 @@ const StepThreeS3: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
+    if (!tmpTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/S3/ec2";
       history.push({
         pathname: toPath,
@@ -263,8 +264,8 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.destAcl,
     });
     taskParamArr.push({
-      ParameterKey: "ecsCronExpression",
-      ParameterValue: parametersObj.ecsCronExpression,
+      ParameterKey: "ec2CronExpression",
+      ParameterValue: parametersObj.ec2CronExpression,
     });
     taskParamArr.push({
       ParameterKey: "maxCapacity",
@@ -291,8 +292,8 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.finderNumber,
     });
     taskParamArr.push({
-      ParameterKey: "ecsFargateMemory",
-      ParameterValue: parametersObj.ecsFargateMemory,
+      ParameterKey: "finderEc2Memory",
+      ParameterValue: parametersObj.finderEc2Memory,
     });
     taskParamArr.push({
       ParameterKey: "workerNumber",
@@ -307,66 +308,68 @@ const StepThreeS3: React.FC = () => {
 
   // Build  Task  Info  Data
   useEffect(() => {
-    const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
-
-    // Set Description
-    if (createTaskInfo) {
-      createTaskInfo.description = parametersObj?.description || "";
-    }
-
-    let taskParamArr: any = [];
-    if (engine === S3_ENGINE_TYPE.LAMBDA) {
-      taskParamArr = buildLambdaParams(parametersObj);
-      setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
-    }
-    if (engine === S3_ENGINE_TYPE.EC2) {
-      taskParamArr = buildEC2Params(parametersObj);
-      setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
-
-      if (
-        getParamsValueByName("srcType", taskParamArr) ===
-        EnumSourceType.S3_COMPATIBLE
-      ) {
-        // set value to Amazon_S3 when src Type is Amazon_S3_Compatible
-        const srcTypeIndex = taskParamArr.findIndex(
-          (param: any) => param.ParameterKey === "srcType"
-        );
-        taskParamArr[srcTypeIndex] = {
-          ParameterKey: "srcType",
-          ParameterValue: EnumSourceType.S3,
-        };
+    if (tmpTaskInfo !== null) {
+      const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
+      // Set Description
+      if (createTaskInfo) {
+        createTaskInfo.description = parametersObj?.description || "";
       }
-    }
 
-    // Add Cluster Data
-    const configJson: any = JSON.parse(
-      localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
-    );
-    const clusterData = configJson.taskCluster;
-    for (const key in clusterData) {
-      if (key === "ecsSubnets") {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key].join(","),
-        });
-      } else {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key],
-        });
+      let taskParamArr: any = [];
+      if (engine === S3_ENGINE_TYPE.LAMBDA) {
+        taskParamArr = buildLambdaParams(parametersObj);
+        setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
       }
-    }
+      if (engine === S3_ENGINE_TYPE.EC2) {
+        taskParamArr = buildEC2Params(parametersObj);
+        setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
 
-    // Remove uesless property when clone task
-    for (const key in createTaskInfo) {
-      if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
-        delete createTaskInfo[key];
+        if (
+          getParamsValueByName("srcType", taskParamArr) ===
+          EnumSourceType.S3_COMPATIBLE
+        ) {
+          // set value to Amazon_S3 when src Type is Amazon_S3_Compatible
+          const srcTypeIndex = taskParamArr.findIndex(
+            (param: any) => param.ParameterKey === "srcType"
+          );
+          taskParamArr[srcTypeIndex] = {
+            ParameterKey: "srcType",
+            ParameterValue: EnumSourceType.S3,
+          };
+        }
       }
-    }
 
-    createTaskInfo.parameters = taskParamArr;
-    console.info("createTaskInfo:", createTaskInfo);
-    setCreateTaskGQL(createTaskInfo);
+      // Add Cluster Data
+      const configJson: AmplifyJSONType = JSON.parse(
+        localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
+      );
+      const clusterData = configJson.taskCluster;
+      for (const key in clusterData) {
+        if (key === "ecsSubnets") {
+          taskParamArr.push({
+            ParameterKey: "ec2Subnets",
+            ParameterValue: clusterData[key].join(","),
+          });
+        }
+        if (key === "ecsVpcId") {
+          taskParamArr.push({
+            ParameterKey: "ec2VpcId",
+            ParameterValue: clusterData[key],
+          });
+        }
+      }
+
+      // Remove uesless property when clone task
+      for (const key in createTaskInfo) {
+        if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
+          delete createTaskInfo?.[key];
+        }
+      }
+
+      createTaskInfo.parameters = taskParamArr;
+      console.info("createTaskInfo:", createTaskInfo);
+      setCreateTaskGQL(createTaskInfo);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tmpTaskInfo]);
 
@@ -417,8 +420,8 @@ const StepThreeS3: React.FC = () => {
     if (key === "jobType") {
       return JOB_TYPE_MAP[key];
     }
-    if (key === "ecsFargateMemory") {
-      return parseInt(value) / 1024 + "G";
+    if (key === "finderEc2Memory") {
+      return value + "G";
     }
     if (key === "srcInCurrentAccount") {
       return value === "true" ? YES_NO.YES : YES_NO.NO;
@@ -475,7 +478,7 @@ const StepThreeS3: React.FC = () => {
                       {t("creation.step3.step1EngineSubEngine")}
                     </div>
                     <div className="step3-desc">
-                      {S3_TASK_TYPE_MAP[tmpTaskInfo.type]?.name}
+                      {S3_TASK_TYPE_MAP[tmpTaskInfo?.type || ""]?.name}
                     </div>
                   </div>
                 </div>

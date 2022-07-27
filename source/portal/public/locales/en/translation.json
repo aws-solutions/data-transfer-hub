@@ -298,6 +298,10 @@
     "prefix": "Prefix",
     "taskMetrics": "Task Metrics",
     "dashboard": "CloudWatch Dashboard",
+    "finderMetrics": "Finder Logs",
+    "finderDashboard": "CloudWatch Log Streams",
+    "workerMetrics": "Workder Logs",
+    "workerDashboard": "CloudWatch Log Streams",
     "enableS3Event": "Enable S3 Event?",
     "storageClass": "Storage Class",
     "copyMetadata": "Copy Metadata?",
@@ -430,7 +434,7 @@
       "tip1": "Memory setting is relevant to the number of objects to be transferred, see details as below:",
       "tableh1": "Object #",
       "tableh2": "Recommended Memory",
-      "notSupport": "Doesn't support for now. Recommend dividing into multiple tasks"
+      "notSupport": "Doesn't support for now. Recommend dividing into multiple tasks. Or using Finder Depth and Finder Number to tuning the task."
     }
   }
 }

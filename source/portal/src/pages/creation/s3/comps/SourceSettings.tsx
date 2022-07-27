@@ -64,18 +64,18 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const srcRegionRef = useRef<any>(null);
 
   const [sourceType, setSourceType] = useState<string>(
-    tmpTaskInfo.parametersObj?.sourceType || EnumSourceType.S3
+    tmpTaskInfo?.parametersObj?.sourceType || EnumSourceType.S3
   );
 
   const [srcCredentialsParameterStore, setSrcCredentialsParameterStore] =
-    useState(tmpTaskInfo.parametersObj?.srcCredentialsParameterStore || "");
+    useState(tmpTaskInfo?.parametersObj?.srcCredentialsParameterStore || "");
 
   const [sourceInAccount, setSourceInAccount] = useState<string>(
-    tmpTaskInfo.parametersObj?.sourceInAccount || YES_NO.NO
+    tmpTaskInfo?.parametersObj?.sourceInAccount || YES_NO.NO
   );
 
   const [srcRegionObj, setSrcRegionObj] = useState<IRegionType | null>(
-    tmpTaskInfo.parametersObj?.srcRegionObj || null
+    tmpTaskInfo?.parametersObj?.srcRegionObj || null
   );
 
   // DRH S3 Dynamic Class
@@ -85,18 +85,18 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [showSrcRegion, setShowSrcRegion] = useState(true);
 
   const [srcEndpoint, setSrcEndpoint] = useState(
-    tmpTaskInfo.parametersObj?.srcEndpoint || ""
+    tmpTaskInfo?.parametersObj?.srcEndpoint || ""
   );
 
   const [srcBucketName, setSrcBucketName] = useState(
-    tmpTaskInfo.parametersObj?.srcBucketName || ""
+    tmpTaskInfo?.parametersObj?.srcBucketName || ""
   );
 
   const [enableS3Event, setEnableS3Event] = useState<string>(
-    tmpTaskInfo.parametersObj?.enableS3Event || S3_EVENT_TYPE.NO
+    tmpTaskInfo?.parametersObj?.enableS3Event || S3_EVENT_TYPE.NO
   );
   const [includeMetadata, setIncludeMetadata] = useState<string>(
-    tmpTaskInfo.parametersObj?.includeMetadata || YES_NO.NO
+    tmpTaskInfo?.parametersObj?.includeMetadata || YES_NO.NO
   );
 
   const [srcBucketRequiredError, setSrcBucketRequiredError] = useState(false);
@@ -104,17 +104,17 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [srcRegionReqired, setSrcRegionReqired] = useState(false);
   const [srcEndpointFormatError, setSrcEndpointFormatError] = useState(false);
   const [srcBucketPrefix, setSrcBucketPrefix] = useState(
-    tmpTaskInfo.parametersObj?.srcBucketPrefix
-      ? decodeURIComponent(tmpTaskInfo.parametersObj.srcBucketPrefix)
+    tmpTaskInfo?.parametersObj?.srcBucketPrefix
+      ? decodeURIComponent(tmpTaskInfo?.parametersObj.srcBucketPrefix)
       : ""
   );
 
   const [regionList, setRegionList] = useState<IRegionType[]>([]);
   const [srcPrefixType, setSrcPrefixType] = useState<string>(
-    tmpTaskInfo.parametersObj?.srcPrefixType || S3SourcePrefixType.FullBucket
+    tmpTaskInfo?.parametersObj?.srcPrefixType || S3SourcePrefixType.FullBucket
   );
   const [srcPrefixsListFile, setSrcPrefixsListFile] = useState(
-    tmpTaskInfo.parametersObj?.srcPrefixsListFile || ""
+    tmpTaskInfo?.parametersObj?.srcPrefixsListFile || ""
   );
 
   // Monitor the sourceType change
@@ -207,14 +207,16 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   }, [sourceInAccount]);
 
   const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+    const param: any = { ...tmpTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpTaskInfo) {
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: Object.assign(tmpTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Data Change

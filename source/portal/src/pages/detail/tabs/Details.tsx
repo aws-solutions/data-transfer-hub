@@ -31,6 +31,9 @@ type ObjectType = {
   [key: string]: string;
 };
 
+const FINDER_DESC = "Finder Log Group Name";
+const WORKER_DESC = "Worker Log Group Name";
+
 const converListToMap = (list: ItemType[]): ObjectType => {
   const tmpMap: ObjectType = {};
   list.forEach((element: ItemType) => {
@@ -48,6 +51,18 @@ const Details: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
   const { t } = useTranslation();
   const { curTaskInfo, curRegionType, curRegion, accountInSrc, accountInDest } =
     props;
+
+  const getOutputValueByDesc = (desc: string) => {
+    let resValue = "";
+    if (curTaskInfo.stackOutputs && curTaskInfo.stackOutputs.length > 0) {
+      curTaskInfo.stackOutputs.forEach((element: any) => {
+        if (element.Description === desc) {
+          resValue = element.OutputValue;
+        }
+      });
+    }
+    return resValue;
+  };
 
   return (
     <div className="general-info tab-padding box-shadow">
@@ -84,6 +99,53 @@ const Details: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
               "-"
             )}
           </div>
+
+          {curTaskInfo.stackOutputs && (
+            <>
+              <br />
+              <div className="sub-name">{t("taskDetail.finderMetrics")}</div>
+              <div>
+                {getOutputValueByDesc(FINDER_DESC) ? (
+                  <a
+                    className="a-link"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={`${
+                      CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
+                    }?region=${curRegion}#logStream:group=${getOutputValueByDesc(
+                      FINDER_DESC
+                    )}`}
+                  >
+                    {t("taskDetail.finderDashboard")}{" "}
+                    <OpenInNewIcon fontSize="small" className="open-icon" />
+                  </a>
+                ) : (
+                  "-"
+                )}
+              </div>
+              <br />
+              <div className="sub-name">{t("taskDetail.workerMetrics")}</div>
+              <div>
+                {getOutputValueByDesc(WORKER_DESC) ? (
+                  <a
+                    className="a-link"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={`${
+                      CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
+                    }?region=${curRegion}#logStream:group=${getOutputValueByDesc(
+                      WORKER_DESC
+                    )}`}
+                  >
+                    {t("taskDetail.workerDashboard")}{" "}
+                    <OpenInNewIcon fontSize="small" className="open-icon" />
+                  </a>
+                ) : (
+                  "-"
+                )}
+              </div>
+            </>
+          )}
         </div>
         <div className="split-item">
           {curTaskInfo.srcEndpoint && curTaskInfo.srcEndpoint !== "" && (

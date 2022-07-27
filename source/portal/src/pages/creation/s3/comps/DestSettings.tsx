@@ -63,7 +63,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [showDestInAccount, setShowDestInAccount] = useState(true);
 
   const [destInAccount, setDestInAccount] = useState<string>(
-    tmpTaskInfo.parametersObj?.destInAccount || YES_NO.YES
+    tmpTaskInfo?.parametersObj?.destInAccount || YES_NO.YES
   );
 
   const [destBucketRequiredError, setDestBucketRequiredError] = useState(false);
@@ -73,29 +73,29 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [destPrefixFormatError, setDestPrefixFormatError] = useState(false);
 
   const [destBucketName, setDestBucketName] = useState(
-    tmpTaskInfo.parametersObj?.destBucketName || ""
+    tmpTaskInfo?.parametersObj?.destBucketName || ""
   );
 
   const [destBucketPrefix, setDestBucketPrefix] = useState(
-    tmpTaskInfo.parametersObj?.destBucketPrefix
-      ? decodeURIComponent(tmpTaskInfo.parametersObj.destBucketPrefix)
+    tmpTaskInfo?.parametersObj?.destBucketPrefix
+      ? decodeURIComponent(tmpTaskInfo?.parametersObj.destBucketPrefix)
       : ""
   );
 
   const [destStorageClass, setDestStorageClass] = useState(
-    tmpTaskInfo.parametersObj?.destStorageClass ||
+    tmpTaskInfo?.parametersObj?.destStorageClass ||
       S3_STORAGE_CLASS_TYPE.STANDARD
   );
 
   const [destAcl, setDestAcl] = useState(
-    tmpTaskInfo.parametersObj?.destAcl || "bucket-owner-full-control"
+    tmpTaskInfo?.parametersObj?.destAcl || "bucket-owner-full-control"
   );
 
   const [destCredentialsParameterStore, setDestCredentialsParameterStore] =
-    useState(tmpTaskInfo.parametersObj?.destCredentialsParameterStore || "");
+    useState(tmpTaskInfo?.parametersObj?.destCredentialsParameterStore || "");
 
   const [destRegionObj, setDestRegionObj] = useState<IRegionType | null>(
-    tmpTaskInfo.parametersObj?.destRegionObj || null
+    tmpTaskInfo?.parametersObj?.destRegionObj || null
   );
 
   // Show Error
@@ -144,14 +144,16 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   }, [destInAccount]);
 
   const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+    const param: any = { ...tmpTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpTaskInfo) {
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: Object.assign(tmpTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Data Change

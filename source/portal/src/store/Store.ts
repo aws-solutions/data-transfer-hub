@@ -1,11 +1,81 @@
 import { createStore } from "redux";
 import reducer from "./Reducer";
 import { ACTION_TYPE } from "assets/types/index";
+import { S3SourcePrefixType } from "assets/config/const";
+
+interface S3_EC2_TASK {
+  description: string;
+  type: string;
+  parameters: any;
+  parametersObj: {
+    sourceInAccount: string;
+    destInAccount: string;
+    includeMetadata: string;
+    srcSkipCompare: string;
+    sourceType: string;
+    srcEndpoint: string;
+    srcBucketName: string;
+    srcBucketPrefix: string;
+    srcPrefixType: S3SourcePrefixType;
+    srcPrefixsListFile: string;
+    enableS3Event: string;
+    srcRegionName: string;
+    srcCredentialsParameterStore: string;
+    destBucketName: string;
+    destBucketPrefix: string;
+    destStorageClass: string;
+    destRegionName: string;
+    destCredentialsParameterStore: string;
+    destAcl: string;
+    ec2CronExpression: string;
+    maxCapacity: string;
+    minCapacity: string;
+    desiredCapacity: string;
+    finderDepth: string;
+    finderNumber: string;
+    finderEc2Memory: string;
+    workerNumber: string;
+    alarmEmail: string;
+    description: string;
+    srcRegionObj?: any;
+    destRegionObj?: any;
+    lambdaMemory?: string;
+    multipartThreshold?: string;
+    chunkSize?: string;
+    maxThreads?: string;
+  };
+  [key: string]: any;
+}
+
+interface ECR_TASK {
+  description: string;
+  parameters: any;
+  parametersObj: {
+    sourceType: string;
+    srcRegion: string;
+    srcAccountId: string;
+    srcList: string;
+    srcImageList: string;
+    srcCredential: string;
+    destAccountId: string;
+    destRegion: string;
+    destCredential: string;
+    destPrefix: string;
+    alarmEmail: string;
+    description: string;
+    srcRegionObj?: any;
+    destRegionObj?: any;
+    sourceInAccount?: string;
+    destInAccount?: string;
+  };
+  [key: string]: any;
+}
 
 export interface IState {
   infoSpanType: string;
   createTaskFlag: boolean;
-  tmpTaskInfo: any;
+  tmpTaskInfo: S3_EC2_TASK | null;
+  tmpECRTaskInfo: ECR_TASK | null;
   infoIsOpen?: boolean;
   isOpen: boolean;
   auth0LogoutUrl: string;
@@ -29,6 +99,10 @@ export type Action =
       taskInfo: any;
     }
   | {
+      type: ACTION_TYPE.UPDATE_ECR_TASK_INFO;
+      taskInfo: any;
+    }
+  | {
       type: ACTION_TYPE.SET_CREATE_TASK_FLAG;
     }
   | {
@@ -47,7 +121,8 @@ export function makeStore(): any {
   return createStore(reducer, {
     infoSpanType: "",
     createTaskFlag: false,
-    tmpTaskInfo: {},
+    tmpTaskInfo: null,
+    tmpECRTaskInfo: null,
     infoIsOpen: false,
     isOpen: false,
     auth0LogoutUrl: "",

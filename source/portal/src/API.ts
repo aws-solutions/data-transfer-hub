@@ -31,6 +31,8 @@ export type Task = {
   progress?: TaskProgress | null,
   progressInfo?: CommonProgressInfo | null,
   stackId?: string | null,
+  stackName?: string | null,
+  stackOutputs?:  Array<StackOutputs | null > | null,
   stackStatus?: string | null,
   stackStatusReason?: string | null,
   executionArn?: string | null,
@@ -58,10 +60,23 @@ export type CommonProgressInfo = {
   replicated?: number | null,
 };
 
+export type StackOutputs = {
+  __typename: "StackOutputs",
+  Description?: string | null,
+  OutputKey?: string | null,
+  OutputValue?: string | null,
+};
+
 export type ListTasksResponse = {
   __typename: "ListTasksResponse",
   items?:  Array<Task | null > | null,
   nextToken?: string | null,
+};
+
+export type ListTasksResponseV2 = {
+  __typename: "ListTasksResponseV2",
+  items?:  Array<Task | null > | null,
+  total?: number | null,
 };
 
 export type Secret = {
@@ -95,6 +110,13 @@ export type CreateTaskMutation = {
       replicated?: number | null,
     } | null,
     stackId?: string | null,
+    stackName?: string | null,
+    stackOutputs?:  Array< {
+      __typename: "StackOutputs",
+      Description?: string | null,
+      OutputKey?: string | null,
+      OutputValue?: string | null,
+    } | null > | null,
     stackStatus?: string | null,
     stackStatusReason?: string | null,
     executionArn?: string | null,
@@ -126,6 +148,13 @@ export type StopTaskMutation = {
       replicated?: number | null,
     } | null,
     stackId?: string | null,
+    stackName?: string | null,
+    stackOutputs?:  Array< {
+      __typename: "StackOutputs",
+      Description?: string | null,
+      OutputKey?: string | null,
+      OutputValue?: string | null,
+    } | null > | null,
     stackStatus?: string | null,
     stackStatusReason?: string | null,
     executionArn?: string | null,
@@ -160,11 +189,61 @@ export type ListTasksQuery = {
         replicated?: number | null,
       } | null,
       stackId?: string | null,
+      stackName?: string | null,
+      stackOutputs?:  Array< {
+        __typename: "StackOutputs",
+        Description?: string | null,
+        OutputKey?: string | null,
+        OutputValue?: string | null,
+      } | null > | null,
       stackStatus?: string | null,
       stackStatusReason?: string | null,
       executionArn?: string | null,
     } | null > | null,
     nextToken?: string | null,
+  } | null,
+};
+
+export type ListTasksV2QueryVariables = {
+  page?: number | null,
+  count?: number | null,
+};
+
+export type ListTasksV2Query = {
+  listTasksV2?:  {
+    __typename: "ListTasksResponseV2",
+    items?:  Array< {
+      __typename: "Task",
+      id: string,
+      description?: string | null,
+      type?: TaskType | null,
+      templateUrl?: string | null,
+      parameters?:  Array< {
+        __typename: "TaskParameter",
+        ParameterKey?: string | null,
+        ParameterValue?: string | null,
+      } | null > | null,
+      createdAt?: string | null,
+      stoppedAt?: string | null,
+      progress?: TaskProgress | null,
+      progressInfo?:  {
+        __typename: "CommonProgressInfo",
+        total?: number | null,
+        replicated?: number | null,
+      } | null,
+      stackId?: string | null,
+      stackName?: string | null,
+      stackOutputs?:  Array< {
+        __typename: "StackOutputs",
+        Description?: string | null,
+        OutputKey?: string | null,
+        OutputValue?: string | null,
+      } | null > | null,
+      stackStatus?: string | null,
+      stackStatusReason?: string | null,
+      executionArn?: string | null,
+    } | null > | null,
+    total?: number | null,
   } | null,
 };
 
@@ -193,6 +272,13 @@ export type GetTaskQuery = {
       replicated?: number | null,
     } | null,
     stackId?: string | null,
+    stackName?: string | null,
+    stackOutputs?:  Array< {
+      __typename: "StackOutputs",
+      Description?: string | null,
+      OutputKey?: string | null,
+      OutputValue?: string | null,
+    } | null > | null,
     stackStatus?: string | null,
     stackStatusReason?: string | null,
     executionArn?: string | null,

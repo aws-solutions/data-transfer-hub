@@ -10,6 +10,25 @@ import STATUS_PROGRESS from "@material-ui/icons/RemoveCircleOutline";
 import STATUS_ERROR from "@material-ui/icons/HighlightOff";
 import STATUS_DONE from "@material-ui/icons/CheckCircleOutline";
 
+export interface AmplifyJSONType {
+  taskCluster: {
+    ecsVpcId: string;
+    ecsClusterName: string;
+    ecsSubnets: string[];
+  };
+  aws_appsync_region: string;
+  aws_appsync_authenticationType: string;
+  aws_user_pools_id: string;
+  aws_oidc_customer_domain: string;
+  aws_project_region: string;
+  aws_oidc_provider: string;
+  aws_cognito_region: string;
+  aws_oidc_client_id: string;
+  aws_cloudfront_url: string;
+  aws_appsync_graphqlEndpoint: string;
+  aws_user_pools_web_client_id: string;
+}
+
 // S3 ENGINE TYPE
 export enum S3_ENGINE_TYPE {
   LAMBDA = "lambda",
@@ -28,6 +47,7 @@ export enum ACTION_TYPE {
   OPEN_INFO_BAR = "open info bar",
   CLOSE_INFO_BAR = "close info bar",
   UPDATE_TASK_INFO = "update task info",
+  UPDATE_ECR_TASK_INFO = "update ecr task info",
   SET_CREATE_TASK_FLAG = "set create task flag",
   HIDE_CREATE_TASK_FLAG = "hide create task flag",
   SET_INFO_SPAN_TYPE = "set info span type",
