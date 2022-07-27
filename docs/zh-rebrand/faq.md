@@ -119,7 +119,7 @@
 
 - 如果没有数据传输，您需要检查ECS任务日志中是否有问题。以下是调度ECS任务的日志组。
 
-* \<StackName>-ECSStackFinderLogGroup\<random suffix>
+* <StackName>-EC2FinderLogGroup<random suffix>
 
 - 以下是所有EC2实例的日志组，您可以找到详细的传输日志。
 
