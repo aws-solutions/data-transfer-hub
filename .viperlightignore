@@ -8,11 +8,13 @@ docs/tutortial-beijing-to-oregon-s3.md
 docs/tutortial-beijing-to-oregon-s3_CN.md
 docs/tutortial-migration-oss-to-s3.md
 docs/tutortial-migration-oss-to-s3_CN.md
+docs/en-base/tutorial-oss.md
+docs/zh-base/tutorial-oss.md
 
 source/portal/src/pages/creation/ecr/StepTwoECR.tsx
 source/portal/src/pages/creation/s3/comps/MoreSettings.tsx
 source/portal/src/common/info/CredentialInfo.tsx
-
+source/portal/.env
 
 package-lock.json
 
