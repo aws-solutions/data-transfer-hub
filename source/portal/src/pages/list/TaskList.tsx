@@ -488,7 +488,10 @@ const List: React.FC = () => {
       }
     }
     dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
+      type:
+        curSelectTask.type === EnumTaskType.ECR
+          ? ACTION_TYPE.UPDATE_ECR_TASK_INFO
+          : ACTION_TYPE.UPDATE_TASK_INFO,
       taskInfo: tmpTaskInfo,
     });
     // Redirect to Create S3 Task Step two
