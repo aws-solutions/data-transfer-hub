@@ -38,7 +38,7 @@ task_info_1 = {
         {"ParameterKey": "finderNumber", "ParameterValue": "1"},
         {"ParameterKey": "ecsFargateMemory", "ParameterValue": "8192"},
         {"ParameterKey": "workerNumber", "ParameterValue": "4"},
-        {"ParameterKey": "alarmEmail", "ParameterValue": "huyikai@amazon.com"},
+        {"ParameterKey": "alarmEmail", "ParameterValue": "xxxxxx"},
         {"ParameterKey": "ecsVpcId", "ParameterValue": "vpc-0f96aaaa8a4f5c38d"},
         {
             "ParameterKey": "ecsClusterName",
