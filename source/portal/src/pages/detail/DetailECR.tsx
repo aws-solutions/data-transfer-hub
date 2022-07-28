@@ -395,7 +395,9 @@ const Detail: React.FC = (props: any) => {
                             {t("taskDetail.description")}
                           </div>
                           <div>
-                            {decodeURIComponent(curTaskInfo.description) || "-"}
+                            {decodeURIComponent(
+                              curTaskInfo.description.replaceAll("+", " ")
+                            ) || "-"}
                           </div>
                           <br />
                         </div>

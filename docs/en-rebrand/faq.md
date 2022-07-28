@@ -133,7 +133,7 @@ When deploying the stack, you will be asked to enter the stack name (`DTHS3Stack
 
 - If there is no data transfer, you need to check whether there is a problem in the ECS task log. The following is the log group for scheduling ECS tasks.
     
-    `<StackName>-ECSStackFinderLogGroup<random suffix>`
+    `<StackName>-EC2FinderLogGroup<random suffix>`
 
 - The following are the log groups of all EC2 instances, and you can find detailed transfer logs.
 

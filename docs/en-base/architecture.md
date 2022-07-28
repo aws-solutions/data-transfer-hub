@@ -20,7 +20,7 @@ The solution automatically deploys and configures a serverless architecture with
 
 The web console is a centralized place to create and manage all data transfer jobs. Each data type (for example, Amazon S3 or Amazon ECR) is a plugin for Data Transfer Hub, and is packaged as an AWS CloudFormation template hosted in an S3 bucket that AWS owns. When the you create a transfer task, an AWS Lambda function initiates the Amazon CloudFormation template, and state of each task is stored and displayed in the DynamoDB tables.
 
-As of December 2021, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. 
+As of July 2022, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. 
 
 ## Amazon S3 plugin
 
@@ -30,10 +30,11 @@ Figure 2: Data Transfer Hub Amazon S3 plugin architecture
 
 The Amazon S3 plugin runs the following workflows:
 
-1.	A time-based Event Bridge rule triggers the AWS Fargate task to run on an hourly basis. 
-2.	The Fargate task lists all the objects in the source and destination
+1.	A time-based Event Bridge rule triggers a AWS Lambda function on an hourly basis. 
+2.  AWS Lambda uses the launch template to launch a data comparison job (JobFinder) in an EC2.
+3. The job lists all the objects in the source and destination
 buckets, makes comparisons among objects and determines which objects should be transferred.
-3.	Fargate sends a message for each object that will be transferred to Amazon Simple Queue Service (Amazon SQS). Amazon S3 event messages can also be supported for more real-time data transfer; whenever there is object uploaded to source bucket, the event message is sent to the same SQS queue.
+3.	EC2 sends a message for each object that will be transferred to Amazon Simple Queue Service (Amazon SQS). Amazon S3 event messages can also be supported for more real-time data transfer; whenever there is object uploaded to source bucket, the event message is sent to the same SQS queue.
 4.	A JobWorker running in EC2 consumes the messages in SQS and transfers the object from the source bucket to the destination bucket. You can use an Auto Scaling Group to control the number of EC2 instances to transfer the data based on business need.
 5.	A record with transfer status for each object is stored in Amazon DynamoDB. 
 6.	The Amazon EC2 instance will get (download) the object from the source bucket based on the SQS message. 

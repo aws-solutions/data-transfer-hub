@@ -27,7 +27,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 // import { API } from "aws-amplify";
-import { listTasks } from "graphql/queries";
+import { listTasksV2 } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
 import gql from "graphql-tag";
 import ClientContext from "common/context/ClientContext";
@@ -47,11 +47,6 @@ import "./TaskList.scss";
 
 import STATUS_OK from "@material-ui/icons/CheckCircleOutline";
 
-import PAGE_PREV from "@material-ui/icons/NavigateBefore";
-import PAGE_PREV_DISABLED from "@material-ui/icons/NavigateBefore";
-import PAGE_NEXT from "@material-ui/icons/NavigateNext";
-import PAGE_NEXT_DISABLED from "@material-ui/icons/NavigateNext";
-
 import {
   EnumTaskStatus,
   EnumTaskType,
@@ -66,6 +61,7 @@ import {
   getRegionListBySourceType,
   S3SourcePrefixType,
 } from "assets/config/const";
+import { Pagination } from "@material-ui/lab";
 
 const StyledMenu = withStyles({
   paper: {
@@ -109,6 +105,8 @@ const mapState = (state: IState) => ({
   createTaskFlag: state.createTaskFlag,
 });
 
+const PAGE_SIZE = 20;
+
 const List: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -129,53 +127,37 @@ const List: React.FC = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [isStopLoading, setIsStopLoading] = useState(false);
-  const [nextToken, setNextToken] = useState<string | null>(null);
   const [curPage, setCurPage] = useState(1);
-  const [isLastpage, setIsLast] = useState(false);
-  const [pageTokenArr, setPageTokenArr] = useState<any>([null]);
+  const [totalCount, setTotalCount] = useState(0);
   const [taskListData, setTaskListData] = useState<any>([]);
   const [curSelectTask, setCurSelectTask] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
 
-  async function getTaskList(token: string | null, direction: string) {
-    console.info("getTaskList:getTaskList:", token, direction);
-    console.info("client:", client);
+  async function getTaskList() {
     setIsLoading(true);
     try {
-      const query = gql(listTasks);
+      const query = gql(listTasksV2);
       const apiData: any = await client?.query({
         fetchPolicy: "no-cache",
         query: query,
         variables: {
-          limit: 30,
-          nextToken: token,
+          count: PAGE_SIZE,
+          page: curPage,
         },
       });
       // Build Pagination Data
-      // First build Table Data
-      // const dataListArr: any = [];
-      // If click the next, set New Next token
       setIsLoading(false);
-      if (direction === "next") {
-        if (apiData?.data?.listTasks?.nextToken) {
-          setNextToken(apiData.data.listTasks.nextToken);
-        } else {
-          setIsLast(true);
-        }
-      }
       if (
         apiData &&
         apiData.data &&
-        apiData.data.listTasks &&
-        apiData.data.listTasks.items
+        apiData.data.listTasksV2 &&
+        apiData.data.listTasksV2.items
       ) {
-        const orderedList = apiData.data.listTasks.items;
-        orderedList.sort((a: any, b: any) =>
-          a.createdAt < b.createdAt ? 1 : -1
-        );
+        const orderedList = apiData.data.listTasksV2.items;
         setTaskListData(orderedList);
+        setTotalCount(apiData.data.listTasksV2.total);
       }
     } catch (error: any) {
       setIsLoading(false);
@@ -184,10 +166,10 @@ const List: React.FC = () => {
   }
 
   useEffect(() => {
-    getTaskList(null, "next");
+    getTaskList();
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [curPage]);
 
   // Hide Create Flag in 3 seconds
   useEffect(() => {
@@ -531,33 +513,12 @@ const List: React.FC = () => {
   };
 
   const refreshData = () => {
-    setCurPage(1);
-    setIsLast(false);
     setCurSelectTask(null);
-    getTaskList(null, "next");
-  };
-
-  const toPrevPage = () => {
-    setIsLast(false);
-    setCurSelectTask(null);
-    const newCurPage = curPage - 1;
-    setCurPage(newCurPage < 1 ? 1 : newCurPage);
-    getTaskList(pageTokenArr[newCurPage - 1], "prev");
-  };
-
-  const toNextPage = () => {
-    setCurSelectTask(null);
-    const newCurPage = curPage + 1;
-    if (pageTokenArr.indexOf(nextToken) === -1) {
-      pageTokenArr.push(nextToken);
-    }
-    setPageTokenArr(pageTokenArr);
-    if (pageTokenArr[newCurPage - 1]) {
-      getTaskList(pageTokenArr[newCurPage - 1], "next");
+    if (curPage === 1) {
+      getTaskList();
     } else {
-      getTaskList(nextToken, "next");
+      setCurPage(1);
     }
-    setCurPage(newCurPage);
   };
 
   const [tipsOpen, setTipsOpen] = useState(false);
@@ -575,6 +536,12 @@ const List: React.FC = () => {
 
   const handleCloseMessage = () => {
     setMessageOpen(false);
+  };
+
+  const handlePageChange = (event: any, value: number) => {
+    console.info("event:", event);
+    console.info("value:", value);
+    setCurPage(value);
   };
 
   const getParamsValueByName = (name: string, paramList: any) => {
@@ -789,25 +756,12 @@ const List: React.FC = () => {
                   </div>
                   <div className="pagination">
                     <div>
-                      {curPage > 1 && !isLoading ? (
-                        <span onClick={toPrevPage} className="item prev">
-                          <PAGE_PREV />
-                        </span>
-                      ) : (
-                        <span className="item prev disabled">
-                          <PAGE_PREV_DISABLED color="disabled" />
-                        </span>
-                      )}
-                      <span className="cur-page">{curPage}</span>
-                      {isLastpage || isLoading ? (
-                        <span className="item next disabled">
-                          <PAGE_NEXT_DISABLED color="disabled" />
-                        </span>
-                      ) : (
-                        <span onClick={toNextPage} className="item next">
-                          <PAGE_NEXT />
-                        </span>
-                      )}
+                      <Pagination
+                        count={Math.ceil(totalCount / PAGE_SIZE)}
+                        page={curPage}
+                        onChange={handlePageChange}
+                        size="small"
+                      />
                     </div>
                   </div>
                   <div className="setting-icon">
@@ -876,7 +830,7 @@ const List: React.FC = () => {
                               <Link
                                 to={`/task/detail/s3/${element.type}/${element.id}`}
                               >
-                                {element.id}
+                                {element.stackName || element.id}
                               </Link>
                             )}
                             {element.type !== EnumTaskType.S3 &&
@@ -884,7 +838,7 @@ const List: React.FC = () => {
                                 <Link
                                   to={`/task/detail/${element.type}/${element.id}`}
                                 >
-                                  {element.id}
+                                  {element.stackName || element.id}
                                 </Link>
                               )}
                           </div>

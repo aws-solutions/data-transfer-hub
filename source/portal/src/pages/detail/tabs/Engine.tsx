@@ -51,7 +51,7 @@ const Engine: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
               <div className="sub-name">
                 {t("taskDetail.schedulingSettings")}
               </div>
-              <div>{curTaskInfo.ecsCronExpression || "-"}</div>
+              <div>{curTaskInfo.ec2CronExpression || "-"}</div>
               <br />
             </div>
             <div className="split-item">
@@ -94,8 +94,8 @@ const Engine: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
                   <br />
                   <div className="sub-name">{t("taskDetail.finderMemory")}</div>
                   <div>
-                    {curTaskInfo.ecsFargateMemory
-                      ? parseInt(curTaskInfo.ecsFargateMemory) / 1024 + "G"
+                    {curTaskInfo.finderEc2Memory
+                      ? curTaskInfo.finderEc2Memory + "G"
                       : "-"}
                   </div>
                   <br />

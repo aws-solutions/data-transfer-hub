@@ -117,6 +117,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "SNS:DeleteTopic",
             "SNS:Subscribe",
             "SNS:Unsubscribe",
+            "SNS:TagResource"
           ],
           resources: [`arn:${cdk.Aws.PARTITION}:sns:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:DTH*`]
         }),
@@ -218,7 +219,6 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "logs:GetLogEvents",
             "logs:PutMetricFilter",
             "logs:DeleteMetricFilter",
-            "logs:DeleteMetricFilter",
             "logs:DescribeMetricFilters"
           ],
           resources: [`*`]
@@ -235,6 +235,14 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "cloudwatch:DeleteAlarms",
             "cloudwatch:PutDashboard",
             "cloudwatch:ListDashboards",
+          ],
+          resources: [
+            `*`
+          ]
+        }),
+        new iam.PolicyStatement({
+          actions: [
+            "tag:TagResources"
           ],
           resources: [
             `*`
@@ -280,6 +288,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "lambda:UpdateFunctionConfiguration",
             "lambda:UpdateFunctionCode",
             "lambda:PublishVersion",
+            "lambda:TagResource",
             "lambda:Get*",
             "lambda:List*",
           ],

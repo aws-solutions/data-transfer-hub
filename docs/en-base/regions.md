@@ -24,5 +24,5 @@ This solution uses services which may not be currently available in all AWS Regi
 
 | Region Name | Region ID |
 |----------|--------|
-| China (Beijing) Region Operated by Sinnet | cn-northwest-1
-| China (Ningxia) Regions operated by NWCD | cn-north-1
+| China (Beijing) Region Operated by Sinnet | cn-north-1
+| China (Ningxia) Region Operated by NWCD | cn-northwest-1

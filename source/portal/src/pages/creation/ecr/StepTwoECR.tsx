@@ -44,7 +44,7 @@ import {
 import "../Creation.scss";
 
 const mapState = (state: IState) => ({
-  tmpTaskInfo: state.tmpTaskInfo,
+  tmpECRTaskInfo: state.tmpECRTaskInfo,
 });
 
 const MAX_LENGTH = 4096;
@@ -55,14 +55,14 @@ const StepTwoECR: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { tmpTaskInfo } = useMappedState(mapState);
+  const { tmpECRTaskInfo } = useMappedState(mapState);
   const { t, i18n } = useTranslation();
 
   const [titleStr, setTitleStr] = useState("en_name");
   const [descStr, setDescStr] = useState("en_desc");
 
   const [sourceType, setSourceType] = useState(
-    tmpTaskInfo.parametersObj?.sourceType || ECREnumSourceType.ECR
+    tmpECRTaskInfo?.parametersObj?.sourceType || ECREnumSourceType.ECR
   );
 
   const [destRegionRequiredError, setDestRegionRequiredError] = useState(false);
@@ -81,45 +81,45 @@ const StepTwoECR: React.FC = () => {
   const [curLength, setCurLength] = useState(0);
 
   const [srcRegionObj, setSrcRegionObj] = useState<IRegionType | null>(
-    tmpTaskInfo.parametersObj?.srcRegionObj || null
+    tmpECRTaskInfo?.parametersObj?.srcRegionObj || null
   );
   const [sourceInAccount, setSourceInAccount] = useState<string>(
-    tmpTaskInfo.parametersObj?.sourceInAccount || YES_NO.NO
+    tmpECRTaskInfo?.parametersObj?.sourceInAccount || YES_NO.NO
   );
   const [srcAccountId, setSrcAccountId] = useState(
-    tmpTaskInfo.parametersObj?.srcAccountId || ""
+    tmpECRTaskInfo?.parametersObj?.srcAccountId || ""
   );
   const [srcCredential, setSrcCredential] = useState(
-    tmpTaskInfo.parametersObj?.srcCredential || ""
+    tmpECRTaskInfo?.parametersObj?.srcCredential || ""
   );
   const [srcList, setSrcList] = useState(
-    tmpTaskInfo.parametersObj?.srcList || EnumDockerImageType.ALL
+    tmpECRTaskInfo?.parametersObj?.srcList || EnumDockerImageType.ALL
   );
   const [srcImageList, setSrcImageList] = useState(
-    tmpTaskInfo.parametersObj?.srcImageList || ""
+    tmpECRTaskInfo?.parametersObj?.srcImageList || ""
   );
   const [destRegionObj, setDestRegionObj] = useState<IRegionType | null>(
-    tmpTaskInfo.parametersObj?.destRegionObj || null
+    tmpECRTaskInfo?.parametersObj?.destRegionObj || null
   );
   const [destInAccount, setDestInAccount] = useState<string>(
-    tmpTaskInfo.parametersObj?.destInAccount || YES_NO.NO
+    tmpECRTaskInfo?.parametersObj?.destInAccount || YES_NO.NO
   );
   const [destAccountId, setDestAccountId] = useState(
-    tmpTaskInfo.parametersObj?.destAccountId || ""
+    tmpECRTaskInfo?.parametersObj?.destAccountId || ""
   );
   const [destCredential, setDestCredential] = useState(
-    tmpTaskInfo.parametersObj?.destCredential || ""
+    tmpECRTaskInfo?.parametersObj?.destCredential || ""
   );
   const [destPrefix, setDestPrefix] = useState(
-    tmpTaskInfo.parametersObj?.destPrefix || ""
+    tmpECRTaskInfo?.parametersObj?.destPrefix || ""
   );
   const [description, setDescription] = useState(
-    tmpTaskInfo.parametersObj?.description
-      ? decodeURIComponent(tmpTaskInfo.parametersObj?.description)
+    tmpECRTaskInfo?.parametersObj?.description
+      ? decodeURIComponent(tmpECRTaskInfo?.parametersObj?.description)
       : ""
   );
   const [alarmEmail, setAlarmEmail] = useState(
-    tmpTaskInfo.parametersObj?.alarmEmail || ""
+    tmpECRTaskInfo?.parametersObj?.alarmEmail || ""
   );
 
   useEffect(() => {
@@ -132,32 +132,34 @@ const StepTwoECR: React.FC = () => {
   // Redirect Step One if task type is null
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
+    if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
       history.push({
         pathname: toPath,
       });
     }
-  }, [history, tmpTaskInfo]);
+  }, [history, tmpECRTaskInfo]);
 
   const validateInput = () => {
-    const paramsObj = tmpTaskInfo.parametersObj;
+    const paramsObj = tmpECRTaskInfo?.parametersObj;
     // Source Bucket Not Can Be Empty
     let errorCount = 0;
 
-    // Check Destination Region
-    if (!paramsObj.destRegion) {
-      errorCount++;
-      setDestRegionRequiredError(true);
-    }
-    // Alarm Email Not Can Be Empty
-    if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
-      errorCount++;
-      setAlramEmailRequireError(true);
-    } else if (!emailIsValid(paramsObj.alarmEmail)) {
-      // Alarm Email Not valid
-      errorCount++;
-      setAlarmEmailFormatError(true);
+    if (paramsObj) {
+      // Check Destination Region
+      if (!paramsObj.destRegion) {
+        errorCount++;
+        setDestRegionRequiredError(true);
+      }
+      // Alarm Email Not Can Be Empty
+      if (!paramsObj.alarmEmail || paramsObj.alarmEmail.trim() === "") {
+        errorCount++;
+        setAlramEmailRequireError(true);
+      } else if (!emailIsValid(paramsObj.alarmEmail)) {
+        // Alarm Email Not valid
+        errorCount++;
+        setAlarmEmailFormatError(true);
+      }
     }
 
     if (errorCount > 0) {
@@ -232,7 +234,7 @@ const StepTwoECR: React.FC = () => {
   };
 
   const goToStepThree = () => {
-    console.info("tmpTaskInfo:", tmpTaskInfo);
+    console.info("tmpECRTaskInfo:", tmpECRTaskInfo);
     if (validateInput()) {
       const toPath = "/create/step3/ECR";
       history.push({
@@ -241,102 +243,104 @@ const StepTwoECR: React.FC = () => {
     }
   };
 
-  const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+  const updatetmpECRTaskInfo = (key: string, value: any) => {
+    const param: any = { ...tmpECRTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: EnumTaskType.ECR,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpECRTaskInfo) {
+      dispatch({
+        type: EnumTaskType.ECR,
+        taskInfo: Object.assign(tmpECRTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Data Change
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("sourceType", sourceType);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("sourceType", sourceType);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceType]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("srcRegionObj", srcRegionObj);
-    updateTmpTaskInfo("srcRegion", srcRegionObj?.value);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("srcRegionObj", srcRegionObj);
+    updatetmpECRTaskInfo("srcRegion", srcRegionObj?.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcRegionObj]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("sourceInAccount", sourceInAccount);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("sourceInAccount", sourceInAccount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceInAccount]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("srcAccountId", srcAccountId);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("srcAccountId", srcAccountId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcAccountId]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("srcCredential", srcCredential);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("srcCredential", srcCredential);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcCredential]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("srcList", srcList);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("srcList", srcList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcList]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("srcImageList", srcImageList);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("srcImageList", srcImageList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcImageList]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("destRegionObj", destRegionObj);
-    updateTmpTaskInfo("destRegion", destRegionObj?.value);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("destRegionObj", destRegionObj);
+    updatetmpECRTaskInfo("destRegion", destRegionObj?.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destRegionObj]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("destInAccount", destInAccount);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("destInAccount", destInAccount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destInAccount]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("destCredential", destCredential);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("destCredential", destCredential);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destCredential]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("destAccountId", destAccountId);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("destAccountId", destAccountId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destAccountId]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("destPrefix", destPrefix);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("destPrefix", destPrefix);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destPrefix]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("description", encodeURIComponent(description));
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("description", encodeURIComponent(description));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 
   useEffect(() => {
-    // Update tmpTaskInfo
-    updateTmpTaskInfo("alarmEmail", alarmEmail);
+    // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("alarmEmail", alarmEmail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alarmEmail]);
 

@@ -21,7 +21,7 @@
 
 网页控制台用于集中创建和管理所有数据传输任务。每种数据类型（例如，Amazon S3或Amazon ECR）都是插件，并打包为AWS CloudFormation模板，托管在Amazon S3存储桶中。当您创建传输任务时，AWS Lambda函数会启动AWS CloudFormation模板，并且每个任务的状态都会存储并显示在Amazon DynamoDB表中。
 
-截至2021年12月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。
+截至2022年7月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。
 ## Amazon S3插件
 
 ![s3-architecture](./images/s3-arch-global.png)
@@ -30,9 +30,10 @@
 
 使用Amazon S3插件的工作流程如下：
 
-1. Event Bridge规则定时触发AWS Fargate任务，默认每小时运行一次。
-2. Fargate任务列出源和目标存储桶中的所有对象，进行比较并确定传输对象。
-3. Fargate 为每一个需要传输的对象发送一条消息到 Amazon SQS 队列中。同时该方案还支持Amazon S3事件消息，以实现更实时的数据传输；每当有对象上传到源存储桶时，事件消息就会被发送到同一个SQS队列。
+1. Event Bridge规则定时触发AWS Lambda 函数，默认每小时运行一次。
+2. AWS Lambda 将使用启动模板在 EC2 中启动数据比较作业 (JobFinder)。
+2. 该任务列出源和目标存储桶中的所有对象，进行比较并确定传输对象。
+3. EC2 为每一个需要传输的对象发送一条消息到 Amazon SQS 队列中。同时该方案还支持Amazon S3事件消息，以实现更实时的数据传输；每当有对象上传到源存储桶时，事件消息就会被发送到同一个SQS队列。
 4. 在Amazon EC2中运行的JobWorker使用SQS中的消息，并将对象从源存储桶传输到目标存储桶。该方案将使用Auto Scaling Group来控制EC2实例的数量，并根据业务需要传输数据。
 5. 每个对象的传输状态记录存储在Amazon DynamoDB中。
 6. Amazon EC2实例将根据SQS消息从源存储桶中获取（下载）对象。

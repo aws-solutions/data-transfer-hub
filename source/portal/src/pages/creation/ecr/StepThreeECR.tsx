@@ -39,7 +39,7 @@ import {
 import { ACTION_TYPE } from "assets/types";
 
 const mapState = (state: IState) => ({
-  tmpTaskInfo: state.tmpTaskInfo,
+  tmpECRTaskInfo: state.tmpECRTaskInfo,
 });
 
 const JOB_TYPE_MAP: any = {
@@ -58,7 +58,7 @@ const StepThreeECR: React.FC = () => {
     }
   }, [i18n.language]);
 
-  const { tmpTaskInfo } = useMappedState(mapState);
+  const { tmpECRTaskInfo } = useMappedState(mapState);
   const [paramsList, setParamList] = useState<any>([]);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
@@ -69,13 +69,13 @@ const StepThreeECR: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
+    if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
       history.push({
         pathname: toPath,
       });
     }
-  }, [history, tmpTaskInfo]);
+  }, [history, tmpECRTaskInfo]);
 
   const buildECRParams = (parametersObj: any) => {
     const taskParamArr: any = [];
@@ -135,49 +135,51 @@ const StepThreeECR: React.FC = () => {
 
   // Build  Task  Info  Data
   useEffect(() => {
-    const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
+    if (tmpECRTaskInfo !== null) {
+      const { parametersObj, ...createTaskInfo } = tmpECRTaskInfo;
 
-    // Set Description
-    if (createTaskInfo) {
-      createTaskInfo.description = parametersObj?.description || "";
-    }
-
-    const taskParamArr: any = buildECRParams(parametersObj);
-
-    setParamList(taskParamArr);
-
-    // Add New Params to Creat Task
-    const configJson: any = JSON.parse(
-      localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
-    );
-    const clusterData = configJson.taskCluster;
-    for (const key in clusterData) {
-      if (key === "ecsSubnets") {
-        taskParamArr.push({
-          ParameterKey: "ecsSubnetA",
-          ParameterValue: clusterData[key][0],
-        });
-        taskParamArr.push({
-          ParameterKey: "ecsSubnetB",
-          ParameterValue: clusterData[key][1],
-        });
-      } else {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key],
-        });
+      // Set Description
+      if (createTaskInfo) {
+        createTaskInfo.description = parametersObj?.description || "";
       }
-    }
 
-    // Remove uesless property when clone task
-    for (const key in createTaskInfo) {
-      if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
-        delete createTaskInfo[key];
+      const taskParamArr: any = buildECRParams(parametersObj);
+
+      setParamList(taskParamArr);
+
+      // Add New Params to Creat Task
+      const configJson: any = JSON.parse(
+        localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
+      );
+      const clusterData = configJson.taskCluster;
+      for (const key in clusterData) {
+        if (key === "ecsSubnets") {
+          taskParamArr.push({
+            ParameterKey: "ecsSubnetA",
+            ParameterValue: clusterData[key][0],
+          });
+          taskParamArr.push({
+            ParameterKey: "ecsSubnetB",
+            ParameterValue: clusterData[key][1],
+          });
+        } else {
+          taskParamArr.push({
+            ParameterKey: key,
+            ParameterValue: clusterData[key],
+          });
+        }
       }
+
+      // Remove uesless property when clone task
+      for (const key in createTaskInfo) {
+        if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
+          delete createTaskInfo?.[key];
+        }
+      }
+      createTaskInfo.parameters = taskParamArr;
+      setCreateTaskGQL(createTaskInfo);
     }
-    createTaskInfo.parameters = taskParamArr;
-    setCreateTaskGQL(createTaskInfo);
-  }, [tmpTaskInfo]);
+  }, [tmpECRTaskInfo]);
 
   async function createTask() {
     setIsCreating(true);

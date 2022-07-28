@@ -15,7 +15,7 @@ import { IState } from "store/Store";
 import DrhSelect from "common/comp/form/DrhSelect";
 import {
   CRON_HELP_LINK,
-  ECS_FARGATE_MEMORY_LIST,
+  EC2_MEMORY_LIST,
   YES_NO,
   YES_NO_LIST,
 } from "assets/config/const";
@@ -36,44 +36,46 @@ const OptionSettings: React.FC = () => {
   const [professionShow, setProfessionShow] = useState(false);
 
   const [maxCapacity, setMaxCapacity] = useState(
-    tmpTaskInfo.parametersObj?.setMaxCapacity || 20
+    tmpTaskInfo?.parametersObj?.maxCapacity || "20"
   );
   const [minCapacity, setMinCapacity] = useState(
-    tmpTaskInfo.parametersObj?.setMinCapacity || 1
+    tmpTaskInfo?.parametersObj?.minCapacity || "1"
   );
   const [desiredCapacity, setDesiredCapacity] = useState(
-    tmpTaskInfo.parametersObj?.setDesiredCapacity || 1
+    tmpTaskInfo?.parametersObj?.desiredCapacity || "1"
   );
 
   const [finderDepth, setFinderDepth] = useState(
-    tmpTaskInfo.parametersObj?.setFinderDepth || 0
+    tmpTaskInfo?.parametersObj?.finderDepth || "0"
   );
   const [finderNumber, setFinderNumber] = useState(
-    tmpTaskInfo.parametersObj?.setFinderNumber || 1
+    tmpTaskInfo?.parametersObj?.finderNumber || "1"
   );
   const [workerNumber, setWorkerNumber] = useState(
-    tmpTaskInfo.parametersObj?.setWorkerNumber || 4
+    tmpTaskInfo?.parametersObj?.workerNumber || "4"
   );
 
   const [srcSkipCompare, setSrcSkipCompare] = useState<string>(
-    tmpTaskInfo.parametersObj?.srcSkipCompare || YES_NO.YES
+    tmpTaskInfo?.parametersObj?.srcSkipCompare || YES_NO.YES
   );
-  const [ecsFargateMemory, setEcsFargateMemory] = useState(
-    tmpTaskInfo.parametersObj?.ecsFargateMemory || "8192"
+  const [finderEc2Memory, setFinderEc2Memory] = useState(
+    tmpTaskInfo?.parametersObj?.finderEc2Memory || "8"
   );
-  const [ecsCronExpression, setEcsCronExpression] = useState(
-    tmpTaskInfo.parametersObj?.ecsCronExpression || ""
+  const [ec2CronExpression, setEc2CronExpression] = useState(
+    tmpTaskInfo?.parametersObj?.ec2CronExpression || ""
   );
 
   const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+    const param: any = { ...tmpTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpTaskInfo) {
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: Object.assign(tmpTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Select Change
@@ -113,14 +115,14 @@ const OptionSettings: React.FC = () => {
   }, [srcSkipCompare]);
 
   useEffect(() => {
-    updateTmpTaskInfo("ecsFargateMemory", ecsFargateMemory);
+    updateTmpTaskInfo("finderEc2Memory", finderEc2Memory);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ecsFargateMemory]);
+  }, [finderEc2Memory]);
 
   useEffect(() => {
-    updateTmpTaskInfo("ecsCronExpression", ecsCronExpression);
+    updateTmpTaskInfo("ec2CronExpression", ec2CronExpression);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ecsCronExpression]);
+  }, [ec2CronExpression]);
 
   return (
     <div className="box-shadow card-list">
@@ -206,7 +208,7 @@ const OptionSettings: React.FC = () => {
             <div className="form-items">
               <DrhCron
                 onChange={(expression) => {
-                  setEcsCronExpression(expression);
+                  setEc2CronExpression(expression);
                 }}
                 optionTitle={t(
                   "creation.step2.settings.advance.schedulingSettings"
@@ -217,7 +219,7 @@ const OptionSettings: React.FC = () => {
                   <DescLink title={" this guide "} link={CRON_HELP_LINK} />,
                   t("creation.step2.settings.advance.schedulingSettingsDesc2"),
                 ]}
-                cronValue={ecsCronExpression}
+                cronValue={ec2CronExpression}
                 // optionList={}
               />
             </div>
@@ -315,7 +317,7 @@ const OptionSettings: React.FC = () => {
                       onChange={(
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
-                        setEcsFargateMemory(event.target.value);
+                        setFinderEc2Memory(event.target.value);
                       }}
                       optionTitle={t(
                         "creation.step2.settings.advance.finderMemory"
@@ -323,8 +325,8 @@ const OptionSettings: React.FC = () => {
                       optionDesc={t(
                         "creation.step2.settings.advance.finderMemoryDesc"
                       )}
-                      selectValue={ecsFargateMemory}
-                      optionList={ECS_FARGATE_MEMORY_LIST}
+                      selectValue={finderEc2Memory}
+                      optionList={EC2_MEMORY_LIST}
                     />
                   </div>
 
