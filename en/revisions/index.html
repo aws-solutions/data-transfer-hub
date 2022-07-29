@@ -10,7 +10,7 @@
       
         <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/revisions/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
@@ -71,8 +71,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="Data Transfer Hub" class="md-header__button md-logo" aria-label="Data Transfer Hub" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -197,8 +196,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="Data Transfer Hub" class="md-nav__button md-logo" aria-label="Data Transfer Hub" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     Data Transfer Hub
@@ -346,6 +344,98 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorial-s3/" class="md-nav__link">
+        Create Amazon S3 transfer task
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-ecr/" class="md-nav__link">
+        Create Amazon ECR transfer task
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-oss/" class="md-nav__link">
+        Transfer S3 object from Alibaba Cloud OSS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-directconnect/" class="md-nav__link">
+        Transfer S3 object via Direct Connect
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         Additional resources
       </a>
@@ -454,11 +544,15 @@
 </tr>
 <tr>
 <td>July 2021</td>
-<td>Released version 2.0 <br> 1. Support general OIDC providers, including Authing, Auth0, okta, etc.<br> 2. Support transferring objects from more Amazon S3 compatible storage services, such as Huawei Cloud OBS.<br> 3. Support setting the access control list (ACL) of the target bucket object<br> 4. Support deployment in account A, and copying data from account B to account C<br> 5. Change to use Graviton 2 instance , and turn on BBR to transfer S3 objects to improve performance and save costs<br> 6. Change to use Secrets Manager to maintain credential information</td>
+<td>Released version 2.0 <br> 1. Support general OIDC providers, including Authing, Auth0, okta, etc.<br> 2. Support transferring objects from more Amazon S3 compatible storage services, such as Huawei Cloud OBS.<br> 3. Support setting the access control list (ACL) of the target bucket object<br> 4. Support deployment in account A, and copying data from account B to account C<br> 5. Change to use Graviton 2 instance, and turn on BBR to transfer S3 objects to improve performance and save costs<br> 6. Change to use Secrets Manager to maintain credential information</td>
 </tr>
 <tr>
 <td>December 2021</td>
-<td>Released version 2.1 <br> 1. Supports custom prefix list to filter transfer tasks<br> 2. Supports configuration of single-run file transfer tasks<br> 3. Supports configuration of tasks through custom CRON Expression timetable<br> 4. Support manual enabling or disabling of data comparison function</td>
+<td>Released version 2.1 <br> 1. Support custom prefix list to filter transfer tasks<br> 2. Support configuration of single-run file transfer tasks<br> 3. Support configuration of tasks through custom CRON Expression timetable<br> 4. Support manual enabling or disabling of data comparison function</td>
+</tr>
+<tr>
+<td>July 2022</td>
+<td>Released version 2.2 <br> 1. Support transfer data through Direct Connect</td>
 </tr>
 </tbody>
 </table>

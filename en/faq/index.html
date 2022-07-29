@@ -10,7 +10,7 @@
       
         <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/faq/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
@@ -76,8 +76,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="Data Transfer Hub" class="md-header__button md-logo" aria-label="Data Transfer Hub" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -202,8 +201,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="Data Transfer Hub" class="md-nav__button md-logo" aria-label="Data Transfer Hub" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     Data Transfer Hub
@@ -351,6 +349,98 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorial-s3/" class="md-nav__link">
+        Create Amazon S3 transfer task
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-ecr/" class="md-nav__link">
+        Create Amazon ECR transfer task
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-oss/" class="md-nav__link">
+        Transfer S3 object from Alibaba Cloud OSS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-directconnect/" class="md-nav__link">
+        Transfer S3 object via Direct Connect
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         Additional resources
       </a>
@@ -434,6 +524,13 @@
         <li class="md-nav__item">
   <a href="#features" class="md-nav__link">
     Features
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-messages" class="md-nav__link">
+    Error messages
   </a>
   
 </li>
@@ -536,6 +633,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#error-messages" class="md-nav__link">
+    Error messages
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#others" class="md-nav__link">
     Others
   </a>
@@ -564,7 +668,7 @@
 <p>The following are common issues you may face in deploying and using the solution.</p>
 <h2 id="deployment">Deployment</h2>
 <p><strong>1. In which AWS Regions can this solution be deployed?</strong></br></p>
-<p>Please refer to <a href="../regions/">Region Support</a>.</p>
+<p>For the list of supported regions, refer to <a href="../regions/">supported regions</a>.</p>
 <p><strong>2. When creating a transfer task, shall I deploy it on the data source side or the destination side?</strong></br></p>
 <p>The transfer performance of the solution will not be affected by whether the deployment is on the data source or destination side.</p>
 <p>If you do not have a domain name registered by ICP in AWS China Regions, we recommend you deploy it in AWS Standard Regions.</p>
@@ -602,7 +706,7 @@
 <p><strong>4. How does the solution achieve cross-account and cross-cloud authentication?</strong></br></p>
 <p>By authentication through the Access Keyid and Access Key of the other party’s account. The secret key is stored in AWS Secrets Manager and will be read in Secrets Manager as needed.</p>
 <p><strong>5. Does the solution support SSE-S3, SSE-KMS, and SSE-CMK?</strong></br></p>
-<p>Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, please refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md">Tutorial</a>.</p>
+<p>Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the <a href="https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md">tutorial</a>.</p>
 <h2 id="features">Features</h2>
 <p><strong>1. What third-party clouds does Amazon S3 sync currently support?</strong></br></p>
 <p>Alibaba Cloud OSS, Tencent Cloud, Huawei Cloud, Qiniu Cloud, Baidu Cloud, and all clouds that support S3 compatible protocols.</p>
@@ -619,37 +723,52 @@
 <li>If you only want to perform the data synchronization task once, select <strong>One Time Transfer</strong>.</li>
 </ul>
 <p><strong>4. Is it possible for real-time synchronization of newly added files?</strong></br></p>
-<p>Near-real-time synchronization can be achieved, only if the Data Transfer Hub is deployed in the same AWS account and the same region as the data source. If the data source and the solution are not in the same account, you can configure it manually. For more information, refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/s3-event-trigger-config.md">Tutorial</a>.</p>
+<p>Near-real-time synchronization can be achieved, only if the Data Transfer Hub is deployed in the same AWS account and the same region as the data source. If the data source and the solution are not in the same account, you can configure it manually. For more information, refer to the <a href="https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/s3-event-trigger-config.md">tutorial</a>.</p>
 <p><strong>5. Are there restrictions on the number of files and the size of files?</strong></br></p>
 <p>No. Larger files will be uploaded in chunks.</p>
 <p><strong>6. If a single file transfer fails due to network issues, how to resolve it? Is there an error handling mechanism?</strong></br></p>
 <p>There will be 5 retries. After 5 retries without success, the task will be notified to the user via email.</p>
 <p><strong>7. How to monitor the progress of the transfer by checking information like how many files are waiting to be transferred and the current transfer speed?</strong></br></p>
 <p>You can jump to the customized dashboard of Amazon CloudWatch by clicking the CloudWatch Dashboard link in Task Detail of the web console. You can also go directly to CloudWatch to view it.</p>
+<h2 id="error-messages">Error messages</h2>
+<p>After creating the task, you may encounter some error messages. The following list the error messages and provide general steps to troubleshoot them.</p>
+<p><strong>1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid</strong></p>
+<p>If you get this error message, confirm that your secret is configured in the following format. You can copy and paste it directly.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;access_key_id&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;Your Access Key ID&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;secret_access_key&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;Your Access Key Secret&gt;&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>2. StatusCode: 403, InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records</strong></p>
+<p>If you get this error message, check if your bucket name and region name are configured correctly.</p>
+<p><strong>3. StatusCode: 403, InvalidAccessKeyId: UnknownError</strong></p>
+<p>If you get this error message, check whether the Credential stored in Secrets Manager has the proper permissions. For more information, refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md">IAM Policy</a>.</p>
+<p><strong>4. StatusCode: 400, AccessDeniedException: Access to KMS is not allowed</strong></p>
+<p>If you get this error message, confirm that your secret is not encrypted by SSE-CMK. Currently, DTH does not support SSE-CMK encrypted secrets.</p>
+<p><strong>5. dial tcp: lookup xxx.xxxxx.xxxxx.xx (http://xxx.xxxxx.xxxxx.xx/) on xxx.xxx.xxx.xxx:53: no such host</strong></p>
+<p>If you get this error message, check if your endpoint is configured correctly.</p>
 <h2 id="others">Others</h2>
-<p><strong>1. I get a 403 GetObject Access Denied error. How to resolve it?</strong></br></p>
-<p>Please check whether the Credential stored in Secrets Manager has the proper permissions. For more information, refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md">IAM Policy</a>.</p>
-<p><strong>2. The cluster node (EC2) is terminated by mistake. How to resolve it?</strong></br></p>
+<p><strong>1. The cluster node (EC2) is terminated by mistake. How to resolve it?</strong></br></p>
 <p>The Auto Scaling mechanism of the solution will enable automatic restart of a new working node. </p>
 <p>However, if a sharding task being transferred in the node is mistakenly terminated, it may cause that the files to which the shard belongs cannot be merged on the destination side, and the error "api error NoSuchUpload: The specified upload does not exist. The upload ID may be invalid, or the upload may have been aborted or completed" occurs. You need to configure lifecycle rules for <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html">Delete expired delete markers or incomplete multipart uploads</a> in the Amazon S3 bucket. </p>
-<p><strong>3. The Secrets configuration in Secrets Manager is wrong. How to resolve it?</strong></br></p>
-<p>Please update Secrets in Secrets Manager first, and then go to the EC2 console to Terminate all EC2 instances that have been started by the task. Later, the Auto Scaling mechanism of the solution will automatically start a new working node and update Secrets to it.</p>
-<p><strong>4. How to find detailed transfer log?</strong></br></p>
+<p><strong>2. The Secrets configuration in Secrets Manager is wrong. How to resolve it?</strong></br></p>
+<p>You need to update Secrets in Secrets Manager first, and then go to the EC2 console to Terminate all EC2 instances that have been started by the task. Later, the Auto Scaling mechanism of the solution will automatically start a new working node and update Secrets to it.</p>
+<p><strong>3. How to find detailed transfer log?</strong></br></p>
 <p>When deploying the stack, you will be asked to enter the stack name (<code>DTHS3Stack</code> by default), and most resources will be created with the name prefix as the stack name. For example, the format of the queue name is <code>&lt;StackName&gt;-S3TransferQueue-&lt;random suffix&gt;</code>. This plugin will create two main log groups.</p>
 <ul>
 <li>
-<p>If there is no data transfer, you need to check whether there is a problem in the ECS task log. The following is the log group for scheduling ECS tasks.</p>
-<p><code>&lt;StackName&gt;-ECSStackFinderLogGroup&lt;random suffix&gt;</code></p>
+<p>If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the <a href="#error-code-list">Error Code List</a> section.</p>
+<p><code>&lt;StackName&gt;-EC2FinderLogGroup&lt;random suffix&gt;</code></p>
 </li>
 <li>
 <p>The following are the log groups of all EC2 instances, and you can find detailed transfer logs.</p>
-<p><code>&lt;StackName&gt;-EC2WorkerStackS3RepWorkerLogGroup\&lt;random suffix&gt;</code></p>
+<p><code>&lt;StackName&gt;-EC2WorkerStackS3RepWorkerLogGroup&lt;random suffix&gt;</code></p>
 </li>
 </ul>
-<p><strong>5. How to make customized build?</strong></br></p>
-<p>If you want to make customized changes to this plugin, please refer to <a href="https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md">Custom Build</a>.</p>
-<p><strong>6. After the deployment is complete, why can't I find any log streams in the two CloudWatch log groups?</strong></br></p>
-<p>This is because the subnet you selected when deploying this solution does not have public network access, so the Fargate task cannot pull the image, and EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Please check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Subsequently, the elastic scaling group will automatically start a new instance.</p>
+<p><strong>4. How to make customized build?</strong></br></p>
+<p>If you want to make customized changes to this plugin, refer to <a href="https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md">Custom Build</a>.</p>
+<p><strong>5. After the deployment is complete, why can't I find any log streams in the two CloudWatch log groups?</strong></br></p>
+<p>This is because the subnet you selected when deploying this solution does not have public network access, and the EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Later, the elastic scaling group will automatically start a new instance.</p>
 
               
             </article>

@@ -12,7 +12,7 @@
       
         <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/architecture/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
@@ -78,8 +78,7 @@
   <nav class="md-header__inner md-grid" aria-label="页眉">
     <a href=".." title="数据传输解决方案" class="md-header__button md-logo" aria-label="数据传输解决方案" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -204,8 +203,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="数据传输解决方案" class="md-nav__button md-logo" aria-label="数据传输解决方案" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     数据传输解决方案
@@ -397,6 +395,98 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorial-s3/" class="md-nav__link">
+        创建Amazon S3传输任务
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-ecr/" class="md-nav__link">
+        创建Amazon ECR传输任务
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          教程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="教程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          教程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-oss/" class="md-nav__link">
+        从阿里云 OSS 传输 S3 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-directconnect/" class="md-nav__link">
+        通过 Direct Connect 传输 S3 对象
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         更多资源
       </a>
@@ -540,15 +630,16 @@
 <p>如果您在由光环新网运营的亚马逊云科技中国（北京）区域或由西云数据运营的亚马逊云科技中国（宁夏）区域部署本解决方案，您需要预先准备具有ICP记录的域，然后才能访问网页控制台。</p>
 </div>
 <p>网页控制台用于集中创建和管理所有数据传输任务。每种数据类型（例如，Amazon S3或Amazon ECR）都是插件，并打包为AWS CloudFormation模板，托管在Amazon S3存储桶中。当您创建传输任务时，AWS Lambda函数会启动AWS CloudFormation模板，并且每个任务的状态都会存储并显示在Amazon DynamoDB表中。</p>
-<p>截至2021年12月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。</p>
+<p>截至2022年7月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。</p>
 <h2 id="amazon-s3">Amazon S3插件</h2>
 <p><img alt="s3-architecture" src="../images/s3-arch-global.png" /></p>
 <p>图2：Amazon S3插件架构</p>
 <p>使用Amazon S3插件的工作流程如下：</p>
 <ol>
-<li>Event Bridge规则定时触发AWS Fargate任务，默认每小时运行一次。</li>
-<li>Fargate任务列出源和目标存储桶中的所有对象，进行比较并确定传输对象。</li>
-<li>Fargate 为每一个需要传输的对象发送一条消息到 Amazon SQS 队列中。同时该方案还支持Amazon S3事件消息，以实现更实时的数据传输；每当有对象上传到源存储桶时，事件消息就会被发送到同一个SQS队列。</li>
+<li>Event Bridge规则定时触发AWS Lambda 函数，默认每小时运行一次。</li>
+<li>AWS Lambda 将使用启动模板在 EC2 中启动数据比较作业 (JobFinder)。</li>
+<li>该任务列出源和目标存储桶中的所有对象，进行比较并确定传输对象。</li>
+<li>EC2 为每一个需要传输的对象发送一条消息到 Amazon SQS 队列中。同时该方案还支持Amazon S3事件消息，以实现更实时的数据传输；每当有对象上传到源存储桶时，事件消息就会被发送到同一个SQS队列。</li>
 <li>在Amazon EC2中运行的JobWorker使用SQS中的消息，并将对象从源存储桶传输到目标存储桶。该方案将使用Auto Scaling Group来控制EC2实例的数量，并根据业务需要传输数据。</li>
 <li>每个对象的传输状态记录存储在Amazon DynamoDB中。</li>
 <li>Amazon EC2实例将根据SQS消息从源存储桶中获取（下载）对象。</li>

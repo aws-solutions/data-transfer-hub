@@ -12,7 +12,7 @@
       
         <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/deployment/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
@@ -78,8 +78,7 @@
   <nav class="md-header__inner md-grid" aria-label="页眉">
     <a href=".." title="数据传输解决方案" class="md-header__button md-logo" aria-label="数据传输解决方案" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -204,8 +203,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="数据传输解决方案" class="md-nav__button md-logo" aria-label="数据传输解决方案" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <img src="../images/aws-solutions.png" alt="logo">
 
     </a>
     数据传输解决方案
@@ -447,32 +445,104 @@
     步骤3：创建数据传输任务 
   </a>
   
-    <nav class="md-nav" aria-label="步骤3：创建数据传输任务 ">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#amazon-s3" class="md-nav__link">
-    创建Amazon S3传输任务
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#amazon-ecr" class="md-nav__link">
-    创建Amazon ECR传输任务
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-s3/" class="md-nav__link">
+        创建Amazon S3传输任务
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-ecr/" class="md-nav__link">
+        创建Amazon ECR传输任务
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          教程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="教程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          教程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-oss/" class="md-nav__link">
+        从阿里云 OSS 传输 S3 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-directconnect/" class="md-nav__link">
+        通过 Direct Connect 传输 S3 对象
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -655,26 +725,6 @@
   <a href="#3" class="md-nav__link">
     步骤3：创建数据传输任务 
   </a>
-  
-    <nav class="md-nav" aria-label="步骤3：创建数据传输任务 ">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#amazon-s3" class="md-nav__link">
-    创建Amazon S3传输任务
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#amazon-ecr" class="md-nav__link">
-    创建Amazon ECR传输任务
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -941,121 +991,9 @@
 <li>更改您的密码，然后重新登录。</li>
 </ol>
 <h2 id="3">步骤3：创建数据传输任务 <a name="create-task"></a></h2>
-<p>您可以选择为Amazon S3或Amazon ECR创建传输任务。</p>
+<p>您可以选择为Amazon S3或Amazon ECR创建传输任务。更多信息请参考<a href="../tutorial-s3/">创建Amazon S3传输任务</a>和<a href="../tutorial-ecr/">创建Amazon ECR传输任务</a>。</p>
 <p><img alt="dth-console" src="../images/dth-console.png" /></p>
 <p>图1：网页控制台</p>
-<h3 id="amazon-s3">创建Amazon S3传输任务</h3>
-<ol>
-<li>从<strong>创建传输任务</strong>页面，选择<strong>创建新任务</strong>，然后选择<strong>下一步</strong>。</li>
-<li>在<strong>引擎选项</strong>页面的引擎下，选择<strong>Amazon S3</strong>，然后选择<strong>下一步</strong>。</li>
-<li>指定传输任务详细信息。<ul>
-<li>在<strong>源类型</strong>下，选择数据源，例如Amazon S3。</li>
-</ul>
-</li>
-<li>输入<strong>存储桶名称</strong>，并选择同步<strong>整个存储桶</strong>或<strong>指定前缀的对象</strong>或<strong>多个指定前缀的对象</strong>。<ul>
-<li>如果数据源桶也在方案部署的账户中，请选择<strong>Yes</strong>。<ul>
-<li>如果您需要实现实时的增量数据同步，请配置是否启用S3事件通知。注意，只有当该方案和您的数据源部署在同一个账户的同一个区域内时，方可配置该选项。</li>
-<li>如果您不启用S3事件通知，该方案会按照您在后续所配置的调度频率来定期实现增量数据的同步。</li>
-</ul>
-</li>
-<li>如果数据源桶不在方案部署的账户中，请选择<strong>No</strong>，然后指定源存储桶的凭证。</li>
-<li>如果您选择同步多个前缀的对象，请将以换行为分隔的前缀列表文件传输到数据源桶的根目录下，然后填写该文件的名称。具体可参考<a href="https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/r2_1/docs/USING_PREFIX_LIST_CN.md">多前缀列表配置教程</a>。</li>
-</ul>
-</li>
-<li>
-<p>要创建凭证信息，请选择<a href="https://console.aws.amazon.com/secretsmanager/home">Secrets Manager</a>以跳转到当前区域的AWS Secrets Manager控制台。</p>
-<ul>
-<li>从左侧菜单中，选择<strong>密钥</strong>，然后选择<strong>储存新的密钥</strong>并选择<strong>其他类型的密钥</strong>类型。</li>
-<li>根据显示格式在Plaintext输入框中填写<code>access_key_id</code>和<code>secret_access_key</code>信息。有关更多信息，请参阅<em>IAM用户指南</em>中的<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html">IAM功能</a>。选择<strong>下一步</strong>。</li>
-<li>（可选）输入密钥名称和描述。选择<strong>下一步</strong>。</li>
-<li>在自动轮换的配置中，选择禁用自动轮换。选择<strong>下一步</strong>。</li>
-<li>保留默认值，选择<strong>保存</strong>完成密钥的创建。</li>
-<li>返回任务创建界面并刷新界面，您的新密钥将显示在下拉列表中。</li>
-<li>选择证书（密钥）。</li>
-</ul>
-</li>
-<li>
-<p>设置目标端S3存储桶信息。</p>
-<div class="admonition note">
-<p class="admonition-title">注意</p>
-<p>如果源S3存储桶也在方案部署的账户中，则在目标端的设置中，您必须为目标端S3存储桶创建或提供凭证信息。否则，您不需要为目标端存储桶提供凭证信息。</p>
-</div>
-</li>
-<li>
-<p>在<strong>引擎设置</strong>中，验证信息，并在必要时修改信息。如果要进行增量数据传输，建议将<strong>最小容量</strong>设置为至少为1的值。</p>
-</li>
-<li>
-<p>在<strong>任务调度设置</strong>处，选择您的任务调度配置。</p>
-<ul>
-<li>如果要以固定频率配置定时任务，以实现定时对比两侧的数据差异，请选择<strong>Fixed Rate</strong>。</li>
-<li>如果要通过<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions">Cron Expression</a>配置定时任务，以实现定时对比两侧的数据差异，请选择<strong>Cron Expression</strong>。</li>
-<li>如果只想执行一次数据同步任务，请选择<strong>One Time Transfer</strong>。</li>
-</ul>
-</li>
-<li>
-<p>在<strong>高级选项</strong>中，保留默认值。</p>
-</li>
-<li>
-<p>在<strong>是否需要数据比对</strong>处，选择您的任务配置。</p>
-<ul>
-<li>如果要跳过数据对比过程，传输所有文件，请选择<strong>No</strong>。</li>
-<li>如果只想同步有差异的文件，请选择<strong>Yes</strong>。</li>
-</ul>
-</li>
-<li>
-<p>在<strong>通知邮箱</strong>中提供电子邮件地址。</p>
-</li>
-<li>
-<p>选择<strong>下一步</strong>并查看您的任务参数详细信息。</p>
-</li>
-<li>
-<p>选择<strong>创建任务</strong>。</p>
-</li>
-</ol>
-<p>任务创建成功后，会出现在<strong>任务</strong>页面。</p>
-<p><img alt="s3-task-list" src="../images/s3-task-list.png" /></p>
-<p>图2：任务页面</p>
-<p>选择<strong>任务 ID</strong>进入任务详情页面，然后选择<strong>CloudWatch Dashboard</strong>监控任务状态。</p>
-<h3 id="amazon-ecr">创建Amazon ECR传输任务</h3>
-<ol>
-<li>
-<p>从<strong>创建传输任务</strong>页面，选择<strong>创建新任务</strong>，然后选择<strong>下一步</strong>。</p>
-</li>
-<li>
-<p>指定传输任务详细信息。在<strong>源仓库类型</strong>中，选择容器仓库类型。</p>
-</li>
-<li>在<strong>源仓库设置</strong>中，输入<strong>源仓库区域</strong>和<strong>Amazon Web Services账户ID</strong>。</li>
-<li>
-<p>要创建凭证信息，请选择<a href="https://console.aws.amazon.com/secretsmanager/home">Secrets Manager</a>以跳转到当前区域的AWS Secrets Manager控制台。</p>
-<ol>
-<li>从左侧菜单中，选择<strong>密钥</strong>，然后选择<strong>储存新的密钥</strong>并选择<strong>其他类型的密钥</strong>类型。</li>
-<li>根据显示格式在Plaintext输入框中填写<code>access_key_id</code>和<code>secret_access_key</code>信息。有关更多信息，请参阅<em>IAM用户指南</em>中的<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html">IAM功能</a>。选择<strong>下一步</strong>。</li>
-<li>（可选）输入密钥名称和描述。选择<strong>下一步</strong>。</li>
-<li>在自动轮换的配置中，选择禁用自动轮换。选择<strong>下一步</strong>。</li>
-<li>保留默认值，选择<strong>保存</strong>完成密钥的创建。</li>
-</ol>
-</li>
-<li>
-<p>返回任务创建界面并刷新界面。您的新密钥将显示在下拉列表中。</p>
-</li>
-<li>
-<p>选择证书（密钥）。</p>
-<div class="admonition note">
-<p class="admonition-title">注意</p>
-<p>如果数据源也在方案部署的账户中，您必须为目标端创建或提供凭证信息。否则，您不需要为目标端提供凭证信息。</p>
-</div>
-</li>
-<li>
-<p>在<strong>通知邮箱</strong>中提供电子邮件地址。</p>
-</li>
-<li>
-<p>选择<strong>下一步</strong>并查看您的任务参数详细信息。</p>
-</li>
-<li>
-<p>选择<strong>创建任务</strong>。</p>
-</li>
-</ol>
-<p>任务创建成功后，会出现在任务页面。</p>
 
               
             </article>
@@ -1085,13 +1023,13 @@
       
       
         
-        <a href="../additional-resources/" class="md-footer__link md-footer__link--next" aria-label="下一页: 更多资源" rel="next">
+        <a href="../tutorial-s3/" class="md-footer__link md-footer__link--next" aria-label="下一页: 创建Amazon S3传输任务" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 下一页
               </span>
-              更多资源
+              创建Amazon S3传输任务
             </div>
           </div>
           <div class="md-footer__button md-icon">
