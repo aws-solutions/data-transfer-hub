@@ -15,7 +15,9 @@ const handler = async function (event: any, context?: Context) {
     const sm = new AWS.SecretsManager({apiVersion: '2017-10-17'});
     let result: Array<Parameter> = [];
 
-    const params = {};
+    const params = {
+        MaxResults: 100,
+    };
 
     await sm.listSecrets(params, function (err, data) {
         if (err) console.log(err, err.stack); // an error occurred

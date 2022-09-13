@@ -12,7 +12,7 @@
 # aws-exports
 aws-exports.json
 
-
+*.js
 !jest.config.js
 *.d.ts
 node_modules
@@ -28,6 +28,3 @@ regional-s3-assets
 .build
 
 Config
-*.js
-
-!source/portal/src/assets/config

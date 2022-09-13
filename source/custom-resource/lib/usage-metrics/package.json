@@ -1,5 +1,5 @@
 {
-    "name": "aws-usage-metrics",
+    "name": "usage-metrics",
     "version": "0.0.1",
     "description": "Usage metrics is an auxiliary class to capture metrics pertinent for feedback on the solution",
     "author": {

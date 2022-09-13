@@ -10,13 +10,13 @@
     "dependencies": {
         "moment": "^2.24.0",
         "uuid": "^3.3.3",
-        "aws-usage-metrics": "file:lib/aws-usage-metrics/"
+        "usage-metrics": "file:lib/usage-metrics/"
     },
     "devDependencies": {
         "aws-sdk": "*",
         "aws-sdk-mock": "*",
         "chai": "*",
-        "mocha": "^10.0.0",
+        "mocha": "^8.1.1",
         "npm-run-all": "*",
         "sinon": "*",
         "sinon-chai": "*"
