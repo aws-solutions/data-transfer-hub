@@ -5,6 +5,7 @@
     "cdk-solution": "bin/cdk-solution.js"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "cleanup": "tsc --build .. --clean && rm -rf node_modules && rm -f package-lock.json",
     "build": "tsc",
     "watch": "tsc -w",
@@ -39,5 +40,8 @@
     "@aws-solutions-constructs/aws-cloudfront-s3": "1.157.0",
     "@aws-solutions-constructs/core": "1.157.0",
     "source-map-support": "0.5.20"
+  },
+  "resolutions": {
+    "minimatch": "^3.0.5"
   }
 }
