@@ -282,7 +282,7 @@ class MetricData:
             serie_name = data_points_dict["name"]
 
             for timestamp in merged_xaxis:
-                value = data_points.get(timestamp, 0)
+                value = data_points.get(timestamp, -1)
                 tmp_serire_data_array.append(value)
 
             series.append(
@@ -324,7 +324,7 @@ class Network(MetricData):
             data_points.sort(key=lambda x: x['Timestamp'])
 
             for data_point in data_points:
-                self._tmp_series.append(data_point.get("Sum"))
+                self._tmp_series.append(int(data_point.get("Sum", -1)))
                 self._xaxis.append(data_point.get(
                     "Timestamp").strftime('%s'))  # to unix timestamp
 
