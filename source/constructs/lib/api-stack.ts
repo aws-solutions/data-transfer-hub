@@ -395,13 +395,14 @@
  
      // Create Lambda Data Source for listing secrets
      const secretManagerHandlerFn = new lambda.Function(this, 'SecretManagerHandlerFn', {
-       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
+       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/secrets_manager'), {
          exclude: ['cdk/*', 'layer/*']
        }),
        runtime: lambda.Runtime.PYTHON_3_9,
-       handler: 'api/api_sm_param.lambda_handler',
+       handler: 'api_sm_param.lambda_handler',
        timeout: Duration.seconds(60),
        memorySize: 128,
+       description: 'Data Transfer Hub - Secrets Manager API',
      })
  
      const cfnSecretManagerHandlerFn = secretManagerHandlerFn.node.defaultChild as lambda.CfnFunction
@@ -444,12 +445,13 @@
  
      // Create Lambda Data Source for tasks v2
      const taskV2HandlerFn = new lambda.Function(this, 'TaskV2HandlerFn', {
-       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api'), {
+       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task'), {
        }),
        runtime: lambda.Runtime.PYTHON_3_9,
        handler: 'api_task_v2.lambda_handler',
        timeout: Duration.seconds(60),
        memorySize: 128,
+       description: 'Data Transfer Hub - Task Handler API V2',
        environment: {
          TRANSFER_TASK_TABLE: this.taskTable.tableName,
        }
@@ -474,7 +476,70 @@
        requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
        responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
      })
- 
+
+    // Create Lambda Data Source for CloudWatch API
+    const cwlMonitorHandlerFn = new lambda.Function(this, 'CWLMonitorHandlerFn', {
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/cwl'), {
+      }),
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: 'lambda_function.lambda_handler',
+      timeout: Duration.seconds(60),
+      memorySize: 128,
+      description: 'Data Transfer Hub - CloudWatch Monitoring Handler',
+      environment: {
+        TRANSFER_TASK_TABLE: this.taskTable.tableName,
+      }
+    })
+
+    this.taskTable.grantReadWriteData(cwlMonitorHandlerFn)
+
+    // Grant es permissions to the appPipeline lambda
+    cwlMonitorHandlerFn.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        resources: ["*"],
+        actions: [
+          "logs:GetLogDelivery",
+          "logs:ListLogDeliveries",
+          "logs:DescribeLogStreams",
+          "logs:GetLogEvents",
+          "cloudwatch:GetMetricStatistics"
+        ],
+      })
+    );
+
+    const cfncwlMonitorHandlerFn = cwlMonitorHandlerFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfncwlMonitorHandlerFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
+    const cwlMonitorLambdaDS = this.api.addLambdaDataSource('cwlMonitorLambdaDS', cwlMonitorHandlerFn, {
+      description: 'Lambda Resolver Datasource v2'
+    });
+
+    cwlMonitorLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'listLogStreams',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
+
+    cwlMonitorLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'getLogEvents',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
+
+    cwlMonitorLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'getMetricHistoryData',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
  
    }
  }

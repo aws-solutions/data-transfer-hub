@@ -34,6 +34,21 @@ type Query {
     Get the list of Secrets names from Secret Manager
     """
     listSecrets: [Secret]
+
+    """
+    Get the list of log group by log group name
+    """
+    listLogStreams(logGroupName: String, logStreamNamePrefix: String, page: Int, count: Int): ListLogStreamsResponse
+
+    """
+    Get the log events by log group name and log stream name
+    """
+    getLogEvents(limit: Int = 100, logGroupName: String, logStreamName: String, nextToken: String): GetLogEventsResponse
+    
+    """
+    Get the log metric history data
+    """
+    getMetricHistoryData(id: String!, graphName: GraphName!, startTime: String, endTime: String, period: Int): GetMetricHistoryDataResponse
 }
 
 type Mutation {
@@ -151,6 +166,23 @@ enum TaskProgress {
     STOPPED
 }
 
+"""
+CloudWatch graph name.
+"""
+enum GraphName {
+    "Network Graph"
+    Network
+
+    "Transferred data and failed data graph"
+    TransferredFailedObjects
+
+    "Running job and waiting job graph"
+    RunningWaitingJobHistory
+
+    "Desired and in-service instance graph"
+    DesiredInServiceInstances
+}
+
 type CommonProgressInfo @aws_iam @aws_cognito_user_pools @aws_oidc{
     "Total number of records. In S3 task, it is the total number of objects."
     total: Int
@@ -179,6 +211,47 @@ type ListTasksResponse {
 type ListTasksResponseV2 {
     items: [Task],
     total: Int
+}
+
+type LogStream {
+    logStreamName: String
+    creationTime: String
+    firstEventTimestamp: String
+    lastEventTimestamp: String
+    lastIngestionTime: String
+    uploadSequenceToken: String
+    arn: String
+    storedBytes: Int
+}
+
+type ListLogStreamsResponse {
+    logStreams: [LogStream],
+    total: Int
+}
+
+type LogEvent {
+    timestamp: String
+    message: String
+    ingestionTime: String
+}
+
+type GetLogEventsResponse {
+    logEvents: [LogEvent],
+    nextToken: String
+}
+
+type DataSerie {
+    name: String,
+    data: [Int]
+}
+
+type GraphXaxis {
+    categories: [String]
+}
+
+type GetMetricHistoryDataResponse {
+    series: [DataSerie],
+    xaxis: GraphXaxis
 }
 
 input TaskParameterInput {
