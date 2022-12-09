@@ -37,6 +37,15 @@ a:hover {
   }
 }
 
+.text-center {
+  text-align: center;
+}
+
+.no-data {
+  padding: 15px;
+  color: #888;
+}
+
 .desc-link {
   padding-right: 25px;
   .icon {
@@ -64,6 +73,10 @@ a:hover {
   box-sizing: border-box;
 }
 
+.pr {
+  position: relative;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
@@ -73,6 +86,10 @@ code {
   label {
     cursor: pointer;
   }
+}
+
+.w-100p {
+  width: 100%;
 }
 
 .flex {
@@ -125,10 +142,13 @@ code {
   }
 }
 
+.sign-out,
 .logout-btn-style {
+  display: inline-block;
   border: 0;
   padding: 0;
   margin: 0;
+  cursor: pointer;
 }
 
 .loading-style {
@@ -153,6 +173,10 @@ code {
   button {
     margin-left: 10px;
   }
+}
+
+.plr-20 {
+  padding: 0 20px;
 }
 
 .padding-left-40 {
@@ -268,6 +292,98 @@ code {
   }
 }
 
+.monitor-menu {
+  display: flex;
+  justify-content: space-between;
+  .monitor-tabs {
+    display: flex;
+    box-shadow: 0 1px 1px rgba(0, 28, 36, 0.3);
+    padding: 0;
+    margin: 0;
+    height: 42px;
+    .tab-item {
+      background-color: #fafafa;
+      border-top: 4px solid #fafafa;
+      padding: 8px 12px;
+      border-right: 1px solid #eaeded;
+      cursor: pointer;
+      &:hover {
+        background-color: #fff;
+      }
+      &.item-active {
+        font-weight: bold;
+        background-color: #fff;
+        border-top: 4px solid #ec7211;
+      }
+    }
+  }
+}
+
+.monitor-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .metrics-time-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .specify-time {
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #aab7b8;
+    .item {
+      background-color: #fff;
+      display: inline-block;
+      padding: 8px 20px;
+      cursor: pointer;
+      &:active {
+        background-color: #eee;
+      }
+      &.item-active {
+        font-weight: bold;
+        color: #0073bb;
+      }
+    }
+  }
+}
+
+.monitor-chart-list {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  .monitor-chart {
+    width: 100%;
+    // height: 380px;
+    flex: 50%;
+    margin-top: 10px;
+    padding: 10px 10px 20px;
+  }
+}
+
+.chart-mask {
+  position: absolute;
+  z-index: 99;
+  background-color: rgba($color: #fff, $alpha: 0.5);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.load-more-wrap {
+  padding: 10px 20px;
+  text-align: center;
+  .load-more {
+    cursor: pointer;
+    color: #0073bb;
+  }
+}
+
 .MuiButton-root {
   text-transform: none !important;
 }
@@ -285,4 +401,17 @@ code {
 .MuiAutocomplete-listbox {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+$loading-color: #555;
+.gsui-loading {
+  position: relative;
+  color: $loading-color;
+  padding-left: 20px;
+  .icon {
+    position: absolute;
+    color: $loading-color;
+    width: 15px;
+    margin: 3px 0 0 -20px;
+  }
 }

@@ -1,9 +1,6 @@
 {
   "taskCluster": {
-    "publicSubnetIds": [
-      "subnet-xxxx",
-      "subnet-xxxxx"
-    ],
+    "publicSubnetIds": ["subnet-xxxx", "subnet-xxxxx"],
     "vpcId": "vpc-xxxxxxx",
     "clusterName": "xxxxxxxx"
   },

@@ -18,7 +18,7 @@ const DRHSignOut: React.FC<propsType> = (props: propsType) => {
 
   return (
     <div className={props.className} onClick={signOut}>
-      (<span>{t("signOut")}</span>)
+      <span>{t("signOut")}</span>
     </div>
   );
 };

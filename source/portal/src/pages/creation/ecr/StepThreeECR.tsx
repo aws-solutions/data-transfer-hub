@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Swal from "sweetalert2";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -12,8 +11,7 @@ import MLink from "@material-ui/core/Link";
 
 // import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
+// import gql from "graphql-tag";
 import { IState } from "store/Store";
 
 import InfoBar from "common/InfoBar";
@@ -37,6 +35,7 @@ import {
   DRH_CONFIG_JSON_NAME,
 } from "assets/config/const";
 import { ACTION_TYPE } from "assets/types";
+import { appSyncRequestMutation } from "assets/utils/request";
 
 const mapState = (state: IState) => ({
   tmpECRTaskInfo: state.tmpECRTaskInfo,
@@ -50,7 +49,6 @@ const JOB_TYPE_MAP: any = {
 const StepThreeECR: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
-  const client: any = React.useContext(ClientContext);
 
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
@@ -69,6 +67,7 @@ const StepThreeECR: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
+    // eslint-disable-next-line no-prototype-builtins
     if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
       history.push({
@@ -182,14 +181,10 @@ const StepThreeECR: React.FC = () => {
   }, [tmpECRTaskInfo]);
 
   async function createTask() {
-    setIsCreating(true);
     try {
-      console.info("createTaskGQL:", createTaskGQL);
-      const createTask = gql(createTaskMutaion);
-      const createTaskData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: createTask,
-        variables: { input: createTaskGQL },
+      setIsCreating(true);
+      const createTaskData = await appSyncRequestMutation(createTaskMutaion, {
+        input: createTaskGQL,
       });
       console.info("createTaskData:", createTaskData);
       dispatch({
@@ -200,9 +195,8 @@ const StepThreeECR: React.FC = () => {
       history.push({
         pathname: toPath,
       });
-    } catch (error: any) {
+    } catch (error) {
       setIsCreating(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 

@@ -68,12 +68,10 @@ const OptionSettings: React.FC<MoreSettingsType> = (props) => {
   // Monitor Data Change
   useEffect(() => {
     updateTmpTaskInfo("description", encodeURIComponent(description));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 
   useEffect(() => {
     updateTmpTaskInfo("alarmEmail", alarmEmail);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alarmEmail]);
 
   useEffect(() => {

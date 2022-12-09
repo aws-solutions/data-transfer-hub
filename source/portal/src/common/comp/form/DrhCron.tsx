@@ -18,9 +18,6 @@ type SelectMenuProp = {
   optionDesc: string;
   optionDescHtml?: any;
   cronValue: string;
-  // optionList: OptionType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // onChange: any;
   onChange: (express: string) => any;
 };
 
@@ -28,7 +25,6 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const {
     isI18n,
     cronValue,
-    // optionList,
     optionTitle,
     optionDesc,
     optionDescHtml,
@@ -55,7 +51,6 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
 
   useEffect(() => {
     buildCronExpression();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cronUnitType, cronFixValue]);
 
   useEffect(() => {
@@ -65,7 +60,6 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
     } else {
       buildCronExpression();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cronType]);
 
   return (

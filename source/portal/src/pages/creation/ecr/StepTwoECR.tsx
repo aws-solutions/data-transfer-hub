@@ -132,6 +132,7 @@ const StepTwoECR: React.FC = () => {
   // Redirect Step One if task type is null
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
+    // eslint-disable-next-line no-prototype-builtins
     if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
       history.push({
@@ -261,87 +262,73 @@ const StepTwoECR: React.FC = () => {
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("sourceType", sourceType);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceType]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcRegionObj", srcRegionObj);
     updatetmpECRTaskInfo("srcRegion", srcRegionObj?.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcRegionObj]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("sourceInAccount", sourceInAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceInAccount]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcAccountId", srcAccountId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcAccountId]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcCredential", srcCredential);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcCredential]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcList", srcList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcList]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcImageList", srcImageList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcImageList]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destRegionObj", destRegionObj);
     updatetmpECRTaskInfo("destRegion", destRegionObj?.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destRegionObj]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destInAccount", destInAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destInAccount]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destCredential", destCredential);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destCredential]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destAccountId", destAccountId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destAccountId]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destPrefix", destPrefix);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destPrefix]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("description", encodeURIComponent(description));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("alarmEmail", alarmEmail);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alarmEmail]);
 
   return (
