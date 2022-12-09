@@ -58,8 +58,6 @@ const Details: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
           <br />
           <div className="sub-name">{t("taskDetail.createdAt")}</div>
           <div>{formatLocalTime(curTaskInfo.createdAt)}</div>
-          <br />
-          <div className="sub-name">{t("taskDetail.taskMetrics")}</div>
         </div>
         <div className="split-item">
           {curTaskInfo.srcEndpoint && curTaskInfo.srcEndpoint !== "" && (

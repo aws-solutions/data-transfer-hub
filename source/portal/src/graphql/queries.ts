@@ -154,7 +154,8 @@ export const getLogEvents = /* GraphQL */ `
         message
         ingestionTime
       }
-      nextToken
+      nextForwardToken
+      nextBackwardToken
     }
   }
 `;

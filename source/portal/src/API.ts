@@ -104,7 +104,8 @@ export type LogStream = {
 export type GetLogEventsResponse = {
   __typename: "GetLogEventsResponse";
   logEvents?: Array<LogEvent | null> | null;
-  nextToken?: string | null;
+  nextForwardToken?: string | null;
+  nextBackwardToken?: string | null;
 };
 
 export type LogEvent = {
@@ -387,7 +388,8 @@ export type GetLogEventsQuery = {
       message?: string | null;
       ingestionTime?: string | null;
     } | null> | null;
-    nextToken?: string | null;
+    nextForwardToken?: string | null;
+    nextBackwardToken?: string | null;
   } | null;
 };
 

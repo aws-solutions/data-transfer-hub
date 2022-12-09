@@ -16,56 +16,94 @@ import LoadingText from "common/comp/LoadingText";
 import NormalButton from "common/comp/NormalButton";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
+enum LoadType {
+  NEW = "NEW",
+  OLD = "OLD",
+}
+
 const LogEvents: React.FC = () => {
   const { t } = useTranslation();
   const { id, logType, logGroupName, logStreamName } = useParams() as any;
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [logEventList, setLogEventList] = useState<LogEvent[]>([]);
-  const [nextToken, setNextToken] = useState("");
+  const [backwardToken, setBackwardToken] = useState("");
+  const [forwardToken, setForwardToken] = useState("");
   const [loadingMore, setLoadingMore] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [hasHistory, setHasHistory] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
 
-  const getLogEventsByGroup = async (isLoadMore = false) => {
+  const getLogEventsByGroup = async (type: string, isLoadMore = false) => {
     if (!isLoadMore) {
       setLoadingEvents(true);
       setLogEventList([]);
     } else {
-      setLoadingMore(true);
+      if (type === LoadType.NEW) {
+        setLoadingMore(true);
+      }
+      if (type === LoadType.OLD) {
+        setLoadingHistory(true);
+      }
     }
     try {
       const resData: any = await appSyncRequestQuery(getLogEvents, {
         logGroupName: logGroupName,
         logStreamName: logStreamName,
         limit: 20,
-        nextToken: nextToken,
+        nextToken: type === LoadType.NEW ? forwardToken : backwardToken,
       });
       if (resData?.data?.getLogEvents?.logEvents) {
         if (!isLoadMore) {
           setLogEventList(resData.data.getLogEvents.logEvents);
-          setNextToken(resData.data.getLogEvents.nextToken);
+          setForwardToken(resData.data.getLogEvents.nextForwardToken);
+          setBackwardToken(resData.data.getLogEvents.nextBackwardToken);
         } else {
-          setLogEventList((prev) => {
-            return [...prev, ...resData.data.getLogEvents.logEvents];
-          });
-          setNextToken(resData.data.getLogEvents.nextToken);
+          console.info("TYOYOYOYOYOY:", type);
+          if (type === LoadType.NEW) {
+            if (resData.data.getLogEvents.logEvents.length > 0) {
+              setHasMore(true);
+            } else {
+              setHasMore(false);
+            }
+            setLogEventList((prev) => {
+              return [...prev, ...resData.data.getLogEvents.logEvents];
+            });
+            // setForwardToken(resData.data.getLogEvents.nextForwardToken);
+            setBackwardToken(resData.data.getLogEvents.nextBackwardToken);
+          } else {
+            if (resData.data.getLogEvents.logEvents.length > 0) {
+              setHasHistory(true);
+            } else {
+              setHasHistory(false);
+            }
+            setLogEventList((prev) => {
+              return [...resData.data.getLogEvents.logEvents, ...prev];
+            });
+            // setForwardToken(resData.data.getLogEvents.nextForwardToken);
+            setBackwardToken(resData.data.getLogEvents.nextBackwardToken);
+          }
         }
       }
       setLoadingEvents(false);
       setLoadingMore(false);
+      setLoadingHistory(false);
     } catch (error) {
       setLoadingEvents(false);
       setLoadingMore(false);
+      setLoadingHistory(false);
     }
   };
 
-  const loadMore = () => {
-    getLogEventsByGroup(true);
+  const loadMore = (type: string) => {
+    console.info("TYPE:", type);
+    getLogEventsByGroup(type, true);
   };
 
   useEffect(() => {
-    if (!nextToken) {
-      getLogEventsByGroup();
+    if (!forwardToken) {
+      getLogEventsByGroup(LoadType.NEW);
     }
-  }, [nextToken]);
+  }, [forwardToken]);
 
   return (
     <div className="drh-page">
@@ -96,12 +134,14 @@ const LogEvents: React.FC = () => {
             <div className="general-info tab-padding box-shadow">
               <div className="header">
                 <div className="header-title">
-                  <div className="big-title">Log streams: {logStreamName}</div>
+                  <div className="big-title">Log events: {logStreamName}</div>
                   <div>
                     <NormalButton
                       onClick={() => {
                         console.info("refresh");
-                        setNextToken("");
+                        setHasMore(true);
+                        setHasHistory(true);
+                        setForwardToken("");
                       }}
                     >
                       <RefreshIcon width="10" />
@@ -119,6 +159,39 @@ const LogEvents: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td colSpan={3}>
+                      <div className="load-more-wrap">
+                        {loadingHistory ? (
+                          <LoadingText text="Loading..." />
+                        ) : hasHistory ? (
+                          <div>
+                            There are older events to load.{" "}
+                            <span
+                              className="load-more"
+                              onClick={() => {
+                                loadMore(LoadType.OLD);
+                              }}
+                            >
+                              Load more.
+                            </span>
+                          </div>
+                        ) : (
+                          <div>
+                            No older events at this moment.{" "}
+                            <span
+                              className="load-more"
+                              onClick={() => {
+                                loadMore(LoadType.OLD);
+                              }}
+                            >
+                              Retry.
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
                   {loadingEvents ? (
                     <tr>
                       <td colSpan={3}>
@@ -147,24 +220,43 @@ const LogEvents: React.FC = () => {
                       </td>
                     </tr>
                   )}
+                  <tr>
+                    <td colSpan={3}>
+                      {backwardToken && (
+                        <div className="load-more-wrap">
+                          {loadingMore ? (
+                            <LoadingText text="Loading..." />
+                          ) : hasMore ? (
+                            <div>
+                              There are newer events to load.{" "}
+                              <span
+                                className="load-more"
+                                onClick={() => {
+                                  loadMore(LoadType.NEW);
+                                }}
+                              >
+                                Load more.
+                              </span>
+                            </div>
+                          ) : (
+                            <div>
+                              No newer events at this moment.{" "}
+                              <span
+                                className="load-more"
+                                onClick={() => {
+                                  loadMore(LoadType.NEW);
+                                }}
+                              >
+                                Retry.
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
-              {nextToken && (
-                <div className="load-more-wrap">
-                  {loadingMore ? (
-                    <LoadingText text="Loading..." />
-                  ) : (
-                    <span
-                      className="load-more"
-                      onClick={() => {
-                        loadMore();
-                      }}
-                    >
-                      Load More
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -30,6 +30,9 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
       zoom: {
         enabled: false,
       },
+      animations: {
+        enabled: false,
+      },
     },
     colors: ["#0073bb", "#ec7211"],
     grid: {
@@ -37,7 +40,7 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
         top: 20,
         right: 10,
         bottom: 0,
-        left: 10,
+        left: 20,
       },
     },
     legend: {
@@ -52,9 +55,9 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
       tickAmount: 2,
       title: {
         text: yAxisUnit,
-        rotate: 0,
-        offsetX: 15,
-        offsetY: -140,
+        rotate: -90,
+        offsetX: 7,
+        // offsetY: -140,
         style: {
           fontWeight: "500",
           color: "#666",
@@ -65,12 +68,6 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
       labels: {
         show: true,
         align: "right",
-        style: {
-          colors: [],
-          fontSize: "12px",
-          fontFamily: "Helvetica, Arial, sans-serif",
-          cssClass: "apexcharts-yaxis-label",
-        },
         formatter: (value) => {
           if (graphName === GraphName.Network) {
             return humanFileSize(value, true);

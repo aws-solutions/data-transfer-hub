@@ -210,8 +210,8 @@
       padding: 8px 20px;
       border-bottom: 1px solid #eaeded;
     }
-    tr:nth-child(odd) > td,
-    .tr:nth-child(odd) > th {
+    tr:nth-child(even) > td,
+    .tr:nth-child(even) > th {
       background: rgba(0, 0, 0, 0.05); // Choose your own color here
     }
     th {
