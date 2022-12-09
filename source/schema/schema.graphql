@@ -237,7 +237,8 @@ type LogEvent {
 
 type GetLogEventsResponse {
     logEvents: [LogEvent],
-    nextToken: String
+    nextForwardToken: String,
+    nextBackwardToken: String
 }
 
 type DataSerie {
