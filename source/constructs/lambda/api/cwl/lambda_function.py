@@ -135,7 +135,8 @@ def get_log_events(**args):
         )
     return {
         "logEvents": response.get("events"),
-        "nextToken": response.get("nextBackwardToken"),
+        "nextForwardToken": response.get("nextForwardToken"),
+        "nextBackwardToken": response.get("nextBackwardToken"),
     }
 
 
