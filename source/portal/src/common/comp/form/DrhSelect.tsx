@@ -20,9 +20,7 @@ type SelectMenuProp = {
   optionDescHtml?: any;
   selectValue: string;
   optionList: OptionType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
-  // onChange?: (event: any) => any;
 };
 
 const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
@@ -43,14 +41,11 @@ const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
         {optionTitle} {infoType && <InfoSpan spanType={infoType || ""} />}
       </div>
       <div className="desc">
-        {
-          // <span dangerouslySetInnerHTML={{ __html: optionDescHtml }}></span>
-          optionDescHtml
-            ? optionDescHtml.map((element: any, index: number) => {
-                return <span key={index}>{element}</span>;
-              })
-            : optionDesc
-        }
+        {optionDescHtml
+          ? optionDescHtml.map((element: any, index: number) => {
+              return <span key={index}>{element}</span>;
+            })
+          : optionDesc}
       </div>
       <div>
         <Select

@@ -72,6 +72,8 @@ interface ECR_TASK {
 }
 
 export interface IState {
+  userEmail: string;
+  amplifyConfig: any;
   infoSpanType: string;
   createTaskFlag: boolean;
   tmpTaskInfo: S3_EC2_TASK | null;
@@ -82,6 +84,14 @@ export interface IState {
 }
 
 export type Action =
+  | {
+      type: ACTION_TYPE.UPDATE_USER_EMAIL;
+      userEmail: any;
+    }
+  | {
+      type: ACTION_TYPE.UPDATE_AMPLIFY_CONFIG;
+      amplifyConfig: any;
+    }
   | {
       type: ACTION_TYPE.OPEN_SIDE_BAR;
     }
@@ -117,15 +127,6 @@ export type Action =
       logoutUrl: string;
     };
 
-export function makeStore(): any {
-  return createStore(reducer, {
-    infoSpanType: "",
-    createTaskFlag: false,
-    tmpTaskInfo: null,
-    tmpECRTaskInfo: null,
-    infoIsOpen: false,
-    isOpen: false,
-    auth0LogoutUrl: "",
-    // isOpen: localStorage.getItem("drhIsOpen") ? true : false
-  });
-}
+export const makeStore = () => {
+  return createStore(reducer);
+};

@@ -641,3 +641,61 @@ export const bucketNameIsValid = (bucketName: string): boolean => {
   }
   return false;
 };
+
+export const AMPLIFY_ZH_DICT = {
+  zh: {
+    "Sign In": "登录",
+    "Sign Up": "注册",
+    "Sign Out": "退出",
+    "Forgot your password?": "忘记密码？",
+    "Reset your password": "重置密码",
+    "Reset password": "重置密码",
+    Username: "用户名",
+    Password: "密码",
+    "Change Password": "修改密码",
+    Email: "邮箱",
+    email: "邮箱",
+    "Phone Number": "电话",
+    "Confirm a Code": "确认码",
+    "Confirm Sign In": "确认登录",
+    "Confirm Sign Up": "确认注册",
+    "Back to Sign In": "回到登录",
+    "Send Code": "发送确认码",
+    Confirm: "确认",
+    "Resend a Code": "重发确认码",
+    Submit: "提交",
+    Skip: "跳过",
+    Verify: "验证",
+    "Verify Contact": "验证联系方式",
+    Code: "确认码",
+    "Account recovery requires verified contact information":
+      "账户恢复需要验证过的联系方式",
+    "User does not exist": "用户不存在",
+    "User already exists": "用户已经存在",
+    "Incorrect username or password.": "用户名或密码错误",
+    "Invalid password format": "密码格式错误",
+    "Invalid phone number format": "电话格式错误，请使用格式 +12345678900",
+    "Enter your username": "请输入您的邮箱",
+    "Enter your password": "请输入您的密码",
+    "Enter your phone number": "请输入您的手机号",
+    "Enter your email": "请输入您的邮箱",
+    "Enter your code": "请输入您的验证码",
+    "Lost your code?": "没收到验证码？",
+    "Resend Code": "重新发送验证码",
+    "New password": "新密码",
+    "Enter your new password": "请输入新密码",
+    Change: "修改",
+  },
+};
+
+export enum MonitorTabType {
+  METRICS = "METRICS",
+  FINDER = "FINDER",
+  WORKER = "WORKER",
+}
+
+export const FINDER_DESC = "Finder Log Group Name";
+export const WORKER_DESC = "Worker Log Group Name";
+
+export const LOGTYPE_FINDER = MonitorTabType.FINDER;
+export const LOGTYPE_WORKER = MonitorTabType.WORKER;

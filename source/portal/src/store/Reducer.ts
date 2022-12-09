@@ -1,15 +1,34 @@
-import { Action, IState } from "./Store";
+import { Action } from "./Store";
 import { ACTION_TYPE } from "../assets/types/index";
 
-export default function reducer(
-  state: IState | null | undefined,
-  action: Action
-) {
-  if (!state) {
-    return null;
-  }
+const initialState = {
+  userEmail: "",
+  amplifyConfig: {},
+  infoSpanType: "",
+  createTaskFlag: false,
+  tmpTaskInfo: null,
+  tmpECRTaskInfo: null,
+  infoIsOpen: false,
+  isOpen: false,
+  auth0LogoutUrl: "",
+  // isOpen: localStorage.getItem("drhIsOpen") ? true : false
+};
 
+const reducer = (state = initialState, action: Action): any => {
   switch (action.type) {
+    case ACTION_TYPE.UPDATE_USER_EMAIL: {
+      console.info("action.type:userEmail:", action.userEmail);
+      return {
+        ...state,
+        userEmail: action.userEmail,
+      };
+    }
+    case ACTION_TYPE.UPDATE_AMPLIFY_CONFIG: {
+      return {
+        ...state,
+        amplifyConfig: action.amplifyConfig,
+      };
+    }
     case ACTION_TYPE.OPEN_SIDE_BAR: {
       return {
         ...state,
@@ -73,4 +92,6 @@ export default function reducer(
     default:
       return state;
   }
-}
+};
+
+export default reducer;

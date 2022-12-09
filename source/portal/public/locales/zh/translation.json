@@ -8,6 +8,19 @@
   "info": "信息",
   "optional": "可选",
   "recommened": "推荐",
+  "signin": {
+    "signInToDRH": "登录到 Data Transfer Hub",
+    "email": "邮箱地址 *",
+    "inputEmail": "输入您的邮箱地址",
+    "password": "密码 *",
+    "inputPassword": "输入您的密码",
+    "signIn": "登录"
+  },
+  "header": {
+    "name": "亚马逊云科技解决方案",
+    "welcome": "欢迎您",
+    "logout": "退出登录"
+  },
   "top": {
     "account": "我的账户"
   },
@@ -321,7 +334,8 @@
     "nameOfPrefixList": "前缀列表文件名",
     "schedulingSettings": "任务调度设置",
     "finderMemory": "查找器内存",
-    "skipComparison": "是否需要数据比对"
+    "skipComparison": "是否需要数据比对",
+    "monitor": "日志监控"
   },
   "bottom": {
     "copy": "Amazon Web Services, Inc. 或其子公司.保留所有权利.",

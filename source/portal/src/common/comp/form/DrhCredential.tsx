@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Swal from "sweetalert2";
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -12,8 +11,6 @@ import InfoSpan from "common/InfoSpan";
 import NormalButton from "common/comp/NormalButton";
 
 import { listSecrets } from "graphql/queries";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
 import DescLink from "common/comp/DescLink";
 
 import {
@@ -24,11 +21,11 @@ import {
   GLOBAL_STR,
 } from "assets/config/const";
 import { EnumSpanType } from "common/InfoBar";
+import { appSyncRequestQuery } from "assets/utils/request";
 
 interface SelectMenuProp {
   hideBucket?: boolean;
   credentialValue: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
 }
 
@@ -38,21 +35,14 @@ const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
 
 const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const { t } = useTranslation();
-  const client: any = React.useContext(ClientContext);
   const { credentialValue, hideBucket, onChange } = props;
   const [ssmParamList, setSSMParamList] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
 
   async function getSSMParamsList() {
-    setLoadingData(true);
     try {
-      const query = gql(listSecrets);
-      const apiData: any = await client?.query({
-        fetchPolicy: "no-cache",
-        query: query,
-        variables: {},
-      });
-
+      setLoadingData(true);
+      const apiData: any = await appSyncRequestQuery(listSecrets, {});
       setLoadingData(false);
       if (
         apiData &&
@@ -62,15 +52,13 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
       ) {
         setSSMParamList(apiData.data.listSecrets);
       }
-    } catch (error: any) {
+    } catch (error) {
       setLoadingData(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
   useEffect(() => {
     getSSMParamsList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

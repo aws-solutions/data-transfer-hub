@@ -81,47 +81,38 @@ const OptionSettings: React.FC = () => {
   // Monitor Select Change
   useEffect(() => {
     updateTmpTaskInfo("maxCapacity", maxCapacity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maxCapacity]);
 
   useEffect(() => {
     updateTmpTaskInfo("minCapacity", minCapacity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minCapacity]);
 
   useEffect(() => {
     updateTmpTaskInfo("desiredCapacity", desiredCapacity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [desiredCapacity]);
 
   useEffect(() => {
     updateTmpTaskInfo("finderDepth", finderDepth);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finderDepth]);
 
   useEffect(() => {
     updateTmpTaskInfo("finderNumber", finderNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finderNumber]);
 
   useEffect(() => {
     updateTmpTaskInfo("workerNumber", workerNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workerNumber]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcSkipCompare", srcSkipCompare);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcSkipCompare]);
 
   useEffect(() => {
     updateTmpTaskInfo("finderEc2Memory", finderEc2Memory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finderEc2Memory]);
 
   useEffect(() => {
     updateTmpTaskInfo("ec2CronExpression", ec2CronExpression);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ec2CronExpression]);
 
   return (
@@ -216,11 +207,14 @@ const OptionSettings: React.FC = () => {
                 optionDesc=""
                 optionDescHtml={[
                   t("creation.step2.settings.advance.schedulingSettingsDesc1"),
-                  <DescLink title={" this guide "} link={CRON_HELP_LINK} />,
+                  <DescLink
+                    key={1}
+                    title={" this guide "}
+                    link={CRON_HELP_LINK}
+                  />,
                   t("creation.step2.settings.advance.schedulingSettingsDesc2"),
                 ]}
                 cronValue={ec2CronExpression}
-                // optionList={}
               />
             </div>
 

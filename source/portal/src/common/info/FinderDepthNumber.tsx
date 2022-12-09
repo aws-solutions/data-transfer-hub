@@ -6,7 +6,7 @@ interface Page {
   name: string | undefined;
 }
 
-const FinderDepthNumber: React.FC<Page> = (props: Page) => {
+const FinderDepthNumber: React.FC<Page> = () => {
   const { t } = useTranslation();
   return (
     <div className="credential">

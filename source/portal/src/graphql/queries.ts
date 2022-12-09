@@ -109,3 +109,77 @@ export const listSecrets = /* GraphQL */ `
     }
   }
 `;
+export const listLogStreams = /* GraphQL */ `
+  query ListLogStreams(
+    $logGroupName: String
+    $logStreamNamePrefix: String
+    $page: Int
+    $count: Int
+  ) {
+    listLogStreams(
+      logGroupName: $logGroupName
+      logStreamNamePrefix: $logStreamNamePrefix
+      page: $page
+      count: $count
+    ) {
+      logStreams {
+        logStreamName
+        creationTime
+        firstEventTimestamp
+        lastEventTimestamp
+        lastIngestionTime
+        uploadSequenceToken
+        arn
+        storedBytes
+      }
+      total
+    }
+  }
+`;
+export const getLogEvents = /* GraphQL */ `
+  query GetLogEvents(
+    $limit: Int
+    $logGroupName: String
+    $logStreamName: String
+    $nextToken: String
+  ) {
+    getLogEvents(
+      limit: $limit
+      logGroupName: $logGroupName
+      logStreamName: $logStreamName
+      nextToken: $nextToken
+    ) {
+      logEvents {
+        timestamp
+        message
+        ingestionTime
+      }
+      nextToken
+    }
+  }
+`;
+export const getMetricHistoryData = /* GraphQL */ `
+  query GetMetricHistoryData(
+    $id: String!
+    $graphName: GraphName!
+    $startTime: String
+    $endTime: String
+    $period: Int
+  ) {
+    getMetricHistoryData(
+      id: $id
+      graphName: $graphName
+      startTime: $startTime
+      endTime: $endTime
+      period: $period
+    ) {
+      series {
+        name
+        data
+      }
+      xaxis {
+        categories
+      }
+    }
+  }
+`;

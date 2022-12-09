@@ -8,6 +8,19 @@
   "info": "Info",
   "optional": "optional",
   "recommened": "Recommened",
+  "signin": {
+    "signInToDRH": "Sign in to Data Transfer Hub",
+    "email": "Email *",
+    "inputEmail": "Enter your email",
+    "password": "Password *",
+    "inputPassword": "Enter your password",
+    "signIn": "Sign In"
+  },
+  "header": {
+    "name": "AWS Solutions",
+    "welcome": "Welcome",
+    "logout": "Sign Out"
+  },
   "top": {
     "account": "Account"
   },
@@ -300,7 +313,7 @@
     "dashboard": "CloudWatch Dashboard",
     "finderMetrics": "Finder Logs",
     "finderDashboard": "CloudWatch Log Streams",
-    "workerMetrics": "Workder Logs",
+    "workerMetrics": "Worker Logs",
     "workerDashboard": "CloudWatch Log Streams",
     "enableS3Event": "Enable S3 Event?",
     "storageClass": "Storage Class",
@@ -321,7 +334,8 @@
     "nameOfPrefixList": "Name of Prefix List",
     "schedulingSettings": "Task Scheduling Settings",
     "finderMemory": "Finder Memory",
-    "skipComparison": "Need Data Comparison before Transfer"
+    "skipComparison": "Need Data Comparison before Transfer",
+    "monitor": "Monitoring"
   },
   "bottom": {
     "copy": "Amazon Web Services, Inc. or its affiliates. All rights reserved.",

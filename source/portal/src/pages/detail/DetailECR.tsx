@@ -6,8 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Moment from "react-moment";
-import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -19,11 +17,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-// import { API } from "aws-amplify";
 import { getTask } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -42,6 +37,10 @@ import {
 import { getRegionNameById } from "assets/config/const";
 
 import "./Detail.scss";
+import {
+  appSyncRequestMutation,
+  appSyncRequestQuery,
+} from "assets/utils/request";
 
 interface StyledTabProps {
   label: string;
@@ -109,7 +108,6 @@ function TabPanel(props: TabPanelProps) {
 
 const Detail: React.FC = (props: any) => {
   const { t } = useTranslation();
-  const client: any = React.useContext(ClientContext);
 
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -118,18 +116,12 @@ const Detail: React.FC = (props: any) => {
   const [isStopLoading, setIsStopLoading] = useState(false);
 
   async function fetchNotes(taskId: string) {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
-      const query = gql(getTask);
-      const apiData: any = await client?.query({
-        fetchPolicy: "no-cache",
-        query: query,
-        variables: {
-          id: taskId,
-        },
+      const apiData: any = await appSyncRequestQuery(getTask, {
+        id: taskId,
       });
       const tmpCurTask = apiData.data.getTask;
-
       if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
         tmpCurTask.parameters.forEach((element: any) => {
           tmpCurTask[element.ParameterKey] = element.ParameterValue
@@ -139,15 +131,13 @@ const Detail: React.FC = (props: any) => {
       }
       setCurTaskInfo(tmpCurTask);
       setIsLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       setIsLoading(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
   useEffect(() => {
     fetchNotes(props.match.params.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange: any = (event: React.ChangeEvent, newValue: number) => {
@@ -157,21 +147,15 @@ const Detail: React.FC = (props: any) => {
   async function stopTaskFunc(taskId: string) {
     setIsStopLoading(true);
     try {
-      const mutationStop = gql(stopTask);
-      const stopResData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: mutationStop,
-        variables: {
-          id: taskId,
-        },
+      const stopResData = await appSyncRequestMutation(stopTask, {
+        id: taskId,
       });
       setIsStopLoading(false);
       setOpen(false);
       fetchNotes(props.match.params.id);
       console.info(stopResData);
-    } catch (error: any) {
+    } catch (error) {
       setIsLoading(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
@@ -304,11 +288,11 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.createdAt")}
                           </div>
-                          <div>
+                          {/* <div>
                             <Moment format="YYYY-MM-DD HH:mm">
                               {curTaskInfo.createdAt}
                             </Moment>
-                          </div>
+                          </div> */}
                         </div>
                         <div className="split-item">
                           <div className="sub-name">

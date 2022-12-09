@@ -59,13 +59,13 @@ const StepTwoS3: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
+    // eslint-disable-next-line no-prototype-builtins
     if (!tmpTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/S3/ec2";
       history.push({
         pathname: toPath,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tmpTaskInfo]);
 
   const validateInput = () => {
@@ -171,7 +171,6 @@ const StepTwoS3: React.FC = () => {
   }, [tmpTaskInfo?.parametersObj?.alarmEmail]);
 
   // END Monitor tmpTaskInfo and hide validation error
-
   const goToHomePage = () => {
     const toPath = "/";
     history.push({
