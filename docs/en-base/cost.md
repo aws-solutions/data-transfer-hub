@@ -12,7 +12,7 @@ For an Amazon S3 transfer task, the cost can vary based on the total number of f
 
 Transfer 1 TB of S3 files from AWS Oregon Region (us-west-2) to AWS Beijing Region (cn-north-1), the average file size is **50MB**.
 
-- Total files: ~2,048
+- Total files: ~20,480
 - Average speed per EC2 instance: ~1GB/min
 - Total EC2 instance hours: ~17 hours
 
@@ -21,12 +21,12 @@ As of July 2022, the cost of using the solution to complete the transfer task is
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
 | Amazon EC2 | $0.0084 per hour (t4g.micro) |	$0.14
-| Amazon S3 |  ~ 12 GET requests + 10 PUT requests per file <br> GET: $0.0004 per 1000 request <br> PUT: $0.005 per 1000 request | $0.11
-| Amazon DynamoDB | ~2 write requests per file <br>  $1.25 per million write |$0.01
+| Amazon S3 |  ~ 12 GET requests + 10 PUT requests per file <br> GET: $0.0004 per 1000 request <br> PUT: $0.005 per 1000 request | $1.12
+| Amazon DynamoDB | ~2 write requests per file <br>  $1.25 per million write |$0.05
 | Amazon SQS | ~2 request per file <br>  $0.40 per million request | $0.01
 | Data Transfer Out | 0.09 per GB | $92.16
 | Others (For example, CloudWatch, Secrets Manager, etc.)   |  |  $1
- | | **TOTAL** |  $93.43
+ | | **TOTAL** |  $94.48
 
 ### Example 2
 

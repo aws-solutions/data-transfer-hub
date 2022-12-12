@@ -33,6 +33,10 @@ Yes. It is recommended to create a new AWS account dedicated to deploying soluti
 
 Not supported currently. For this scenario, we recommend using Amazon S3's [Cross-Region Replication][crr].
 
+**7. How to create a DTH S3 Transfer Task with AWS CLI?**</br>
+
+Please refer to the guide [Using AWS CLI to launch DTH S3 Transfer task](./tutorial-cli-launch.md).
+
 ## Performance
 
 **1. Will there be any difference in data transfer performance for deployment in AWS China Regions and in AWS Standard Regions?**</br>
@@ -44,6 +48,22 @@ No. If you do not have a domain name registered by ICP in AWS China Regions, it 
 The transfer performance may be affected by average file size, destination of data transfer, geographic location of data source, and real-time network environment. 
 
 For example, using the same configuration, the transfer speed with an average file size of 50MB is 170 times the transfer speed with an average file size of 10KB.
+
+**3. What is the scale up/scale down policy of Worker Auto Scaling Group?**</br>
+The size of Auto Scaling Group will automatically scale up or scale down according to the number of tasks in SQS.
+
+- Scaling Up Steps are:
+    ```json
+    { lower: 100,   change: +1 }
+    { lower: 500,   change: +2 }
+    { lower: 2000,  change: +5 }
+    { lower: 10000, change: +10 }
+    ```
+
+- Scaling Down Step is:
+    ```json
+    { upper: 0, change: -10000 }
+    ```
 
 ## Data security and authentication
 
@@ -69,7 +89,7 @@ By authentication through the Access Keyid and Access Key of the other party’s
 
 **5. Does the solution support SSE-S3, SSE-KMS, and SSE-CMK?**</br>
 
-Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the [tutorial](https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md ).
+Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the [tutorial](../tutorial-s3/#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3).
 
 ## Features
 
@@ -79,11 +99,20 @@ Alibaba Cloud OSS, Tencent Cloud, Huawei Cloud, Qiniu Cloud, Baidu Cloud, and al
 
 **2. Why is the status of Task still in progress after all destination files are transferred? When will the task stop?**</br>
 
-The data difference between the data source and destination will be monitored continuously, and the differences between the two sides will be automatically compared after the first deployment. 
+- **For Fixed Rate Job**
 
-Moreover, when the default comparison task once an hour finds a difference, it will also transfer the difference data. Therefore, the status of the Task will always be in progress, unless the user manually terminates the task.
+    The data difference between the data source and destination will be monitored continuously, and the differences between the two sides will be automatically compared after the first deployment. 
 
-Based on the built-in automatic expansion function of the solution, when there is no data to be transferred, the number of transfer working nodes will be automatically reduced to the minimum value configured by the user.
+    Moreover, when the default comparison task once an hour finds a difference, it will also transfer the difference data. Therefore, the status of the Task will always be in progress, unless the user manually terminates the task.
+
+    Based on the built-in automatic expansion function of the solution, when there is no data to be transferred, the number of transfer working nodes will be automatically reduced to the minimum value configured by the user.
+
+- **For One Time Transfer Job**
+
+    
+    When the objects all transferred to the destination, the status of one time transfer job will become **Completed**. 
+    
+    The transfer action will stop and you can select **Stop** to delete and release all backed resource.
 
 **3. How often will the data difference between the data source and destination be compared？**</br>
 
@@ -92,7 +121,7 @@ By default, it runs hourly.
 At **Task Scheduling Settings**, you can make the task scheduling configuration.
 
 - If you want to configure the timed task at a fixed frequency to compare the data difference on both sides of the time, select **Fixed Rate**.
-- If you want to configure a scheduled task through [Cron Expression](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions) to achieve a scheduled comparison of data differences on both sides, select **CroExpression**.
+- If you want to configure a scheduled task through [Cron Expression](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions) to achieve a scheduled comparison of data differences on both sides, select **Cron Expression**.
 - If you only want to perform the data synchronization task once, select **One Time Transfer**.
 
 **4. Is it possible for real-time synchronization of newly added files?**</br>
@@ -110,6 +139,31 @@ There will be 5 retries. After 5 retries without success, the task will be notif
 **7. How to monitor the progress of the transfer by checking information like how many files are waiting to be transferred and the current transfer speed?**</br>
 
 You can jump to the customized dashboard of Amazon CloudWatch by clicking the CloudWatch Dashboard link in Task Detail of the web console. You can also go directly to CloudWatch to view it.
+
+**8. Do I need to create an S3 destination bucket before creating a transfer task?**</br>
+
+Yes, you need to create the destination S3 bucket in advance.
+
+**9. How to use Finder depth and Finder number to improve Finder performance?**</br>
+
+You can use these two parameters to increase the parallelism of Finder to improve the performance of data comparison.
+
+- Example: If there are 12 subdirectories with over 100k files each, such as `Jan/`, `Feb`, ..., `Dec`. 
+    
+    It's recommended to set **`finderDepth`**=1 and **`finderNumber`**=12. In this example, your comparison performance will increase by 12 times.
+
+    !!! warning "Important"
+        When you are using finderDepth and finderNumber, please make sure that there is no objects at the same level as the folder with finderdepth shallower than or equal to.
+
+        For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372.  And assume that your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
+
+        What will **be lost** are: `bucket_name/pic.jpg`, `bucket_name/Jan/pic.jpg`
+
+        What will **not be lost** are: all files under `bucket_name/Jan/33/`, all files under `bucket_name/13/33/`
+
+**10. How to deal with Access Key Rotation?**</br>
+
+Currently, when Data Transfer Hub perceived that the Access Key of S3 has been rotated, it will fetch the latest key from AWS Secrets Manager automatically. Therefore, the Access Key Rotation will not affect the migrating process of DTH.
 
 ## Error messages
 
@@ -155,15 +209,23 @@ You need to update Secrets in Secrets Manager first, and then go to the EC2 cons
 
 **3. How to find detailed transfer log?**</br>
 
-When deploying the stack, you will be asked to enter the stack name (`DTHS3Stack` by default), and most resources will be created with the name prefix as the stack name. For example, the format of the queue name is `<StackName>-S3TransferQueue-<random suffix>`. This plugin will create two main log groups.
+- **For Portal users**
 
-- If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the [Error Code List](#error-code-list) section.
-    
-    `<StackName>-EC2FinderLogGroup<random suffix>`
+    Data Transfer Hub has integrated Dashboard and log groups into Portal, you don't need to jump to AWS CloudWatch console to view the logs.
 
-- The following are the log groups of all EC2 instances, and you can find detailed transfer logs.
+    Go to **Tasks** list page, and click the **Task ID**. You can see the dashboard and logs under the **Monitoring** section.
 
-    `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
+- **For Plugin (Pure Backend) users**
+
+    When deploying the stack, you will be asked to enter the stack name (`DTHS3Stack` by default), and most resources will be created with the name prefix as the stack name. For example, the format of the queue name is `<StackName>-S3TransferQueue-<random suffix>`. This plugin will create two main log groups.
+
+    - If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the [Error Code List](#error-messages) section.
+        
+        `<StackName>-EC2FinderLogGroup<random suffix>`
+
+    - The following are the log groups of all EC2 instances, and you can find detailed transfer logs.
+
+        `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
 
 **4. How to make customized build?**</br>
 
@@ -173,5 +235,13 @@ If you want to make customized changes to this plugin, refer to [Custom Build](h
 
 This is because the subnet you selected when deploying this solution does not have public network access, and the EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Later, the elastic scaling group will automatically start a new instance.
 
+**6. What is the version mapping relationship between the DTH portal template and DTH plugin templates?**</br>
+
+| DTH Portal Version | DTH S3 Plugin Version | DTH ECR Plugin Version|
+|----------|--------|--------|
+| v2.0.7   | v2.0.2 | v1.0.1 |
+| v2.1.3   | v2.1.0 | v1.0.3 |
+| v2.2.0   | v2.2.0 | v1.0.3 |
+| v2.3.0   | v2.3.0 | v1.0.4 |
 
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario

@@ -16,7 +16,13 @@ You can use the web console to create an Amazon S3 transfer task. For more infor
 
 5. To create credential information, select [Secrets Manager](https://console.aws.amazon.com/secretsmanager/home) to jump to the AWS Secrets Manager console in the current region.
     - From the left menu, select **Secrets**, then choose **Store a new secret** and select the **other type of secrets** key type.
-    - Fill in the `access_key_id` and `secret_access_key` information in the Plaintext input box according to the displayed format. For more information, refer to IAM features in the [IAM User Guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html). Choose **Next**.
+    - Fill in the `access_key_id` and `secret_access_key` information in the Plaintext input box according to the following format. For more information, refer to IAM features in the [IAM User Guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html). Choose **Next**.
+        ```json
+        {
+            "access_key_id": "<Your Access Key ID>",
+            "secret_access_key": "<Your Access Key Secret>"
+        }
+        ```
     - (Optional) Enter the key name and description. Choose **Next**.
     - In the configuration of automatic rotation, select Disable automatic rotation. Choose **Next**.
     - Keep the default value and choose **Save** to complete the creation of the key.
@@ -55,7 +61,7 @@ After the task is created successfully, it will appear on the **Tasks** page.
 
 By default, Data Transfer Hub supports data source bucket using SSE-S3 and SSE-KMS.
 
-If your source bucket enabled **SSE-CMK**, you need to create an IAM Policy and attach it to DTH worker and finder node.
+If your source bucket enabled **SSE-CMK**, you need to create an IAM Policy and attach it to DTH worker and finder node. You can go to [Amazon IAM Roles][iam-role] Console and search for `<StackName>-FinderStackFinderRole<random suffix>` and `<StackName>-EC2WorkerStackWorkerAsgRole<random suffix>`.
 
 Pay attention to the following:
 
@@ -84,3 +90,4 @@ Pay attention to the following:
 }
 ```
 
+[iam-role]: https://us-east-1.console.aws.amazon.com/iamv2/home#/roles

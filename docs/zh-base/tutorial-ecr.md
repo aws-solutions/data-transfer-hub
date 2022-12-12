@@ -1,7 +1,7 @@
 您可以在网页控制台创建Amazon ECR数据传输任务。更多信息请参考[部署解决方案](./deployment.md)。
 
 1. 从**创建传输任务**页面，选择**创建新任务**，然后选择**下一步**。
-2. 在**引擎选项**页面的引擎下，选择**Amazon ECR**，然后选择**下一步**。
+2. 在**引擎选项**页面的引擎下，选择**Amazon ECR**，然后选择**下一步**。您还可以通过选择 **Public Container Registry** 从 Docker Hub，GCR.io，Quay.io 等复制镜像。
 3. 指定传输任务详细信息。在**源仓库类型**中，选择容器仓库类型。
 4. 在**源仓库设置**中，输入**源仓库区域**和**Amazon Web Services账户ID**。
 5. 要创建凭证信息，请选择[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home)以跳转到当前区域的AWS Secrets Manager控制台。

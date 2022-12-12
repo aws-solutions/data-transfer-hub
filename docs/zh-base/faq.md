@@ -32,6 +32,10 @@
 
 暂不支持。此场景建议使用Amazon S3的[跨区域复制][crr]。
 
+**7。 如何使用 AWS CLI 创建 DTH S3 传输任务？**</br>
+
+请参考[使用AWS CLI启动DTH S3 Transfer任务](./tutorial-cli-launch.md)指南。
+
 ## 性能相关问题
 
 **1. 从中国区域部署和从全球区部署相比，数据传输性能会有差异吗？**</br>
@@ -41,6 +45,22 @@
 **2. 数据传输解决方案的传输性能和什么有关？**</br>
 
 传输性能的影响因素包括：平均文件大小、数据传输的目标端、数据源端所在的地理位置，以及实时的网络环境。例如，相同配置下，平均文件大小为50MB的传输速度为平均文件大小为10KB传输速度的170倍。
+
+**3. Worker Auto Scaling Group 的扩容/缩容策略是什么？**</br>
+Auto Scaling Group 的大小会根据 SQS 中的任务数量自动放大或缩小。
+
+- 扩大步骤是：
+    ```json
+    { lower: 100,   change: +1 }
+    { lower: 500,   change: +2 }
+    { lower: 2000,  change: +5 }
+    { lower: 10000, change: +10 }
+    ```
+
+- 按比例缩小步骤是：
+    ```json
+    { upper: 0, change: -10000 }
+    ```
 
 ## 数据安全与鉴权问题
 
@@ -66,7 +86,7 @@
 
 **5. 支持SSE-S3，SSE-KMS，SSE-CMK吗？**</br>
 
-是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考[教程](https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md)。
+是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考[教程](../tutorial-s3/#kms-amazon-s3-s3)。
 
 ## 功能相关问题
 
@@ -76,9 +96,17 @@
 
 **2. 为什么目标文件全部传输过后，Task的状态依旧是in progress？什么时候任务会停止？**</br>
 
-数据源端和目标端之间的数据差异会一直被监控，首次部署后会自动对比两侧差异。同时，当其默认一小时一次的对比任务发现差异后，也会将差异的数据进行传输。因此，Task的状态会一直在in progress，除非用户手动终止该任务。
+- **对于固定频率的任务**
 
-由于数据传输解决方案内置自动扩展功能，当没有数据需要传输时，会自动将传输工作节点数量降到用户配置的最小值。
+    数据源端和目标端之间的数据差异会一直被监控，首次部署后会自动对比两侧差异。同时，当其默认一小时一次的对比任务发现差异后，也会将差异的数据进行传输。因此，Task的状态会一直在in progress，除非用户手动终止该任务。
+
+    由于数据传输解决方案内置自动扩展功能，当没有数据需要传输时，会自动将传输工作节点数量降到用户配置的最小值。
+
+- **对于单次传输任务**
+
+    当对象全部传送到目标桶后，一次传送作业的状态会变为**已完成**。
+    
+    传输操作将停止，您可以选择**停止**删除并释放所有支持的资源。
 
 **3. 多久会对比一次数据源端和目标端之间的数据差异？**</br>
 
@@ -99,6 +127,30 @@
 **7. 如何监控传输的进度，还有多少等待传输的文件，以及当前的传输速度？**</br>
 
 您可以通过点击网页控制台的Task Detail内的CloudWatch Dashboard链接，跳转至Amazon CloudWatch的定制化Dashboard内查看。您也可以直接前往CloudWatch进行查看。
+
+**8. 在创建传输任务之前是否需要创建 S3 目标存储桶？**</br>
+
+是的，您需要提前创建目标 S3 存储桶。
+
+**9. 如何使用 Finder 深度和 Finder 数量来提高 Finder 性能？**</br>
+
+您可以使用这两个参数来增加 Finder 的并行度，以提高数据比较的性能。
+
+- 示例：如果有 12 个子目录，每个子目录的文件数超过 100k，例如 `Jan/`、`Feb`、...、`Dec`。
+    
+    建议设置 **`finderDepth`**=1 和 **`finderNumber`**=12。 在此示例中，您的比较性能将提高 12 倍。
+
+    !!! warning "重要提示"
+        当您使用finderDepth 和finderNumber 时，请确保没有与finderdepth 浅于或等于文件夹同级的对象。
+
+        例如，假设您设置 `finderDepth`=2 和 `finderNumber`=12 * 31 = 372。并假设您的 S3 存储桶结构类似于 `bucket_name/Jan/01/pic1.jpg`。
+
+        将**丢失**的是：`bucket_name/pic.jpg`、`bucket_name/Jan/pic.jpg`
+
+        **不会丢失**的是：`bucket_name/Jan/33/`下的所有文件，`bucket_name/13/33/`下的所有文件
+
+**10. 如何处理Access Key 轮换?**</br>
+目前，当 Data Transfer Hub 感知到 S3 的 Access Key 被轮换时，它会自动从 AWS Secrets Manager 中获取最新的密钥。 因此，Access Key Rotation 不会影响DTH 的迁移过程。
 
 ## 错误消息列表 <a name="error-code-list"></a>
 
@@ -140,15 +192,23 @@
 
 **3. 如何查找详细的传输日志？**</br>
 
-部署堆栈时，会要求您输入堆栈名称（默认为DTHS3Stack），大多数资源都会以名称前缀作为堆栈名称创建。例如，队列名称的格式为`<StackName>-S3TransferQueue-<random suffix>`。此插件将创建两个主要日志组。
+- **对于控制台用户**
 
-- 如果没有数据传输，您需要检查ECS任务日志中是否有问题。以下是调度ECS任务的日志组。您可以在 [错误消息列表](#error-code-list) 中找到更多信息.
+    Data Transfer Hub 已将 Dashboard 和日志组集成到 Portal 中，您无需跳转到 AWS CloudWatch 控制台即可查看日志。
 
-    `<StackName>-EC2FinderLogGroup<random suffix>`
+    转到**任务**列表页面，然后单击**任务编号**。 您可以在 **日志监控** 部分下看到仪表板和日志。
 
-- 以下是所有EC2实例的日志组，您可以找到详细的传输日志。
+- **对于 Plugin（纯后端版本）用户**
 
-    `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
+    部署堆栈时，会要求您输入堆栈名称（默认为DTHS3Stack），大多数资源都会以名称前缀作为堆栈名称创建。例如，队列名称的格式为`<StackName>-S3TransferQueue-<random suffix>`。此插件将创建两个主要日志组。
+
+    - 如果没有数据传输，您需要检查ECS任务日志中是否有问题。以下是调度ECS任务的日志组。您可以在 [错误消息列表](#error-code-list) 中找到更多信息.
+
+        `<StackName>-EC2FinderLogGroup<random suffix>`
+
+    - 以下是所有EC2实例的日志组，您可以找到详细的传输日志。
+
+        `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
 
 **4. 如何进行自定义更改？**</br>
 
@@ -158,5 +218,13 @@
 
 这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
 
+**6. DTH 前端版本模板和 DTH 插件模板之间的版本映射关系是什么？**</br>
+
+| DTH 前端版本| DTH S3 插件版本 | DTH ECR 插件版本|
+|------------|--------|--------|
+| v2.0.7 | v2.0.2 | v1.0.1 |
+| v2.1.3 | v2.1.0 | v1.0.3 |
+| v2.2.0 | v2.2.0 | v1.0.3 |
+| v2.3.0 | v2.3.0 | v1.0.4 |
 
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario
