@@ -43,3 +43,13 @@ export const humanFileSize = (bytes: any, si = false, dp = 1) => {
 
   return bytes.toFixed(dp) + " " + units[u];
 };
+
+export const buildCloudFormationLink = (
+  region: string,
+  cfnId: string
+): string => {
+  if (region.startsWith("cn")) {
+    return `https://${region}.console.amazonaws.cn/cloudformation/home?region=${region}#/stacks/events?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false&stackId=${cfnId}`;
+  }
+  return `https://${region}.console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/events?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false&stackId=${cfnId}`;
+};

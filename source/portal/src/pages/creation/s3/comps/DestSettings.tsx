@@ -84,7 +84,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
 
   const [destStorageClass, setDestStorageClass] = useState(
     tmpTaskInfo?.parametersObj?.destStorageClass ||
-      S3_STORAGE_CLASS_TYPE.STANDARD
+      S3_STORAGE_CLASS_TYPE.INTELLIGENT_TIERING
   );
 
   const [destAcl, setDestAcl] = useState(

@@ -38,12 +38,12 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
     curRegionType,
     curRegion,
   } = props;
+  const { t } = useTranslation();
   const [logStreams, setLogStreams] = useState<LogStream[]>([]);
   const [loadingData, setLoadingData] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [logPrefix, setLogPrefix] = useState("");
   const [curPage, setCurPage] = useState(1);
-  const { t } = useTranslation();
   const getLogStreamsByLogGroup = async () => {
     setLoadingData(true);
     try {
@@ -75,10 +75,10 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
     <div>
       <div className="log-group-detail">
         <div className="general-info tab-padding box-shadow">
-          <div className="title">Log group details</div>
+          <div className="title">{t("logGroup.details")}</div>
           <div className="general-info-content">
             <div className="split-item">
-              <div className="sub-name">Log Group Name</div>
+              <div className="sub-name">{t("logGroup.name")}</div>
               <div>{logGroupName}</div>
               <br />
             </div>
@@ -146,12 +146,11 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
         <div className="general-info tab-padding box-shadow">
           <div className="header">
             <div className="header-title">
-              <div className="big-title">Log streams</div>
+              <div className="big-title">{t("logGroup.logStrem")}</div>
               <div>
                 <NormalButton
                   onClick={() => {
                     getLogStreamsByLogGroup();
-                    console.info("refresh");
                   }}
                 >
                   <RefreshIcon width="10" />
@@ -172,7 +171,7 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
                         getLogStreamsByLogGroup();
                       }
                     }}
-                    placeholder="Filter log streams or try prefix search"
+                    placeholder={t("logGroup.filterStrem")}
                     className="text-input"
                     type="text"
                   />
@@ -182,8 +181,6 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
                     page={curPage}
                     count={Math.ceil(totalCount / PAGE_SIZE)}
                     onChange={(event, page) => {
-                      console.info("event:", event, page);
-                      // setCurPage(event.detail);
                       setCurPage(page);
                     }}
                   />
@@ -200,9 +197,9 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
             >
               <thead>
                 <tr>
-                  <th>Log stream</th>
-                  <th>Creation time</th>
-                  <th>Last event time</th>
+                  <th>{t("logGroup.streamName")}</th>
+                  <th>{t("logGroup.streamCreated")}</th>
+                  <th>{t("logGroup.streamEvent")}</th>
                 </tr>
               </thead>
               <tbody>

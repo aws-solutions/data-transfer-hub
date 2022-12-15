@@ -31,6 +31,7 @@ export const listTasks = /* GraphQL */ `
         stackStatus
         stackStatusReason
         executionArn
+        scheduleType
       }
       nextToken
     }
@@ -65,6 +66,7 @@ export const listTasksV2 = /* GraphQL */ `
         stackStatus
         stackStatusReason
         executionArn
+        scheduleType
       }
       total
     }
@@ -98,6 +100,7 @@ export const getTask = /* GraphQL */ `
       stackStatus
       stackStatusReason
       executionArn
+      scheduleType
     }
   }
 `;
@@ -181,6 +184,14 @@ export const getMetricHistoryData = /* GraphQL */ `
       xaxis {
         categories
       }
+    }
+  }
+`;
+export const getErrorMessage = /* GraphQL */ `
+  query GetErrorMessage($id: String!) {
+    getErrorMessage(id: $id) {
+      errMessage
+      errCode
     }
   }
 `;

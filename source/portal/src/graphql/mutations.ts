@@ -30,6 +30,7 @@ export const createTask = /* GraphQL */ `
       stackStatus
       stackStatusReason
       executionArn
+      scheduleType
     }
   }
 `;
@@ -61,6 +62,7 @@ export const stopTask = /* GraphQL */ `
       stackStatus
       stackStatusReason
       executionArn
+      scheduleType
     }
   }
 `;

@@ -55,6 +55,7 @@ import {
   AWS_REGION_LIST,
   getRegionListBySourceType,
   S3SourcePrefixType,
+  CRON_TYPE_LIST_WITH_ONE_TIME,
 } from "assets/config/const";
 import { Pagination } from "@material-ui/lab";
 import {
@@ -604,6 +605,17 @@ const List: React.FC = () => {
     return "";
   };
 
+  const buildScheduleType = (item: any) => {
+    if (item.type === EnumTaskType.S3_EC2) {
+      return CRON_TYPE_LIST_WITH_ONE_TIME.find(
+        (element) => element.value === item.scheduleType
+      )?.name;
+    }
+    if (item.type === EnumTaskType.ECR) {
+      return "Fixed Rate";
+    }
+  };
+
   return (
     <div className="drh-page">
       <Dialog
@@ -852,10 +864,15 @@ const List: React.FC = () => {
                             {buildTaskType(element)}
                           </div>
                           <div className="table-item body-item">
-                            One Time Transfer
+                            {buildScheduleType(element)}
                           </div>
-                          <div className="table-item body-item">
-                            <TaskStatusComp progress={element.progress} />
+                          <div className="table-item body-item task-list-status">
+                            <TaskStatusComp
+                              showLink
+                              taskId={element.id}
+                              cfnId={element.stackName}
+                              progress={element.progress}
+                            />
                           </div>
                           <div className="table-item create-time">
                             {formatLocalTime(element.createdAt)}

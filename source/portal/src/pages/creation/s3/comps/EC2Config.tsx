@@ -16,6 +16,7 @@ import DrhSelect from "common/comp/form/DrhSelect";
 import {
   CRON_HELP_LINK,
   EC2_MEMORY_LIST,
+  S3_EVENT_TYPE,
   YES_NO,
   YES_NO_LIST,
 } from "assets/config/const";
@@ -198,6 +199,9 @@ const OptionSettings: React.FC = () => {
 
             <div className="form-items">
               <DrhCron
+                hasOneTime={
+                  tmpTaskInfo?.parametersObj?.enableS3Event === S3_EVENT_TYPE.NO
+                }
                 onChange={(expression) => {
                   setEc2CronExpression(expression);
                 }}

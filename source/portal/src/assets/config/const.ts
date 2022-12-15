@@ -506,9 +506,13 @@ export const EC2_MEMORY_LIST = [
 ];
 
 export const CRON_TYPE_LIST = [
-  { name: "One Time Transfer", value: CRON_TYPE.ONE_TIME },
   { name: "Fixed Rate", value: CRON_TYPE.FIXED_RATE },
   { name: "Cron Expression", value: CRON_TYPE.CRON_EXPRESS },
+];
+
+export const CRON_TYPE_LIST_WITH_ONE_TIME = [
+  { name: "One Time Transfer", value: CRON_TYPE.ONE_TIME },
+  ...CRON_TYPE_LIST,
 ];
 
 export const CRON_UNIT_LIST = [

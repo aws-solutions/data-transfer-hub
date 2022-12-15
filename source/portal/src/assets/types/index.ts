@@ -177,7 +177,7 @@ export const TASK_STATUS_MAP: any = {
   STOPPING: { name: "Stopping", src: STATUS_PENDING, class: "gray" },
   ERROR: { name: "Error", src: STATUS_ERROR, class: "error" },
   IN_PROGRESS: { name: "In Progress", src: STATUS_PROGRESS, class: "gray" },
-  DONE: { name: "Done", src: STATUS_DONE, class: "success" },
+  DONE: { name: "Completed", src: STATUS_DONE, class: "success" },
   STOPPED: { name: "Stopped", src: STATUS_PENDING, class: "gray" },
 };
 

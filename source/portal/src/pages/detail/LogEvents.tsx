@@ -134,7 +134,10 @@ const LogEvents: React.FC = () => {
             <div className="general-info tab-padding box-shadow">
               <div className="header">
                 <div className="header-title">
-                  <div className="big-title">Log events: {logStreamName}</div>
+                  <div className="big-title">
+                    {t("logEvent.name")}
+                    {logStreamName}
+                  </div>
                   <div>
                     <NormalButton
                       onClick={() => {
@@ -154,8 +157,8 @@ const LogEvents: React.FC = () => {
               <table width="100%" cellPadding={0} cellSpacing={0}>
                 <thead>
                   <tr>
-                    <th style={{ width: 200 }}>Timestamp</th>
-                    <th>Message</th>
+                    <th style={{ width: 200 }}>{t("logEvent.timestamp")}</th>
+                    <th>{t("logEvent.message")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,29 +166,29 @@ const LogEvents: React.FC = () => {
                     <td colSpan={3}>
                       <div className="load-more-wrap">
                         {loadingHistory ? (
-                          <LoadingText text="Loading..." />
+                          <LoadingText text={t("loading")} />
                         ) : hasHistory ? (
                           <div>
-                            There are older events to load.{" "}
+                            {t("logEvent.hasOlder")}
                             <span
                               className="load-more"
                               onClick={() => {
                                 loadMore(LoadType.OLD);
                               }}
                             >
-                              Load more.
+                              {t("logEvent.loadMore")}
                             </span>
                           </div>
                         ) : (
                           <div>
-                            No older events at this moment.{" "}
+                            {t("logEvent.noOlder")}
                             <span
                               className="load-more"
                               onClick={() => {
                                 loadMore(LoadType.OLD);
                               }}
                             >
-                              Retry.
+                              {t("logEvent.retry")}
                             </span>
                           </div>
                         )}
@@ -216,7 +219,9 @@ const LogEvents: React.FC = () => {
                   ) : (
                     <tr>
                       <td colSpan={3}>
-                        <div className="no-data text-center">No Data</div>
+                        <div className="no-data text-center">
+                          {t("logEvent.noData")}
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -228,26 +233,26 @@ const LogEvents: React.FC = () => {
                             <LoadingText text="Loading..." />
                           ) : hasMore ? (
                             <div>
-                              There are newer events to load.{" "}
+                              {t("logEvent.hasNewer")}
                               <span
                                 className="load-more"
                                 onClick={() => {
                                   loadMore(LoadType.NEW);
                                 }}
                               >
-                                Load more.
+                                {t("logEvent.loadMore")}
                               </span>
                             </div>
                           ) : (
                             <div>
-                              No newer events at this moment.{" "}
+                              {t("logEvent.noNewer")}
                               <span
                                 className="load-more"
                                 onClick={() => {
                                   loadMore(LoadType.NEW);
                                 }}
                               >
-                                Retry.
+                                {t("logEvent.retry")}
                               </span>
                             </div>
                           )}

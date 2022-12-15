@@ -7,6 +7,9 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { GraphName } from "API";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { getOutputValueByDesc } from "assets/utils/utils";
+import { RangePicker } from "react-minimal-datetime-range";
+import "react-minimal-datetime-range/lib/react-minimal-datetime-range.min.css";
+
 import {
   CLOUD_WATCH_DASHBOARD_LINK_MAP,
   FINDER_DESC,
@@ -15,6 +18,7 @@ import {
   MonitorTabType,
   WORKER_DESC,
 } from "assets/config/const";
+// import { ZH_LANGUAGE_LIST } from "common/Bottom";
 
 const buildPreTime = (nowTime: number, period: string) => {
   switch (period) {
@@ -36,9 +40,9 @@ const buildPreTime = (nowTime: number, period: string) => {
 };
 
 const METRICS_TAB_LIST = [
-  { name: "Task Metrics", value: MonitorTabType.METRICS },
-  { name: "Finder Logs", value: MonitorTabType.FINDER },
-  { name: "Worker Logs", value: MonitorTabType.WORKER },
+  { name: "taskDetail.taskMetrics", value: MonitorTabType.METRICS },
+  { name: "taskDetail.finderMetrics", value: MonitorTabType.FINDER },
+  { name: "taskDetail.workerMetrics", value: MonitorTabType.WORKER },
 ];
 
 const SPECIFY_TIME_ITEMS = [
@@ -59,6 +63,9 @@ const SPECIFY_TIME_ITEMS = [
   },
   {
     name: "1w",
+  },
+  {
+    name: "Custom",
   },
 ];
 
@@ -81,6 +88,8 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
     Math.floor((Date.now() - 1000 * 60 * 60 * 3) / 1000)
   );
   const [endTime, setEndTime] = useState(Math.floor(Date.now() / 1000));
+  const [customDateRage, setCustomDateRage] = useState<any>([]);
+  const [customTimeRage, setCustomTimeRage] = useState<any>(["00:00", "23:59"]);
 
   const changeSpecifyTimeRange = (range: string) => {
     const tmpEndTime = Date.now();
@@ -99,7 +108,10 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
   };
 
   useEffect(() => {
-    changeSpecifyTimeRange(curSpecifyRange);
+    if (curSpecifyRange && curSpecifyRange !== "Custom") {
+      setCustomDateRage([]);
+      changeSpecifyTimeRange(curSpecifyRange);
+    }
   }, [curSpecifyRange]);
 
   return (
@@ -118,7 +130,7 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
                     setMonitorTab(element.value);
                   }}
                 >
-                  {element.name}
+                  {t(element.name)}
                 </div>
               );
             })}
@@ -153,6 +165,70 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
                       </span>
                     );
                   })}
+                  {curSpecifyRange === "Custom" && (
+                    <span className="item custom">
+                      <div className="time-range-picker">
+                        <RangePicker
+                          // locale={
+                          //   ZH_LANGUAGE_LIST.includes(i18n.language)
+                          //     ? "zh-cn"
+                          //     : "en-us"
+                          // } // ['en-us', 'zh-cn','ko-kr']; default is en-us
+                          show={false} // default is false
+                          disabled={false} // default is false
+                          allowPageClickToClose={true} // default is true
+                          onConfirm={(res: any) => {
+                            console.log(res);
+                            setCurSpecifyRange("Custom");
+                            const customStartDate = res[0]?.split(" ")?.[0];
+                            const customEndDate = res[1]?.split(" ")?.[0];
+                            setCustomDateRage([customStartDate, customEndDate]);
+                            const customStartTime = res[0]?.split(" ")?.[1];
+                            const customEndTime = res[1]?.split(" ")?.[1];
+                            setCustomTimeRage([customStartTime, customEndTime]);
+
+                            setStartTime(
+                              Math.floor(new Date(res[0]).getTime() / 1000)
+                            );
+                            setEndTime(
+                              Math.floor(new Date(res[1]).getTime() / 1000)
+                            );
+                          }}
+                          onClose={() => {
+                            console.log("onClose");
+                          }}
+                          onClear={() => {
+                            console.log("onClear");
+                          }}
+                          style={{ width: "300px", margin: "0 auto" }}
+                          placeholder={[
+                            t("taskDetail.startTime"),
+                            t("taskDetail.endTime"),
+                          ]}
+                          showOnlyTime={false} // default is false, only select time
+                          ////////////////////
+                          // IMPORTANT DESC //
+                          ////////////////////
+                          defaultDates={customDateRage}
+                          // ['YYYY-MM-DD', 'YYYY-MM-DD']
+                          // This is the value you choosed every time.
+                          defaultTimes={customTimeRage}
+                          // ['hh:mm', 'hh:mm']
+                          // This is the value you choosed every time.
+                          initialDates={customDateRage}
+                          // ['YYYY-MM-DD', 'YYYY-MM-DD']
+                          // This is the initial dates.
+                          // If provied, input will be reset to this value when the clear icon hits,
+                          // otherwise input will be display placeholder
+                          initialTimes={customTimeRage}
+                          // ['hh:mm', 'hh:mm']
+                          // This is the initial times.
+                          // If provied, input will be reset to this value when the clear icon hits,
+                          // otherwise input will be display placeholder
+                        />
+                      </div>
+                    </span>
+                  )}
                 </div>
                 <NormalButton
                   onClick={() => {
