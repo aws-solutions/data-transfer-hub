@@ -49,6 +49,11 @@ type Query {
     Get the log metric history data
     """
     getMetricHistoryData(id: String!, graphName: GraphName!, startTime: String, endTime: String, period: Int): GetMetricHistoryDataResponse
+
+    """
+    Get the task error message
+    """
+    getErrorMessage(id: String!): GetErrorMessageResponse
 }
 
 type Mutation {
@@ -133,6 +138,9 @@ type Task @aws_iam @aws_cognito_user_pools @aws_oidc{
 
     "StepFunctions execution ARN."
     executionArn: String
+
+    "Task schedule type."
+    scheduleType: ScheduleType
 }
 
 """
@@ -181,6 +189,31 @@ enum GraphName {
 
     "Desired and in-service instance graph"
     DesiredInServiceInstances
+}
+
+"""
+Task Error Code.
+"""
+enum TaskErrorCode {
+    "Error in cloudformation stack deployment or deletion"
+    CFN_ERROR
+    
+    "Error in check the finder job status"
+    FINDER_ERROR
+
+    "Error in check the complete check"
+    COMPLETE_CHECK_ERROR
+
+    UN_KNOWN
+}
+
+"""
+Task Schedule.
+"""
+enum ScheduleType {
+    ONE_TIME
+
+    FIXED_RATE
 }
 
 type CommonProgressInfo @aws_iam @aws_cognito_user_pools @aws_oidc{
@@ -253,6 +286,11 @@ type GraphXaxis {
 type GetMetricHistoryDataResponse {
     series: [DataSerie],
     xaxis: GraphXaxis
+}
+
+type GetErrorMessageResponse {
+    errMessage: String,
+    errCode: TaskErrorCode
 }
 
 input TaskParameterInput {

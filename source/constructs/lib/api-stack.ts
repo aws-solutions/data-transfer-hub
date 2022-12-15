@@ -11,15 +11,19 @@
  *  and limitations under the License.
  */
 
- import { Construct, CfnParameter, Duration, Stack, RemovalPolicy, CustomResource } from '@aws-cdk/core';
+ import { Construct, CfnParameter, Duration, Stack, RemovalPolicy, CustomResource, Aws, CfnOutput } from '@aws-cdk/core';
  import * as ddb from '@aws-cdk/aws-dynamodb';
  import * as cognito from '@aws-cdk/aws-cognito';
  import * as appsync from '@aws-cdk/aws-appsync';
  import * as lambda from '@aws-cdk/aws-lambda';
  import * as path from 'path';
  import * as cfnSate from './cfn-step-functions';
+ import * as monitorSate from './monitor-step-functions'
  import * as iam from '@aws-cdk/aws-iam';
  import * as cr from "@aws-cdk/custom-resources";
+ import * as sns from '@aws-cdk/aws-sns';
+ import * as sub from '@aws-cdk/aws-sns-subscriptions';
+ import * as kms from '@aws-cdk/aws-kms'
  import { AuthType } from './constructs-stack';
  import { addCfnNagSuppressRules } from "./constructs-stack";
  import { TableEncryption } from '@aws-cdk/aws-dynamodb';
@@ -131,11 +135,55 @@
          reason: 'This table is set to use DEFAULT encryption, the key is owned by DDB.'
        },
      ])
+     const snsKey = new kms.Key(this, 'SNSTopicEncryptionKey', {
+      enableKeyRotation: true,
+      enabled: true,
+      alias: `alias/dth/sns/${Aws.STACK_NAME}`,
+      // policy: snsKeyPolicy,
+      policy: new iam.PolicyDocument({
+          assignSids: true,
+          statements: [
+              new iam.PolicyStatement({
+                  actions: [
+                      "kms:GenerateDataKey*",
+                      "kms:Decrypt",
+                      "kms:Encrypt",
+                  ],
+                  resources: ["*"],
+                  effect: iam.Effect.ALLOW,
+                  principals: [
+                      new iam.ServicePrincipal("sns.amazonaws.com"),
+                      new iam.ServicePrincipal("cloudwatch.amazonaws.com"),
+                      new iam.ServicePrincipal("lambda.amazonaws.com"),
+                  ],
+              }),
+              new iam.PolicyStatement({
+                actions: [
+                  "kms:*",
+                  "sns:Publish"
+                ],
+                resources: ["*"],
+                effect: iam.Effect.ALLOW,
+                principals: [new iam.AccountRootPrincipal()],
+              }),
+          ],
+      }),
+
+    })
+
+     const alarmTopic = new sns.Topic(this, 'DTHCentralAlarmTopic', {
+         masterKey: snsKey,
+         displayName: `Data Transfer Hub Central Monitor Alarm (${Aws.STACK_NAME})`,
+         fifo: false,
+     }) 
+     alarmTopic.addSubscription(new sub.EmailSubscription(props.usernameParameter!.valueAsString));
+     const cfnAlarmTopic = alarmTopic.node.defaultChild as sns.CfnTopic;
+     cfnAlarmTopic.overrideLogicalId('DTHCentralAlarmTopic')
  
      const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
        code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
          bundling: {
-           image: lambda.Runtime.NODEJS_14_X.bundlingImage,
+           image: lambda.Runtime.NODEJS_16_X.bundlingImage,
            command: [
              'bash', '-c', [
                `cd /asset-output/`,
@@ -148,16 +196,22 @@
            user: 'root'
          }
        }),
-       compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
+       compatibleRuntimes: [lambda.Runtime.NODEJS_16_X],
        description: 'Data Transfer Hub - Lambda Layer'
+     })
+
+     const monitorStateMachine = new monitorSate.MonitorStateMachine(this, 'taskMonitorFlow', {
+      taskTable: this.taskTable,
+      centralSnsArn: alarmTopic.topicArn,
      })
  
      const stateMachine = new cfnSate.CloudFormationStateMachine(this, 'CfnWorkflow', {
        taskTableName: this.taskTable.tableName,
        taskTableArn: this.taskTable.tableArn,
-       lambdaLayer: lambdaLayer
+       lambdaLayer: lambdaLayer,
+       taskMonitorSfnArn: monitorStateMachine.taskMonitorStateMachineArn
      })
- 
+
      if (props.authType === AuthType.OPENID) {
  
        // Open Id Auth Config
@@ -337,7 +391,7 @@
        code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
          exclude: ['cdk/*', 'layer/*']
        }),
-       runtime: lambda.Runtime.NODEJS_14_X,
+       runtime: lambda.Runtime.NODEJS_16_X,
        handler: 'api/api-task.handler',
        timeout: Duration.seconds(10),
        memorySize: 512,
@@ -456,6 +510,14 @@
          TRANSFER_TASK_TABLE: this.taskTable.tableName,
        }
      })
+     taskV2HandlerFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [`arn:${Aws.PARTITION}:cloudformation:${Aws.REGION}:${Aws.ACCOUNT_ID}:stack/DTH*`],
+      actions: [
+        'cloudformation:DescribeStacks',
+        'cloudformation:DescribeStackEvents'
+      ]
+    }))
  
      const cfntaskV2HandlerFn = taskV2HandlerFn.node.defaultChild as lambda.CfnFunction
      addCfnNagSuppressRules(cfntaskV2HandlerFn, [
@@ -477,6 +539,14 @@
        responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
      })
 
+     taskLambdaDS.createResolver({
+      typeName: 'Query',
+      fieldName: 'getErrorMessage',
+      requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
+
+
     // Create Lambda Data Source for CloudWatch API
     const cwlMonitorHandlerFn = new lambda.Function(this, 'CWLMonitorHandlerFn', {
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/cwl'), {
@@ -493,7 +563,6 @@
 
     this.taskTable.grantReadWriteData(cwlMonitorHandlerFn)
 
-    // Grant es permissions to the appPipeline lambda
     cwlMonitorHandlerFn.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -539,6 +608,11 @@
       fieldName: 'getMetricHistoryData',
       requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
       responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
+    })
+
+    new CfnOutput(this, 'CentralAlarmTopicName', {
+      value: alarmTopic.topicName,
+      description: 'Central Alarm Topic Name'
     })
  
    }

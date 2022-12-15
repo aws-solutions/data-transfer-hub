@@ -236,8 +236,8 @@ def test_apex_chart_data_adaptor(ddb_client):
     result = metricData._apex_chart_data_adaptor(
         merged_xaxis, data_points_dict_array)
 
-    assert result == {'series': [{'name': 'serie_1', 'data': [22.0, 23.0, 0, 31.0]}, {
-        'name': 'serie_2', 'data': [0, 0, 27.0, 0]}], 'xaxis': {'categories': ['time1', 'time2', 'time3', 'time4']}}
+    assert result == {'series': [{'name': 'serie_1', 'data': [22.0, 23.0, -1, 31.0]}, {
+        'name': 'serie_2', 'data': [-1, -1, 27.0, -1]}], 'xaxis': {'categories': ['time1', 'time2', 'time3', 'time4']}}
 
 def test_network_graph_helper(ddb_client):
     from cwl_metric_data_helper import MetricDataHelper
