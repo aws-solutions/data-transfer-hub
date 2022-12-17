@@ -21,11 +21,15 @@ type DrhCronProp = {
   optionDesc: string;
   optionDescHtml?: any;
   cronValue: string;
+  scheduleType: string;
+  changeScheduleType: (type: string) => void;
   onChange: (express: string) => any;
 };
 
 const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
   const {
+    scheduleType,
+    changeScheduleType,
     hasOneTime,
     isI18n,
     cronValue,
@@ -35,7 +39,7 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
     onChange,
   } = props;
   const { t } = useTranslation();
-  const [cronType, setCronType] = useState<string>(CRON_TYPE.FIXED_RATE);
+  const [cronType, setCronType] = useState<string>(scheduleType);
   const [cronUnitType, setCronUnitType] = useState<string>(CRON_FIX_UNIT.HOURS);
   const [cronFixValue, setCronFixValue] = useState("1");
   const [cronTypeList, setCronTypeList] = useState(CRON_TYPE_LIST);
@@ -72,6 +76,7 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
 
   useEffect(() => {
     console.info("cronType:", cronType);
+    changeScheduleType(cronType);
     if (cronType === CRON_TYPE.ONE_TIME) {
       onChange("");
     } else {

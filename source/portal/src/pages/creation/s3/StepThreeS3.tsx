@@ -11,7 +11,7 @@ import MLink from "@material-ui/core/Link";
 
 import { createTask as createTaskMutaion } from "graphql/mutations";
 
-import { IState } from "store/Store";
+import { IState, S3_EC2_TASK } from "store/Store";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -41,6 +41,7 @@ import {
   S3_TASK_TYPE_MAP,
 } from "assets/types";
 import { appSyncRequestMutation } from "assets/utils/request";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -167,7 +168,7 @@ const StepThreeS3: React.FC = () => {
     return taskParamArr;
   };
 
-  const buildEC2Params = (parametersObj: any) => {
+  const buildEC2Params = (parametersObj: S3_EC2_TASK) => {
     const taskParamArr: any = [];
     console.info("parametersObj:", parametersObj);
     if (!parametersObj) {
@@ -310,6 +311,8 @@ const StepThreeS3: React.FC = () => {
       // Set Description
       if (createTaskInfo) {
         createTaskInfo.description = parametersObj?.description || "";
+        createTaskInfo.scheduleType =
+          parametersObj?.scheduleType || ScheduleType.FIXED_RATE;
       }
 
       let taskParamArr: any = [];
@@ -318,7 +321,7 @@ const StepThreeS3: React.FC = () => {
         setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
       }
       if (engine === S3_ENGINE_TYPE.EC2) {
-        taskParamArr = buildEC2Params(parametersObj);
+        taskParamArr = buildEC2Params(parametersObj as any);
         setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
 
         if (

@@ -63,6 +63,7 @@ import {
   appSyncRequestQuery,
 } from "assets/utils/request";
 import { formatLocalTime } from "assets/utils/utils";
+import { ScheduleType } from "API";
 
 const StyledMenu = withStyles({
   paper: {
@@ -298,6 +299,7 @@ const List: React.FC = () => {
     // when need to clone task type is S3 (EC2 Version)
     if (curSelectTask.type === EnumTaskType.S3_EC2) {
       // Clone EC2 Version Task
+      console.info("curSelectTask.parameters:", curSelectTask.parameters);
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
         // Set Default src prefix type
         tmpTaskInfo.parametersObj.srcPrefixType = S3SourcePrefixType.FullBucket;
@@ -420,6 +422,10 @@ const List: React.FC = () => {
           // Set Description
           tmpTaskInfo.parametersObj.description =
             tmpTaskInfo?.description || "";
+
+          // Set scheduleType
+          tmpTaskInfo.parametersObj.scheduleType =
+            tmpTaskInfo?.scheduleType || ScheduleType.FIXED_RATE;
         });
       }
     }

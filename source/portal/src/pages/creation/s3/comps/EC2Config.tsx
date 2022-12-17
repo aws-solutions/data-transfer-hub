@@ -22,6 +22,7 @@ import {
 } from "assets/config/const";
 import DrhCron from "common/comp/form/DrhCron";
 import DescLink from "common/comp/DescLink";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -64,6 +65,9 @@ const OptionSettings: React.FC = () => {
   );
   const [ec2CronExpression, setEc2CronExpression] = useState(
     tmpTaskInfo?.parametersObj?.ec2CronExpression || ""
+  );
+  const [scheduleType, setScheduleType] = useState<string>(
+    tmpTaskInfo?.parametersObj?.scheduleType || ScheduleType.FIXED_RATE
   );
 
   const updateTmpTaskInfo = (key: string, value: any) => {
@@ -115,6 +119,10 @@ const OptionSettings: React.FC = () => {
   useEffect(() => {
     updateTmpTaskInfo("ec2CronExpression", ec2CronExpression);
   }, [ec2CronExpression]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("scheduleType", scheduleType);
+  }, [scheduleType]);
 
   return (
     <div className="box-shadow card-list">
@@ -199,6 +207,14 @@ const OptionSettings: React.FC = () => {
 
             <div className="form-items">
               <DrhCron
+                scheduleType={scheduleType}
+                changeScheduleType={(type) => {
+                  setScheduleType(
+                    type === ScheduleType.ONE_TIME
+                      ? ScheduleType.ONE_TIME
+                      : ScheduleType.FIXED_RATE
+                  );
+                }}
                 hasOneTime={
                   tmpTaskInfo?.parametersObj?.enableS3Event === S3_EVENT_TYPE.NO
                 }

@@ -3,9 +3,10 @@ import reducer from "./Reducer";
 import { ACTION_TYPE } from "assets/types/index";
 import { S3SourcePrefixType } from "assets/config/const";
 
-interface S3_EC2_TASK {
+export interface S3_EC2_TASK {
   description: string;
   type: string;
+  scheduleType: string;
   parameters: any;
   parametersObj: {
     sourceInAccount: string;
@@ -28,6 +29,7 @@ interface S3_EC2_TASK {
     destCredentialsParameterStore: string;
     destAcl: string;
     ec2CronExpression: string;
+    scheduleType: string;
     maxCapacity: string;
     minCapacity: string;
     desiredCapacity: string;
