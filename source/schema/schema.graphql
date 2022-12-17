@@ -301,5 +301,6 @@ input TaskParameterInput {
 input CreateTaskInput {
     type: TaskType!
     description: String
+    scheduleType: ScheduleType!
     parameters: [ TaskParameterInput ]
 }

@@ -54,7 +54,7 @@
      let ecrPluginVersion = 'v1.0.0'
      let suffix = '-plugin'
      if (templateBucket === 'aws-gcr-solutions') {
-       s3PluginVersion = 'v2.2.0'
+       s3PluginVersion = 'v2.3.0'
        ecrPluginVersion = 'v1.0.3'
        suffix = ''
      }

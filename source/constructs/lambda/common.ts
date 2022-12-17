@@ -36,6 +36,11 @@ enum TaskType {
   ECR = 'ECR'
 }
 
+enum ScheduleType {
+  ONE_TIME = 'ONE_TIME',
+  FIXED_RATE = 'FIXED_RATE'
+}
+
 interface Parameter {
   ParameterKey: string,
   ParameterValue: string
@@ -44,6 +49,7 @@ interface Parameter {
 interface CreateTaskInput {
   type: TaskType,
   description?: string,
+  scheduleType: ScheduleType,
   parameters?: Parameter[]
 }
 
@@ -93,4 +99,4 @@ function makeid(length: number) {
   return result;
 }
 
-export { Task, TaskType, Parameter, CreateTaskInput, UpdateTaskInput, CommonTaskProgress, TaskProgress, assert, pprint, makeid }
+export { Task, TaskType, ScheduleType, Parameter, CreateTaskInput, UpdateTaskInput, CommonTaskProgress, TaskProgress, assert, pprint, makeid }
