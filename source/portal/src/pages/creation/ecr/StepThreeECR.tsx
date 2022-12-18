@@ -36,6 +36,7 @@ import {
 } from "assets/config/const";
 import { ACTION_TYPE } from "assets/types";
 import { appSyncRequestMutation } from "assets/utils/request";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpECRTaskInfo: state.tmpECRTaskInfo,
@@ -140,6 +141,8 @@ const StepThreeECR: React.FC = () => {
       // Set Description
       if (createTaskInfo) {
         createTaskInfo.description = parametersObj?.description || "";
+        // Set scheduleType
+        createTaskInfo.scheduleType = ScheduleType.FIXED_RATE;
       }
 
       const taskParamArr: any = buildECRParams(parametersObj);

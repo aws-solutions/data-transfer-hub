@@ -51,6 +51,7 @@ export interface S3_EC2_TASK {
 
 interface ECR_TASK {
   description: string;
+  scheduleType: string;
   parameters: any;
   parametersObj: {
     sourceType: string;
@@ -65,6 +66,7 @@ interface ECR_TASK {
     destPrefix: string;
     alarmEmail: string;
     description: string;
+    scheduleType: string;
     srcRegionObj?: any;
     destRegionObj?: any;
     sourceInAccount?: string;
