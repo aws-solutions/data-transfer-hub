@@ -1,10 +1,9 @@
 import React from "react";
-import Moment from "react-moment";
+// import Moment from "react-moment";
 import { useTranslation } from "react-i18next";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+// import {} from "utils"
 
 import {
-  CLOUD_WATCH_DASHBOARD_LINK_MAP,
   S3SourcePrefixType,
   S3SourcePrefixTypeList,
   S3_EVENT_OPTIONS,
@@ -13,6 +12,7 @@ import {
   YES_NO,
 } from "assets/config/const";
 import { EnumSourceType, EnumTaskType } from "assets/types";
+import { formatLocalTime } from "assets/utils/utils";
 
 interface TaskDetailProps {
   curTaskInfo: any;
@@ -31,9 +31,6 @@ type ObjectType = {
   [key: string]: string;
 };
 
-const FINDER_DESC = "Finder Log Group Name";
-const WORKER_DESC = "Worker Log Group Name";
-
 const converListToMap = (list: ItemType[]): ObjectType => {
   const tmpMap: ObjectType = {};
   list.forEach((element: ItemType) => {
@@ -49,20 +46,7 @@ const S3_SRC_PREFIX_MAP = converListToMap(S3SourcePrefixTypeList);
 
 const Details: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
   const { t } = useTranslation();
-  const { curTaskInfo, curRegionType, curRegion, accountInSrc, accountInDest } =
-    props;
-
-  const getOutputValueByDesc = (desc: string) => {
-    let resValue = "";
-    if (curTaskInfo.stackOutputs && curTaskInfo.stackOutputs.length > 0) {
-      curTaskInfo.stackOutputs.forEach((element: any) => {
-        if (element.Description === desc) {
-          resValue = element.OutputValue;
-        }
-      });
-    }
-    return resValue;
-  };
+  const { curTaskInfo, accountInSrc, accountInDest } = props;
 
   return (
     <div className="general-info tab-padding box-shadow">
@@ -73,79 +57,7 @@ const Details: React.FC<TaskDetailProps> = (props: TaskDetailProps) => {
           <div>{curTaskInfo.id}</div>
           <br />
           <div className="sub-name">{t("taskDetail.createdAt")}</div>
-          <div>
-            <Moment format="YYYY-MM-DD HH:mm:ss">
-              {curTaskInfo.createdAt}
-            </Moment>
-          </div>
-          <br />
-          <div className="sub-name">{t("taskDetail.taskMetrics")}</div>
-          <div>
-            {curTaskInfo.stackId ? (
-              <a
-                className="a-link"
-                rel="noopener noreferrer"
-                target="_blank"
-                href={`${
-                  CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                }?region=${curRegion}#dashboards:name=${
-                  curTaskInfo?.stackId?.split("/")[1]
-                }-Dashboard-${curRegion}`}
-              >
-                {t("taskDetail.dashboard")}{" "}
-                <OpenInNewIcon fontSize="small" className="open-icon" />
-              </a>
-            ) : (
-              "-"
-            )}
-          </div>
-
-          {curTaskInfo.stackOutputs && (
-            <>
-              <br />
-              <div className="sub-name">{t("taskDetail.finderMetrics")}</div>
-              <div>
-                {getOutputValueByDesc(FINDER_DESC) ? (
-                  <a
-                    className="a-link"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href={`${
-                      CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                    }?region=${curRegion}#logStream:group=${getOutputValueByDesc(
-                      FINDER_DESC
-                    )}`}
-                  >
-                    {t("taskDetail.finderDashboard")}{" "}
-                    <OpenInNewIcon fontSize="small" className="open-icon" />
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </div>
-              <br />
-              <div className="sub-name">{t("taskDetail.workerMetrics")}</div>
-              <div>
-                {getOutputValueByDesc(WORKER_DESC) ? (
-                  <a
-                    className="a-link"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href={`${
-                      CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                    }?region=${curRegion}#logStream:group=${getOutputValueByDesc(
-                      WORKER_DESC
-                    )}`}
-                  >
-                    {t("taskDetail.workerDashboard")}{" "}
-                    <OpenInNewIcon fontSize="small" className="open-icon" />
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </div>
-            </>
-          )}
+          <div>{formatLocalTime(curTaskInfo.createdAt)}</div>
         </div>
         <div className="split-item">
           {curTaskInfo.srcEndpoint && curTaskInfo.srcEndpoint !== "" && (

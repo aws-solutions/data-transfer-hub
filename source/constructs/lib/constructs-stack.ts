@@ -73,6 +73,12 @@ export class ConstructsStack extends cdk.Stack {
         default: '',
       });
 
+      usernameParameter = new CfnParameter(this, 'AdminEmail', {
+        type: 'String',
+        description: 'The email for receiving task status alarm',
+        allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
+      });
+
       // CFN metadata
       this.templateOptions.metadata = {
         'AWS::CloudFormation::Interface': {
@@ -87,7 +93,7 @@ export class ConstructsStack extends cdk.Stack {
     } else {
       usernameParameter = new CfnParameter(this, 'AdminEmail', {
         type: 'String',
-        description: 'The email of Admin user',
+        description: 'The email of Admin user and for receiving task status alarm',
         allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
       });
       // CFN metadata

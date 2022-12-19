@@ -203,7 +203,6 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       // If engine type is EC2 always show region
       setShowSrcRegion(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceInAccount]);
 
   const updateTmpTaskInfo = (key: string, value: any) => {
@@ -222,17 +221,14 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   // Monitor Data Change
   useEffect(() => {
     updateTmpTaskInfo("srcEndpoint", srcEndpoint);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcEndpoint]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcBucketName", srcBucketName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketName]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcBucketPrefix", encodeURIComponent(srcBucketPrefix));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketPrefix]);
 
   useEffect(() => {
@@ -240,33 +236,27 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       "srcCredentialsParameterStore",
       srcCredentialsParameterStore
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcCredentialsParameterStore]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcRegionObj", srcRegionObj);
     updateTmpTaskInfo("srcRegionName", srcRegionObj?.value || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcRegionObj]);
 
   useEffect(() => {
     updateTmpTaskInfo("enableS3Event", enableS3Event);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableS3Event]);
 
   useEffect(() => {
     updateTmpTaskInfo("includeMetadata", includeMetadata);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [includeMetadata]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcPrefixType", srcPrefixType);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcPrefixType]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcPrefixsListFile", srcPrefixsListFile);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcPrefixsListFile]);
 
   useEffect(() => {
@@ -281,8 +271,6 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       setSrcPrefixsListFile("");
       setSrcBucketPrefix("");
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcPrefixType]);
 
   return (
@@ -454,6 +442,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
               optionDescHtml={[
                 t("creation.step2.settings.source.enableS3EventDesc1"),
                 <DescLink
+                  key={1}
                   link={S3_EVENT_LINK}
                   title={t("creation.step2.settings.source.enableS3EventDesc2")}
                 />,
@@ -481,6 +470,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 optionDescHtml={[
                   t("creation.step2.settings.source.includeMetadataDesc1"),
                   <DescLink
+                    key={1}
                     title={t(
                       "creation.step2.settings.source.includeMetadataDesc2"
                     )}

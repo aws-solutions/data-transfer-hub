@@ -50,6 +50,8 @@ const mapState = (state: IState) => ({
 const MAX_LENGTH = 4096;
 
 const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
+const defaultTxtValueSourceECR =
+  "my-ecr-repo:ALL_TAGS,\nubuntu:14.04,\namazon-linux:latest,\nmysql";
 
 const StepTwoECR: React.FC = () => {
   const history = useHistory();
@@ -79,6 +81,7 @@ const StepTwoECR: React.FC = () => {
   const [classDestAccountId, setClassDestAccountId] = useState("form-items");
   const [classDestCredential, setClassDestCredential] = useState("form-items");
   const [curLength, setCurLength] = useState(0);
+  const [srcECRandSelectedImgs, setSrcECRandSelectedImgs] = useState(false);
 
   const [srcRegionObj, setSrcRegionObj] = useState<IRegionType | null>(
     tmpECRTaskInfo?.parametersObj?.srcRegionObj || null
@@ -132,6 +135,7 @@ const StepTwoECR: React.FC = () => {
   // Redirect Step One if task type is null
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
+    // eslint-disable-next-line no-prototype-builtins
     if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
       history.push({
@@ -189,9 +193,13 @@ const StepTwoECR: React.FC = () => {
       }
       if (srcList === EnumDockerImageType.SELECTED) {
         setClassImageList("form-items");
+        setSrcECRandSelectedImgs(true);
+      } else {
+        setSrcECRandSelectedImgs(false);
       }
     }
     if (sourceType === ECREnumSourceType.PUBLIC) {
+      setSrcECRandSelectedImgs(false);
       setSrcList(EnumDockerImageType.SELECTED);
       setClassSourceRegion("hidden");
       setClassIsSourceAccount("hidden");
@@ -261,87 +269,73 @@ const StepTwoECR: React.FC = () => {
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("sourceType", sourceType);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceType]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcRegionObj", srcRegionObj);
     updatetmpECRTaskInfo("srcRegion", srcRegionObj?.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcRegionObj]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("sourceInAccount", sourceInAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceInAccount]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcAccountId", srcAccountId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcAccountId]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcCredential", srcCredential);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcCredential]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcList", srcList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcList]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("srcImageList", srcImageList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcImageList]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destRegionObj", destRegionObj);
     updatetmpECRTaskInfo("destRegion", destRegionObj?.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destRegionObj]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destInAccount", destInAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destInAccount]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destCredential", destCredential);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destCredential]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destAccountId", destAccountId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destAccountId]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destPrefix", destPrefix);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destPrefix]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("description", encodeURIComponent(description));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("alarmEmail", alarmEmail);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alarmEmail]);
 
   return (
@@ -535,6 +529,9 @@ const StepTwoECR: React.FC = () => {
                             &gt;:&lt;
                             {t("creation.step2ECR.settings.source.image3")}&gt;,
                             {t("creation.step2ECR.settings.source.image4")}
+                            {srcECRandSelectedImgs
+                              ? t("creation.step2ECR.settings.source.image5")
+                              : ""}
                           </div>
                           <div>
                             <textarea
@@ -542,7 +539,11 @@ const StepTwoECR: React.FC = () => {
                               name="srcImageList"
                               value={srcImageList}
                               onChange={changeSrcImageList}
-                              placeholder={defaultTxtValue}
+                              placeholder={
+                                srcECRandSelectedImgs
+                                  ? defaultTxtValueSourceECR
+                                  : defaultTxtValue
+                              }
                               rows={7}
                             ></textarea>
                             <div className="max-tips">{`${curLength}/${MAX_LENGTH}`}</div>

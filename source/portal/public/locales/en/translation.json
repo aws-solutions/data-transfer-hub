@@ -8,6 +8,19 @@
   "info": "Info",
   "optional": "optional",
   "recommened": "Recommened",
+  "signin": {
+    "signInToDRH": "Sign in to Data Transfer Hub",
+    "email": "Email *",
+    "inputEmail": "Enter your email",
+    "password": "Password *",
+    "inputPassword": "Enter your password",
+    "signIn": "Sign In"
+  },
+  "header": {
+    "name": "AWS Solutions",
+    "welcome": "Welcome",
+    "logout": "Sign Out"
+  },
   "top": {
     "account": "Account"
   },
@@ -163,7 +176,9 @@
           "skipComparison": "Need Data Comparison before Transfer",
           "skipComparisonDesc": "If select yes, a finder will execute data comparison before transferring to avoid duplicated transfer. If select no, a worker will start transfer directly.",
           "finderMemory": "Finder Memory",
-          "finderMemoryDesc": "Memory size of the finder"
+          "finderMemoryDesc": "Memory size of the finder",
+          "oneTimeTips": "When the task 'Completed', the transfer action will stop and you can select 'Stop' to delete and release all backed resource. ",
+          "fixedRateError": "Task Scheduling must larger or equal than 2 minutes."
         },
         "more": {
           "title": "More",
@@ -195,7 +210,8 @@
           "image1": "Enter all images in format of",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "delimited by comma. If tag is ommited, the latest tag will be used."
+          "image4": "delimited by comma. If tag is ommited, the latest tag will be used.",
+          "image5": " If tag is ALL_TAGS, all the tags of this image will be used."
         },
         "dest": {
           "title": "Destination settings",
@@ -251,9 +267,16 @@
       "source": "Source",
       "destination": "Destination",
       "engineType": "Engine Type",
+      "scheduleType": "Schedule Type",
       "status": "Status",
       "createdTime": "Created time"
-    }
+    },
+    "error": "Error: ",
+    "viewInCFN": "View more logs in CloudFormation",
+    "viewInFinder": "View more logs in Finder Logs",
+    "viewWorker1": "Please check the warning email in the mailbox or ",
+    "viewWorker2": "View more logs in Worker Logs",
+    "viewWorker3": ", or re-create the transfer task to complete the difference"
   },
   "taskDetail": {
     "title": "",
@@ -300,7 +323,7 @@
     "dashboard": "CloudWatch Dashboard",
     "finderMetrics": "Finder Logs",
     "finderDashboard": "CloudWatch Log Streams",
-    "workerMetrics": "Workder Logs",
+    "workerMetrics": "Worker Logs",
     "workerDashboard": "CloudWatch Log Streams",
     "enableS3Event": "Enable S3 Event?",
     "storageClass": "Storage Class",
@@ -321,7 +344,10 @@
     "nameOfPrefixList": "Name of Prefix List",
     "schedulingSettings": "Task Scheduling Settings",
     "finderMemory": "Finder Memory",
-    "skipComparison": "Need Data Comparison before Transfer"
+    "skipComparison": "Need Data Comparison before Transfer",
+    "monitor": "Monitoring",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "bottom": {
     "copy": "Amazon Web Services, Inc. or its affiliates. All rights reserved.",
@@ -436,5 +462,27 @@
       "tableh2": "Recommended Memory",
       "notSupport": "Doesn't support for now. Recommend dividing into multiple tasks. Or using Finder Depth and Finder Number to tuning the task."
     }
-  }
+  },
+  "logGroup": {
+    "details": "Log group details",
+    "name": "Log Group Name",
+    "logStrem": "Log streams",
+    "filterStrem": "Filter log streams or try prefix search",
+    "streamName": "Log stream",
+    "streamCreated": "Creation time",
+    "streamEvent": "Last event time"
+  },
+  "logEvent": {
+    "name": "Log events: ",
+    "timestamp": "Timestamp",
+    "message": "Message",
+    "hasOlder": "There are older events to load. ",
+    "loadMore": "Load more.",
+    "noOlder": "No older events at this moment.",
+    "retry": "Retry.",
+    "hasNewer": "There are newer events to load. ",
+    "noNewer": "No newer events at this moment. "
+  },
+  "noData": "No Data",
+  "loading": "Loading..."
 }

@@ -3,19 +3,15 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Swal from "sweetalert2";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
-// import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
 
-import { IState } from "store/Store";
+import { IState, S3_EC2_TASK } from "store/Store";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -44,6 +40,8 @@ import {
   S3_ENGINE_TYPE,
   S3_TASK_TYPE_MAP,
 } from "assets/types";
+import { appSyncRequestMutation } from "assets/utils/request";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -57,7 +55,6 @@ const JOB_TYPE_MAP: any = {
 const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
-  const client: any = React.useContext(ClientContext);
 
   const { engine } = useParams() as any;
   console.info("type:", engine);
@@ -79,6 +76,7 @@ const StepThreeS3: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
+    // eslint-disable-next-line no-prototype-builtins
     if (!tmpTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/S3/ec2";
       history.push({
@@ -170,7 +168,7 @@ const StepThreeS3: React.FC = () => {
     return taskParamArr;
   };
 
-  const buildEC2Params = (parametersObj: any) => {
+  const buildEC2Params = (parametersObj: S3_EC2_TASK) => {
     const taskParamArr: any = [];
     console.info("parametersObj:", parametersObj);
     if (!parametersObj) {
@@ -313,6 +311,8 @@ const StepThreeS3: React.FC = () => {
       // Set Description
       if (createTaskInfo) {
         createTaskInfo.description = parametersObj?.description || "";
+        createTaskInfo.scheduleType =
+          parametersObj?.scheduleType || ScheduleType.FIXED_RATE;
       }
 
       let taskParamArr: any = [];
@@ -321,7 +321,7 @@ const StepThreeS3: React.FC = () => {
         setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
       }
       if (engine === S3_ENGINE_TYPE.EC2) {
-        taskParamArr = buildEC2Params(parametersObj);
+        taskParamArr = buildEC2Params(parametersObj as any);
         setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
 
         if (
@@ -376,13 +376,9 @@ const StepThreeS3: React.FC = () => {
   async function createTask() {
     setIsCreating(true);
     try {
-      const mutationCreate = gql(createTaskMutaion);
-      const createTaskData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: mutationCreate,
-        variables: { input: createTaskGQL },
+      const createTaskData = await appSyncRequestMutation(createTaskMutaion, {
+        input: createTaskGQL,
       });
-
       console.info("createTaskData:", createTaskData);
       dispatch({
         type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
@@ -392,9 +388,8 @@ const StepThreeS3: React.FC = () => {
       history.push({
         pathname: toPath,
       });
-    } catch (error: any) {
+    } catch (error) {
       setIsCreating(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 

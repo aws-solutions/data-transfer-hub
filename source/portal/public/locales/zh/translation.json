@@ -8,6 +8,19 @@
   "info": "信息",
   "optional": "可选",
   "recommened": "推荐",
+  "signin": {
+    "signInToDRH": "登录到 Data Transfer Hub",
+    "email": "邮箱地址 *",
+    "inputEmail": "输入您的邮箱地址",
+    "password": "密码 *",
+    "inputPassword": "输入您的密码",
+    "signIn": "登录"
+  },
+  "header": {
+    "name": "亚马逊云科技解决方案",
+    "welcome": "欢迎您",
+    "logout": "退出登录"
+  },
   "top": {
     "account": "我的账户"
   },
@@ -163,7 +176,9 @@
           "skipComparison": "是否需要数据比对",
           "skipComparisonDesc": "如果选Yes, 在传输数据前进行数据比对以防止重复传输。如果选No，将直接传输源数据.",
           "finderMemory": "查找器内存",
-          "finderMemoryDesc": "查找器内存大小"
+          "finderMemoryDesc": "查找器内存大小",
+          "oneTimeTips": "当任务 'Completed' 时，传输操作将停止，您可以选择“停止”以删除并释放所有支持的资源。",
+          "fixedRateError": "任务调度必须大于或等于 2 分钟."
         },
         "more": {
           "title": "更多",
@@ -195,7 +210,8 @@
           "image1": "输入容器镜像名称",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "使用逗号分隔. 如果不指定tag, 则默认为latest."
+          "image4": "使用逗号分隔. 如果不指定 tag, 则默认为 latest.",
+          "image5": "如果 tag 是 ALL_TAGS，则将使用该容器镜像的所有 tag。"
         },
         "dest": {
           "title": "目标仓库设置",
@@ -251,9 +267,16 @@
       "source": "数据源",
       "destination": "数据目的地",
       "engineType": "引擎类型",
+      "scheduleType": "任务类型",
       "status": "状态",
       "createdTime": "创建时间"
-    }
+    },
+    "error": "错误: ",
+    "viewInCFN": "在 CloudFormation 中查看更多",
+    "viewInFinder": "在查找器日志中查看更多",
+    "viewWorker1": "请在邮箱中检查告警邮件或者 ",
+    "viewWorker2": "在工作线程日志中查看",
+    "viewWorker3": ", 或者重新创建传输任务补齐文件差异。"
   },
   "taskDetail": {
     "title": "",
@@ -321,7 +344,10 @@
     "nameOfPrefixList": "前缀列表文件名",
     "schedulingSettings": "任务调度设置",
     "finderMemory": "查找器内存",
-    "skipComparison": "是否需要数据比对"
+    "skipComparison": "是否需要数据比对",
+    "monitor": "日志监控",
+    "startTime": "开始时间",
+    "endTime": "结束时间"
   },
   "bottom": {
     "copy": "Amazon Web Services, Inc. 或其子公司.保留所有权利.",
@@ -436,5 +462,27 @@
       "tableh2": "建议配置内存",
       "notSupport": "暂不支持，建议分解成多个传输任务， 或者使用 Finder Depth 和 Finder Number 来调优任务。"
     }
-  }
+  },
+  "logGroup": {
+    "details": "日志组详细信息",
+    "name": "日志组名称",
+    "logStrem": "日志流",
+    "filterStrem": "使用日志流前缀过滤",
+    "streamName": "日志流",
+    "streamCreated": "创建时间",
+    "streamEvent": "最后事件时间"
+  },
+  "logEvent": {
+    "name": "日志事件: ",
+    "timestamp": "时间",
+    "message": "消息",
+    "hasOlder": "有较早的事件可以加载。",
+    "loadMore": "加载更多",
+    "noOlder": "暂时没有更早的事件",
+    "retry": "重试",
+    "hasNewer": "有较新的事件可以加载。",
+    "noNewer": "暂时没有更新的事件。"
+  },
+  "noData": "暂无数据",
+  "loading": "加载中..."
 }

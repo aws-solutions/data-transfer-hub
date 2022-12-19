@@ -6,7 +6,7 @@ interface Page {
   name: string | undefined;
 }
 
-const ComparisonInfo: React.FC<Page> = (props: Page) => {
+const ComparisonInfo: React.FC<Page> = () => {
   const { t } = useTranslation();
   return (
     <div className="credential">

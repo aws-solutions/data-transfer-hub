@@ -6,7 +6,7 @@ interface Page {
   name: string | undefined;
 }
 
-const FinderMemory: React.FC<Page> = (props: Page) => {
+const FinderMemory: React.FC<Page> = () => {
   const { t } = useTranslation();
   return (
     <div className="credential">

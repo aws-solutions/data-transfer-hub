@@ -10,7 +10,6 @@ const PrimaryButton = withStyles({
     fontWeight: "bold",
     padding: "5px 15px",
     border: "1px solid",
-    // lineHeight: 1.5,
     backgroundColor: "#EC7211",
     borderColor: "#EC7211",
     borderRadius: 0,

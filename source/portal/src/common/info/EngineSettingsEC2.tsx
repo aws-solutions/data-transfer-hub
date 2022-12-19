@@ -9,7 +9,7 @@ interface Page {
   name: string | undefined;
 }
 
-const EngineSettingsEC2: React.FC<Page> = (props: Page) => {
+const EngineSettingsEC2: React.FC<Page> = () => {
   const { t } = useTranslation();
   return (
     <div className="credential">

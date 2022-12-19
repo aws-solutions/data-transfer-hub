@@ -23,7 +23,7 @@ const CREDENTIAL_JSON = {
   secret_access_key: "xxxxx",
 };
 
-const CredentialInfo: React.FC<Page> = (props: Page) => {
+const CredentialInfo: React.FC<Page> = () => {
   const [isCopied, setIsCopied] = useState(false);
   const { t } = useTranslation();
 

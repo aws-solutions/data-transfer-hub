@@ -26,6 +26,7 @@ setup_python_env() {
 
     echo "Installing python packages"
     # install test dependencies in the python virtual environment
+	pip install --upgrade pip
 	pip3 install -r test/requirements-test.txt
 	# pip3 install -r requirements.txt --target .
 
@@ -52,8 +53,8 @@ run_python_test() {
 	source .venv-test/bin/activate
 
 	# setup coverage report path
-	mkdir -p $source_dir/tests/coverage-reports
-	coverage_report_path=$source_dir/tests/coverage-reports/$component_name.coverage.xml
+	mkdir -p $source_dir/test/coverage-reports
+	coverage_report_path=$source_dir/test/coverage-reports/$component_name.coverage.xml
 	echo "coverage report path set to $coverage_report_path"
 
 	# Use -vv for debugging
@@ -109,7 +110,10 @@ construct_dir=$source_dir
 run_cdk_project_test $construct_dir
 
 # Test the attached Lambda function
-run_python_test $construct_dir/lambda/api api
+run_python_test $construct_dir/lambda/api/cwl cloudwatch_api
+run_python_test $construct_dir/lambda/api/secrets_manager secrets_manager_api
+run_python_test $construct_dir/lambda/api/task task_api
+run_python_test $construct_dir/lambda/api/task-monitoring task_monitoring_api
 run_python_test $construct_dir/lambda/custom-resource custom-resource
 
 # Return to the source/ level

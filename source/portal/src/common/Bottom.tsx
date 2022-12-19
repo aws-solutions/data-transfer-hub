@@ -8,7 +8,7 @@ import FeedbackIcon from "@material-ui/icons/Feedback";
 import { URL_FEEDBACK } from "../assets/config/const";
 
 const EN_LANGUAGE_LIST = ["en", "en_US", "en_GB"];
-const ZH_LANGUAGE_LIST = ["zh", "zh_CN"];
+export const ZH_LANGUAGE_LIST = ["zh", "zh_CN"];
 
 const langList = [
   {

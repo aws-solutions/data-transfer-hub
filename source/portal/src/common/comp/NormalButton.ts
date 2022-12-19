@@ -10,9 +10,7 @@ const NormalButton = withStyles({
     fontWeight: "bold",
     padding: "5px 15px",
     border: "1px solid",
-    // lineHeight: 1.5,
     backgroundColor: "#ffffff",
-    // borderColor: "#545b64",
     borderRadius: 0,
     "&:hover": {
       backgroundColor: "#ffffff",

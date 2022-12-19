@@ -20,7 +20,6 @@ type DrhInputProps = {
   requiredErrorMsg?: string;
   showFormatError?: boolean;
   formatErrorMsg?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
 };
 

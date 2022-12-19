@@ -23,7 +23,8 @@ import { addCfnNagSuppressRules } from "./constructs-stack";
 export interface CloudFormationStateMachineProps {
   taskTableName: string,
   taskTableArn: string,
-  lambdaLayer: lambda.LayerVersion
+  lambdaLayer: lambda.LayerVersion,
+  taskMonitorSfnArn: string
 }
 
 export class CloudFormationStateMachine extends cdk.Construct {
@@ -34,7 +35,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     super(scope, id);
 
     const createTaskCfnFn = new lambda.Function(this, 'CreateTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -57,7 +58,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     ])
 
     const stopTaskCfnFn = new lambda.Function(this, 'StopTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -368,7 +369,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     ])
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -406,6 +407,33 @@ export class CloudFormationStateMachine extends cdk.Construct {
       ]
     }))
 
+    const startMonitorFlowFn = new lambda.Function(this, 'StartMonitorFlowFn', {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
+      handler: 'start_monitor_flow.lambda_handler',
+      environment: {
+        MONITOR_SFN_ARN: props.taskMonitorSfnArn
+      },
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(60),
+      description: 'Data Transfer Hub - Start Task Monitoring Flow Handler'
+    })
+    startMonitorFlowFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [props.taskMonitorSfnArn],
+      actions: [
+        'states:StartExecution'
+      ]
+    }))
+
+    const cfnStartMonitorFlowFn = startMonitorFlowFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnStartMonitorFlowFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
     const startStackTask = new sfnTasks.LambdaInvoke(this, 'Start Stack', {
       lambdaFunction: createTaskCfnFn,
       outputPath: '$.Payload'
@@ -421,6 +449,11 @@ export class CloudFormationStateMachine extends cdk.Construct {
       outputPath: '$.Payload'
     })
 
+    const startMonitorFlow = new sfnTasks.LambdaInvoke(this, 'Start Monitoring Flow', {
+      lambdaFunction: startMonitorFlowFn,
+      outputPath: '$.Payload'
+    })
+
     const stackOperationSucceed = new sfn.Succeed(this, 'Stack Ops Succeed')
     const stackOperationFailed = new sfn.Fail(this, 'Stack Ops Failed')
 
@@ -430,8 +463,10 @@ export class CloudFormationStateMachine extends cdk.Construct {
 
     const queryStackStatusChoice = new sfn.Choice(this, 'Query Stack Status Choice')
       .when(
+        sfn.Condition.stringEquals('$.stackStatus', 'CREATE_COMPLETE')
+        , startMonitorFlow.next(stackOperationSucceed))
+      .when(
         sfn.Condition.or(
-          sfn.Condition.stringEquals('$.stackStatus', 'CREATE_COMPLETE'),
           sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_COMPLETE'),
           sfn.Condition.stringEquals('$.stackStatus', 'DELETE_COMPLETE')
         )

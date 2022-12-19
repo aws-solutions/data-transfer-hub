@@ -59,22 +59,18 @@ const OptionSettings: React.FC = () => {
   // Monitor Select Change
   useEffect(() => {
     updateTmpTaskInfo("lambdaMemory", lambdaMemory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lambdaMemory]);
 
   useEffect(() => {
     updateTmpTaskInfo("multipartThreshold", multipartThreshold);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multipartThreshold]);
 
   useEffect(() => {
     updateTmpTaskInfo("chunkSize", chunkSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chunkSize]);
 
   useEffect(() => {
     updateTmpTaskInfo("maxThreads", maxThreads);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maxThreads]);
 
   return (

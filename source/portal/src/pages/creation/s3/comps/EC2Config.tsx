@@ -16,18 +16,27 @@ import DrhSelect from "common/comp/form/DrhSelect";
 import {
   CRON_HELP_LINK,
   EC2_MEMORY_LIST,
+  S3_EVENT_TYPE,
   YES_NO,
   YES_NO_LIST,
 } from "assets/config/const";
 import DrhCron from "common/comp/form/DrhCron";
 import DescLink from "common/comp/DescLink";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
-const OptionSettings: React.FC = () => {
+interface EC2ConfigSettingsProps {
+  fixedRateError: boolean;
+}
+
+const EC2ConfigSettings: React.FC<EC2ConfigSettingsProps> = (
+  props: EC2ConfigSettingsProps
+) => {
   const { t } = useTranslation();
+  const { fixedRateError } = props;
   const { tmpTaskInfo } = useMappedState(mapState);
   const dispatch = useDispatch();
   console.info("tmpTaskInfo:", tmpTaskInfo);
@@ -64,6 +73,9 @@ const OptionSettings: React.FC = () => {
   const [ec2CronExpression, setEc2CronExpression] = useState(
     tmpTaskInfo?.parametersObj?.ec2CronExpression || ""
   );
+  const [scheduleType, setScheduleType] = useState<string>(
+    tmpTaskInfo?.parametersObj?.scheduleType || ScheduleType.FIXED_RATE
+  );
 
   const updateTmpTaskInfo = (key: string, value: any) => {
     const param: any = { ...tmpTaskInfo?.parametersObj };
@@ -81,48 +93,43 @@ const OptionSettings: React.FC = () => {
   // Monitor Select Change
   useEffect(() => {
     updateTmpTaskInfo("maxCapacity", maxCapacity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maxCapacity]);
 
   useEffect(() => {
     updateTmpTaskInfo("minCapacity", minCapacity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minCapacity]);
 
   useEffect(() => {
     updateTmpTaskInfo("desiredCapacity", desiredCapacity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [desiredCapacity]);
 
   useEffect(() => {
     updateTmpTaskInfo("finderDepth", finderDepth);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finderDepth]);
 
   useEffect(() => {
     updateTmpTaskInfo("finderNumber", finderNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finderNumber]);
 
   useEffect(() => {
     updateTmpTaskInfo("workerNumber", workerNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workerNumber]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcSkipCompare", srcSkipCompare);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcSkipCompare]);
 
   useEffect(() => {
     updateTmpTaskInfo("finderEc2Memory", finderEc2Memory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finderEc2Memory]);
 
   useEffect(() => {
     updateTmpTaskInfo("ec2CronExpression", ec2CronExpression);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ec2CronExpression]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("scheduleType", scheduleType);
+  }, [scheduleType]);
 
   return (
     <div className="box-shadow card-list">
@@ -207,6 +214,18 @@ const OptionSettings: React.FC = () => {
 
             <div className="form-items">
               <DrhCron
+                fixedRateError={fixedRateError}
+                scheduleType={scheduleType}
+                changeScheduleType={(type) => {
+                  setScheduleType(
+                    type === ScheduleType.ONE_TIME
+                      ? ScheduleType.ONE_TIME
+                      : ScheduleType.FIXED_RATE
+                  );
+                }}
+                hasOneTime={
+                  tmpTaskInfo?.parametersObj?.enableS3Event === S3_EVENT_TYPE.NO
+                }
                 onChange={(expression) => {
                   setEc2CronExpression(expression);
                 }}
@@ -216,11 +235,14 @@ const OptionSettings: React.FC = () => {
                 optionDesc=""
                 optionDescHtml={[
                   t("creation.step2.settings.advance.schedulingSettingsDesc1"),
-                  <DescLink title={" this guide "} link={CRON_HELP_LINK} />,
+                  <DescLink
+                    key={1}
+                    title={" this guide "}
+                    link={CRON_HELP_LINK}
+                  />,
                   t("creation.step2.settings.advance.schedulingSettingsDesc2"),
                 ]}
                 cronValue={ec2CronExpression}
-                // optionList={}
               />
             </div>
 
@@ -359,4 +381,4 @@ const OptionSettings: React.FC = () => {
   );
 };
 
-export default OptionSettings;
+export default EC2ConfigSettings;

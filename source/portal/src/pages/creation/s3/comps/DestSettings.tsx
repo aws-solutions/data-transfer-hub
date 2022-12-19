@@ -84,7 +84,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
 
   const [destStorageClass, setDestStorageClass] = useState(
     tmpTaskInfo?.parametersObj?.destStorageClass ||
-      S3_STORAGE_CLASS_TYPE.STANDARD
+      S3_STORAGE_CLASS_TYPE.INTELLIGENT_TIERING
   );
 
   const [destAcl, setDestAcl] = useState(
@@ -159,22 +159,18 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   // Monitor Data Change
   useEffect(() => {
     updateTmpTaskInfo("destBucketName", destBucketName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destBucketName]);
 
   useEffect(() => {
     updateTmpTaskInfo("destBucketPrefix", encodeURIComponent(destBucketPrefix));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destBucketPrefix]);
 
   useEffect(() => {
     updateTmpTaskInfo("destStorageClass", destStorageClass);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destStorageClass]);
 
   useEffect(() => {
     updateTmpTaskInfo("destAcl", destAcl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destAcl]);
 
   useEffect(() => {
@@ -182,13 +178,11 @@ const DestSettings: React.FC<DestPropType> = (props) => {
       "destCredentialsParameterStore",
       destCredentialsParameterStore
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destCredentialsParameterStore]);
 
   useEffect(() => {
     updateTmpTaskInfo("destRegionObj", destRegionObj);
     updateTmpTaskInfo("destRegionName", destRegionObj?.value || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destRegionObj]);
 
   // Monitor SourceInAccount When Lambda Engine
@@ -374,6 +368,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                     optionDescHtml={[
                       t("creation.step2.settings.source.objectACLDesc1"),
                       <DescLink
+                        key={1}
                         title={t(
                           "creation.step2.settings.source.objectACLDesc2"
                         )}

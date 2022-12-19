@@ -34,6 +34,7 @@ import { EnumSourceType, S3_ENGINE_TYPE } from "assets/types";
 import "../Creation.scss";
 
 import { IState } from "store/Store";
+import { ScheduleType } from "API";
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
@@ -57,15 +58,17 @@ const StepTwoS3: React.FC = () => {
   const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);
   const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
 
+  const [fixedRateInvalidError, setFixedRateInvalidError] = useState(false);
+
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
+    // eslint-disable-next-line no-prototype-builtins
     if (!tmpTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/S3/ec2";
       history.push({
         pathname: toPath,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tmpTaskInfo]);
 
   const validateInput = () => {
@@ -129,6 +132,19 @@ const StepTwoS3: React.FC = () => {
           errorCount++;
           setDestRegionRequiredError(true);
         }
+        // IF the schedule type is Fix Rate, selection at least 2 minutes
+        if (paramsObj.scheduleType === ScheduleType.FIXED_RATE) {
+          const [first, ...rest] = paramsObj.ec2CronExpression.split(" ");
+          if (rest.join(" ").trim() === "* * * ? *") {
+            // 1 min eg. */1 * * * ? *
+            // 1 hrs eg. 0 */1 ? * * *
+            // 1 day eg. 0 0 */1 * ? *
+            if (parseInt(first.split("/")?.[1]) < 2) {
+              errorCount++;
+              setFixedRateInvalidError(true);
+            }
+          }
+        }
       }
     }
 
@@ -170,8 +186,11 @@ const StepTwoS3: React.FC = () => {
     setAlarmEmailFormatError(false);
   }, [tmpTaskInfo?.parametersObj?.alarmEmail]);
 
-  // END Monitor tmpTaskInfo and hide validation error
+  useEffect(() => {
+    setFixedRateInvalidError(false);
+  }, [tmpTaskInfo?.parametersObj?.ec2CronExpression]);
 
+  // END Monitor tmpTaskInfo and hide validation error
   const goToHomePage = () => {
     const toPath = "/";
     history.push({
@@ -253,7 +272,9 @@ const StepTwoS3: React.FC = () => {
                 destShowPrefixFormatError={destPrefixFormatError}
               />
               {engine === S3_ENGINE_TYPE.LAMBDA && <LambdaConfig />}
-              {engine === S3_ENGINE_TYPE.EC2 && <EC2Config />}
+              {engine === S3_ENGINE_TYPE.EC2 && (
+                <EC2Config fixedRateError={fixedRateInvalidError} />
+              )}
               <OptionSettings
                 showAlramEmailRequireError={alramEmailRequireError}
                 showAlarmEmailFormatError={alarmEmailFormatError}

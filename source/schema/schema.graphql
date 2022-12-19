@@ -34,6 +34,26 @@ type Query {
     Get the list of Secrets names from Secret Manager
     """
     listSecrets: [Secret]
+
+    """
+    Get the list of log group by log group name
+    """
+    listLogStreams(logGroupName: String, logStreamNamePrefix: String, page: Int, count: Int): ListLogStreamsResponse
+
+    """
+    Get the log events by log group name and log stream name
+    """
+    getLogEvents(limit: Int = 100, logGroupName: String, logStreamName: String, nextToken: String): GetLogEventsResponse
+    
+    """
+    Get the log metric history data
+    """
+    getMetricHistoryData(id: String!, graphName: GraphName!, startTime: String, endTime: String, period: Int): GetMetricHistoryDataResponse
+
+    """
+    Get the task error message
+    """
+    getErrorMessage(id: String!): GetErrorMessageResponse
 }
 
 type Mutation {
@@ -118,6 +138,9 @@ type Task @aws_iam @aws_cognito_user_pools @aws_oidc{
 
     "StepFunctions execution ARN."
     executionArn: String
+
+    "Task schedule type."
+    scheduleType: ScheduleType
 }
 
 """
@@ -151,6 +174,48 @@ enum TaskProgress {
     STOPPED
 }
 
+"""
+CloudWatch graph name.
+"""
+enum GraphName {
+    "Network Graph"
+    Network
+
+    "Transferred data and failed data graph"
+    TransferredFailedObjects
+
+    "Running job and waiting job graph"
+    RunningWaitingJobHistory
+
+    "Desired and in-service instance graph"
+    DesiredInServiceInstances
+}
+
+"""
+Task Error Code.
+"""
+enum TaskErrorCode {
+    "Error in cloudformation stack deployment or deletion"
+    CFN_ERROR
+    
+    "Error in check the finder job status"
+    FINDER_ERROR
+
+    "Error in check the complete check"
+    COMPLETE_CHECK_ERROR
+
+    UN_KNOWN
+}
+
+"""
+Task Schedule.
+"""
+enum ScheduleType {
+    ONE_TIME
+
+    FIXED_RATE
+}
+
 type CommonProgressInfo @aws_iam @aws_cognito_user_pools @aws_oidc{
     "Total number of records. In S3 task, it is the total number of objects."
     total: Int
@@ -181,6 +246,53 @@ type ListTasksResponseV2 {
     total: Int
 }
 
+type LogStream {
+    logStreamName: String
+    creationTime: String
+    firstEventTimestamp: String
+    lastEventTimestamp: String
+    lastIngestionTime: String
+    uploadSequenceToken: String
+    arn: String
+    storedBytes: Int
+}
+
+type ListLogStreamsResponse {
+    logStreams: [LogStream],
+    total: Int
+}
+
+type LogEvent {
+    timestamp: String
+    message: String
+    ingestionTime: String
+}
+
+type GetLogEventsResponse {
+    logEvents: [LogEvent],
+    nextForwardToken: String,
+    nextBackwardToken: String
+}
+
+type DataSerie {
+    name: String,
+    data: [Float]
+}
+
+type GraphXaxis {
+    categories: [Float]
+}
+
+type GetMetricHistoryDataResponse {
+    series: [DataSerie],
+    xaxis: GraphXaxis
+}
+
+type GetErrorMessageResponse {
+    errMessage: String,
+    errCode: TaskErrorCode
+}
+
 input TaskParameterInput {
     ParameterKey: String
     ParameterValue: String
@@ -189,5 +301,6 @@ input TaskParameterInput {
 input CreateTaskInput {
     type: TaskType!
     description: String
+    scheduleType: ScheduleType!
     parameters: [ TaskParameterInput ]
 }

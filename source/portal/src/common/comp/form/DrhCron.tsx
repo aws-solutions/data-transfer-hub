@@ -1,43 +1,50 @@
 import React, { useState, useEffect } from "react";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Trans } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import {
   CRON_FIX_UNIT,
   CRON_TYPE,
   CRON_TYPE_LIST,
+  CRON_TYPE_LIST_WITH_ONE_TIME,
   CRON_UNIT_LIST,
   MenuProps,
 } from "assets/config/const";
 import SelectInput from "common/comp/SelectInput";
+import Alert from "common/Alert";
 
-type SelectMenuProp = {
+type DrhCronProp = {
+  hasOneTime?: boolean;
   isI18n?: boolean;
   optionTitle: string;
   optionDesc: string;
   optionDescHtml?: any;
   cronValue: string;
-  // optionList: OptionType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // onChange: any;
+  scheduleType: string;
+  fixedRateError: boolean;
+  changeScheduleType: (type: string) => void;
   onChange: (express: string) => any;
 };
 
-const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
+const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
   const {
+    scheduleType,
+    changeScheduleType,
+    hasOneTime,
     isI18n,
     cronValue,
-    // optionList,
     optionTitle,
     optionDesc,
     optionDescHtml,
+    fixedRateError,
     onChange,
   } = props;
-
-  const [cronType, setCronType] = useState<string>(CRON_TYPE.FIXED_RATE);
+  const { t } = useTranslation();
+  const [cronType, setCronType] = useState<string>(scheduleType);
   const [cronUnitType, setCronUnitType] = useState<string>(CRON_FIX_UNIT.HOURS);
   const [cronFixValue, setCronFixValue] = useState("1");
+  const [cronTypeList, setCronTypeList] = useState(CRON_TYPE_LIST);
 
   const buildCronExpression = () => {
     let tmpExpression = "";
@@ -54,18 +61,29 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   };
 
   useEffect(() => {
+    if (hasOneTime) {
+      setCronTypeList(CRON_TYPE_LIST_WITH_ONE_TIME);
+    } else {
+      // Reset fixed rate after change s3 event
+      setCronTypeList(CRON_TYPE_LIST);
+      setCronType(CRON_TYPE.FIXED_RATE);
+      setCronUnitType(CRON_FIX_UNIT.HOURS);
+      setCronFixValue("1");
+    }
+  }, [hasOneTime]);
+
+  useEffect(() => {
     buildCronExpression();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cronUnitType, cronFixValue]);
 
   useEffect(() => {
     console.info("cronType:", cronType);
+    changeScheduleType(cronType);
     if (cronType === CRON_TYPE.ONE_TIME) {
       onChange("");
     } else {
       buildCronExpression();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cronType]);
 
   return (
@@ -88,7 +106,7 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
             }}
             input={<SelectInput style={{ width: 200 }} />}
           >
-            {CRON_TYPE_LIST.map((option, index) => {
+            {cronTypeList.map((option, index) => {
               return isI18n ? (
                 <MenuItem key={index} value={option.value}>
                   <Trans i18nKey={`${option.name}`} />
@@ -160,7 +178,14 @@ const DrhCron: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
           )}
         </div>
       </div>
-      <div className="error">&nbsp;</div>
+      {fixedRateError && (
+        <div className="error">
+          {t("creation.step2.settings.advance.fixedRateError")}
+        </div>
+      )}
+      {cronType === CRON_TYPE.ONE_TIME && (
+        <Alert content={t("creation.step2.settings.advance.oneTimeTips")} />
+      )}
     </>
   );
 };

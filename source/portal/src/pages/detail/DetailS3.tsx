@@ -7,7 +7,6 @@ import MLink from "@material-ui/core/Link";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -19,12 +18,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-// import { API } from "aws-amplify";
 import { getTask } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
-// import { updateTaskProgress } from "graphql/subscriptions";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -51,6 +46,11 @@ import "./Detail.scss";
 import Details from "./tabs/Details";
 import Engine from "./tabs/Engine";
 import Options from "./tabs/Options";
+import {
+  appSyncRequestMutation,
+  appSyncRequestQuery,
+} from "assets/utils/request";
+import Monitor from "./tabs/Monitor";
 
 // const S3_EVENT_OPTIONS_MAP = ConverListToMap(S3_EVENT_OPTIONS);
 
@@ -118,12 +118,10 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const Detail: React.FC = (props: any) => {
-  const client: any = React.useContext(ClientContext);
+const Detail: React.FC = () => {
   const { t } = useTranslation();
-  const { type, id } = useParams() as any;
-
-  const [value, setValue] = useState(0);
+  const { type, id, logType } = useParams() as any;
+  const [value, setValue] = useState(logType ? 2 : 0);
   const [isLoading, setIsLoading] = useState(true);
   const [curTaskInfo, setCurTaskInfo] = useState<any>({});
   const [open, setOpen] = useState(false);
@@ -134,19 +132,12 @@ const Detail: React.FC = (props: any) => {
   const [curRegion, setCurRegion] = useState("");
 
   async function fetchNotes(taskId: string) {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
-      const query = gql(getTask);
-      const apiData: any = await client?.query({
-        fetchPolicy: "no-cache",
-        query: query,
-        variables: {
-          id: taskId,
-        },
+      const apiData: any = await appSyncRequestQuery(getTask, {
+        id: taskId,
       });
-
       const tmpCurTask = apiData.data.getTask;
-
       if (tmpCurTask.parameters && tmpCurTask.parameters.length > 0) {
         tmpCurTask.parameters.forEach((element: any) => {
           tmpCurTask[element.ParameterKey] = element.ParameterValue
@@ -182,15 +173,13 @@ const Detail: React.FC = (props: any) => {
       }
       setCurTaskInfo(tmpCurTask);
       setIsLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       setIsLoading(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
   useEffect(() => {
     fetchNotes(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Get Cur Region and Region Type
@@ -209,21 +198,15 @@ const Detail: React.FC = (props: any) => {
   async function stopTaskFunc(taskId: string) {
     setIsStopLoading(true);
     try {
-      const mutationStop = gql(stopTask);
-      const stopResData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: mutationStop,
-        variables: {
-          id: taskId,
-        },
+      const stopResData = await appSyncRequestMutation(stopTask, {
+        id: taskId,
       });
       setIsStopLoading(false);
       setOpen(false);
       fetchNotes(id);
       console.info(stopResData);
-    } catch (error: any) {
+    } catch (error) {
       setIsStopLoading(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
@@ -348,6 +331,7 @@ const Detail: React.FC = (props: any) => {
                   <AntTabs value={value} onChange={handleChange}>
                     <AntTab label={t("taskDetail.details")} />
                     <AntTab label={t("taskDetail.engine")} />
+                    <AntTab label={t("taskDetail.monitor")} />
                     <AntTab label={t("taskDetail.option")} />
                   </AntTabs>
                   <TabPanel value={value} index={0}>
@@ -363,6 +347,14 @@ const Detail: React.FC = (props: any) => {
                     <Engine curTaskInfo={curTaskInfo} />
                   </TabPanel>
                   <TabPanel value={value} index={2}>
+                    <Monitor
+                      curRegionType={curRegionType}
+                      curRegion={curRegion}
+                      logType={logType}
+                      curTaskInfo={curTaskInfo}
+                    />
+                  </TabPanel>
+                  <TabPanel value={value} index={3}>
                     <Options curTaskInfo={curTaskInfo} />
                   </TabPanel>
                 </div>

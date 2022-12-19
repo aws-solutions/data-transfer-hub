@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { lighten, LinearProgress } from "@material-ui/core";
 
-const BorderLinearProgress = makeStyles((theme) => ({
+const BorderLinearProgress = makeStyles(() => ({
   root: {
     height: 10,
     backgroundColor: lighten("#000", 0.8),
