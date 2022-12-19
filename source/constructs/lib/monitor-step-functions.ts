@@ -52,25 +52,17 @@ export class MonitorStateMachine extends cdk.Construct {
             ]
         });
 
-        // const cfnTaskMonitorFnPolicy = taskMonitorFnPolicy.node.defaultChild as iam.CfnPolicy
-        // addCfnNagSuppressRules(cfnTaskMonitorFnPolicy, [
-        //     {
-        //         id: 'F4',
-        //         reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
-        //     },
-        //     {
-        //         id: 'F39',
-        //         reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
-        //     },
-        //     {
-        //         id: 'W76',
-        //         reason: 'This policy needs to be able to start/delete other complex cloudformation stacks'
-        //     },
-        //     {
-        //         id: 'W12',
-        //         reason: 'This policy needs to be able to start/delete other cloudformation stacks of the plugin with unknown resources names'
-        //     }
-        // ])
+        const cfnCheckFinderJobStatusFnPolicy = checkFinderJobStatusFnPolicy.node.defaultChild as iam.CfnPolicy
+        addCfnNagSuppressRules(cfnCheckFinderJobStatusFnPolicy, [
+            {
+                id: 'F4',
+                reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+            },
+            {
+                id: 'F39',
+                reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
+            }
+        ])
 
         const checkFinderJobStatusFn = new lambda.Function(this, 'CheckFinderJobStatusFn', {
             runtime: lambda.Runtime.PYTHON_3_9,
@@ -113,6 +105,18 @@ export class MonitorStateMachine extends cdk.Construct {
                 })
             ]
         });
+        const cfncheckSqsStatusFnPolicy = checkSqsStatusFnPolicy.node.defaultChild as iam.CfnPolicy
+        addCfnNagSuppressRules(cfncheckSqsStatusFnPolicy, [
+            {
+                id: 'F4',
+                reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+            },
+            {
+                id: 'F39',
+                reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
+            }
+        ])
+
         const checkSqsStatusFn = new lambda.Function(this, 'CheckSqsStatusFn', {
             runtime: lambda.Runtime.PYTHON_3_9,
             code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
@@ -153,6 +157,18 @@ export class MonitorStateMachine extends cdk.Construct {
                 })
             ]
         });
+        const cfnCheckTransferCompleteFnPolicy = checkTransferCompleteFnPolicy.node.defaultChild as iam.CfnPolicy
+        addCfnNagSuppressRules(cfnCheckTransferCompleteFnPolicy, [
+            {
+                id: 'F4',
+                reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+            },
+            {
+                id: 'F39',
+                reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
+            }
+        ])
+
         const checkTransferCompleteFn = new lambda.Function(this, 'CheckTransferCompleteFn', {
             runtime: lambda.Runtime.PYTHON_3_9,
             code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
@@ -193,6 +209,18 @@ export class MonitorStateMachine extends cdk.Construct {
                 })
             ]
         });
+        const cfnChangeAsgSizeFnPolicy = changeAsgSizeFnPolicy.node.defaultChild as iam.CfnPolicy
+        addCfnNagSuppressRules(cfnChangeAsgSizeFnPolicy, [
+            {
+                id: 'F4',
+                reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+            },
+            {
+                id: 'F39',
+                reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
+            }
+        ])
+
         const changeAsgSizeFn = new lambda.Function(this, 'ChangeAsgSizeFn', {
             runtime: lambda.Runtime.PYTHON_3_9,
             code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
@@ -233,6 +261,18 @@ export class MonitorStateMachine extends cdk.Construct {
                 })
             ]
         });
+        const cfnCheckIsOneTimeTransferFnPolicy = checkIsOneTimeTransferFnPolicy.node.defaultChild as iam.CfnPolicy
+        addCfnNagSuppressRules(cfnCheckIsOneTimeTransferFnPolicy, [
+            {
+                id: 'F4',
+                reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+            },
+            {
+                id: 'F39',
+                reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
+            }
+        ])
+
         const checkIsOneTimeTransferFn = new lambda.Function(this, 'CheckIsOneTimeTransferFn', {
             runtime: lambda.Runtime.PYTHON_3_9,
             code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
@@ -272,6 +312,13 @@ export class MonitorStateMachine extends cdk.Construct {
                 }),
             ]
         });
+        const cfnSendSnsNotificationFnPolicy = sendSnsNotificationFnPolicy.node.defaultChild as iam.CfnPolicy
+        addCfnNagSuppressRules(cfnSendSnsNotificationFnPolicy, [
+            {
+                id: 'F4',
+                reason: 'This policy requires releted actions'
+            }
+        ])
         const sendSnsNotificationFn = new lambda.Function(this, 'SendSnsNotificationFn', {
             runtime: lambda.Runtime.PYTHON_3_9,
             code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
@@ -376,6 +423,13 @@ export class MonitorStateMachine extends cdk.Construct {
                 cdk.Fn.split(":", checkFinderJobStatusFn.functionArn)
             )}-SM-Monitor`,
         });
+        const cfnLogGroup = logGroup.node.defaultChild as logs.CfnLogGroup
+        addCfnNagSuppressRules(cfnLogGroup, [
+            {
+                id: 'W84',
+                reason: 'log group is encrypted with the default master key'
+            }
+        ])
         const taskMonitorStateMachine = new sfn.StateMachine(this, 'taskMonitorStateMachine', {
             definition: definition,
             logs: {

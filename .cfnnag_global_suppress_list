@@ -8,3 +8,9 @@ RulesToSuppress:
 
 - id: W89
   reason: This function does not need to be deployed in a VPC.
+
+- id: W12
+  reason: The step function's default policy 
+
+- id: W76
+  reason: This policy needs to be able to start/delete other complex cloudformation stacks
