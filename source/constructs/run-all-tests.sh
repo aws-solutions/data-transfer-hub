@@ -105,6 +105,11 @@ echo "Running unit tests"
 
 coverage_reports_top_path=$source_dir/test/coverage-reports
 
+portal_dir=$source_dir/../portal
+cd $portal_dir
+npm install
+npm run build
+
 # Test the CDK project
 construct_dir=$source_dir
 run_cdk_project_test $construct_dir
