@@ -129,12 +129,21 @@ class FinderMonitorHelper(MonitorHelper):
 
         Return:
             stream_result: {
-                "status": "COMPLETED" | "ERROR" | "SKIPPED" | "IN_PROGRESS",
+                "status": "COMPLETED" | "ERROR" | "SKIPPED" | "IN_PROGRESS" | "NO_NEED",
                 "message": "error message",
                 "total_object_count": int | -1
             }
         """
         stream_result = {}
+
+        if self._finder_log_group_name == "" or self._finder_log_group_name is None:
+            # This task is not a S3 transfer task, break the step function.
+            return {
+                "status": "NO_NEED",
+                "arguments": {
+                    "id": self._task_id
+                }
+            }
 
         log_streams = self._list_log_streams()
         for log_stream in log_streams:

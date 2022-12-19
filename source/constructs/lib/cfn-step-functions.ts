@@ -220,7 +220,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "logs:GetLogEvents",
             "logs:PutMetricFilter",
             "logs:DeleteMetricFilter",
-            "logs:DescribeMetricFilters"
+            "logs:DescribeMetricFilters",
+            "logs:TagResource"
           ],
           resources: [`*`]
         }),
@@ -475,7 +476,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
         sfn.Condition.or(
           sfn.Condition.stringEquals('$.stackStatus', 'CREATE_FAILED'),
           sfn.Condition.stringEquals('$.stackStatus', 'DELETE_FAILED'),
-          sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_ROLLBACK_FAILED')
+          sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_ROLLBACK_FAILED'),
+          sfn.Condition.stringEquals('$.stackStatus', 'ROLLBACK_COMPLETE')
         )
         , stackOperationFailed
       )
