@@ -177,7 +177,8 @@
           "skipComparisonDesc": "If select yes, a finder will execute data comparison before transferring to avoid duplicated transfer. If select no, a worker will start transfer directly.",
           "finderMemory": "Finder Memory",
           "finderMemoryDesc": "Memory size of the finder",
-          "oneTimeTips": "When the task 'Completed', the transfer action will stop and you can select 'Stop' to delete and release all backed resource. "
+          "oneTimeTips": "When the task 'Completed', the transfer action will stop and you can select 'Stop' to delete and release all backed resource. ",
+          "fixedRateError": "Task Scheduling must larger or equal than 2 minutes."
         },
         "more": {
           "title": "More",
@@ -209,7 +210,8 @@
           "image1": "Enter all images in format of",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "delimited by comma. If tag is ommited, the latest tag will be used."
+          "image4": "delimited by comma. If tag is ommited, the latest tag will be used.",
+          "image5": " If tag is ALL_TAGS, all the tags of this image will be used."
         },
         "dest": {
           "title": "Destination settings",

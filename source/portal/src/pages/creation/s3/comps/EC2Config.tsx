@@ -28,8 +28,15 @@ const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
 
-const OptionSettings: React.FC = () => {
+interface EC2ConfigSettingsProps {
+  fixedRateError: boolean;
+}
+
+const EC2ConfigSettings: React.FC<EC2ConfigSettingsProps> = (
+  props: EC2ConfigSettingsProps
+) => {
   const { t } = useTranslation();
+  const { fixedRateError } = props;
   const { tmpTaskInfo } = useMappedState(mapState);
   const dispatch = useDispatch();
   console.info("tmpTaskInfo:", tmpTaskInfo);
@@ -207,6 +214,7 @@ const OptionSettings: React.FC = () => {
 
             <div className="form-items">
               <DrhCron
+                fixedRateError={fixedRateError}
                 scheduleType={scheduleType}
                 changeScheduleType={(type) => {
                   setScheduleType(
@@ -373,4 +381,4 @@ const OptionSettings: React.FC = () => {
   );
 };
 
-export default OptionSettings;
+export default EC2ConfigSettings;

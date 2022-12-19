@@ -50,6 +50,8 @@ const mapState = (state: IState) => ({
 const MAX_LENGTH = 4096;
 
 const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
+const defaultTxtValueSourceECR =
+  "my-ecr-repo:ALL_TAGS,\nubuntu:14.04,\namazon-linux:latest,\nmysql";
 
 const StepTwoECR: React.FC = () => {
   const history = useHistory();
@@ -79,6 +81,7 @@ const StepTwoECR: React.FC = () => {
   const [classDestAccountId, setClassDestAccountId] = useState("form-items");
   const [classDestCredential, setClassDestCredential] = useState("form-items");
   const [curLength, setCurLength] = useState(0);
+  const [srcECRandSelectedImgs, setSrcECRandSelectedImgs] = useState(false);
 
   const [srcRegionObj, setSrcRegionObj] = useState<IRegionType | null>(
     tmpECRTaskInfo?.parametersObj?.srcRegionObj || null
@@ -190,9 +193,13 @@ const StepTwoECR: React.FC = () => {
       }
       if (srcList === EnumDockerImageType.SELECTED) {
         setClassImageList("form-items");
+        setSrcECRandSelectedImgs(true);
+      } else {
+        setSrcECRandSelectedImgs(false);
       }
     }
     if (sourceType === ECREnumSourceType.PUBLIC) {
+      setSrcECRandSelectedImgs(false);
       setSrcList(EnumDockerImageType.SELECTED);
       setClassSourceRegion("hidden");
       setClassIsSourceAccount("hidden");
@@ -522,6 +529,9 @@ const StepTwoECR: React.FC = () => {
                             &gt;:&lt;
                             {t("creation.step2ECR.settings.source.image3")}&gt;,
                             {t("creation.step2ECR.settings.source.image4")}
+                            {srcECRandSelectedImgs
+                              ? t("creation.step2ECR.settings.source.image5")
+                              : ""}
                           </div>
                           <div>
                             <textarea
@@ -529,7 +539,11 @@ const StepTwoECR: React.FC = () => {
                               name="srcImageList"
                               value={srcImageList}
                               onChange={changeSrcImageList}
-                              placeholder={defaultTxtValue}
+                              placeholder={
+                                srcECRandSelectedImgs
+                                  ? defaultTxtValueSourceECR
+                                  : defaultTxtValue
+                              }
                               rows={7}
                             ></textarea>
                             <div className="max-tips">{`${curLength}/${MAX_LENGTH}`}</div>

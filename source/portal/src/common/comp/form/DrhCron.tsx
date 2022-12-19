@@ -22,6 +22,7 @@ type DrhCronProp = {
   optionDescHtml?: any;
   cronValue: string;
   scheduleType: string;
+  fixedRateError: boolean;
   changeScheduleType: (type: string) => void;
   onChange: (express: string) => any;
 };
@@ -36,6 +37,7 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
     optionTitle,
     optionDesc,
     optionDescHtml,
+    fixedRateError,
     onChange,
   } = props;
   const { t } = useTranslation();
@@ -176,7 +178,11 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
           )}
         </div>
       </div>
-      <div className="error">&nbsp;</div>
+      {fixedRateError && (
+        <div className="error">
+          {t("creation.step2.settings.advance.fixedRateError")}
+        </div>
+      )}
       {cronType === CRON_TYPE.ONE_TIME && (
         <Alert content={t("creation.step2.settings.advance.oneTimeTips")} />
       )}
