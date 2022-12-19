@@ -22,3 +22,7 @@ def default_environment_variables():
     os.environ["AUTHENTICATION_TYPE"] = "AMAZON_COGNITO_USER_POOLS"
     os.environ["CLOUDFRONT_URL"] = "loghub.cloudfront.net"
     os.environ["TRANSFER_TASK_TABLE"] = "dth-task-table"
+    os.environ["ASG_NAME"] = "DTH-S3EC2-sKKUJ-Worker-ASG"
+    os.environ["LAUNCH_TEMPLATE_NAME"] = "dth-finder-launch-template"
+    os.environ["CENTRAL_SNS_ARN"] = "arn:aws:sns:us-east-1:123456789012:test-topic"
+    os.environ["MOCK_FINDER_LOG_GROUP_NAME"] = "finder_log_group_name"

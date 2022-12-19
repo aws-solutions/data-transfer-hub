@@ -23,3 +23,7 @@ node_modules/
 build/
 cdk.out
 deployment/regional-s3-assets/
+
+pip
+aws-sam-cli
+pipenv

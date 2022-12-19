@@ -29,7 +29,7 @@ task_info_1 = {
         {"ParameterKey": "destCredentials", "ParameterValue": ""},
         {"ParameterKey": "includeMetadata", "ParameterValue": "false"},
         {"ParameterKey": "destAcl", "ParameterValue": "bucket-owner-full-control"},
-        {"ParameterKey": "ecsCronExpression", "ParameterValue": "0 */1 ? * * *"},
+        {"ParameterKey": "ec2CronExpression", "ParameterValue": "0 */1 ? * * *"},
         {"ParameterKey": "maxCapacity", "ParameterValue": "20"},
         {"ParameterKey": "minCapacity", "ParameterValue": "0"},
         {"ParameterKey": "desiredCapacity", "ParameterValue": "0"},
@@ -85,6 +85,18 @@ task_info_1 = {
 
 
 @pytest.fixture
+def cfn_client():
+    with mock_cloudformation():
+        region = os.environ.get("AWS_REGION")
+        client = boto3.client("cloudformation", region_name=region)
+        client.create_stack(
+            StackName='DTH-S3EC2-sKKUJ',
+            TemplateBody='{"Resources": {}}',
+        )
+        yield
+
+
+@pytest.fixture
 def ddb_client():
     with mock_dynamodb():
         region = os.environ.get("AWS_REGION")
@@ -113,102 +125,23 @@ def ddb_client():
         yield
 
 
-@pytest.fixture
-def auto_scaling_client():
-    with mock_autoscaling():
-        region = os.environ.get("AWS_REGION")
-        launch_template_name = os.environ.get("LAUNCH_TEMPLATE_NAME")
-        asg_name = os.environ.get("ASG_NAME")
-        client = boto3.client("autoscaling", region_name=region)
-        client.create_auto_scaling_group(
-            AutoScalingGroupName=asg_name,
-            DesiredCapacity=0,
-            MinSize=0,
-            MaxSize=1,
-            LaunchTemplate={
-                "LaunchTemplateName": launch_template_name,
-                "Version": "$Latest",
-            },
-            AvailabilityZones=["us-east-1a"],
-        )
-        yield
-
-
-@pytest.fixture
-def auto_scaling_client_2():
-    with mock_autoscaling():
-        region = os.environ.get("AWS_REGION")
-        launch_template_name = os.environ.get("LAUNCH_TEMPLATE_NAME")
-        client = boto3.client("autoscaling", region_name=region)
-        client.create_auto_scaling_group(
-            AutoScalingGroupName="no_exist",
-            DesiredCapacity=0,
-            MinSize=0,
-            MaxSize=1,
-            LaunchTemplate={
-                "LaunchTemplateName": launch_template_name,
-                "Version": "$Latest",
-            },
-            AvailabilityZones=["us-east-1a"],
-        )
-        yield
-
-
-@pytest.fixture
-def ec2_client():
-    with mock_ec2():
-        region = os.environ.get("AWS_REGION")
-        launch_template_name = os.environ.get("LAUNCH_TEMPLATE_NAME")
-        client = boto3.client("ec2", region_name=region)
-        client.create_launch_template(
-            LaunchTemplateName=launch_template_name,
-            LaunchTemplateData={"ImageId": "ami-12c6146b", "InstanceType": "t2.medium"},
-        )
-        yield
-
-@pytest.fixture
-def cfn_client():
-    with mock_cloudformation():
-        region = os.environ.get("AWS_REGION")
-        client = boto3.client("cloudformation", region_name=region)
-        client.create_stack(
-            StackName='DTH-S3EC2-sKKUJ',
-            TemplateBody='{"Resources": {}}',
-        )
-        yield
-
-
-def test_lambda_function(cfn_client, ddb_client, ec2_client, auto_scaling_client):
-    import change_asg_size
+def test_lambda_function(cfn_client, ddb_client):
+    import check_is_onetime_transfer_task
 
     # Create a service linked role in a brand new account
-    result = change_asg_size.lambda_handler(
-            {
-                "arguments": {
-                    "id": "0ff94440-331e-4678-a53c-768c6720db55"
-                }
-            },
-            None,
-        )
-    print(result)
-    # Expect Execute successfully.
-    assert result == {
-            "status": "OK",
+    result = check_is_onetime_transfer_task.lambda_handler(
+        {
             "arguments": {
                 "id": "0ff94440-331e-4678-a53c-768c6720db55"
             }
+        },
+        None,
+    )
+    print(result)
+    # Expect Execute successfully.
+    assert result == {
+        "isOneTime": "false",
+        "arguments": {
+            "id": "0ff94440-331e-4678-a53c-768c6720db55"
         }
-
-
-def test_lambda_function_2(ddb_client, ec2_client, auto_scaling_client_2):
-    import change_asg_size
-
-    with pytest.raises(Exception):
-        change_asg_size.lambda_handler(
-            {
-                "arguments": {
-                    "id": "0ff94440-331e-4678-a53c-768c6720db55"
-                }
-            },
-            None,
-        )
+    }

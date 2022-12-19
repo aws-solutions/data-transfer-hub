@@ -193,7 +193,7 @@ class FinderMonitorHelper(MonitorHelper):
             if self._check_finder_oom(now_time, last_log_event_time):
                 return {
                     "status": "ERROR",
-                    "message": "oom",
+                    "message": "Out of memory error detected, please increase Finder Job Memory or use Finder Depth and Finder Number to optimize the job",
                     "total_object_count": -1
                 }
             else:

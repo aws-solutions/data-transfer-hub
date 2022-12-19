@@ -1,3 +1,6 @@
-moto==3.1.18
-pytest==7.1.2
-pytest-cov==3.0.0
+moto
+pytest
+pytest-cov
+pyyaml
+openapi_spec_validator
+docker
