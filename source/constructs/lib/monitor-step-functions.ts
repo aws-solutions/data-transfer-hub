@@ -411,6 +411,7 @@ export class MonitorStateMachine extends cdk.Construct {
         const checkFinderStatusChoice = new sfn.Choice(this, 'Check Finder Status Choice')
             .when(sfn.Condition.stringEquals('$.status', 'ERROR'), scareDownAsgTask)
             .when(sfn.Condition.stringEquals('$.status', 'COMPLETED'), checkIsOneTimeTransferTask)
+            .when(sfn.Condition.stringEquals('$.status', 'NO_NEED'), taskMonitoringComplete)
             .otherwise(waitFor1MinuteForFinder)
 
         const definition = checkFinderJobStatusTask
