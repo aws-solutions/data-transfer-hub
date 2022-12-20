@@ -70,7 +70,6 @@ export class ConstructsStack extends cdk.Stack {
       oidcCustomerDomain = new CfnParameter(this, 'OidcCustomerDomain', {
         type: 'String',
         description: 'Customer Domain for Data Transfer Hub, and must start with https:// or http://',
-        default: '',
         allowedPattern: '^(http|https):\/\/(.+)'
       });
 
