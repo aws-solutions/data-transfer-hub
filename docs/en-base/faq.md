@@ -50,7 +50,7 @@ The transfer performance may be affected by average file size, destination of da
 For example, using the same configuration, the transfer speed with an average file size of 50MB is 170 times the transfer speed with an average file size of 10KB.
 
 **3. What is the scale up/scale down policy of Worker Auto Scaling Group?**</br>
-The Auto Scaling Group will automatically scale up or scale down according to the number of tasks in SQS.
+The Auto Scaling Group will [automatically scale up][asg_scale] or scale down according to the number of tasks in SQS. 
 
 - Scaling Up Steps are:
     ```json
@@ -148,18 +148,18 @@ Yes, you need to create the destination S3 bucket in advance.
 
 You can use these two parameters to increase the parallelism of Finder to improve the performance of data comparison.
 
-- For example, if there are 12 subdirectories with over 100k files each, such as `Jan/`, `Feb`, ..., `Dec`. 
+For example, if there are 12 subdirectories with over 100k files each, such as `Jan`, `Feb`, ..., `Dec`. 
     
-    It's recommended to set **`finderDepth`**=1 and **`finderNumber`**=12. In this example, your comparison performance will increase by 12 times.
+It's recommended to set **`finderDepth`**=1 and **`finderNumber`**=12. In this example, your comparison performance will increase by 12 times.
 
-    !!! important "Important"
-        When you are using finderDepth and finderNumber, please make sure that there are no objects in the folder whose level is equal to or less than finderdepth.
+!!! important "Important"
+    When you are using finderDepth and finderNumber, please make sure that there are no objects in the folder whose level is equal to or less than finderdepth.
 
-        For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372, and your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
+    For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372, and your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
 
-        What will **be lost** are: `bucket_name/pic.jpg`, `bucket_name/Jan/pic.jpg`
+    What will **be lost** are: `bucket_name/pic.jpg`, `bucket_name/Jan/pic.jpg`
 
-        What will **not be lost** are: all files under `bucket_name/Jan/33/`, all files under `bucket_name/13/33/`
+    What will **not be lost** are: all files under `bucket_name/Jan/33/`, all files under `bucket_name/13/33/`
 
 **10. How to deal with Access Key Rotation?**</br>
 
@@ -235,13 +235,5 @@ If you want to make customized changes to this plugin, refer to [Custom Build](h
 
 This is because the subnet you selected when deploying this solution does not have public network access, and the EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Later, the elastic scaling group will automatically start a new instance.
 
-**6. What is the version mapping relationship between the DTH portal template and DTH plugin templates?**</br>
-
-| DTH Portal Version | DTH S3 Plugin Version | DTH ECR Plugin Version|
-|----------|--------|--------|
-| v2.0.7   | v2.0.2 | v1.0.1 |
-| v2.1.3   | v2.1.0 | v1.0.3 |
-| v2.2.0   | v2.2.0 | v1.0.3 |
-| v2.3.0   | v2.3.0 | v1.0.4 |
-
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario
+[asg_scale]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html#as-scaling-steps

@@ -54,6 +54,7 @@ You can view the status of the stack in the AWS CloudFormation console in the **
 !!! warning "Important"
 
     The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions refer to Option 1.  
+    If you are deploying the solution in **AWS China Regions**, the domain must have a valid [ICP Recordal][icp]. 
 
 ### Prerequisites
 1.	Create an OIDC User Pool. 
@@ -62,39 +63,27 @@ You can view the status of the stack in the AWS CloudFormation console in the **
 ### Prerequisite 1: Create an OIDC user pool
 In AWS Regions where Amazon Cognito is not yet available, you can use OIDC to provide authentication. The following procedure uses AWS Partner [Authing](https://www.authing.cn/) as an example, but you can also choose any available provider. 
 
-1. Sign up for an Authing developer account. For more information, see [How to register an account](https://docs.authing.cn/v2/).
+1. Go to the [Authing console](https://console.authing.cn/console){target=_blank}.
+2. Create a user pool if you don't have one.
+3. Select the user pool.
+4. On the left navigation bar, select **Self-built App** under **Applications**. 
+5. Click the **Create** button.
+6. Enter the **Application Name**, and **Subdomain**.
+7. Save the `App ID` (that is, `client_id`) and `Issuer` to a text file from Endpoint Information, which will be used later.
+    [![](./images/OIDC/endpoint-info.png)](./images/OIDC/endpoint-info.png)
 
-2. Sign in to Authing.
+8. Update the `Login Callback URL` and `Logout Callback URL` to your IPC recorded domain name.
+    [![](./images/OIDC/authentication-configuration.png)](./images/OIDC/authentication-configuration.png)
 
-3. Select **Create new user pool**, enter a name, and choose **Confirm**.
-
-4. After the user pool is created, you can then create an application for OIDC authentication. 
-    1. Select and enter the **App** interface from the left sidebar, and select **Add App**.
-    2. Select **Self-built application**.
-    3. Enter the application name and enter the authentication address.
-    4. Select **Create**.
-
-5. Update the authorization configuration.
-    1. Select from the left sidebar and enter the **Applicable Order** interface, select **App Configuration**, and then select **Authorized Configuration**.
-    2. **Authorization mode** select **implicit**, return type select **id_token**.
-    3. The id_token signature algorithm is modified to **RS256**.
-    4. Select **Save**.
-
-6. Update the callback URL.
-    1. From **Application**, select **Configuration**, then choose **Auth Config**. 
-    2. Modify the login callback URL to `https://<your-custom-domain>/authentication/callback`。
-    3. Choose **Save**.
-    !!! note "Note"
-
-        Verify that the domain name has completed ICP registration in China. 
-
-7. Update login control.
+9. Set the Authorization Configuration.
+    [![](./images/OIDC/authorization-configuration.png)](./images/OIDC/authorization-configuration.png)
+10. Update login control.
     1. Select and enter the **Application** interface from the left sidebar, select **Login Control**, and then select **Registration and Login**.
     2. Please select only **Password Login: Email** for the login method.
     3. Please **uncheck** all options in the registration method.
     4. Select **Save**.
 
-8. Create an admin user.
+11. Create an admin user.
     1. From **Users & Roles**, select **Users**, then choose **Create user**.
     2. Enter the email for the user. 
     3. Choose **OK**. 
@@ -149,6 +138,7 @@ This automated AWS CloudFormation template deploys Data Transfer Hub in the AWS 
     | **OidcProvider** | <Requires input\> |	Refers to the Issuer shown in the OIDC application configuration.  
     | **OidcClientId** | <Requires input\> |	Refers to the App ID shown in the OIDC application configuration. 
     | **OidcCustomerDomain** | <Requires input\> | Refers to the customer domain that has completed ICP registration in China, not the subdomain provided by Authing. <br> It must start with `https://`.
+    | **AdminEmail** | <Requires input\> | The email for receiving task status alarm.
 
 6. Choose **Next**.
 
@@ -194,3 +184,4 @@ Use the web console to create a transfer task for Amazon S3 or Amazon ECR. For m
 
 Figure 1: Data Transfer Hub web console
 
+[icp]: https://www.amazonaws.cn/en/support/icp/?nc2=h_l2_su

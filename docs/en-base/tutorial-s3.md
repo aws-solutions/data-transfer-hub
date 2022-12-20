@@ -1,4 +1,7 @@
-You can use the web console to create an Amazon S3 transfer task. For more information about how to launch the web console, see [deployment](./deployment.md).
+You can use the web console to create an Amazon S3 transfer task. For more information about how to launch the web console, see [deployment](./deployment.md). 
+
+!!! Note "Note"
+    Data Transfer Hub also support using AWS CLI to create an Amazon S3 transfer task, please refer to this [tutorial](./tutorial-cli-launch.md).
 
 1. From the **Create Transfer Task** page, select **Create New Task**, and then select **Next**.
 

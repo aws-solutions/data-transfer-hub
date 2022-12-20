@@ -32,9 +32,9 @@
 
 暂不支持。此场景建议使用Amazon S3的[跨区域复制][crr]。
 
-**7。 如何使用 AWS CLI 创建 DTH S3 传输任务？**</br>
+**7. 能否使用 AWS CLI 创建 DTH S3 传输任务？**</br>
 
-请参考[使用AWS CLI启动DTH S3 Transfer任务](./tutorial-cli-launch.md)指南。
+可以。请参考[使用AWS CLI启动DTH S3 Transfer任务](./tutorial-cli-launch.md)指南。
 
 ## 性能相关问题
 
@@ -47,7 +47,7 @@
 传输性能的影响因素包括：平均文件大小、数据传输的目标端、数据源端所在的地理位置，以及实时的网络环境。例如，相同配置下，平均文件大小为50MB的传输速度为平均文件大小为10KB传输速度的170倍。
 
 **3. Worker Auto Scaling Group 的扩容/缩容策略是什么？**</br>
-Auto Scaling Group 的大小会根据 SQS 中的任务数量自动放大或缩小。
+Auto Scaling Group 的大小会根据 SQS 中的任务数量[自动放大或缩小][asg_scale]。
 
 - 扩大步骤是：
     ```json
@@ -136,18 +136,18 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量自动放大或缩�
 
 您可以使用这两个参数来增加 Finder 的并行度，以提高数据比较的性能。
 
-- 示例：如果有 12 个子目录，每个子目录的文件数超过 100k，例如 `Jan/`、`Feb`、...、`Dec`。
+示例：如果有 12 个子目录，每个子目录的文件数超过 100k，例如 `Jan`、`Feb`、...、`Dec`。
     
-    建议设置 **`finderDepth`**=1 和 **`finderNumber`**=12。 在此示例中，您的比较性能将提高 12 倍。
+建议设置 **`finderDepth`**=1 和 **`finderNumber`**=12。 在此示例中，您的比较性能将提高 12 倍。
 
-    !!! warning "重要提示"
-        当您使用finderDepth 和finderNumber 时，请确保没有与finderdepth 浅于或等于文件夹同级的对象。
+!!! warning "重要提示"
+    当您使用finderDepth 和finderNumber 时，请确保没有与finderdepth 浅于或等于文件夹同级的对象。
 
-        例如，假设您设置 `finderDepth`=2 和 `finderNumber`=12 * 31 = 372。并假设您的 S3 存储桶结构类似于 `bucket_name/Jan/01/pic1.jpg`。
+    例如，假设您设置 `finderDepth`=2 和 `finderNumber`=12 * 31 = 372。并假设您的 S3 存储桶结构类似于 `bucket_name/Jan/01/pic1.jpg`。
 
-        将**丢失**的是：`bucket_name/pic.jpg`、`bucket_name/Jan/pic.jpg`
+    将**丢失**的是：`bucket_name/pic.jpg`、`bucket_name/Jan/pic.jpg`
 
-        **不会丢失**的是：`bucket_name/Jan/33/`下的所有文件，`bucket_name/13/33/`下的所有文件
+    **不会丢失**的是：`bucket_name/Jan/33/`下的所有文件，`bucket_name/13/33/`下的所有文件
 
 **10. 如何处理Access Key 轮换?**</br>
 目前，当 Data Transfer Hub 感知到 S3 的 Access Key 被轮换时，它会自动从 AWS Secrets Manager 中获取最新的密钥。 因此，Access Key Rotation 不会影响DTH 的迁移过程。
@@ -194,9 +194,9 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量自动放大或缩�
 
 - **对于控制台用户**
 
-    Data Transfer Hub 已将 Dashboard 和日志组集成到 Portal 中，您无需跳转到 AWS CloudWatch 控制台即可查看日志。
-
     转到**任务**列表页面，然后单击**任务编号**。 您可以在 **日志监控** 部分下看到仪表板和日志。
+
+    Data Transfer Hub 已将 Dashboard 和日志组集成到 Portal 中，您无需跳转到 AWS CloudWatch 控制台即可查看日志。
 
 - **对于 Plugin（纯后端版本）用户**
 
@@ -218,13 +218,5 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量自动放大或缩�
 
 这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
 
-**6. DTH 前端版本模板和 DTH 插件模板之间的版本映射关系是什么？**</br>
-
-| DTH 前端版本| DTH S3 插件版本 | DTH ECR 插件版本|
-|------------|--------|--------|
-| v2.0.7 | v2.0.2 | v1.0.1 |
-| v2.1.3 | v2.1.0 | v1.0.3 |
-| v2.2.0 | v2.2.0 | v1.0.3 |
-| v2.3.0 | v2.3.0 | v1.0.4 |
-
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario
+[asg_scale]: https://docs.aws.amazon.com/zh_cn/autoscaling/ec2/userguide/as-scaling-simple-step.html#as-scaling-steps

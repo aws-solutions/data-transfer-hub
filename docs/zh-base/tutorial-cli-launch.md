@@ -1,8 +1,8 @@
 您可以使用 [AWS CLI][aws-cli] 创建 Amazon S3 传输任务。
 
-1. 您需要使用[NAT 网关][nat] 创建一个具有两个公有子网或两个私有子网的Amazon VPC。
+1. 创建一个具有两个公有子网或两个拥有[NAT 网关][nat] 私有子网的Amazon VPC。
 
-2. 请根据需要替换下面的`<CLOUDFORMATION_URL>`和相应的参数。
+2. 请根据需要替换的`<CLOUDFORMATION_URL>`。
 
     - 全球区域: 
     ```
@@ -13,7 +13,7 @@
     https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub-s3/latest/DataTransferS3Stack-ec2.template
     ```
 
-3. 转到您的终端并输入以下命令。
+3. 转到您的终端并输入以下命令，参数详情请参考下表。
 
     ```shell
     aws cloudformation create-stack --stack-name dth-s3-task --template-url CLOUDFORMATION_URL \
@@ -44,9 +44,6 @@
     ```
 
 
-!!! note "注意"
-    如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。
-
 ### 参数列表
 
 | 参数名称 | 允许值 | 默认值 | 附加说明 |
@@ -56,7 +53,7 @@
 | destAcl | private <br> public-read <br> public-read-write <br> authenticated-read <br> aws-exec-read <br> bucket-owner-read <br> bucket-owner-full-control | bucket-owner-full-control | 目的桶访问控制列表
 | destBucket |  |  | 目标桶名称
 | destCredentials |  |  | Secrets Manager 中用于保存目标存储桶的 AK/SK 凭证的密钥名称。如果目标存储桶在当前帐户中，则留空
-| destInCurrentAccount | true <br> false | true | 当前帐户中的目标存储桶？ 如果没有，您应该提供具有读写权限的凭证
+| destInCurrentAccount | true <br> false | true | 目标存储桶是否在当前帐户中？ 如果不在，您应该提供具有读写权限的凭证
 | destPrefix |  |  | 目标前缀（可选）
 | destRegion |  |  | 目标区域名称
 | destStorageClass | STANDARD <br> STANDARD_IA <br> ONEZONE_IA <br> INTELLIGENT_TIERING | INTELLIGENT_TIERING | Destination Storage Class, Default to INTELLIGENT_TIERING
@@ -73,14 +70,16 @@
 | srcCredentials |  |  | Secrets Manager 中用于保存 Source Bucket 的 AK/SK 凭证的密钥名称。 如果源存储桶在当前帐户中或源是开源数据，则留空
 | srcEndpoint |  |  | 源端点 URL（可选），除非您想提供自定义端点 URL，否则留空
 | srcEvent | No <br> Create <br> CreateAndDelete | No | 是否启用 S3 Event 触发复制。 请注意，S3Event 仅适用于源位于当前帐户中的情况
-| srcInCurrentAccount | true <br> false | false | 当前帐户中的源存储桶？ 如果没有，您应该提供具有读取权限的凭证
+| srcInCurrentAccount | true <br> false | false | 源存储桶是否当前帐户中？ 如果不在，您应该提供具有读取权限的凭证
 | srcPrefix |  |  | 源前缀（可选）
-| srcPrefixsListFile |  |  | Source Prefixs List File S3路径（可选），支持txt类型，最大行数1000万行。 例如 my_prefix_list.txt
+| srcPrefixsListFile |  |  | Source Prefixs List File S3路径（可选）。支持txt类型，例如 my_prefix_list.txt最大行数1000万行。 
 | srcRegion |  |  | Source Region Name
-| srcSkipCompare | true <br> false | false | 跳过任务查找过程中的数据比较？ 如果是，则将源中的所有数据覆盖到目标桶中
+| srcSkipCompare | true <br> false | false | 是否跳过任务查找过程中的数据比较？ 如果是，则将源中的所有数据覆盖到目标桶中
 | srcType | Amazon_S3 <br> Aliyun_OSS <br> Qiniu_Kodo <br> Tencent_COS | Amazon_S3 | 如果选择使用Endpoint模式，请选择Amazon_S3
 | workerNumber | 1 ~ 10 | 4 | 在一个工作节点/实例中运行的工作线程数。 对于小文件（平均文件大小 < 1MB），您可以增加工作人员数量以提高传输性能。
 
+!!! note "注意"
+    如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。
 
 [aws-cli]: https://aws.amazon.com/cli/
 [nat]: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
