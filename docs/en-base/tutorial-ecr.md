@@ -2,7 +2,7 @@ You can use the web console to create an Amazon ECR transfer task. For more info
 
 1. From the **Create Transfer Task** page, select **Create New Task**, and then select **Next**.
 
-1. From the **Engine options** page, under engine, select **Amazon ECR**, and then choose **Next Step**. You can also copy image from Docker Hub，GCR.io，Quay.io, etc. by choosing **Public Container Registry**.
+1. From the **Engine options** page, under engine, select **Amazon ECR**, and then choose **Next Step**. You can also copy image from Docker Hub，GCR.io，Quay.io, and so on by choosing **Public Container Registry**.
 
 1. Specify the transfer task details. In **Source Type**, select the container warehouse type.
 

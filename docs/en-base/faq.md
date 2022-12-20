@@ -33,9 +33,9 @@ Yes. It is recommended to create a new AWS account dedicated to deploying soluti
 
 Not supported currently. For this scenario, we recommend using Amazon S3's [Cross-Region Replication][crr].
 
-**7. How to create a DTH S3 Transfer Task with AWS CLI?**</br>
+**7. Can I use AWS CLI to create a DTH S3 Transfer Task?**</br>
 
-Please refer to the guide [Using AWS CLI to launch DTH S3 Transfer task](./tutorial-cli-launch.md).
+Yes. Please refer to the tutorial [Using AWS CLI to launch DTH S3 Transfer task](./tutorial-cli-launch.md).
 
 ## Performance
 
@@ -50,7 +50,7 @@ The transfer performance may be affected by average file size, destination of da
 For example, using the same configuration, the transfer speed with an average file size of 50MB is 170 times the transfer speed with an average file size of 10KB.
 
 **3. What is the scale up/scale down policy of Worker Auto Scaling Group?**</br>
-The size of Auto Scaling Group will automatically scale up or scale down according to the number of tasks in SQS.
+The Auto Scaling Group will automatically scale up or scale down according to the number of tasks in SQS.
 
 - Scaling Up Steps are:
     ```json
@@ -110,9 +110,9 @@ Alibaba Cloud OSS, Tencent Cloud, Huawei Cloud, Qiniu Cloud, Baidu Cloud, and al
 - **For One Time Transfer Job**
 
     
-    When the objects all transferred to the destination, the status of one time transfer job will become **Completed**. 
+    When the objects are all transferred to the destination, the status of one time transfer job will become **Completed**. 
     
-    The transfer action will stop and you can select **Stop** to delete and release all backed resource.
+    The transfer action will stop and you can select **Stop** to delete and release all backend resources.
 
 **3. How often will the data difference between the data source and destination be compared？**</br>
 
@@ -148,14 +148,14 @@ Yes, you need to create the destination S3 bucket in advance.
 
 You can use these two parameters to increase the parallelism of Finder to improve the performance of data comparison.
 
-- Example: If there are 12 subdirectories with over 100k files each, such as `Jan/`, `Feb`, ..., `Dec`. 
+- For example, if there are 12 subdirectories with over 100k files each, such as `Jan/`, `Feb`, ..., `Dec`. 
     
     It's recommended to set **`finderDepth`**=1 and **`finderNumber`**=12. In this example, your comparison performance will increase by 12 times.
 
-    !!! warning "Important"
-        When you are using finderDepth and finderNumber, please make sure that there is no objects at the same level as the folder with finderdepth shallower than or equal to.
+    !!! important "Important"
+        When you are using finderDepth and finderNumber, please make sure that there are no objects in the folder whose level is equal to or less than finderdepth.
 
-        For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372.  And assume that your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
+        For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372, and your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
 
         What will **be lost** are: `bucket_name/pic.jpg`, `bucket_name/Jan/pic.jpg`
 
@@ -211,9 +211,9 @@ You need to update Secrets in Secrets Manager first, and then go to the EC2 cons
 
 - **For Portal users**
 
-    Data Transfer Hub has integrated Dashboard and log groups into Portal, you don't need to jump to AWS CloudWatch console to view the logs.
-
     Go to **Tasks** list page, and click the **Task ID**. You can see the dashboard and logs under the **Monitoring** section.
+    
+    Data Transfer Hub has embedded Dashboard and log groups on the Portal, so you do not need to navigate to AWS CloudWatch console to view the logs.   
 
 - **For Plugin (Pure Backend) users**
 
