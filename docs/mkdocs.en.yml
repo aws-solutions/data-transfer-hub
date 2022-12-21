@@ -23,6 +23,7 @@ nav:
     - Transfer S3 object via Direct Connect: tutorial-directconnect.md    
     - Using AWS CLI to create S3 transfer task: tutorial-cli-launch.md    
   - Additional resources: additional-resources.md
+  - Upgrading the solution: upgrade.md
   - Uninstall the solution: uninstall.md
   - FAQ: faq.md
   - Source code: source.md

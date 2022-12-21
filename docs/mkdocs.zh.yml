@@ -25,6 +25,7 @@ nav:
     - 通过 Direct Connect 传输 S3 对象: tutorial-directconnect.md    
     - 使用 AWS CLI 创建 S3 传输任务: tutorial-cli-launch.md    
   - 更多资源: additional-resources.md
+  - 更新解决方案: upgrade.md
   - 卸载解决方案: uninstall.md
   - 常见问题解答: faq.md
   - 源代码: source.md

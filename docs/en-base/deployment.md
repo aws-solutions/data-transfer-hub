@@ -54,7 +54,7 @@ You can view the status of the stack in the AWS CloudFormation console in the **
 !!! warning "Important"
 
     The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions refer to Option 1.  
-    If you are deploying the solution in **AWS China Regions**, the domain must have a valid [ICP Recordal][icp]. 
+    If you are deploying the solution in **AWS China Regions**, the domain must have a valid [ICP Record][icp]. 
 
 ### Prerequisites
 1.	Create an OIDC User Pool. 
