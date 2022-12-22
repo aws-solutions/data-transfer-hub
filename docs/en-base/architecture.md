@@ -20,7 +20,7 @@ The solution automatically deploys and configures a serverless architecture with
 
 The web console is a centralized place to create and manage all data transfer jobs. Each data type (for example, Amazon S3 or Amazon ECR) is a plugin for Data Transfer Hub, and is packaged as an AWS CloudFormation template hosted in an S3 bucket that AWS owns. When the you create a transfer task, an AWS Lambda function initiates the Amazon CloudFormation template, and state of each task is stored and displayed in the DynamoDB tables.
 
-As of July 2022, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. 
+As of December 2022, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. 
 
 ## Amazon S3 plugin
 

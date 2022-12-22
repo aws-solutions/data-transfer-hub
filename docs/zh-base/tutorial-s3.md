@@ -1,5 +1,8 @@
 您可以在网页控制台创建Amazon S3数据传输任务。更多信息请参考[部署解决方案](./deployment.md)。
 
+!!! Note "注意"
+    Data Transfer Hub 也支持通过 AWS CLI 创建 Amazon S3 的传输任务, 请参考该[教程](./tutorial-cli-launch.md).
+
 1. 从**创建传输任务**页面，选择**创建新任务**，然后选择**下一步**。
 2. 在**引擎选项**页面的引擎下，选择**Amazon S3**，然后选择**下一步**。
 3. 指定传输任务详细信息。
@@ -12,7 +15,13 @@
     - 如果您选择同步多个前缀的对象，请将以换行为分隔的前缀列表文件传输到数据源桶的根目录下，然后填写该文件的名称。具体可参考[多前缀列表配置教程](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/r2_1/docs/USING_PREFIX_LIST_CN.md)。
 5. 要创建凭证信息，请选择[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home)以跳转到当前区域的AWS Secrets Manager控制台。
     - 从左侧菜单中，选择**密钥**，然后选择**储存新的密钥**并选择**其他类型的密钥**类型。
-    - 根据显示格式在Plaintext输入框中填写`access_key_id`和`secret_access_key`信息。有关更多信息，请参阅*IAM用户指南*中的[IAM功能](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)。选择**下一步**。
+    - 根据下面的格式在Plaintext输入框中填写`access_key_id`和`secret_access_key`信息。有关更多信息，请参阅*IAM用户指南*中的[IAM功能](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)。选择**下一步**。
+        ```json
+        {
+            "access_key_id": "<Your Access Key ID>",
+            "secret_access_key": "<Your Access Key Secret>"
+        }
+        ```
     - （可选）输入密钥名称和描述。选择**下一步**。
     - 在自动轮换的配置中，选择禁用自动轮换。选择**下一步**。
     - 保留默认值，选择**保存**完成密钥的创建。
@@ -49,7 +58,7 @@
 
 Data Transfer Hub 默认支持使用 SSE-S3 和 SSE-KMS 的数据源。
 
-但如果您的源存储桶启用了 **SSE-CMK**，请创建一个IAM Policy，并将 Policy 关联到 DTH Worker 和Finder。
+但如果您的源存储桶启用了 **SSE-CMK**，请创建一个IAM Policy，并将 Policy 关联到 DTH Worker 和Finder。您可以跳转到 [Amazon IAM Roles][iam-role] 控制台并搜索`<StackName>-FinderStackFinderRole<random suffix>`和`<StackName>-EC2WorkerStackWorkerAsgRole<random suffix>`。
 
 注意进行以下修改：
 
@@ -78,3 +87,5 @@ Data Transfer Hub 默认支持使用 SSE-S3 和 SSE-KMS 的数据源。
     ]
 }
 ```
+
+[iam-role]: https://us-east-1.console.aws.amazon.com/iamv2/home#/roles

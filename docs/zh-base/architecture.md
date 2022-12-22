@@ -21,7 +21,7 @@
 
 网页控制台用于集中创建和管理所有数据传输任务。每种数据类型（例如，Amazon S3或Amazon ECR）都是插件，并打包为AWS CloudFormation模板，托管在Amazon S3存储桶中。当您创建传输任务时，AWS Lambda函数会启动AWS CloudFormation模板，并且每个任务的状态都会存储并显示在Amazon DynamoDB表中。
 
-截至2022年7月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。
+截至2022年12月，该解决方案支持两个数据传输插件：Amazon S3插件和Amazon ECR插件。
 ## Amazon S3插件
 
 ![s3-architecture](./images/s3-arch-global.png)

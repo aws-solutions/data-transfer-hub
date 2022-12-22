@@ -56,39 +56,34 @@
 ### 前提条件
 1. 创建OIDC用户池。
 2. 配置域名服务解析。
+3. 确认已有[ICP备案][icp]的域名。
 
 ### 前提条件1：创建OIDC用户池
 在Amazon Cognito尚不可用的区域，您可以使用OIDC提供身份验证。以下过程以亚马逊云科技合作伙伴[Authing](https://www.authing.cn/)为例，但您也可以选择其它可用的供应商。
 
-1. 注册一个Authing开发者账号。有关更多信息，请参阅[如何注册帐户](https://docs.authing.cn/v2/)。
-2. 登录到Authing。
-3. 选择创建新用户池，输入名称，然后选择确认。
-4. 创建OIDC认证的应用。
-    1. 从左侧边栏选择并进入**应用**界面，选择**添加应用**。
-    2. 选择**自建应用**。
-    3. 输入应用名称，并输入认证地址。
-    4. 选择**创建**。
-5. 更新授权配置。
-    1. 从左侧边栏选择并进入**应用**界面，选择**应用配置**，然后选择**授权配置**。
-    2. **授权模式**选择**implicit**，返回类型选择**id_token**。
-    3. id_token签名算法修改为**RS256**。
-    4. 选择**保存**。
 
-6. 配置回调链接。
-    1. 从左侧边栏选择并进入**应用**界面，选择**应用配置**，然后选择**认证配置**。
-    2. 将登录回调URL修改为 `https://<your-custom-domain>/authentication/callback`。
-    3. 选择**保存**。
-    !!! note "注意"
+1. 登录[Authing 控制台](https://console.authing.cn/console){target=_blank}。
+2. 如果您还没有用户池，先创建一个用户池。
+3. 选择用户池。
+4. 在左侧导航栏，选择**应用**下的**自建应用**。
+5. 单击**创建自建应用**按钮。
+6. 输入**应用名称**和**认证地址**。
+7. 将Endpoint Information中的`App ID`（即`client_id`）和`Issuer`保存到一个文本文件中，以备后面使用。
+    [![](./images/OIDC/endpoint-info.png)](./images/OIDC/endpoint-info.png)
 
-        请确保您上面填写的域名已在中国区完成ICP备案。
+8. 将`Login Callback URL`和`Logout Callback URL`更新为IPC记录的域名。
+    [![](./images/OIDC/authentication-configuration.png)](./images/OIDC/authentication-configuration.png)
 
-7. 更新登录控制。
+9. 设置以下授权配置。
+    [![](./images/OIDC/authorization-configuration.png)](./images/OIDC/authorization-configuration.png)
+
+10. 更新登录控制。
     1. 从左侧边栏选择并进入**应用**界面，选择**登录控制**，然后选择**登录注册方式**。
     2. 登录方式请只选择**密码登录：邮箱**。
     3. 请**取消勾选**注册方式方式内的所有选项。
     4. 选择**保存**。
 
-8. 创建管理员用户。
+11. 创建管理员用户。
     1. 从左侧边栏选择并进入**用户管理**界面，选择**用户列表**，然后选择**创建用户**。
     2. 选择邮箱模式。
     3. 输入用户的邮箱以及密码。
@@ -139,6 +134,7 @@
     | **OidcProvider** | 无 |	OIDC应用程序配置中显示的颁发者。
     | **OidcClientId** | 无 |	OIDC应用配置中显示的App ID。
     | **OidcCustomerDomain** | 无 | 指在中国完成ICP注册的客户域，注意不是Authing提供的子域。<br> 它的开头必须是https://。
+    | **AdminEmail** | 无 | 用于接收传输任务状态监控的邮箱。
 
 6. 选择**下一步**。
 7. 在**配置堆栈选项** 页面上，保持默认值并选择**下一步**。
@@ -177,3 +173,5 @@
 ![dth-console](./images/dth-console.png)
 
 图1：网页控制台
+
+[icp]: https://www.amazonaws.cn/en/support/icp/?nc2=h_l2_su
