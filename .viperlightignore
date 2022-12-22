@@ -10,6 +10,8 @@ docs/tutortial-migration-oss-to-s3.md
 docs/tutortial-migration-oss-to-s3_CN.md
 docs/en-base/tutorial-oss.md
 docs/zh-base/tutorial-oss.md
+docs/en-base/tutorial-cli-launch.md
+docs/zh-base/tutorial-cli-launch.md
 
 source/portal/src/pages/creation/ecr/StepTwoECR.tsx
 source/portal/src/pages/creation/s3/comps/MoreSettings.tsx
