@@ -150,16 +150,15 @@ You can use these two parameters to increase the parallelism of Finder to improv
 
 For example, if there are 12 subdirectories with over 100k files each, such as `Jan`, `Feb`, ..., `Dec`. 
     
-It's recommended to set **`finderDepth`**=1 and **`finderNumber`**=12. In this example, your comparison performance will increase by 12 times.
+You are recommended to set **`finderDepth`**=1 and **`finderNumber`**=12, so that your comparison performance will increase by 12 times.
 
-!!! important "Important"
-    When you are using finderDepth and finderNumber, please make sure that there are no objects in the folder whose level is equal to or less than finderdepth.
+When using finderDepth and finderNumber, make sure that there are no objects in the folder whose level is equal to or less than finderDepth. Otherwise, data loss may occur.
 
-    For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372, and your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
+For example, assume that you set the `finderDepth`=2 and `finderNumber`=12 * 31 = 372, and your S3 bucket structure is like `bucket_name/Jan/01/pic1.jpg`.
 
-    What will **be lost** are: `bucket_name/pic.jpg`, `bucket_name/Jan/pic.jpg`
+What will **be lost** are files like `bucket_name/pic.jpg`, `bucket_name/Jan/pic.jpg`.
 
-    What will **not be lost** are: all files under `bucket_name/Jan/33/`, all files under `bucket_name/13/33/`
+What will **not be lost** are all files under `bucket_name/Jan/33/`, all files under `bucket_name/13/33/`.
 
 **10. How to deal with Access Key Rotation?**</br>
 

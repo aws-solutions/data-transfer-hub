@@ -14,8 +14,8 @@ Use the following steps to deploy this solution on AWS. For detailed instruction
 
 ## Step 1. (Option 1) Launch the stack in AWS Standard Regions <a name="launch-cognito"></a>
 
-!!! warning "Important"
-    The following deployment instructions apply to AWS Standard Regions only. For deployment in AWS China Regions refer to Option 2.  
+!!! important "Important"
+    The following deployment instructions apply to AWS Standard Regions only. For deployment in AWS China Regions, refer to Option 2.  
 
 **Deploy the AWS CloudFormation template for Option 1 – AWS Standard Regions**
 
@@ -51,20 +51,20 @@ You can view the status of the stack in the AWS CloudFormation console in the **
 
 ## Step 1. (Option 2) Launch the stack in AWS China Regions <a name="launch-openid"></a>
 
-!!! warning "Important"
+!!! important "Important"
 
-    The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions refer to Option 1.  
-    If you are deploying the solution in **AWS China Regions**, the domain must have a valid [ICP Record][icp]. 
+    The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions, refer to Option 1.  
 
 ### Prerequisites
-1.	Create an OIDC User Pool. 
-2.	Configure domain name service (DNS) resolution.
+1.	Create an OIDC user pool.
+2.	Configure domain name service (DNS) resolution. 
+3.  Make sure a domain registered by [ICP][icp] is available.
 
 ### Prerequisite 1: Create an OIDC user pool
 In AWS Regions where Amazon Cognito is not yet available, you can use OIDC to provide authentication. The following procedure uses AWS Partner [Authing](https://www.authing.cn/) as an example, but you can also choose any available provider. 
 
 1. Go to the [Authing console](https://console.authing.cn/console){target=_blank}.
-2. Create a user pool if you don't have one.
+2. Create a new user pool if you don't have one.
 3. Select the user pool.
 4. On the left navigation bar, select **Self-built App** under **Applications**. 
 5. Click the **Create** button.
@@ -138,7 +138,7 @@ This automated AWS CloudFormation template deploys Data Transfer Hub in the AWS 
     | **OidcProvider** | <Requires input\> |	Refers to the Issuer shown in the OIDC application configuration.  
     | **OidcClientId** | <Requires input\> |	Refers to the App ID shown in the OIDC application configuration. 
     | **OidcCustomerDomain** | <Requires input\> | Refers to the customer domain that has completed ICP registration in China, not the subdomain provided by Authing. <br> It must start with `https://`.
-    | **AdminEmail** | <Requires input\> | The email for receiving task status alarm.
+    | **AdminEmail** | <Requires input\> | Refers to the email for receiving task status alarm.
 
 6. Choose **Next**.
 

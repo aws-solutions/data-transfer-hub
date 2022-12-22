@@ -1,4 +1,4 @@
-You can use the [AWS CLI][aws-cli] to create an Amazon S3 transfer task. 
+You can use the [AWS CLI][aws-cli] to create an Amazon S3 transfer task. Note that if you have deployed the DTH Portal at the same time, the tasks started through the CLI will not appear in the Task List on your Portal.
 
 1. Create an Amazon VPC with two public subnets or two private subnets with [NAT gateway][nat].
 
@@ -44,7 +44,7 @@ You can use the [AWS CLI][aws-cli] to create an Amazon S3 transfer task.
     ```
 ### Parameters
 
-| Parameter Name | Allowed Value | Default Value | Additional Remark |
+| Parameter Name | Allowed Value | Default Value | Description |
 | --- | --- | --- | --- |
 | alarmEmail |  |  | An email to which errors will be sent
 | desiredCapacity |  | 1 | Desired capacity for Auto Scaling Group
@@ -76,9 +76,6 @@ You can use the [AWS CLI][aws-cli] to create an Amazon S3 transfer task.
 | srcType | Amazon_S3 <br> Aliyun_OSS <br> Qiniu_Kodo <br> Tencent_COS | Amazon_S3 | If you choose to use the Endpoint mode, please select Amazon_S3.
 | workerNumber | 1 ~ 10 | 4 | The number of worker threads to run in one worker node/instance. For small files (size < 1MB), you can increase the number of workers to improve the transfer performance.
 
-
-!!! note "Note"
-    If you have deployed the DTH Portal at the same time, the tasks started through the CLI will not appear in the Task List on your Portal.
 
 [aws-cli]: https://aws.amazon.com/cli/
 [nat]: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
