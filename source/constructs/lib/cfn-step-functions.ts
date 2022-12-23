@@ -221,6 +221,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "logs:PutMetricFilter",
             "logs:DeleteMetricFilter",
             "logs:DescribeMetricFilters",
+            "logs:PutLogEvents",
             "logs:TagResource"
           ],
           resources: [`*`]
@@ -407,6 +408,15 @@ export class CloudFormationStateMachine extends cdk.Construct {
         'cloudformation:DescribeStacks'
       ]
     }))
+    queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ["*"],
+      actions: [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }))
 
     const startMonitorFlowFn = new lambda.Function(this, 'StartMonitorFlowFn', {
       runtime: lambda.Runtime.PYTHON_3_9,
@@ -424,6 +434,15 @@ export class CloudFormationStateMachine extends cdk.Construct {
       resources: [props.taskMonitorSfnArn],
       actions: [
         'states:StartExecution'
+      ]
+    }))
+    startMonitorFlowFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ["*"],
+      actions: [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
       ]
     }))
 

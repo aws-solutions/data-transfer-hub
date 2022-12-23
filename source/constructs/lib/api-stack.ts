@@ -84,6 +84,16 @@
              '*'
            ]
          }),
+         new iam.PolicyStatement({
+          actions: [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          resources: [
+            '*'
+          ]
+        })
        ]
      });
      appSyncServiceLinkRoleFn.role?.attachInlinePolicy(serviceLikedRolePolicy)
@@ -446,6 +456,15 @@
          'states:StartExecution'
        ]
      }))
+     taskHandlerFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [`*`],
+      actions: [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }))
  
      const lambdaDS = this.api.addLambdaDataSource('TaskLambdaDS', taskHandlerFn, {
        description: 'Lambda Resolver Datasource'
@@ -500,6 +519,15 @@
          "secretsmanager:ListSecrets",
        ]
      }))
+     secretManagerReadOnlyPolicy.addStatements(new iam.PolicyStatement({
+       effect: iam.Effect.ALLOW,
+       resources: ['*'],
+       actions: [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+       ]
+     }))
  
      const cfnSecretManagerReadOnlyPolicy = secretManagerReadOnlyPolicy.node.defaultChild as iam.CfnPolicy
      addCfnNagSuppressRules(cfnSecretManagerReadOnlyPolicy, [
@@ -541,6 +569,15 @@
       actions: [
         'cloudformation:DescribeStacks',
         'cloudformation:DescribeStackEvents'
+      ]
+    }))
+    taskV2HandlerFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [`*`],
+      actions: [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
       ]
     }))
  
@@ -597,7 +634,10 @@
           "logs:ListLogDeliveries",
           "logs:DescribeLogStreams",
           "logs:GetLogEvents",
-          "cloudwatch:GetMetricStatistics"
+          "cloudwatch:GetMetricStatistics",
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
         ],
       })
     );
