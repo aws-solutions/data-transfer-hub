@@ -48,6 +48,16 @@ export class MonitorStateMachine extends cdk.Construct {
                     resources: [
                         `*`,
                     ]
+                }),
+                new iam.PolicyStatement({
+                    actions: [
+                      "logs:CreateLogGroup",
+                      "logs:CreateLogStream",
+                      "logs:PutLogEvents"
+                    ],
+                    resources: [
+                      '*'
+                    ]
                 })
             ]
         });
@@ -97,7 +107,10 @@ export class MonitorStateMachine extends cdk.Construct {
                         "cloudwatch:GetMetricStatistics",
                         "cloudformation:DescribeStacks",
                         "sqs:GetQueueUrl",
-                        "sqs:GetQueueAttributes"
+                        "sqs:GetQueueAttributes",
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream",
+                        "logs:PutLogEvents"
                     ],
                     resources: [
                         `*`,
@@ -149,7 +162,10 @@ export class MonitorStateMachine extends cdk.Construct {
                         "logs:DescribeLogStreams",
                         "logs:GetLogEvents",
                         "cloudwatch:GetMetricStatistics",
-                        "cloudformation:DescribeStacks"
+                        "cloudformation:DescribeStacks",
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream",
+                        "logs:PutLogEvents"
                     ],
                     resources: [
                         `*`,
@@ -204,7 +220,10 @@ export class MonitorStateMachine extends cdk.Construct {
                         "logs:GetLogEvents",
                         "cloudwatch:GetMetricStatistics",
                         "cloudformation:DescribeStacks",
-                        "autoscaling:UpdateAutoScalingGroup"
+                        "autoscaling:UpdateAutoScalingGroup",
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream",
+                        "logs:PutLogEvents"
                     ],
                 })
             ]
@@ -253,7 +272,10 @@ export class MonitorStateMachine extends cdk.Construct {
                         "logs:DescribeLogStreams",
                         "logs:GetLogEvents",
                         "cloudwatch:GetMetricStatistics",
-                        "cloudformation:DescribeStacks"
+                        "cloudformation:DescribeStacks",
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream",
+                        "logs:PutLogEvents"
                     ],
                     resources: [
                         `*`,
@@ -304,6 +326,16 @@ export class MonitorStateMachine extends cdk.Construct {
                     ],
                     resources: [props.centralSnsArn]
                 }),
+                new iam.PolicyStatement({
+                    actions: [
+                      "logs:CreateLogGroup",
+                      "logs:CreateLogStream",
+                      "logs:PutLogEvents"
+                    ],
+                    resources: [
+                      '*'
+                    ]
+                  }),
                 new iam.PolicyStatement({
                     actions: [
                         "kms:Decrypt",
