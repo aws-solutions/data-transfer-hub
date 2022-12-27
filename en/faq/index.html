@@ -427,6 +427,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-cli-launch/" class="md-nav__link">
+        Using AWS CLI to create S3 transfer task
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -443,6 +457,21 @@
     <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         Additional resources
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        Upgrade the solution
       </a>
     </li>
   
@@ -685,12 +714,31 @@
 <p>Yes. It is recommended to create a new AWS account dedicated to deploying solutions. The account-level isolation improves the stability of the production account in the data synchronization process.</p>
 <p><strong>6. Is it possible to transfer data between different areas under the same account?</strong></br></p>
 <p>Not supported currently. For this scenario, we recommend using Amazon S3's <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario">Cross-Region Replication</a>.</p>
+<p><strong>7. Can I use AWS CLI to create a DTH S3 Transfer Task?</strong></br></p>
+<p>Yes. Please refer to the tutorial <a href="../tutorial-cli-launch/">Using AWS CLI to launch DTH S3 Transfer task</a>.</p>
 <h2 id="performance">Performance</h2>
 <p><strong>1. Will there be any difference in data transfer performance for deployment in AWS China Regions and in AWS Standard Regions?</strong></br></p>
 <p>No. If you do not have a domain name registered by ICP in AWS China Regions, it is recommended to deploy it in the AWS Standard Regions.</p>
 <p><strong>2. What are the factors influencing the data transfer performance?</strong></br></p>
 <p>The transfer performance may be affected by average file size, destination of data transfer, geographic location of data source, and real-time network environment. </p>
 <p>For example, using the same configuration, the transfer speed with an average file size of 50MB is 170 times the transfer speed with an average file size of 10KB.</p>
+<p><strong>3. What is the scale up/scale down policy of Worker Auto Scaling Group?</strong></br>
+The Auto Scaling Group will <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html#as-scaling-steps">automatically scale up</a> or scale down according to the number of tasks in SQS. </p>
+<ul>
+<li>
+<p>Scaling Up Steps are:
+    <div class="highlight"><pre><span></span><code><span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>   <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">1</span> <span class="p">}</span>
+<span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>   <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">2</span> <span class="p">}</span>
+<span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>  <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">5</span> <span class="p">}</span>
+<span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span> <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">10</span> <span class="p">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Scaling Down Step is:
+    <div class="highlight"><pre><span></span><code><span class="p">{</span> <span class="err">upper</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="mi">-10000</span> <span class="p">}</span>
+</code></pre></div></p>
+</li>
+</ul>
 <h2 id="data-security-and-authentication">Data security and authentication</h2>
 <p><strong>1. How does the solution ensure data security?</strong></br></p>
 <p>The solution adopts the following to ensure data security:</p>
@@ -706,20 +754,30 @@
 <p><strong>4. How does the solution achieve cross-account and cross-cloud authentication?</strong></br></p>
 <p>By authentication through the Access Keyid and Access Key of the other party’s account. The secret key is stored in AWS Secrets Manager and will be read in Secrets Manager as needed.</p>
 <p><strong>5. Does the solution support SSE-S3, SSE-KMS, and SSE-CMK?</strong></br></p>
-<p>Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the <a href="https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md">tutorial</a>.</p>
+<p>Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the <a href="../tutorial-s3/#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3">tutorial</a>.</p>
 <h2 id="features">Features</h2>
 <p><strong>1. What third-party clouds does Amazon S3 sync currently support?</strong></br></p>
 <p>Alibaba Cloud OSS, Tencent Cloud, Huawei Cloud, Qiniu Cloud, Baidu Cloud, and all clouds that support S3 compatible protocols.</p>
 <p><strong>2. Why is the status of Task still in progress after all destination files are transferred? When will the task stop?</strong></br></p>
+<ul>
+<li>
+<p><strong>For Fixed Rate Job</strong></p>
 <p>The data difference between the data source and destination will be monitored continuously, and the differences between the two sides will be automatically compared after the first deployment. </p>
 <p>Moreover, when the default comparison task once an hour finds a difference, it will also transfer the difference data. Therefore, the status of the Task will always be in progress, unless the user manually terminates the task.</p>
 <p>Based on the built-in automatic expansion function of the solution, when there is no data to be transferred, the number of transfer working nodes will be automatically reduced to the minimum value configured by the user.</p>
+</li>
+<li>
+<p><strong>For One Time Transfer Job</strong></p>
+<p>When the objects are all transferred to the destination, the status of one time transfer job will become <strong>Completed</strong>. </p>
+<p>The transfer action will stop and you can select <strong>Stop</strong> to delete and release all backend resources.</p>
+</li>
+</ul>
 <p><strong>3. How often will the data difference between the data source and destination be compared？</strong></br></p>
 <p>By default, it runs hourly. </p>
 <p>At <strong>Task Scheduling Settings</strong>, you can make the task scheduling configuration.</p>
 <ul>
 <li>If you want to configure the timed task at a fixed frequency to compare the data difference on both sides of the time, select <strong>Fixed Rate</strong>.</li>
-<li>If you want to configure a scheduled task through <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions">Cron Expression</a> to achieve a scheduled comparison of data differences on both sides, select <strong>CroExpression</strong>.</li>
+<li>If you want to configure a scheduled task through <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions">Cron Expression</a> to achieve a scheduled comparison of data differences on both sides, select <strong>Cron Expression</strong>.</li>
 <li>If you only want to perform the data synchronization task once, select <strong>One Time Transfer</strong>.</li>
 </ul>
 <p><strong>4. Is it possible for real-time synchronization of newly added files?</strong></br></p>
@@ -730,6 +788,18 @@
 <p>There will be 5 retries. After 5 retries without success, the task will be notified to the user via email.</p>
 <p><strong>7. How to monitor the progress of the transfer by checking information like how many files are waiting to be transferred and the current transfer speed?</strong></br></p>
 <p>You can jump to the customized dashboard of Amazon CloudWatch by clicking the CloudWatch Dashboard link in Task Detail of the web console. You can also go directly to CloudWatch to view it.</p>
+<p><strong>8. Do I need to create an S3 destination bucket before creating a transfer task?</strong></br></p>
+<p>Yes, you need to create the destination S3 bucket in advance.</p>
+<p><strong>9. How to use Finder depth and Finder number to improve Finder performance?</strong></br></p>
+<p>You can use these two parameters to increase the parallelism of Finder to improve the performance of data comparison.</p>
+<p>For example, if there are 12 subdirectories with over 100k files each, such as <code>Jan</code>, <code>Feb</code>, ..., <code>Dec</code>. </p>
+<p>You are recommended to set <strong><code>finderDepth</code></strong>=1 and <strong><code>finderNumber</code></strong>=12, so that your comparison performance will increase by 12 times.</p>
+<p>When using finderDepth and finderNumber, make sure that there are no objects in the folder whose level is equal to or less than finderDepth. Otherwise, data loss may occur.</p>
+<p>For example, assume that you set the <code>finderDepth</code>=2 and <code>finderNumber</code>=12 * 31 = 372, and your S3 bucket structure is like <code>bucket_name/Jan/01/pic1.jpg</code>.</p>
+<p>What will <strong>be lost</strong> are files like <code>bucket_name/pic.jpg</code>, <code>bucket_name/Jan/pic.jpg</code>.</p>
+<p>What will <strong>not be lost</strong> are all files under <code>bucket_name/Jan/33/</code>, all files under <code>bucket_name/13/33/</code>.</p>
+<p><strong>10. How to deal with Access Key Rotation?</strong></br></p>
+<p>Currently, when Data Transfer Hub perceived that the Access Key of S3 has been rotated, it will fetch the latest key from AWS Secrets Manager automatically. Therefore, the Access Key Rotation will not affect the migrating process of DTH.</p>
 <h2 id="error-messages">Error messages</h2>
 <p>After creating the task, you may encounter some error messages. The following list the error messages and provide general steps to troubleshoot them.</p>
 <p><strong>1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid</strong></p>
@@ -754,15 +824,25 @@
 <p><strong>2. The Secrets configuration in Secrets Manager is wrong. How to resolve it?</strong></br></p>
 <p>You need to update Secrets in Secrets Manager first, and then go to the EC2 console to Terminate all EC2 instances that have been started by the task. Later, the Auto Scaling mechanism of the solution will automatically start a new working node and update Secrets to it.</p>
 <p><strong>3. How to find detailed transfer log?</strong></br></p>
+<ul>
+<li>
+<p><strong>For Portal users</strong></p>
+<p>Go to <strong>Tasks</strong> list page, and click the <strong>Task ID</strong>. You can see the dashboard and logs under the <strong>Monitoring</strong> section.</p>
+<p>Data Transfer Hub has embedded Dashboard and log groups on the Portal, so you do not need to navigate to AWS CloudWatch console to view the logs.   </p>
+</li>
+<li>
+<p><strong>For Plugin (Pure Backend) users</strong></p>
 <p>When deploying the stack, you will be asked to enter the stack name (<code>DTHS3Stack</code> by default), and most resources will be created with the name prefix as the stack name. For example, the format of the queue name is <code>&lt;StackName&gt;-S3TransferQueue-&lt;random suffix&gt;</code>. This plugin will create two main log groups.</p>
 <ul>
 <li>
-<p>If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the <a href="#error-code-list">Error Code List</a> section.</p>
+<p>If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the <a href="#error-messages">Error Code List</a> section.</p>
 <p><code>&lt;StackName&gt;-EC2FinderLogGroup&lt;random suffix&gt;</code></p>
 </li>
 <li>
 <p>The following are the log groups of all EC2 instances, and you can find detailed transfer logs.</p>
 <p><code>&lt;StackName&gt;-EC2WorkerStackS3RepWorkerLogGroup&lt;random suffix&gt;</code></p>
+</li>
+</ul>
 </li>
 </ul>
 <p><strong>4. How to make customized build?</strong></br></p>

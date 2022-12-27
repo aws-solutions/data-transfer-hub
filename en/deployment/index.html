@@ -539,6 +539,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-cli-launch/" class="md-nav__link">
+        Using AWS CLI to create S3 transfer task
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -555,6 +569,21 @@
     <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         Additional resources
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        Upgrade the solution
       </a>
     </li>
   
@@ -759,9 +788,9 @@
 <li>Step 3. <a href="#create-task">Create a transfer task</a></li>
 </ul>
 <h2 id="step-1-option-1-launch-the-stack-in-aws-standard-regions">Step 1. (Option 1) Launch the stack in AWS Standard Regions <a name="launch-cognito"></a></h2>
-<div class="admonition warning">
+<div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>The following deployment instructions apply to AWS Standard Regions only. For deployment in AWS China Regions refer to Option 2.  </p>
+<p>The following deployment instructions apply to AWS Standard Regions only. For deployment in AWS China Regions, refer to Option 2.  </p>
 </div>
 <p><strong>Deploy the AWS CloudFormation template for Option 1 – AWS Standard Regions</strong></p>
 <div class="admonition note">
@@ -816,56 +845,36 @@
 </ol>
 <p>You can view the status of the stack in the AWS CloudFormation console in the <strong>Status</strong> column. You should receive a <strong>CREATE_COMPLETE</strong> status in approximately 15 minutes.</p>
 <h2 id="step-1-option-2-launch-the-stack-in-aws-china-regions">Step 1. (Option 2) Launch the stack in AWS China Regions <a name="launch-openid"></a></h2>
-<div class="admonition warning">
+<div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions refer to Option 1.  </p>
+<p>The following deployment instructions apply to AWS China Regions only. For deployment in AWS Standard Regions, refer to Option 1.  </p>
 </div>
 <h3 id="prerequisites">Prerequisites</h3>
 <ol>
-<li>Create an OIDC User Pool. </li>
-<li>Configure domain name service (DNS) resolution.</li>
+<li>Create an OIDC user pool.</li>
+<li>Configure domain name service (DNS) resolution. </li>
+<li>Make sure a domain registered by <a href="https://www.amazonaws.cn/en/support/icp/?nc2=h_l2_su">ICP</a> is available.</li>
 </ol>
 <h3 id="prerequisite-1-create-an-oidc-user-pool">Prerequisite 1: Create an OIDC user pool</h3>
 <p>In AWS Regions where Amazon Cognito is not yet available, you can use OIDC to provide authentication. The following procedure uses AWS Partner <a href="https://www.authing.cn/">Authing</a> as an example, but you can also choose any available provider. </p>
 <ol>
+<li>Go to the <a href="https://console.authing.cn/console" target="_blank">Authing console</a>.</li>
+<li>Create a new user pool if you don't have one.</li>
+<li>Select the user pool.</li>
+<li>On the left navigation bar, select <strong>Self-built App</strong> under <strong>Applications</strong>. </li>
+<li>Click the <strong>Create</strong> button.</li>
+<li>Enter the <strong>Application Name</strong>, and <strong>Subdomain</strong>.</li>
 <li>
-<p>Sign up for an Authing developer account. For more information, see <a href="https://docs.authing.cn/v2/">How to register an account</a>.</p>
+<p>Save the <code>App ID</code> (that is, <code>client_id</code>) and <code>Issuer</code> to a text file from Endpoint Information, which will be used later.
+    <a href="../images/OIDC/endpoint-info.png"><img alt="" src="../images/OIDC/endpoint-info.png" /></a></p>
 </li>
 <li>
-<p>Sign in to Authing.</p>
+<p>Update the <code>Login Callback URL</code> and <code>Logout Callback URL</code> to your IPC recorded domain name.
+    <a href="../images/OIDC/authentication-configuration.png"><img alt="" src="../images/OIDC/authentication-configuration.png" /></a></p>
 </li>
 <li>
-<p>Select <strong>Create new user pool</strong>, enter a name, and choose <strong>Confirm</strong>.</p>
-</li>
-<li>
-<p>After the user pool is created, you can then create an application for OIDC authentication. </p>
-<ol>
-<li>Select and enter the <strong>App</strong> interface from the left sidebar, and select <strong>Add App</strong>.</li>
-<li>Select <strong>Self-built application</strong>.</li>
-<li>Enter the application name and enter the authentication address.</li>
-<li>Select <strong>Create</strong>.</li>
-</ol>
-</li>
-<li>
-<p>Update the authorization configuration.</p>
-<ol>
-<li>Select from the left sidebar and enter the <strong>Applicable Order</strong> interface, select <strong>App Configuration</strong>, and then select <strong>Authorized Configuration</strong>.</li>
-<li><strong>Authorization mode</strong> select <strong>implicit</strong>, return type select <strong>id_token</strong>.</li>
-<li>The id_token signature algorithm is modified to <strong>RS256</strong>.</li>
-<li>Select <strong>Save</strong>.</li>
-</ol>
-</li>
-<li>
-<p>Update the callback URL.</p>
-<ol>
-<li>From <strong>Application</strong>, select <strong>Configuration</strong>, then choose <strong>Auth Config</strong>. </li>
-<li>Modify the login callback URL to <code>https://&lt;your-custom-domain&gt;/authentication/callback</code>。</li>
-<li>Choose <strong>Save</strong>.</li>
-</ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Verify that the domain name has completed ICP registration in China. </p>
-</div>
+<p>Set the Authorization Configuration.
+    <a href="../images/OIDC/authorization-configuration.png"><img alt="" src="../images/OIDC/authorization-configuration.png" /></a></p>
 </li>
 <li>
 <p>Update login control.</p>
@@ -961,6 +970,11 @@
 <td><strong>OidcCustomerDomain</strong></td>
 <td>&lt;Requires input></td>
 <td>Refers to the customer domain that has completed ICP registration in China, not the subdomain provided by Authing. <br> It must start with <code>https://</code>.</td>
+</tr>
+<tr>
+<td><strong>AdminEmail</strong></td>
+<td>&lt;Requires input></td>
+<td>Refers to the email for receiving task status alarm.</td>
 </tr>
 </tbody>
 </table>

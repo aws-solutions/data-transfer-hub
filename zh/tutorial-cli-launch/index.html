@@ -10,14 +10,14 @@
       
       
       
-        <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/source/">
+        <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/tutorial-cli-launch/">
       
       <link rel="icon" href="../images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
       
-        <title>源代码 - 数据传输解决方案</title>
+        <title>使用 AWS CLI 创建 S3 传输任务 - 数据传输解决方案</title>
       
     
     
@@ -61,6 +61,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -89,7 +94,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              源代码
+              使用 AWS CLI 创建 S3 传输任务
             
           </span>
         </div>
@@ -374,12 +379,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" checked>
       
       
       
@@ -428,11 +435,48 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../tutorial-cli-launch/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          使用 AWS CLI 创建 S3 传输任务
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         使用 AWS CLI 创建 S3 传输任务
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    参数列表
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -510,19 +554,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../source/" class="md-nav__link">
         源代码
       </a>
-      
     </li>
   
 
@@ -549,19 +585,282 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    参数列表
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/awslabs/data-transfer-hub/edit/master/docs/source.md" title="编辑此页" class="md-content__button md-icon">
+<a href="https://github.com/awslabs/data-transfer-hub/edit/master/docs/tutorial-cli-launch.md" title="编辑此页" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-  <h1>源代码</h1>
+  <h1>使用 AWS CLI 创建 S3 传输任务</h1>
 
-<p>您可以访问我们的<a href="https://github.com/awslabs/data-transfer-hub">GitHub存储库</a>下载此解决方案的源文件。数据传输解决方案的模板是使用<a href="http://aws.amazon.com/cdk/">云开发工具包（CDK）</a>生成的。更多有关信息，请参阅<a href="https://github.com/awslabs/data-transfer-hub#readme">README.md</a>文件。</p>
+<p>您可以使用 <a href="https://aws.amazon.com/cli/">AWS CLI</a> 创建 Amazon S3 传输任务。如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。</p>
+<ol>
+<li>
+<p>创建一个具有两个公有子网或两个拥有<a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT 网关</a> 私有子网的Amazon VPC。</p>
+</li>
+<li>
+<p>根据需要替换<code>&lt;CLOUDFORMATION_URL&gt;</code>。</p>
+<ul>
+<li>全球区域: 
+<div class="highlight"><pre><span></span><code>https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub-s3/latest/DataTransferS3Stack-ec2.template
+</code></pre></div></li>
+<li>中国区域: 
+<div class="highlight"><pre><span></span><code>https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub-s3/latest/DataTransferS3Stack-ec2.template
+</code></pre></div></li>
+</ul>
+</li>
+<li>
+<p>转到您的终端并输入以下命令。参数详情请参考下表。</p>
+<div class="highlight"><pre><span></span><code>aws cloudformation create-stack --stack-name dth-s3-task --template-url CLOUDFORMATION_URL <span class="se">\</span>
+--capabilities CAPABILITY_NAMED_IAM <span class="se">\</span>
+--parameters <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>alarmEmail,ParameterValue<span class="o">=</span>your_email@abc.com <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destBucket,ParameterValue<span class="o">=</span>dth-recive-cn-north-1 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPrefix,ParameterValue<span class="o">=</span>test-prefix <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destCredentials,ParameterValue<span class="o">=</span>drh-cn-secret-key <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destInCurrentAccount,ParameterValue<span class="o">=</span><span class="nb">false</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destRegion,ParameterValue<span class="o">=</span>cn-north-1 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destStorageClass,ParameterValue<span class="o">=</span>STANDARD <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcBucket,ParameterValue<span class="o">=</span>dth-us-west-2 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcInCurrentAccount,ParameterValue<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcCredentials,ParameterValue<span class="o">=</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcRegion,ParameterValue<span class="o">=</span>us-west-2 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcPrefix,ParameterValue<span class="o">=</span>case1 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcType,ParameterValue<span class="o">=</span>Amazon_S3 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2VpcId,ParameterValue<span class="o">=</span>vpc-040bbab85f0e4e088 <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2Subnets,ParameterValue<span class="o">=</span>subnet-0d1bf2725ab8e94ee<span class="se">\\</span>,subnet-06d17b2b3286be40e <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>finderEc2Memory,ParameterValue<span class="o">=</span><span class="m">8</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2CronExpression,ParameterValue<span class="o">=</span><span class="s2">&quot;0/60 * * * ? *&quot;</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>includeMetadata,ParameterValue<span class="o">=</span><span class="nb">false</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcEvent,ParameterValue<span class="o">=</span>No <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>maxCapacity,ParameterValue<span class="o">=</span><span class="m">20</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>minCapacity,ParameterValue<span class="o">=</span><span class="m">1</span> <span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>desiredCapacity,ParameterValue<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</li>
+</ol>
+<h3 id="_1">参数列表</h3>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>允许值</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alarmEmail</td>
+<td></td>
+<td></td>
+<td>用于接收错误信息的电子邮件</td>
+</tr>
+<tr>
+<td>desiredCapacity</td>
+<td></td>
+<td>1</td>
+<td>Auto Scaling 组的所需容量</td>
+</tr>
+<tr>
+<td>destAcl</td>
+<td>private <br> public-read <br> public-read-write <br> authenticated-read <br> aws-exec-read <br> bucket-owner-read <br> bucket-owner-full-control</td>
+<td>bucket-owner-full-control</td>
+<td>目的桶访问控制列表</td>
+</tr>
+<tr>
+<td>destBucket</td>
+<td></td>
+<td></td>
+<td>目标桶名称</td>
+</tr>
+<tr>
+<td>destCredentials</td>
+<td></td>
+<td></td>
+<td>Secrets Manager 中用于保存目标存储桶的 AK/SK 凭证的密钥名称。如果目标存储桶在当前帐户中，则留空</td>
+</tr>
+<tr>
+<td>destInCurrentAccount</td>
+<td>true <br> false</td>
+<td>true</td>
+<td>目标存储桶是否在当前帐户中。如果不在，您应该提供具有读写权限的凭证</td>
+</tr>
+<tr>
+<td>destPrefix</td>
+<td></td>
+<td></td>
+<td>目标前缀（可选）</td>
+</tr>
+<tr>
+<td>destRegion</td>
+<td></td>
+<td></td>
+<td>目标区域名称</td>
+</tr>
+<tr>
+<td>destStorageClass</td>
+<td>STANDARD <br> STANDARD_IA <br> ONEZONE_IA <br> INTELLIGENT_TIERING</td>
+<td>INTELLIGENT_TIERING</td>
+<td>目标存储类。默认值为INTELLIGENT_TIERING</td>
+</tr>
+<tr>
+<td>ec2CronExpression</td>
+<td></td>
+<td>0/60 * * * ? *</td>
+<td>EC2 Finder 任务的 Cron 表达式。<br> "" 表示一次性转移。</td>
+</tr>
+<tr>
+<td>finderEc2Memory</td>
+<td>8 <br> 16 <br> 32 <br> 64 <br> 128 <br> 256</td>
+<td>8 GB</td>
+<td>Finder 任务使用的内存量（以 GB 为单位）</td>
+</tr>
+<tr>
+<td>ec2Subnets</td>
+<td></td>
+<td></td>
+<td>两个公共子网或具有 <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT 网关</a> 的两个私有子网</td>
+</tr>
+<tr>
+<td>ec2VpcId</td>
+<td></td>
+<td></td>
+<td>运行 EC2 任务的 VPC ID，例如 vpc-bef13dc7</td>
+</tr>
+<tr>
+<td>finderDepth</td>
+<td></td>
+<td>0</td>
+<td>要并行比较的子文件夹的深度。 0 表示按顺序比较所有对象</td>
+</tr>
+<tr>
+<td>finderNumber</td>
+<td></td>
+<td>1</td>
+<td>并行运行的查找器线程数</td>
+</tr>
+<tr>
+<td>includeMetadata</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>添加对象元数据的复制，会有额外的 API 调用</td>
+</tr>
+<tr>
+<td>maxCapacity</td>
+<td></td>
+<td>20</td>
+<td>Auto Scaling 组的最大容量</td>
+</tr>
+<tr>
+<td>minCapacity</td>
+<td></td>
+<td>1</td>
+<td>Auto Scaling 组的最小容量</td>
+</tr>
+<tr>
+<td>srcBucket</td>
+<td></td>
+<td></td>
+<td>源桶名称</td>
+</tr>
+<tr>
+<td>srcCredentials</td>
+<td></td>
+<td></td>
+<td>Secrets Manager 中用于保存 Source Bucket 的 AK/SK 凭证的密钥名称。 如果源存储桶在当前帐户中或源是开源数据，则留空</td>
+</tr>
+<tr>
+<td>srcEndpoint</td>
+<td></td>
+<td></td>
+<td>源端点 URL（可选），除非您想提供自定义端点 URL，否则留空</td>
+</tr>
+<tr>
+<td>srcEvent</td>
+<td>No <br> Create <br> CreateAndDelete</td>
+<td>No</td>
+<td>是否启用 S3 Event 触发复制。 请注意，S3Event 仅适用于源位于当前帐户中的情况</td>
+</tr>
+<tr>
+<td>srcInCurrentAccount</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>源存储桶是否当前帐户中。如果不在，您应该提供具有读取权限的凭证</td>
+</tr>
+<tr>
+<td>srcPrefix</td>
+<td></td>
+<td></td>
+<td>源前缀（可选）</td>
+</tr>
+<tr>
+<td>srcPrefixsListFile</td>
+<td></td>
+<td></td>
+<td>Source Prefixes List File S3路径（可选）。支持txt类型，例如 my_prefix_list.txt，最大行数1000万行。</td>
+</tr>
+<tr>
+<td>srcRegion</td>
+<td></td>
+<td></td>
+<td>源区域名称</td>
+</tr>
+<tr>
+<td>srcSkipCompare</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>是否跳过任务查找过程中的数据比较。如果是，则将源中的所有数据覆盖到目标桶中</td>
+</tr>
+<tr>
+<td>srcType</td>
+<td>Amazon_S3 <br> Aliyun_OSS <br> Qiniu_Kodo <br> Tencent_COS</td>
+<td>Amazon_S3</td>
+<td>如果选择使用Endpoint模式，请选择Amazon_S3</td>
+</tr>
+<tr>
+<td>workerNumber</td>
+<td>1 ~ 10</td>
+<td>4</td>
+<td>在一个工作节点/实例中运行的工作线程数。 对于小文件（平均文件大小 &lt; 1MB），您可以增加工作线程数量以提高传输性能。</td>
+</tr>
+</tbody>
+</table>
 
               
             </article>
@@ -575,7 +874,7 @@
     <nav class="md-footer__inner md-grid" aria-label="页脚">
       
         
-        <a href="../faq/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 常见问题解答" rel="prev">
+        <a href="../tutorial-directconnect/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 通过 Direct Connect 传输 S3 对象" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -584,20 +883,20 @@
               <span class="md-footer__direction">
                 上一页
               </span>
-              常见问题解答
+              通过 Direct Connect 传输 S3 对象
             </div>
           </div>
         </a>
       
       
         
-        <a href="../revisions/" class="md-footer__link md-footer__link--next" aria-label="下一页: 版本发布说明" rel="next">
+        <a href="../additional-resources/" class="md-footer__link md-footer__link--next" aria-label="下一页: 更多资源" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 下一页
               </span>
-              版本发布说明
+              更多资源
             </div>
           </div>
           <div class="md-footer__button md-icon">

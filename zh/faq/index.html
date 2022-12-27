@@ -429,6 +429,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-cli-launch/" class="md-nav__link">
+        使用 AWS CLI 创建 S3 传输任务
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -445,6 +459,21 @@
     <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         更多资源
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        更新解决方案
       </a>
     </li>
   
@@ -687,11 +716,30 @@
 <p>是的。建议新建一个AWS账户专门用于部署数据传输解决方案。通过账户级别的隔离，可以提高生产账户在数据同步过程中的稳定性。</p>
 <p><strong>6. 同一个账户下的不同区域之间是否可以进行数据传输？</strong></br></p>
 <p>暂不支持。此场景建议使用Amazon S3的<a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario">跨区域复制</a>。</p>
+<p><strong>7. 能否使用 AWS CLI 创建 DTH S3 传输任务？</strong></br></p>
+<p>可以。请参考<a href="../tutorial-cli-launch/">使用AWS CLI启动DTH S3 Transfer任务</a>指南。</p>
 <h2 id="_2">性能相关问题</h2>
 <p><strong>1. 从中国区域部署和从全球区部署相比，数据传输性能会有差异吗？</strong></br></p>
 <p>不会。如果您在中国区域没有经过ICP备案的域名，建议部署在全球区域。</p>
 <p><strong>2. 数据传输解决方案的传输性能和什么有关？</strong></br></p>
 <p>传输性能的影响因素包括：平均文件大小、数据传输的目标端、数据源端所在的地理位置，以及实时的网络环境。例如，相同配置下，平均文件大小为50MB的传输速度为平均文件大小为10KB传输速度的170倍。</p>
+<p><strong>3. Worker Auto Scaling Group 的扩容/缩容策略是什么？</strong></br>
+Auto Scaling Group 的大小会根据 SQS 中的任务数量<a href="https://docs.aws.amazon.com/zh_cn/autoscaling/ec2/userguide/as-scaling-simple-step.html#as-scaling-steps">自动放大或缩小</a>。</p>
+<ul>
+<li>
+<p>扩大步骤是：
+    <div class="highlight"><pre><span></span><code><span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>   <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">1</span> <span class="p">}</span>
+<span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>   <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">2</span> <span class="p">}</span>
+<span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>  <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">5</span> <span class="p">}</span>
+<span class="p">{</span> <span class="err">lower</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span> <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="err">+</span><span class="mi">10</span> <span class="p">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>按比例缩小步骤是：
+    <div class="highlight"><pre><span></span><code><span class="p">{</span> <span class="err">upper</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="err">cha</span><span class="kc">n</span><span class="err">ge</span><span class="p">:</span> <span class="mi">-10000</span> <span class="p">}</span>
+</code></pre></div></p>
+</li>
+</ul>
 <h2 id="_3">数据安全与鉴权问题</h2>
 <p><strong>1. 方案是如何保证数据安全的？</strong></br></p>
 <p>为了保证数据安全，此解决方案的具体做法如下：</p>
@@ -707,13 +755,23 @@
 <p><strong>4. 方案是如何做到跨账户、跨云鉴权的？</strong></br></p>
 <p>通过在对方账户的Access Keyid和Access Key进行鉴权。该密钥存储在AWS Secrets Manager中，根据需要才会去Secrets Manager中读取密钥。</p>
 <p><strong>5. 支持SSE-S3，SSE-KMS，SSE-CMK吗？</strong></br></p>
-<p>是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考<a href="https://github.com/awslabs/data-transfer-hub/blob/d54d46cd4063e04477131804088bbfc000cfbbbb/docs/S3-SSE-KMS-Policy.md">教程</a>。</p>
+<p>是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考<a href="../tutorial-s3/#kms-amazon-s3-s3">教程</a>。</p>
 <h2 id="_4">功能相关问题</h2>
 <p><strong>1. Amazon S3同步目前支持哪些第三方云？</strong></br></p>
 <p>阿里云OSS, 腾讯云，华为云，七牛云，百度云，以及所有支持S3兼容协议的云。</p>
 <p><strong>2. 为什么目标文件全部传输过后，Task的状态依旧是in progress？什么时候任务会停止？</strong></br></p>
+<ul>
+<li>
+<p><strong>对于固定频率的任务</strong></p>
 <p>数据源端和目标端之间的数据差异会一直被监控，首次部署后会自动对比两侧差异。同时，当其默认一小时一次的对比任务发现差异后，也会将差异的数据进行传输。因此，Task的状态会一直在in progress，除非用户手动终止该任务。</p>
 <p>由于数据传输解决方案内置自动扩展功能，当没有数据需要传输时，会自动将传输工作节点数量降到用户配置的最小值。</p>
+</li>
+<li>
+<p><strong>对于单次传输任务</strong></p>
+<p>当对象全部传送到目标桶后，一次传送作业的状态会变为<strong>已完成</strong>。</p>
+<p>传输操作将停止，您可以选择<strong>停止</strong>删除并释放所有支持的资源。</p>
+</li>
+</ul>
 <p><strong>3. 多久会对比一次数据源端和目标端之间的数据差异？</strong></br></p>
 <p>默认一小时。用户可以在任务创建后，前往Amazon CloudWatch Event Rule中进行修改。</p>
 <p><strong>4. 实时新增文件同步可以实现吗？</strong></br></p>
@@ -724,6 +782,18 @@
 <p>对于单个文件有5次重试机制。在5次重试仍然失败后，会将任务通过邮件告知用户。</p>
 <p><strong>7. 如何监控传输的进度，还有多少等待传输的文件，以及当前的传输速度？</strong></br></p>
 <p>您可以通过点击网页控制台的Task Detail内的CloudWatch Dashboard链接，跳转至Amazon CloudWatch的定制化Dashboard内查看。您也可以直接前往CloudWatch进行查看。</p>
+<p><strong>8. 在创建传输任务之前是否需要创建 S3 目标存储桶？</strong></br></p>
+<p>是的，您需要提前创建目标 S3 存储桶。</p>
+<p><strong>9. 如何使用 Finder 深度和 Finder 数量来提高 Finder 性能？</strong></br></p>
+<p>您可以使用这两个参数来增加 Finder 的并行度，以提高数据比较的性能。</p>
+<p>示例：如果有 12 个子目录，每个子目录的文件数超过 100k，例如 <code>Jan</code>、<code>Feb</code>、...、<code>Dec</code>。</p>
+<p>建议设置 <strong><code>finderDepth</code></strong>=1 和 <strong><code>finderNumber</code></strong>=12。 在此示例中，您的比较性能将提高 12 倍。</p>
+<p>当您使用finderDepth 和finderNumber 时，请确保在与 finderDepth 文件夹同级或更浅级别的文件夹中没有对象。否则，可能会造成数据丢失。</p>
+<p>例如，假设您设置 <code>finderDepth</code>=2 和 <code>finderNumber</code>=12 * 31 = 372。并假设您的 S3 存储桶结构类似于 <code>bucket_name/Jan/01/pic1.jpg</code>。</p>
+<p>那么将<strong>丢失</strong>的文件可能会有<code>bucket_name/pic.jpg</code>、<code>bucket_name/Jan/pic.jpg</code>。</p>
+<p>而<strong>不会丢失</strong>的是<code>bucket_name/Jan/33/</code>下的所有文件，以及<code>bucket_name/13/33/</code>下的所有文件</p>
+<p><strong>10. 如何处理Access Key 轮换?</strong></br>
+目前，当 Data Transfer Hub 感知到 S3 的 Access Key 被轮换时，它会自动从 AWS Secrets Manager 中获取最新的密钥。 因此，Access Key Rotation 不会影响DTH 的迁移过程。</p>
 <h2 id="_5">错误消息列表 <a name="error-code-list"></a></h2>
 <p><strong>1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid</strong></p>
 <p>如果您收到此错误消息，请确认您的 Secret 配置为以下格式，建议您通过复制粘贴的方式创建。</p>
@@ -746,6 +816,14 @@
 <p><strong>2. Secrets Manager中的Secrets配置错误了，如何解决？</strong></br></p>
 <p>请先在Secrets Manager中更新Secrets，然后前往EC2控制台，Terminate所有由该Task已经启动的EC2 instance，稍后数据传输解决方案的Auto Scaling机制会自动启动新的工作节点，并更新Secrets到其中。</p>
 <p><strong>3. 如何查找详细的传输日志？</strong></br></p>
+<ul>
+<li>
+<p><strong>对于控制台用户</strong></p>
+<p>转到<strong>任务</strong>列表页面，然后单击<strong>任务编号</strong>。 您可以在 <strong>日志监控</strong> 部分下看到仪表板和日志。</p>
+<p>Data Transfer Hub 已将 Dashboard 和日志组集成到 Portal 中，您无需跳转到 AWS CloudWatch 控制台即可查看日志。</p>
+</li>
+<li>
+<p><strong>对于 Plugin（纯后端版本）用户</strong></p>
 <p>部署堆栈时，会要求您输入堆栈名称（默认为DTHS3Stack），大多数资源都会以名称前缀作为堆栈名称创建。例如，队列名称的格式为<code>&lt;StackName&gt;-S3TransferQueue-&lt;random suffix&gt;</code>。此插件将创建两个主要日志组。</p>
 <ul>
 <li>
@@ -755,6 +833,8 @@
 <li>
 <p>以下是所有EC2实例的日志组，您可以找到详细的传输日志。</p>
 <p><code>&lt;StackName&gt;-EC2WorkerStackS3RepWorkerLogGroup&lt;random suffix&gt;</code></p>
+</li>
+</ul>
 </li>
 </ul>
 <p><strong>4. 如何进行自定义更改？</strong></br></p>

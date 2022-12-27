@@ -10,14 +10,14 @@
       
       
       
-        <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/source/">
+        <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/upgrade/">
       
       <link rel="icon" href="../images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
       
-        <title>源代码 - 数据传输解决方案</title>
+        <title>更新解决方案 - 数据传输解决方案</title>
       
     
     
@@ -61,6 +61,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#data-transfer-hub" class="md-skip">
+          跳转至
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -89,7 +94,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              源代码
+              更新解决方案
             
           </span>
         </div>
@@ -465,11 +470,80 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../upgrade/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          更新解决方案
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         更新解决方案
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    升级概述
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-cloudformation" class="md-nav__link">
+    步骤 1. 更新 CloudFormation 堆栈
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-oidc" class="md-nav__link">
+    第 2 步.（可选）更新 OIDC 配置 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cloudfront-cdn" class="md-nav__link">
+    步骤 3. 在 CloudFront 创建 CDN 刷新
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    步骤 4. 刷新网页控制台
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -510,19 +584,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../source/" class="md-nav__link">
         源代码
       </a>
-      
     </li>
   
 
@@ -549,19 +615,150 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    升级概述
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-cloudformation" class="md-nav__link">
+    步骤 1. 更新 CloudFormation 堆栈
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-oidc" class="md-nav__link">
+    第 2 步.（可选）更新 OIDC 配置 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cloudfront-cdn" class="md-nav__link">
+    步骤 3. 在 CloudFront 创建 CDN 刷新
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    步骤 4. 刷新网页控制台
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/awslabs/data-transfer-hub/edit/master/docs/source.md" title="编辑此页" class="md-content__button md-icon">
+<a href="https://github.com/awslabs/data-transfer-hub/edit/master/docs/upgrade.md" title="编辑此页" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-  <h1>源代码</h1>
-
-<p>您可以访问我们的<a href="https://github.com/awslabs/data-transfer-hub">GitHub存储库</a>下载此解决方案的源文件。数据传输解决方案的模板是使用<a href="http://aws.amazon.com/cdk/">云开发工具包（CDK）</a>生成的。更多有关信息，请参阅<a href="https://github.com/awslabs/data-transfer-hub#readme">README.md</a>文件。</p>
+<h1 id="data-transfer-hub">升级 Data Transfer Hub</h1>
+<p><strong>部署时间</strong>: 大约 20 分钟</p>
+<h2 id="_1">升级概述</h2>
+<p>使用以下步骤在 AWS 上升级此解决方案。</p>
+<ul>
+<li><a href="#1">步骤 1. 更新 CloudFormation 堆栈</a></li>
+<li><a href="#oidc-update">步骤 2. （可选）更新 OIDC 配置</a></li>
+<li><a href="#3-cloudfront">步骤 3. 在 CloudFront 创建失效</a></li>
+<li><a href="#4">步骤 4. 刷新网页控制台</a></li>
+</ul>
+<h2 id="1-cloudformation">步骤 1. 更新 CloudFormation 堆栈</h2>
+<ol>
+<li>
+<p>登录 <a href="https://console.aws.amazon.com/cloudformation/" target="_blank">AWS CloudFormation 控制台</a>。</p>
+</li>
+<li>
+<p>选择解决方案的主堆栈, 点击<strong>更新</strong>按钮。</p>
+</li>
+<li>
+<p>选择<strong>替换当前模板</strong>，根据您最初部署的类型在 <strong>Amazon S3 URL</strong> 中输入模板链接.</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>从全球区域启动堆栈</td>
+<td><code>https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template</code></td>
+</tr>
+<tr>
+<td>从中国区域启动堆栈</td>
+<td><code>https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub/latest/DataTransferHub-openid.template</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>在 <strong>参数</strong> 部分，查看模板的参数并根据需要进行修改。</p>
+</li>
+<li>
+<p>选择<strong>下一步</strong>。</p>
+</li>
+<li>
+<p>在 <strong>配置堆栈选项</strong> 页面上，选择 <strong>下一步</strong>。</p>
+</li>
+<li>
+<p>在 <strong>审核</strong> 页面上，查看并确认设置。选中确认模板创建 AWS Identity and Access Management (IAM) 资源的复选框。</p>
+</li>
+<li>
+<p>选择 <strong>更新堆栈</strong> 更新堆栈。</p>
+</li>
+</ol>
+<p>您可以在 AWS CloudFormation 控制台的 <strong>状态</strong> 列中查看堆栈的状态。您应该会在大约 15 分钟内收到 <strong>UPDATE_COMPLETE</strong> 状态。</p>
+<h2 id="2-oidc">第 2 步.（可选）更新 OIDC 配置 <a name="oidc-update"></a></h2>
+<p>如果您已经在中国区结合 OIDC 部署了该方案，请参考<a href="../deployment/#1oidc">部署</a>章节更新 OIDC 中的授权、认证配置。</p>
+<h2 id="3-cloudfront-cdn">步骤 3. 在 CloudFront 创建 CDN 刷新</h2>
+<p>CloudFront 已在其边缘节点缓存旧版本的 Data Transfer Hub 控制台。 我们需要在 CloudFront 控制台上创建一个失效（invalidation）以强制删除缓存。 </p>
+<ol>
+<li>
+<p>登录 <a href="https://console.aws.amazon.com/cloudfront/" target="_blank">AWS CloudFront 控制台</a>。</p>
+</li>
+<li>
+<p>选择并点击 Data Transfer Hub 的分配。 其说明类似于 <code>SolutionName - Web Console Distribution (RegionName)</code>。</p>
+</li>
+<li>
+<p>在<strong>失效</strong>界面，点击<strong>创建失效</strong>，并以 <code>/*</code> 路径创建一个失效。</p>
+</li>
+</ol>
+<h2 id="4">步骤 4. 刷新网页控制台</h2>
+<p>现在您已完成所有升级步骤。 请点击浏览器中的<strong>刷新</strong>按钮。</p>
 
               
             </article>
@@ -575,7 +772,7 @@
     <nav class="md-footer__inner md-grid" aria-label="页脚">
       
         
-        <a href="../faq/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 常见问题解答" rel="prev">
+        <a href="../additional-resources/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 更多资源" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -584,20 +781,20 @@
               <span class="md-footer__direction">
                 上一页
               </span>
-              常见问题解答
+              更多资源
             </div>
           </div>
         </a>
       
       
         
-        <a href="../revisions/" class="md-footer__link md-footer__link--next" aria-label="下一页: 版本发布说明" rel="next">
+        <a href="../uninstall/" class="md-footer__link md-footer__link--next" aria-label="下一页: 卸载解决方案" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 下一页
               </span>
-              版本发布说明
+              卸载解决方案
             </div>
           </div>
           <div class="md-footer__button md-icon">

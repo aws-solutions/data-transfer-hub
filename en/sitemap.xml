@@ -2,87 +2,97 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/additional-resources/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/architecture/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/cost/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/deployment/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/faq/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/regions/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/revisions/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/security/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/solution-components/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/source/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/template/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://awslabs.github.io/data-transfer-hub/tutorial-cli-launch/</loc>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/tutorial-directconnect/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/tutorial-ecr/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/tutorial-oss/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/tutorial-s3/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://awslabs.github.io/data-transfer-hub/uninstall/</loc>
-         <lastmod>2022-07-29</lastmod>
+         <lastmod>2022-12-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://awslabs.github.io/data-transfer-hub/upgrade/</loc>
+         <lastmod>2022-12-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

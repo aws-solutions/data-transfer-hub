@@ -506,6 +506,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-cli-launch/" class="md-nav__link">
+        使用 AWS CLI 创建 S3 传输任务
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -522,6 +536,21 @@
     <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         更多资源
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        更新解决方案
       </a>
     </li>
   
@@ -685,11 +714,11 @@
 <h3 id="1">示例1</h3>
 <p>将1TB的Amazon S3文件从美国西部（俄勒冈）区域（us-west-2）传输到由光环新网运营的亚马逊云科技中国（北京）区域（cn-north-1），平均文件大小为<strong>50MB</strong></p>
 <ul>
-<li>文件总数: 2,048</li>
+<li>文件总数: 20,480</li>
 <li>每个EC2实例运行的平均速度: 1GB/min</li>
 <li>EC2实例运行的总时长: 17小时</li>
 </ul>
-<p>截至2022年7月，使用解决方案完成该传输任务的成本费用如下表所示：</p>
+<p>截至2022年12月，使用解决方案完成该传输任务的成本费用如下表所示：</p>
 <table>
 <thead>
 <tr>
@@ -707,12 +736,12 @@
 <tr>
 <td>Amazon S3</td>
 <td>每个文件12个GET请求和10个PUT请求 <br> GET：每1000个请求$0.0004 <br> PUT：每1000个请求 $0.005</td>
-<td>$0.11</td>
+<td>$1.12</td>
 </tr>
 <tr>
 <td>Amazon DynamoDB</td>
 <td>每个文件2个写入请求 <br>  每百万次写入$1.25</td>
-<td>$0.01</td>
+<td>$0.05</td>
 </tr>
 <tr>
 <td>Amazon SQS</td>
@@ -732,7 +761,7 @@
 <tr>
 <td></td>
 <td><strong>总计</strong></td>
-<td>$93.43</td>
+<td>$94.48</td>
 </tr>
 </tbody>
 </table>
@@ -794,7 +823,7 @@
 <p>对于Amazon ECR传输任务而言，影响成本的因素主要包括网络速度和ECR镜像的总大小。</p>
 <h3 id="3">示例3</h3>
 <p>将27个Amazon ECR镜像（总大小约3GB）从欧洲（爱尔兰）区域（eu-west-1）传输到由光环新网运营的亚马逊云科技中国（北京）区域（cn-north-1），运行总时长约为6分钟。</p>
-<p>截至2022年7月，使用解决方案完成传输任务的成本费用如下表所示：</p>
+<p>截至2022年12月，使用解决方案完成传输任务的成本费用如下表所示：</p>
 <table>
 <thead>
 <tr>

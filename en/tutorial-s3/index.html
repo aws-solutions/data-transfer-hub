@@ -464,6 +464,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-cli-launch/" class="md-nav__link">
+        Using AWS CLI to create S3 transfer task
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -480,6 +494,21 @@
     <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
         Additional resources
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        Upgrade the solution
       </a>
     </li>
   
@@ -595,7 +624,11 @@
 
   <h1>Create Amazon S3 transfer task</h1>
 
-<p>You can use the web console to create an Amazon S3 transfer task. For more information about how to launch the web console, see <a href="../deployment/">deployment</a>.</p>
+<p>You can use the web console to create an Amazon S3 transfer task. For more information about how to launch the web console, see <a href="../deployment/">deployment</a>. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Data Transfer Hub also supports using AWS CLI to create an Amazon S3 transfer task. For details, refer to this <a href="../tutorial-cli-launch/">tutorial</a>.</p>
+</div>
 <ol>
 <li>
 <p>From the <strong>Create Transfer Task</strong> page, select <strong>Create New Task</strong>, and then select <strong>Next</strong>.</p>
@@ -625,7 +658,12 @@
 <p>To create credential information, select <a href="https://console.aws.amazon.com/secretsmanager/home">Secrets Manager</a> to jump to the AWS Secrets Manager console in the current region.</p>
 <ul>
 <li>From the left menu, select <strong>Secrets</strong>, then choose <strong>Store a new secret</strong> and select the <strong>other type of secrets</strong> key type.</li>
-<li>Fill in the <code>access_key_id</code> and <code>secret_access_key</code> information in the Plaintext input box according to the displayed format. For more information, refer to IAM features in the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html">IAM User Guide</a>. Choose <strong>Next</strong>.</li>
+<li>Fill in the <code>access_key_id</code> and <code>secret_access_key</code> information in the Plaintext input box according to the following format. For more information, refer to IAM features in the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html">IAM User Guide</a>. Choose <strong>Next</strong>.
+    <div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;access_key_id&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;Your Access Key ID&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;secret_access_key&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;Your Access Key Secret&gt;&quot;</span>
+<span class="p">}</span>
+</code></pre></div></li>
 <li>(Optional) Enter the key name and description. Choose <strong>Next</strong>.</li>
 <li>In the configuration of automatic rotation, select Disable automatic rotation. Choose <strong>Next</strong>.</li>
 <li>Keep the default value and choose <strong>Save</strong> to complete the creation of the key.</li>
@@ -674,7 +712,7 @@
 <p>After the task is created successfully, it will appear on the <strong>Tasks</strong> page.</p>
 <h3 id="how-to-transfer-s3-object-from-kms-encrypted-amazon-s3">How to transfer S3 object from KMS encrypted Amazon S3</h3>
 <p>By default, Data Transfer Hub supports data source bucket using SSE-S3 and SSE-KMS.</p>
-<p>If your source bucket enabled <strong>SSE-CMK</strong>, you need to create an IAM Policy and attach it to DTH worker and finder node.</p>
+<p>If your source bucket enabled <strong>SSE-CMK</strong>, you need to create an IAM Policy and attach it to DTH worker and finder node. You can go to <a href="https://us-east-1.console.aws.amazon.com/iamv2/home#/roles">Amazon IAM Roles</a> Console and search for <code>&lt;StackName&gt;-FinderStackFinderRole&lt;random suffix&gt;</code> and <code>&lt;StackName&gt;-EC2WorkerStackWorkerAsgRole&lt;random suffix&gt;</code>.</p>
 <p>Pay attention to the following:</p>
 <ul>
 <li>Change the <code>Resource</code> in kms part to your own KMS key's arn.</li>
