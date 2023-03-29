@@ -645,19 +645,20 @@
 <ol>
 <li>The solution’s static web assets (frontend user interface) are stored in <a href="https://www.amazonaws.cn/s3/?nc1=h_ls">Amazon S3</a> and made available through <a href="https://www.amazonaws.cn/cloudfront/?nc1=h_ls">Amazon CloudFront</a>.</li>
 <li>The backend APIs are provided via <a href="https://www.amazonaws.cn/appsync/?nc1=h_ls">AWS AppSync</a> GraphQL.</li>
-<li>Users are authenticated by either <a href="https://www.amazonaws.cn/cognito/?nc1=h_ls">Amazon Cognito</a> User Pool (in AWS Standard Regions) or by an OpenID connect provider (in AWS China Regions) such as <a href="https://www.authing.cn/">Authing</a>, <a href="https://auth0.com/">Auth0</a>, etc.</li>
+<li>Users are authenticated by either <a href="https://www.amazonaws.cn/cognito/?nc1=h_ls">Amazon Cognito</a> User Pool (in AWS Regions) or by an OpenID connect provider (in AWS China Regions) such as <a href="https://www.authing.cn/">Authing</a>, <a href="https://auth0.com/">Auth0</a>, etc.</li>
 <li>AWS AppSync runs <a href="https://www.amazonaws.cn/lambda/?nc1=h_ls">AWS Lambda</a> to call backend APIs.</li>
 <li>Lambda starts an <a href="https://www.amazonaws.cn/step-functions/?nc1=h_ls">AWS Step Functions</a> workflow that uses <a href="https://aws.amazon.com/cn/cloudformation/">AWS CloudFormation</a> to start or stop/delete the ECR or S3 plugin template.</li>
 <li>The plugin templates are hosted in a centralized Amazon S3 bucket manged by AWS.</li>
 <li>The solution also provisions an <a href="https://aws.amazon.com/cn/ecs/">Amazon ECS</a> cluster that runs the container images used by the plugin template, and the container images are hosted in <a href="https://aws.amazon.com/cn/ecr/">Amazon ECR</a>.</li>
 <li>The data transfer task information is stored in in <a href="https://www.amazonaws.cn/dynamodb/?nc1=h_ls">Amazon DynamoDB</a>.</li>
 </ol>
+<p>After deploying the solution, you can use <a href="https://aws.amazon.com/waf/">AWS WAF</a> to protect CloudFront or AppSync.</p>
 <div class="admonition note">
 <p class="admonition-title">Important</p>
 <p>If you deploy this solution in AWS (Beijing) Region operated by Beijing Sinnet Technology Co., Ltd. (Sinnet), or the AWS (Ningxia) Region operated by Ningxia Western Cloud Data Technology Co., Ltd. ( ), you are required to provide a domain with ICP Recordal before you can access the web console.</p>
 </div>
 <p>The web console is a centralized place to create and manage all data transfer jobs. Each data type (for example, Amazon S3 or Amazon ECR) is a plugin for Data Transfer Hub, and is packaged as an AWS CloudFormation template hosted in an S3 bucket that AWS owns. When the you create a transfer task, an AWS Lambda function initiates the Amazon CloudFormation template, and state of each task is stored and displayed in the DynamoDB tables.</p>
-<p>As of December 2022, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. </p>
+<p>As of March 2023, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. </p>
 <h2 id="amazon-s3-plugin">Amazon S3 plugin</h2>
 <p><img alt="s3-architecture" src="../images/s3-arch-global.png" /></p>
 <p>Figure 2: Data Transfer Hub Amazon S3 plugin architecture</p>

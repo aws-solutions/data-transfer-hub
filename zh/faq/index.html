@@ -841,6 +841,8 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量<a href="https://doc
 <p>如果要对此插件进行自定义更改，请参阅<a href="https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md">自定义构建</a>。</p>
 <p><strong>5. 部署完成后，为什么在两个CloudWatch日志组中找不到任何日志流？</strong></br></p>
 <p>这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。</p>
+<p><strong>6. 如何在此解决方案中使用TLSv1.2_2021或更高版本?</strong></br></p>
+<p>在部署数据传输中心解决方案后，请前往 <a href="https://us-east-1.console.aws.amazon.com/cloudfront/v3/home#/distributions">CloudFront控制台</a> 配置安全策略。您需要准备一个域名和相应的TLS证书，从而可以实现更加安全的TLS配置。</p>
 
               
             </article>

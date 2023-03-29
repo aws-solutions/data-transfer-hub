@@ -784,7 +784,7 @@
 <p>In an isolated network, do the following to manually download and upload files to an S3 bucket in the region where DTH is deployed.</p>
 <ol>
 <li>
-<p>Download <a href="https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/arm64/latest/amazon-cloudwatch-agent.rpm">Amazon CloudWatch Agent</a> and <a href="https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub-s3/latest/drhcli_1.0.1_linux_arm64.tar.gz">DTH CLI</a>.</p>
+<p>Download <a href="https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/arm64/latest/amazon-cloudwatch-agent.rpm">Amazon CloudWatch Agent</a> and <a href="https://aws-gcr-solutions-assets.s3.amazonaws.com/data-transfer-hub-cli/v1.2.1/dthcli_1.2.1_linux_arm64.tar.gz">DTH CLI</a>.</p>
 </li>
 <li>
 <p>Create the worker's CloudWatch Agent Config file. You can create a file named <code>cw_agent_config.json</code>.
@@ -843,9 +843,9 @@
 <h3 id="deploy-the-dth-s3-plugin">Deploy the DTH S3-Plugin</h3>
 <p>We recommend using the <strong>DTH S3-plugin</strong> to create the transfer task, instead of using the DTH console.</p>
 <p><strong>For AWS China Regions</strong></p>
-<p><a href="https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/data-transfer-hub-s3/latest/DataTransferS3Stack-ec2.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
+<p><a href="https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://s3.amazonaws.com/solutions-reference/data-transfer-hub-s3-plugin/latest/DataTransferS3Stack-ec2.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
 <p><strong>For AWS Global Regions</strong></p>
-<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://aws-gcr-solutions.s3.amazonaws.com/data-transfer-hub-s3/latest/DataTransferS3Stack-ec2.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
+<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://s3.amazonaws.com/solutions-reference/data-transfer-hub-s3-plugin/latest/DataTransferS3Stack-ec2.template"><img alt="Launch Stack" src="../images/launch-stack.png" /></a></p>
 <ol>
 <li>
 <p>For <strong>Source Type</strong>, choose <strong>Amazon_S3</strong>.</p>
@@ -909,12 +909,12 @@ yum update -y
 <span class="nv">asset_bucket</span><span class="o">=</span>&lt;asset_bucket_name&gt;
 aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/cw_agent_config.json&quot;</span> . --region &lt;deploy_region_name&gt;
 aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/amazon-cloudwatch-agent.rpm&quot;</span> .  --region &lt;deploy_region_name&gt;
-aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/dthcli_1.0.1_linux_arm64.tar.gz&quot;</span> .  --region &lt;deploy_region_name&gt;
+aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/dthcli_1.2.1_linux_arm64.tar.gz&quot;</span> .  --region &lt;deploy_region_name&gt;
 
 sudo yum install -y amazon-cloudwatch-agent.rpm
 sed -i  -e <span class="s2">&quot;s/##log group##/&lt;worker_log_group_name&gt;/g&quot;</span> cw_agent_config.json
 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/home/ec2-user/cw_agent_config.json -s
-tar zxvf dthcli_1.0.1_linux_arm64.tar.gz
+tar zxvf dthcli_1.2.1_linux_arm64.tar.gz
 </code></pre></div>
 <ul>
 <li>
@@ -966,7 +966,7 @@ yum update -y
 <span class="nb">cd</span> /home/ec2-user/
 <span class="nv">asset_bucket</span><span class="o">=</span>&lt;asset_bucket_name&gt;
 aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/amazon-cloudwatch-agent.rpm&quot;</span> .  --region &lt;deploy_region_name&gt;
-aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/dthcli_1.0.1_linux_arm64.tar.gz&quot;</span> .  --region &lt;deploy_region_name&gt;
+aws s3 cp <span class="s2">&quot;s3://</span><span class="nv">$asset_bucket</span><span class="s2">/dthcli_1.2.1_linux_arm64.tar.gz&quot;</span> .  --region &lt;deploy_region_name&gt;
 
 <span class="nb">echo</span> <span class="s2">&quot;{\&quot;agent\&quot;: {\&quot;metrics_collection_interval\&quot;: 60,\&quot;run_as_user\&quot;: \&quot;root\&quot;},\&quot;logs\&quot;: {\&quot;logs_collected\&quot;: {\&quot;files\&quot;: {\&quot;collect_list\&quot;: [{\&quot;file_path\&quot;: \&quot;/home/ec2-user/finder.log\&quot;,\&quot;log_group_name\&quot;: \&quot;##log group##\&quot;}]}}}}&quot;</span> &gt;&gt; /home/ec2-user/cw_agent_config.json,
 
@@ -974,7 +974,7 @@ sudo yum install -y amazon-cloudwatch-agent.rpm
 
 sed -i  -e <span class="s2">&quot;s/##log group##/&lt;finder_log_group_name&gt;`/g&quot;</span> cw_agent_config.json
 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/home/ec2-user/cw_agent_config.json -s
-tar zxvf dthcli_1.0.1_linux_arm64.tar.gz
+tar zxvf dthcli_1.2.1_linux_arm64.tar.gz
 </code></pre></div>
 <ul>
 <li>

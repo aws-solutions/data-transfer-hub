@@ -700,7 +700,7 @@
 <p>For the list of supported regions, refer to <a href="../regions/">supported regions</a>.</p>
 <p><strong>2. When creating a transfer task, shall I deploy it on the data source side or the destination side?</strong></br></p>
 <p>The transfer performance of the solution will not be affected by whether the deployment is on the data source or destination side.</p>
-<p>If you do not have a domain name registered by ICP in AWS China Regions, we recommend you deploy it in AWS Standard Regions.</p>
+<p>If you do not have a domain name registered by ICP in AWS China Regions, we recommend you deploy it in AWS Regions.</p>
 <p>If you need to deploy in AWS China Regions but do not have a domain name, you can directly deploy the back-end version:</p>
 <ul>
 <li>Amazon S3 Plugin: <a href="https://github.com/awslabs/amazon-s3-data-replication-hub-plugin">https://github.com/awslabs/amazon-s3-data-replication-hub-plugin</a> </li>
@@ -717,8 +717,8 @@
 <p><strong>7. Can I use AWS CLI to create a DTH S3 Transfer Task?</strong></br></p>
 <p>Yes. Please refer to the tutorial <a href="../tutorial-cli-launch/">Using AWS CLI to launch DTH S3 Transfer task</a>.</p>
 <h2 id="performance">Performance</h2>
-<p><strong>1. Will there be any difference in data transfer performance for deployment in AWS China Regions and in AWS Standard Regions?</strong></br></p>
-<p>No. If you do not have a domain name registered by ICP in AWS China Regions, it is recommended to deploy it in the AWS Standard Regions.</p>
+<p><strong>1. Will there be any difference in data transfer performance for deployment in AWS China Regions and in AWS Regions?</strong></br></p>
+<p>No. If you do not have a domain name registered by ICP in AWS China Regions, it is recommended to deploy it in the AWS Regions.</p>
 <p><strong>2. What are the factors influencing the data transfer performance?</strong></br></p>
 <p>The transfer performance may be affected by average file size, destination of data transfer, geographic location of data source, and real-time network environment. </p>
 <p>For example, using the same configuration, the transfer speed with an average file size of 50MB is 170 times the transfer speed with an average file size of 10KB.</p>
@@ -750,7 +750,7 @@ The Auto Scaling Group will <a href="https://docs.aws.amazon.com/autoscaling/ec2
 <p><strong>2. How does the solution ensure the security of resources on the cloud?</strong></br></p>
 <p>In the research and development process, we strictly follow the minimum IAM permission design rules, and adopt the design of Auto Scaling, which will automatically help users terminate idle working nodes.</p>
 <p><strong>3. Is the front-end console open to the public network? How to ensure user authentication and multi-user management?</strong></br></p>
-<p>Yes. You can access it with a front-end console link. User authentication and multi-user management are achieved through AWS Cognito User Pool in AWS Standard Regions, and through OIDC SAAS in AWS China Regions.</p>
+<p>Yes. You can access it with a front-end console link. User authentication and multi-user management are achieved through AWS Cognito User Pool in AWS Regions, and through OIDC SAAS in AWS China Regions.</p>
 <p><strong>4. How does the solution achieve cross-account and cross-cloud authentication?</strong></br></p>
 <p>By authentication through the Access Keyid and Access Key of the other party’s account. The secret key is stored in AWS Secrets Manager and will be read in Secrets Manager as needed.</p>
 <p><strong>5. Does the solution support SSE-S3, SSE-KMS, and SSE-CMK?</strong></br></p>
@@ -849,6 +849,8 @@ The Auto Scaling Group will <a href="https://docs.aws.amazon.com/autoscaling/ec2
 <p>If you want to make customized changes to this plugin, refer to <a href="https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md">Custom Build</a>.</p>
 <p><strong>5. After the deployment is complete, why can't I find any log streams in the two CloudWatch log groups?</strong></br></p>
 <p>This is because the subnet you selected when deploying this solution does not have public network access, and the EC2 cannot download the CloudWatch agent to send logs to CloudWatch. Check your VPC settings. After resolving the issue, you need to manually terminate the running EC2 instance (if any) through this solution. Later, the elastic scaling group will automatically start a new instance.</p>
+<p><strong>6. How to use TLSv1.2_2021 or above for this Solution?</strong></br>
+Please go to the <a href="https://us-east-1.console.aws.amazon.com/cloudfront/v3/home#/distributions">CloudFront Console</a> and configure a custom domain, which will allow you to select a Security policy for CloudFront after solution deployment. You need to prepare a domain name and a corresponding TLS certificate in order to use more secure TLS configurations.</p>
 
               
             </article>
