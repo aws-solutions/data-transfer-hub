@@ -1,0 +1,8 @@
+#if($ctx.args.period<1)
+    $util.error("Period must be greater than 1")
+#end
+
+$util.validate($util.matches("^\d{10,}$", $ctx.args.startTime), "Invalid Start Time")
+$util.validate($util.matches("^\d{10,}$", $ctx.args.endTime), "Invalid End Time")
+
+{"version": "2017-02-28", "operation": "Invoke", "payload": $util.toJson($ctx)}

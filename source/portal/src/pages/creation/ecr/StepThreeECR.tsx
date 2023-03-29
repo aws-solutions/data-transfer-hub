@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Swal from "sweetalert2";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -12,8 +11,7 @@ import MLink from "@material-ui/core/Link";
 
 // import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
+// import gql from "graphql-tag";
 import { IState } from "store/Store";
 
 import InfoBar from "common/InfoBar";
@@ -37,9 +35,11 @@ import {
   DRH_CONFIG_JSON_NAME,
 } from "assets/config/const";
 import { ACTION_TYPE } from "assets/types";
+import { appSyncRequestMutation } from "assets/utils/request";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
-  tmpTaskInfo: state.tmpTaskInfo,
+  tmpECRTaskInfo: state.tmpECRTaskInfo,
 });
 
 const JOB_TYPE_MAP: any = {
@@ -50,7 +50,6 @@ const JOB_TYPE_MAP: any = {
 const StepThreeECR: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
-  const client: any = React.useContext(ClientContext);
 
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
@@ -58,7 +57,7 @@ const StepThreeECR: React.FC = () => {
     }
   }, [i18n.language]);
 
-  const { tmpTaskInfo } = useMappedState(mapState);
+  const { tmpECRTaskInfo } = useMappedState(mapState);
   const [paramsList, setParamList] = useState<any>([]);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
@@ -69,13 +68,14 @@ const StepThreeECR: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
       history.push({
         pathname: toPath,
       });
     }
-  }, [history, tmpTaskInfo]);
+  }, [history, tmpECRTaskInfo]);
 
   const buildECRParams = (parametersObj: any) => {
     const taskParamArr: any = [];
@@ -135,59 +135,59 @@ const StepThreeECR: React.FC = () => {
 
   // Build  Task  Info  Data
   useEffect(() => {
-    const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
+    if (tmpECRTaskInfo !== null) {
+      const { parametersObj, ...createTaskInfo } = tmpECRTaskInfo;
 
-    // Set Description
-    if (createTaskInfo) {
-      createTaskInfo.description = parametersObj?.description || "";
-    }
-
-    const taskParamArr: any = buildECRParams(parametersObj);
-
-    setParamList(taskParamArr);
-
-    // Add New Params to Creat Task
-    const configJson: any = JSON.parse(
-      localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
-    );
-    const clusterData = configJson.taskCluster;
-    for (const key in clusterData) {
-      if (key === "ecsSubnets") {
-        taskParamArr.push({
-          ParameterKey: "ecsSubnetA",
-          ParameterValue: clusterData[key][0],
-        });
-        taskParamArr.push({
-          ParameterKey: "ecsSubnetB",
-          ParameterValue: clusterData[key][1],
-        });
-      } else {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key],
-        });
+      // Set Description
+      if (createTaskInfo) {
+        createTaskInfo.description = parametersObj?.description || "";
+        // Set scheduleType
+        createTaskInfo.scheduleType = ScheduleType.FIXED_RATE;
       }
-    }
 
-    // Remove uesless property when clone task
-    for (const key in createTaskInfo) {
-      if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
-        delete createTaskInfo[key];
+      const taskParamArr: any = buildECRParams(parametersObj);
+
+      setParamList(taskParamArr);
+
+      // Add New Params to Creat Task
+      const configJson: any = JSON.parse(
+        localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
+      );
+      const clusterData = configJson.taskCluster;
+      for (const key in clusterData) {
+        if (key === "ecsSubnets") {
+          taskParamArr.push({
+            ParameterKey: "ecsSubnetA",
+            ParameterValue: clusterData[key][0],
+          });
+          taskParamArr.push({
+            ParameterKey: "ecsSubnetB",
+            ParameterValue: clusterData[key][1],
+          });
+        } else {
+          taskParamArr.push({
+            ParameterKey: key,
+            ParameterValue: clusterData[key],
+          });
+        }
       }
+
+      // Remove uesless property when clone task
+      for (const key in createTaskInfo) {
+        if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
+          delete createTaskInfo?.[key];
+        }
+      }
+      createTaskInfo.parameters = taskParamArr;
+      setCreateTaskGQL(createTaskInfo);
     }
-    createTaskInfo.parameters = taskParamArr;
-    setCreateTaskGQL(createTaskInfo);
-  }, [tmpTaskInfo]);
+  }, [tmpECRTaskInfo]);
 
   async function createTask() {
-    setIsCreating(true);
     try {
-      console.info("createTaskGQL:", createTaskGQL);
-      const createTask = gql(createTaskMutaion);
-      const createTaskData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: createTask,
-        variables: { input: createTaskGQL },
+      setIsCreating(true);
+      const createTaskData = await appSyncRequestMutation(createTaskMutaion, {
+        input: createTaskGQL,
       });
       console.info("createTaskData:", createTaskData);
       dispatch({
@@ -198,9 +198,8 @@ const StepThreeECR: React.FC = () => {
       history.push({
         pathname: toPath,
       });
-    } catch (error: any) {
+    } catch (error) {
       setIsCreating(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
@@ -251,7 +250,7 @@ const StepThreeECR: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/#/">
+              <MLink color="inherit" href="/">
                 {t("breadCrumb.home")}
               </MLink>
               <Typography color="textPrimary">

@@ -3,12 +3,13 @@
     font-weight: bold;
     font-size: 18px;
     padding: 15px 10px;
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     border-bottom: 1px solid #eaeded;
   }
   .item-list {
     padding: 10px 0;
-    ul, li {
+    ul,
+    li {
       font-size: 14px;
       margin: 0 0;
       padding: 0 0;
@@ -20,7 +21,8 @@
     li {
       padding: 10px 0px;
       border-bottom: 1px solid #eaeded;
-      a, a:link {
+      a,
+      a:link {
         text-decoration: none;
         color: #0073bb;
       }

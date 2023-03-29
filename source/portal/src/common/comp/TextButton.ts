@@ -10,7 +10,6 @@ const TextButton = withStyles({
     fontWeight: "bold",
     padding: "5px 15px",
     border: "1px solid",
-    // lineHeight: 1.5,
     backgroundColor: "transparent",
     borderColor: "transparent",
     borderRadius: 0,

@@ -1,20 +1,20 @@
-/**
- *  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import * as cdk from '@aws-cdk/core';
+import {
+  Construct,
+} from 'constructs';
 import { ApiStack, ApiProps } from './api-stack';
 import { PortalStack } from "./portal-stack";
-import { CfnParameter, CfnResource } from '@aws-cdk/core';
+import {
+  CfnParameter,
+  CfnResource,
+  Stack,
+  StackProps,
+  CfnMapping,
+  CfnOutput
+} from 'aws-cdk-lib';
+import { NagSuppressions } from 'cdk-nag';
 import { TaskCluster } from "./task-cluster";
 
 const { VERSION } = process.env;
@@ -43,8 +43,8 @@ export function addCfnNagSuppressRules(resource: CfnResource, rules: CfnNagSuppr
 /**
  * @class ConstructsStack
  */
-export class ConstructsStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+export class ConstructsStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const authType = this.node.tryGetContext('authType') || AuthType.COGNITO
@@ -69,8 +69,14 @@ export class ConstructsStack extends cdk.Stack {
 
       oidcCustomerDomain = new CfnParameter(this, 'OidcCustomerDomain', {
         type: 'String',
-        description: 'Customer Domain for Data Transfer Hub',
-        default: '',
+        description: 'Customer Domain for Data Transfer Hub, and must start with https:// or http://',
+        allowedPattern: '^(http|https):\/\/(.+)'
+      });
+
+      usernameParameter = new CfnParameter(this, 'AdminEmail', {
+        type: 'String',
+        description: 'The email for receiving task status alarm',
+        allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
       });
 
       // CFN metadata
@@ -79,7 +85,7 @@ export class ConstructsStack extends cdk.Stack {
           ParameterGroups: [
             {
               Label: { default: 'OIDC Settings' },
-              Parameters: [ oidcProvider.logicalId, oidcClientId.logicalId, oidcCustomerDomain.logicalId ]
+              Parameters: [oidcProvider.logicalId, oidcClientId.logicalId, oidcCustomerDomain.logicalId]
             }
           ]
         }
@@ -87,7 +93,7 @@ export class ConstructsStack extends cdk.Stack {
     } else {
       usernameParameter = new CfnParameter(this, 'AdminEmail', {
         type: 'String',
-        description: 'The email of Admin user',
+        description: 'The email of Admin user and for receiving task status alarm',
         allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}'
       });
       // CFN metadata
@@ -110,7 +116,7 @@ export class ConstructsStack extends cdk.Stack {
     this.templateOptions.templateFormatVersion = '2010-09-09';
 
     // Mappings
-    new cdk.CfnMapping(this, 'Send', {
+    new CfnMapping(this, 'Send', {
       mapping: {
         AnonymousUsage: {
           Data: 'Yes'
@@ -129,7 +135,14 @@ export class ConstructsStack extends cdk.Stack {
     }
     // API Stack
     const apiStack = new ApiStack(this, 'API', drhProps);
-
+    NagSuppressions.addResourceSuppressions(apiStack, [
+      {
+        id: 'AwsSolutions-COG2',
+        reason: 'customer can enable MFA by their own, we do not need to enable it'
+      },
+    ],
+      true
+    );
     // Portal - S3 Static Website
     const portal = new PortalStack(this, 'Portal', {
       auth_type: authType,
@@ -147,36 +160,36 @@ export class ConstructsStack extends cdk.Stack {
     });
 
     // Outputs
-    new cdk.CfnOutput(this, 'TaskVpc', {
+    new CfnOutput(this, 'TaskVpc', {
       exportName: 'TaskVpcId',
       description: 'Task VPC ID',
       value: taskCluster.vpc.vpcId
     }).overrideLogicalId('TaskClusterVpc')
-    new cdk.CfnOutput(this, 'TaskClusterOutput', {
+    new CfnOutput(this, 'TaskClusterOutput', {
       exportName: 'TaskClusterName',
       description: 'Task Cluster Name',
       value: taskCluster.clusterName
     }).overrideLogicalId('TaskClusterName')
-    new cdk.CfnOutput(this, 'UserPoolIdOutput', {
+    new CfnOutput(this, 'UserPoolIdOutput', {
       value: apiStack.userPool?.userPoolId || '',
       description: 'User Pool Id'
     }).overrideLogicalId('UserPoolId')
-    new cdk.CfnOutput(this, 'UserPoolApiClientIdOutput', {
+    new CfnOutput(this, 'UserPoolApiClientIdOutput', {
       value: apiStack.userPoolApiClient?.userPoolClientId || '',
       description: 'API Client Id'
     }).overrideLogicalId('UserPoolApiClientId')
-    new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
+    new CfnOutput(this, 'UserPoolDomainOutput', {
       value: apiStack.userPoolDomain?.domainName || '',
       description: 'User pool domain'
     }).overrideLogicalId('UserPoolDomain')
-    new cdk.CfnOutput(this, 'AdminUsernameOutput', {
+    new CfnOutput(this, 'AdminUsernameOutput', {
       value: usernameParameter?.valueAsString || '',
       description: 'Admin username'
     }).overrideLogicalId('AdminUsername')
-    new cdk.CfnOutput(this, 'ApiEndpointOutput', {
+    new CfnOutput(this, 'ApiEndpointOutput', {
       value: apiStack.api.graphqlUrl
     }).overrideLogicalId('ApiEndpoint')
-    new cdk.CfnOutput(this, 'PortalUrlOutput', {
+    new CfnOutput(this, 'PortalUrlOutput', {
       value: portal.websiteURL
     }).overrideLogicalId('PortalUrl')
   }

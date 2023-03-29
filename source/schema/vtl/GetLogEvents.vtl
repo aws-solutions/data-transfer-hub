@@ -1,0 +1,5 @@
+#if($ctx.args.limit<1)
+    $util.error("Limit must be greater than 1")
+#end
+
+{"version": "2017-02-28", "operation": "Invoke", "payload": $util.toJson($ctx)}

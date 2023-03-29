@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import * as AWS from "aws-sdk";
 import { Context } from "aws-lambda";
 import { Task, CreateTaskInput, UpdateTaskInput, assert, pprint, CommonTaskProgress, makeid, } from '../common';
@@ -34,12 +37,12 @@ interface AppSyncEvent {
  * Create a transfer task.
  *
  * @param event Task input parameters. { type: TaskType, parameters: [{ ParameterKey: String, ParameterValue: String }] }
- * @param context
+ * @param _context
  */
-const handler = async function (event: AppSyncEvent, context?: Context) {
+const handler = async function (event: AppSyncEvent, _context?: Context) {
   assert(process.env.AWS_REGION !== undefined, 'NO AWS_REGION')
-  pprint('EVENT', event)
-  pprint('CONTEXT', context)
+  // pprint('EVENT', event)
+  // pprint('CONTEXT', _context)
 
   switch (event.info.fieldName) {
     case ('createTask'): {

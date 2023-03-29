@@ -30,16 +30,17 @@
   }
   .language {
     float: left;
-    
+
     .language-select {
       color: #444444;
       position: absolute;
       margin-left: -20px;
       bottom: 30px;
       background-color: #ffffff;
-      border:1px solid #ccc;
+      border: 1px solid #ccc;
       // box-shadow: 0px 2px 2px #ccc;
-      ul, li {
+      ul,
+      li {
         margin: 0;
         padding: 0;
         list-style: none;
@@ -62,10 +63,9 @@
     float: right;
     padding: 0 2em 0 2em;
     font-weight: regular;
-    color: #EEE;
+    color: #eee;
     font-size: 12px;
     padding: 0 1em;
     cursor: pointer;
   }
-  
 }

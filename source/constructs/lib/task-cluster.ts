@@ -1,21 +1,17 @@
-/**
- *  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import * as cdk from '@aws-cdk/core'
-import * as ecs from '@aws-cdk/aws-ecs'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import { SubnetType } from "@aws-cdk/aws-ec2";
-import { LogGroup, RetentionDays, CfnLogGroup } from "@aws-cdk/aws-logs";
+
+import {
+  Construct,
+} from 'constructs';
+import {  
+  RemovalPolicy,
+  aws_ecs as ecs,
+  aws_ec2 as ec2,
+  aws_logs as logs
+} from 'aws-cdk-lib';
+
 import { addCfnNagSuppressRules } from "./constructs-stack";
 
 interface TaskClusterPros {
@@ -25,12 +21,12 @@ interface TaskClusterPros {
 /**
  * Create a ECS Task Cluster together with a new VPC.
  */
-export class TaskCluster extends cdk.Construct {
+export class TaskCluster extends Construct {
   readonly clusterName: string
   readonly vpc: ec2.Vpc
   readonly publicSubnets: ec2.ISubnet[]
 
-  constructor(scope: cdk.Construct, id: string, props?: TaskClusterPros) {
+  constructor(scope: Construct, id: string, props?: TaskClusterPros) {
     super(scope, id);
 
     const vpc = new ec2.Vpc(this, 'TaskVPC', {
@@ -40,7 +36,7 @@ export class TaskCluster extends cdk.Construct {
       subnetConfiguration: [
         {
           name: 'public',
-          subnetType: SubnetType.PUBLIC,
+          subnetType: ec2.SubnetType.PUBLIC,
           cidrMask: 24,
         }
       ],
@@ -48,12 +44,12 @@ export class TaskCluster extends cdk.Construct {
       natGateways: 0,
     })
 
-    const vpcLogGroup = new LogGroup(this, 'VPCLogGroup', {
-      retention: RetentionDays.TWO_WEEKS,
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    const vpcLogGroup = new logs.LogGroup(this, 'VPCLogGroup', {
+      retention: logs.RetentionDays.TWO_WEEKS,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
-    const cfnVpcLG = vpcLogGroup.node.defaultChild as CfnLogGroup
+    const cfnVpcLG = vpcLogGroup.node.defaultChild as logs.CfnLogGroup
     addCfnNagSuppressRules(cfnVpcLG, [
       {
         id: 'W84',

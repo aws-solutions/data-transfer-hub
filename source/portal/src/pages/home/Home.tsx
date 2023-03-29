@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 
 import { useHistory } from "react-router-dom";
 import { useMappedState } from "redux-react-hook";
@@ -12,9 +10,7 @@ import LeftMenu from "common/LeftMenu";
 import Bottom from "common/Bottom";
 import Card from "./comps/Card";
 import NextButton from "common/comp/PrimaryButton";
-import SelectInput from "common/comp/SelectInput";
-import { TYPE_LIST, EnumTaskType, ACTION_TYPE } from "assets/types/index";
-import { MenuProps } from "assets/config/const";
+import { ACTION_TYPE } from "assets/types/index";
 
 import "./Home.scss";
 
@@ -37,20 +33,15 @@ const mapState = (state: IState) => ({
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [titleStr, setTitleStr] = useState("en_title");
-  const [subTitleStr, setSubTitleStr] = useState("en_subTitle");
+  // const [subTitleStr, setSubTitleStr] = useState("en_subTitle");
   const [nameStr, setNameStr] = useState("en_name");
   const [descStr, setDescStr] = useState("en_desc");
   const [contentStr, setContentStr] = useState("en_content");
-  const [taskType, setTaskType] = useState(EnumTaskType.S3);
-
-  const handleChange = (event: any) => {
-    setTaskType(event.target.value);
-  };
 
   useEffect(() => {
     if (CUR_SUPPORT_LANGS.indexOf(i18n.language) >= 0) {
       setTitleStr(i18n.language + "_title");
-      setSubTitleStr(i18n.language + "_subTitle");
+      // setSubTitleStr(i18n.language + "_subTitle");
       setNameStr(i18n.language + "_name");
       setDescStr(i18n.language + "_desc");
       setContentStr(i18n.language + "_content");
@@ -69,10 +60,7 @@ const Home: React.FC = () => {
   const history = useHistory();
   const startToCreate = () => {
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
-    let toPath = `/create/step1/${taskType}`;
-    if (taskType === EnumTaskType.S3) {
-      toPath = `/create/step1/${taskType}/ec2`;
-    }
+    const toPath = `/create/step1/S3/ec2`;
     history.push({
       pathname: toPath,
     });
@@ -96,7 +84,7 @@ const Home: React.FC = () => {
           <div className={topShowClass}>
             <div className="intro">
               <div className="big">{topTitleInfo[titleStr]}</div>
-              <div className="medium">{topTitleInfo[subTitleStr]}</div>
+              {/* <div className="medium">{topTitleInfo[subTitleStr]}</div> */}
               <div className="small">{topTitleInfo[descStr]}</div>
             </div>
           </div>
@@ -130,28 +118,8 @@ const Home: React.FC = () => {
             </div>
             <div className="right-card">
               <div className="home-card start-item">
-                <div className="title">{t("home.title.createTitle")}</div>
-                <div className="dest">{t("home.title.destinationType")}</div>
-                <div className="select">
-                  <Select
-                    MenuProps={MenuProps}
-                    value={taskType}
-                    onChange={handleChange}
-                    input={<SelectInput style={{ width: 300 }} />}
-                  >
-                    {TYPE_LIST.map((element, index) => {
-                      return (
-                        <MenuItem
-                          className="font14px"
-                          key={index}
-                          value={element.value}
-                        >
-                          {element.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
+                <div className="title">{t("home.title.getStarted")}</div>
+                <div className="dest">{t("home.title.getStartedDesc")}</div>
                 <div className="next-button">
                   <NextButton
                     onClick={startToCreate}
@@ -159,7 +127,7 @@ const Home: React.FC = () => {
                     color="primary"
                     disableRipple
                   >
-                    {t("btn.next")}
+                    {t("btn.createTransferTask")}
                   </NextButton>
                 </div>
               </div>

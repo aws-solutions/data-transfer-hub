@@ -5,6 +5,7 @@ import { Trans } from "react-i18next";
 
 import { MenuProps } from "assets/config/const";
 import SelectInput from "common/comp/SelectInput";
+import InfoSpan from "common/InfoSpan";
 
 interface OptionType {
   name: string | number;
@@ -12,19 +13,19 @@ interface OptionType {
 }
 
 type SelectMenuProp = {
+  infoType?: string;
   isI18n?: boolean;
   optionTitle: string;
   optionDesc: string;
   optionDescHtml?: any;
   selectValue: string;
   optionList: OptionType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
-  // onChange?: (event: any) => any;
 };
 
 const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const {
+    infoType,
     isI18n,
     selectValue,
     optionList,
@@ -36,16 +37,15 @@ const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
 
   return (
     <>
-      <div className="title">{optionTitle}</div>
+      <div className="title">
+        {optionTitle} {infoType && <InfoSpan spanType={infoType || ""} />}
+      </div>
       <div className="desc">
-        {
-          // <span dangerouslySetInnerHTML={{ __html: optionDescHtml }}></span>
-          optionDescHtml
-            ? optionDescHtml.map((element: any, index: number) => {
-                return <span key={index}>{element}</span>;
-              })
-            : optionDesc
-        }
+        {optionDescHtml
+          ? optionDescHtml.map((element: any, index: number) => {
+              return <span key={index}>{element}</span>;
+            })
+          : optionDesc}
       </div>
       <div>
         <Select

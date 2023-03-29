@@ -1,10 +1,5 @@
 Data Transfer Hub
-Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Licensed under the Apache License Version 2.0 (the "License"). You may not use this file except
-in compliance with the License. A copy of the License is located at http://www.apache.org/licenses/
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied. See the License for the
-specific language governing permissions and limitations under the License.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 **********************
 THIRD PARTY COMPONENTS
@@ -12,7 +7,79 @@ THIRD PARTY COMPONENTS
 This software includes third party software subject to the following copyrights:
 
 
-**********************
-MIT License
-**********************
-creat-react-app
+@aws-solutions-constructs/aws-cloudfront-s3 under the Apache License 2.0
+@aws-solutions-constructs/core under the Apache License 2.0
+@aws-cdk/aws-appsync-alpha under the Apache License 2.0
+aws-cdk under the Apache License 2.0
+aws-cdk-lib under the Apache License 2.0
+cdk-nag under the Apache License 2.0
+constructs under the Apache License 2.0
+source-map-support under the Massachusetts Institute of Technology (MIT) license
+@types/aws-lambda under the Massachusetts Institute of Technology (MIT) license
+@types/jest under the Massachusetts Institute of Technology (MIT) license
+@types/node under the Massachusetts Institute of Technology (MIT) license
+@types/uuid under the Massachusetts Institute of Technology (MIT) license
+aws-sdk under the Apache License 2.0
+aws-sdk-mock under the Apache License 2.0
+jest under the Massachusetts Institute of Technology (MIT) license
+ts-jest under the Massachusetts Institute of Technology (MIT) license
+ts-node under the Massachusetts Institute of Technology (MIT) license
+typescript under the Apache License 2.0
+uuid under the Massachusetts Institute of Technology (MIT) license
+@apollo/client under the Massachusetts Institute of Technology (MIT) license
+@material-ui/core under the Massachusetts Institute of Technology (MIT) license
+@material-ui/icons under the Massachusetts Institute of Technology (MIT) license
+@material-ui/lab under the Massachusetts Institute of Technology (MIT) license
+@testing-library/jest-dom under the Massachusetts Institute of Technology (MIT) license
+@testing-library/user-event under the Massachusetts Institute of Technology (MIT) license
+@types/classnames under the Massachusetts Institute of Technology (MIT) license
+@types/jest under the Massachusetts Institute of Technology (MIT) license
+@types/node under the Massachusetts Institute of Technology (MIT) license
+@types/react under the Massachusetts Institute of Technology (MIT) license
+@types/react-copy-to-clipboard under the Massachusetts Institute of Technology (MIT) license
+@types/react-dom under the Massachusetts Institute of Technology (MIT) license
+@types/react-loader-spinner under the Massachusetts Institute of Technology (MIT) license
+@types/react-router-dom under the Massachusetts Institute of Technology (MIT) license
+apexcharts under the Massachusetts Institute of Technology (MIT) license
+apollo-link under the Massachusetts Institute of Technology (MIT) license
+aws-amplify under the Apache License 2.0
+aws-appsync-auth-link under the Apache License 2.0
+aws-appsync-subscription-link under the Apache License 2.0
+axios under the Massachusetts Institute of Technology (MIT) license
+classnames under the Massachusetts Institute of Technology (MIT) license
+date-fns under the Massachusetts Institute of Technology (MIT) license
+i18next under the Massachusetts Institute of Technology (MIT) license
+i18next-browser-languagedetector under the Massachusetts Institute of Technology (MIT) license
+i18next-http-backend under the Massachusetts Institute of Technology (MIT) license
+lodash.clonedeep under the Massachusetts Institute of Technology (MIT) license
+node-sass under the Massachusetts Institute of Technology (MIT) license
+oidc-client under the Apache License 2.0
+oidc-client-ts under the Apache License 2.0
+react under the Massachusetts Institute of Technology (MIT) license
+react-apexcharts under the Massachusetts Institute of Technology (MIT) license
+react-copy-to-clipboard under the Massachusetts Institute of Technology (MIT) license
+react-dom under the Massachusetts Institute of Technology (MIT) license
+react-i18next under the Massachusetts Institute of Technology (MIT) license
+react-loader-spinner under the Massachusetts Institute of Technology (MIT) license
+react-minimal-datetime-range under the Massachusetts Institute of Technology (MIT) license
+react-number-format under the Massachusetts Institute of Technology (MIT) license
+react-oidc-context under the Massachusetts Institute of Technology (MIT) license
+react-router-dom under the Massachusetts Institute of Technology (MIT) license
+react-scripts under the Massachusetts Institute of Technology (MIT) license
+redux under the Massachusetts Institute of Technology (MIT) license
+redux-react-hook under the Massachusetts Institute of Technology (MIT) license
+sweetalert2 under the Massachusetts Institute of Technology (MIT) license
+typescript under the Apache License 2.0
+@types/lodash.clonedeep under the Massachusetts Institute of Technology (MIT) license
+@typescript-eslint/eslint-plugin under the Massachusetts Institute of Technology (MIT) license
+@typescript-eslint/parser under the BSD-2-Clause
+browserslist under the Massachusetts Institute of Technology (MIT) license
+cross-env under the Massachusetts Institute of Technology (MIT) license
+eslint under the Massachusetts Institute of Technology (MIT) license
+eslint-config-prettier under the Massachusetts Institute of Technology (MIT) license
+eslint-config-standard under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-import under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-n under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-prettier under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-react under the Massachusetts Institute of Technology (MIT) license
+prettier under the Massachusetts Institute of Technology (MIT) license

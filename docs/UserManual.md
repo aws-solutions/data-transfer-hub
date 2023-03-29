@@ -63,8 +63,8 @@ For other cloud providers, the credentials format should remain the same.
 
 ## More tutorial
 
-1. [Transfer Amazon S3 Objects from Beijing to Oregon](./tutortial-beijing-to-oregon-s3.md)
-2. [Migration from Alibaba Cloud OSS to Amazon S3](./tutortial-migration-oss-to-s3.md)
+1. [Transfer Amazon S3 Objects from Beijing to Oregon](./tutorial-beijing-to-oregon-s3.md)
+2. [Migration from Alibaba Cloud OSS to Amazon S3](./tutorial-migration-oss-to-s3.md)
 3. [Deploy Data Transfer Hub in AWS China Region](./DeployInChinaWithAuthing_EN.md)
 4. [Config S3 Event Notification to Trigger Replication Job](./s3-event-trigger-config.md)
 5. [Deploy the solution via CDK](./deploy-via-cdk.md)

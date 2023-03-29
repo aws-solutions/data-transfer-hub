@@ -9,6 +9,50 @@ import STATUS_PENDING from "@material-ui/icons/Schedule";
 import STATUS_PROGRESS from "@material-ui/icons/RemoveCircleOutline";
 import STATUS_ERROR from "@material-ui/icons/HighlightOff";
 import STATUS_DONE from "@material-ui/icons/CheckCircleOutline";
+import { AUTH_TYPE } from "aws-appsync-auth-link";
+
+export enum AppSyncAuthType {
+  OPEN_ID = AUTH_TYPE.OPENID_CONNECT,
+  AMAZON_COGNITO_USER_POOLS = AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
+}
+
+export interface AmplifyConfigType {
+  taskCluster: {
+    ecsVpcId: string;
+    ecsClusterName: string;
+    ecsSubnets: string[];
+  };
+  aws_appsync_region: string;
+  aws_appsync_authenticationType: AppSyncAuthType;
+  aws_user_pools_id: string;
+  aws_oidc_customer_domain: "";
+  aws_project_region: string;
+  aws_oidc_provider: string;
+  aws_cognito_region: string;
+  aws_oidc_client_id: string;
+  aws_cloudfront_url: string;
+  aws_appsync_graphqlEndpoint: string;
+  aws_user_pools_web_client_id: string;
+}
+
+export interface AmplifyJSONType {
+  taskCluster: {
+    ecsVpcId: string;
+    ecsClusterName: string;
+    ecsSubnets: string[];
+  };
+  aws_appsync_region: string;
+  aws_appsync_authenticationType: string;
+  aws_user_pools_id: string;
+  aws_oidc_customer_domain: string;
+  aws_project_region: string;
+  aws_oidc_provider: string;
+  aws_cognito_region: string;
+  aws_oidc_client_id: string;
+  aws_cloudfront_url: string;
+  aws_appsync_graphqlEndpoint: string;
+  aws_user_pools_web_client_id: string;
+}
 
 // S3 ENGINE TYPE
 export enum S3_ENGINE_TYPE {
@@ -23,11 +67,14 @@ export const S3_EDITION_LIST = [
 
 // Redux Action Type
 export enum ACTION_TYPE {
+  UPDATE_USER_EMAIL = "update user email",
+  UPDATE_AMPLIFY_CONFIG = "update amplify config",
   OPEN_SIDE_BAR = "open side bar",
   CLOSE_SIDE_BAR = "close side bar",
   OPEN_INFO_BAR = "open info bar",
   CLOSE_INFO_BAR = "close info bar",
   UPDATE_TASK_INFO = "update task info",
+  UPDATE_ECR_TASK_INFO = "update ecr task info",
   SET_CREATE_TASK_FLAG = "set create task flag",
   HIDE_CREATE_TASK_FLAG = "hide create task flag",
   SET_INFO_SPAN_TYPE = "set info span type",
@@ -130,7 +177,7 @@ export const TASK_STATUS_MAP: any = {
   STOPPING: { name: "Stopping", src: STATUS_PENDING, class: "gray" },
   ERROR: { name: "Error", src: STATUS_ERROR, class: "error" },
   IN_PROGRESS: { name: "In Progress", src: STATUS_PROGRESS, class: "gray" },
-  DONE: { name: "Done", src: STATUS_DONE, class: "success" },
+  DONE: { name: "Completed", src: STATUS_DONE, class: "success" },
   STOPPED: { name: "Stopped", src: STATUS_PENDING, class: "gray" },
 };
 

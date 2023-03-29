@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import InfoSpan from "common/InfoSpan";
 
 type DrhInputProps = {
+  minValue?: number;
   showInfo?: boolean;
   infoType?: string;
   inputType?: string;
@@ -19,7 +20,6 @@ type DrhInputProps = {
   requiredErrorMsg?: string;
   showFormatError?: boolean;
   formatErrorMsg?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
 };
 
@@ -27,6 +27,7 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
   const { t } = useTranslation();
 
   const {
+    minValue,
     showInfo,
     infoType,
     inputType,
@@ -60,7 +61,7 @@ const DrhInput: React.FC<DrhInputProps> = (props: DrhInputProps) => {
         <input
           maxLength={255}
           defaultValue={defaultValue}
-          min={inputType === "number" ? 0 : undefined}
+          min={inputType === "number" ? minValue : undefined}
           value={inputValue}
           name={inputName}
           onWheel={(event) => event.currentTarget.blur()}

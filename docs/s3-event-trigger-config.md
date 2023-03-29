@@ -1,6 +1,6 @@
 # Config S3 Event Notification to Trigger Replication Job
 
-This tutortial is the guide to config the S3 Event to trigger Replication Jobs.
+This tutorial is the guide to config the S3 Event to trigger Replication Jobs.
 
 ## Solution Deployed in Source Bucket Account
 
@@ -10,7 +10,7 @@ This Solution supports S3 Event notification to trigger the data transfer (near 
 
 - Choose `Create` or `Create and Delete` in **Enable S3 Event?**
 
-![](images/tutortial/S3-Events-Config/s3-event-1.png)
+![](images/tutorial/S3-Events-Config/s3-event-1.png)
 
 ## Solution Not Deployed in Source Bucket Account
 
@@ -22,19 +22,19 @@ If the Solution is deployed in the different account as the source bucket, Pleas
 
 - Choose `No` in **Is Bucket in this account?** of **Source Settings**
 
-![](images/tutortial/S3-Events-Config/diff-region-1.png)
+![](images/tutorial/S3-Events-Config/diff-region-1.png)
 
 - Create the Replication Task and find the SQS of this Task.
 
-![](images/tutortial/S3-Events-Config/diff-region-2.png)
+![](images/tutorial/S3-Events-Config/diff-region-2.png)
 
-![](images/tutortial/S3-Events-Config/diff-region-3.png)
+![](images/tutorial/S3-Events-Config/diff-region-3.png)
 
 ### Step2. Edit the SQS Access Policy
 
 - Select the SQS and Edit the **Access policy**
 
-![](images/tutortial/S3-Events-Config/diff-region-4.png)
+![](images/tutorial/S3-Events-Config/diff-region-4.png)
 
 - Replace the `YOUR_DATA_TRANSFER_HUB_SQS_ARN`, `YOUR_SOURCE_BUCKET_ACCOUNT`, `YOUR_SOURCE_BUCKET_NAME`.
 
@@ -72,7 +72,7 @@ If the Solution is deployed in the different account as the source bucket, Pleas
 
 - Go to the source bucket account, and Create the S3 bucket event notification.
 
-![](images/tutortial/S3-Events-Config/diff-region-5.png)
+![](images/tutorial/S3-Events-Config/diff-region-5.png)
 
 - Click **Save changes**
 

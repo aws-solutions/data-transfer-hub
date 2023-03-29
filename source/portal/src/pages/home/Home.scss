@@ -1,13 +1,12 @@
-
 $homePadLeft: 200px;
 $opendPaddingLeft: 40px;
 $showPaddingRight: 402px;
 .top-show {
   width: 100%;
-  height: 346px;
+  height: 226px;
   // padding: 50px 0 0 $homePadLeft;
-  padding-top: 50px;
-  background-color: #232F3E;
+  padding-top: 40px;
+  background-color: #232f3e;
   border-top: 1px solid rgba($color: #ffffff, $alpha: 0.2);
   // &.opened {
   //   padding-left: $opendPaddingLeft;
@@ -24,7 +23,7 @@ $showPaddingRight: 402px;
     }
     .medium {
       padding-right: $showPaddingRight;
-      font-size: 42px;
+      font-size: 40px;
       font-weight: normal;
       letter-spacing: -1px;
     }
@@ -63,7 +62,7 @@ $showPaddingRight: 402px;
       padding: 5px 0 10px 0;
     }
     .video {
-      background-color: #232F3E;
+      background-color: #232f3e;
       width: 565px;
       // height: 236px;
     }
@@ -73,7 +72,7 @@ $showPaddingRight: 402px;
       font-size: 14px;
       .items {
         display: flex;
-        padding:10px 20px;
+        padding: 10px 20px;
         .list-icon {
           width: 24px;
           height: 24px;
@@ -81,11 +80,11 @@ $showPaddingRight: 402px;
           text-align: center;
           line-height: 24px;
           border-radius: 100%;
-          background-color: #545B64;
+          background-color: #545b64;
         }
         .list-content {
           padding-left: 10px;
-          flex:1;
+          flex: 1;
         }
       }
     }
@@ -101,8 +100,7 @@ $showPaddingRight: 402px;
           margin-bottom: 25px;
           height: 130px;
           padding: 5px 10px 5px 20px;
-          &:nth-child(odd)
-          {
+          &:nth-child(odd) {
             // background:#ff0000;
             border-right: 1px solid #eee;
           }
@@ -130,7 +128,7 @@ $showPaddingRight: 402px;
         .title {
           font-weight: bold;
           font-size: 18px;
-          padding: 15px 0px 20px 0;
+          padding: 15px 0px 15px 0;
         }
         .dest {
           font-size: 14px;

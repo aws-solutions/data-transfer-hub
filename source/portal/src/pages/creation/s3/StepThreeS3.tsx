@@ -3,19 +3,15 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Swal from "sweetalert2";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
-// import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
 
-import { IState } from "store/Store";
+import { IState, S3_EC2_TASK } from "store/Store";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -39,10 +35,13 @@ import {
 } from "assets/config/const";
 import {
   ACTION_TYPE,
+  AmplifyJSONType,
   EnumSourceType,
   S3_ENGINE_TYPE,
   S3_TASK_TYPE_MAP,
 } from "assets/types";
+import { appSyncRequestMutation } from "assets/utils/request";
+import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
@@ -56,7 +55,6 @@ const JOB_TYPE_MAP: any = {
 const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
-  const client: any = React.useContext(ClientContext);
 
   const { engine } = useParams() as any;
   console.info("type:", engine);
@@ -78,7 +76,8 @@ const StepThreeS3: React.FC = () => {
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
-    if (!tmpTaskInfo.hasOwnProperty("type")) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!tmpTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/S3/ec2";
       history.push({
         pathname: toPath,
@@ -169,7 +168,7 @@ const StepThreeS3: React.FC = () => {
     return taskParamArr;
   };
 
-  const buildEC2Params = (parametersObj: any) => {
+  const buildEC2Params = (parametersObj: S3_EC2_TASK) => {
     const taskParamArr: any = [];
     console.info("parametersObj:", parametersObj);
     if (!parametersObj) {
@@ -189,6 +188,9 @@ const StepThreeS3: React.FC = () => {
     const tmpIncludeMetaData =
       parametersObj.includeMetadata === YES_NO.YES ? "true" : "false";
 
+    const tmpSrcSkipCompare =
+      parametersObj.srcSkipCompare === YES_NO.YES ? "false" : "true";
+
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
       ParameterKey: "srcType",
@@ -205,6 +207,10 @@ const StepThreeS3: React.FC = () => {
     taskParamArr.push({
       ParameterKey: "srcPrefix",
       ParameterValue: parametersObj.srcBucketPrefix,
+    });
+    taskParamArr.push({
+      ParameterKey: "srcPrefixsListFile",
+      ParameterValue: parametersObj.srcPrefixsListFile,
     });
     taskParamArr.push({
       ParameterKey: "srcEvent",
@@ -256,6 +262,10 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.destAcl,
     });
     taskParamArr.push({
+      ParameterKey: "ec2CronExpression",
+      ParameterValue: parametersObj.ec2CronExpression,
+    });
+    taskParamArr.push({
       ParameterKey: "maxCapacity",
       ParameterValue: parametersObj.maxCapacity,
     });
@@ -268,12 +278,20 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: parametersObj.desiredCapacity,
     });
     taskParamArr.push({
+      ParameterKey: "srcSkipCompare",
+      ParameterValue: tmpSrcSkipCompare,
+    });
+    taskParamArr.push({
       ParameterKey: "finderDepth",
       ParameterValue: parametersObj.finderDepth,
     });
     taskParamArr.push({
       ParameterKey: "finderNumber",
       ParameterValue: parametersObj.finderNumber,
+    });
+    taskParamArr.push({
+      ParameterKey: "finderEc2Memory",
+      ParameterValue: parametersObj.finderEc2Memory,
     });
     taskParamArr.push({
       ParameterKey: "workerNumber",
@@ -288,79 +306,79 @@ const StepThreeS3: React.FC = () => {
 
   // Build  Task  Info  Data
   useEffect(() => {
-    const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
-
-    // Set Description
-    if (createTaskInfo) {
-      createTaskInfo.description = parametersObj?.description || "";
-    }
-
-    let taskParamArr: any = [];
-    if (engine === S3_ENGINE_TYPE.LAMBDA) {
-      taskParamArr = buildLambdaParams(parametersObj);
-      setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
-    }
-    if (engine === S3_ENGINE_TYPE.EC2) {
-      taskParamArr = buildEC2Params(parametersObj);
-      setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
-
-      if (
-        getParamsValueByName("srcType", taskParamArr) ===
-        EnumSourceType.S3_COMPATIBLE
-      ) {
-        // set value to Amazon_S3 when src Type is Amazon_S3_Compatible
-        const srcTypeIndex = taskParamArr.findIndex(
-          (param: any) => param.ParameterKey === "srcType"
-        );
-        taskParamArr[srcTypeIndex] = {
-          ParameterKey: "srcType",
-          ParameterValue: EnumSourceType.S3,
-        };
+    if (tmpTaskInfo !== null) {
+      const { parametersObj, ...createTaskInfo } = tmpTaskInfo;
+      // Set Description
+      if (createTaskInfo) {
+        createTaskInfo.description = parametersObj?.description || "";
+        createTaskInfo.scheduleType =
+          parametersObj?.scheduleType || ScheduleType.FIXED_RATE;
       }
-    }
 
-    // Add Cluster Data
-    const configJson: any = JSON.parse(
-      localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
-    );
-    const clusterData = configJson.taskCluster;
-    for (const key in clusterData) {
-      if (key === "ecsSubnets") {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key].join(","),
-        });
-      } else {
-        taskParamArr.push({
-          ParameterKey: key,
-          ParameterValue: clusterData[key],
-        });
+      let taskParamArr: any = [];
+      if (engine === S3_ENGINE_TYPE.LAMBDA) {
+        taskParamArr = buildLambdaParams(parametersObj);
+        setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
       }
-    }
+      if (engine === S3_ENGINE_TYPE.EC2) {
+        taskParamArr = buildEC2Params(parametersObj as any);
+        setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
 
-    // Remove uesless property when clone task
-    for (const key in createTaskInfo) {
-      if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
-        delete createTaskInfo[key];
+        if (
+          getParamsValueByName("srcType", taskParamArr) ===
+          EnumSourceType.S3_COMPATIBLE
+        ) {
+          // set value to Amazon_S3 when src Type is Amazon_S3_Compatible
+          const srcTypeIndex = taskParamArr.findIndex(
+            (param: any) => param.ParameterKey === "srcType"
+          );
+          taskParamArr[srcTypeIndex] = {
+            ParameterKey: "srcType",
+            ParameterValue: EnumSourceType.S3,
+          };
+        }
       }
-    }
 
-    createTaskInfo.parameters = taskParamArr;
-    console.info("createTaskInfo:", createTaskInfo);
-    setCreateTaskGQL(createTaskInfo);
+      // Add Cluster Data
+      const configJson: AmplifyJSONType = JSON.parse(
+        localStorage.getItem(DRH_CONFIG_JSON_NAME) as string
+      );
+      const clusterData = configJson.taskCluster;
+      for (const key in clusterData) {
+        if (key === "ecsSubnets") {
+          taskParamArr.push({
+            ParameterKey: "ec2Subnets",
+            ParameterValue: clusterData[key].join(","),
+          });
+        }
+        if (key === "ecsVpcId") {
+          taskParamArr.push({
+            ParameterKey: "ec2VpcId",
+            ParameterValue: clusterData[key],
+          });
+        }
+      }
+
+      // Remove uesless property when clone task
+      for (const key in createTaskInfo) {
+        if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
+          delete createTaskInfo?.[key];
+        }
+      }
+
+      createTaskInfo.parameters = taskParamArr;
+      console.info("createTaskInfo:", createTaskInfo);
+      setCreateTaskGQL(createTaskInfo);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tmpTaskInfo]);
 
   async function createTask() {
     setIsCreating(true);
     try {
-      const mutationCreate = gql(createTaskMutaion);
-      const createTaskData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: mutationCreate,
-        variables: { input: createTaskGQL },
+      const createTaskData = await appSyncRequestMutation(createTaskMutaion, {
+        input: createTaskGQL,
       });
-
       console.info("createTaskData:", createTaskData);
       dispatch({
         type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
@@ -370,9 +388,8 @@ const StepThreeS3: React.FC = () => {
       history.push({
         pathname: toPath,
       });
-    } catch (error: any) {
+    } catch (error) {
       setIsCreating(false);
-      Swal.fire("Oops...", error.message, "error");
     }
   }
 
@@ -394,6 +411,28 @@ const StepThreeS3: React.FC = () => {
     createTask();
   };
 
+  const buildDisplayValue = (key: string, value: string) => {
+    if (key === "jobType") {
+      return JOB_TYPE_MAP[key];
+    }
+    if (key === "finderEc2Memory") {
+      return value + "G";
+    }
+    if (key === "srcInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "destInCurrentAccount") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "includeMetadata") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
+    if (key === "srcSkipCompare") {
+      return value === "true" ? YES_NO.NO : YES_NO.YES;
+    }
+    return decodeURIComponent(value);
+  };
+
   return (
     <div className="drh-page">
       <LeftMenu />
@@ -405,7 +444,7 @@ const StepThreeS3: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/#/">
+              <MLink color="inherit" href="/">
                 {t("breadCrumb.home")}
               </MLink>
               <Typography color="textPrimary">
@@ -434,7 +473,7 @@ const StepThreeS3: React.FC = () => {
                       {t("creation.step3.step1EngineSubEngine")}
                     </div>
                     <div className="step3-desc">
-                      {S3_TASK_TYPE_MAP[tmpTaskInfo.type]?.name}
+                      {S3_TASK_TYPE_MAP[tmpTaskInfo?.type || ""]?.name}
                     </div>
                   </div>
                 </div>
@@ -479,17 +518,12 @@ const StepThreeS3: React.FC = () => {
                                     ]}
                                 </div>
                                 <div className="table-td value">
-                                  {element.ParameterKey === "jobType" ? (
-                                    <span>
-                                      {JOB_TYPE_MAP[element.ParameterValue]}
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      {decodeURIComponent(
-                                        element.ParameterValue
-                                      )}
-                                    </span>
-                                  )}
+                                  <span>
+                                    {buildDisplayValue(
+                                      element.ParameterKey,
+                                      element.ParameterValue
+                                    )}
+                                  </span>
                                 </div>
                               </div>
                             )

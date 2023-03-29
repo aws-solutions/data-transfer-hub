@@ -13,6 +13,10 @@ import EngineSettingsEC2 from "./info/EngineSettingsEC2";
 import EngineEdition from "./info/EngineEdition";
 import S3BucketSrcPrefix from "./info/S3BucketSrcPrefix";
 import S3BucketDestPrefix from "./info/S3BucketDestPrefix";
+import S3BucketSrcPrefixFilstLIst from "./info/S3BucketSrcPrefixFilstLIst";
+import ComparisonInfo from "./info/ComparisonInfo";
+import FinderDepthNumber from "./info/FinderDepthNumber";
+import FinderMemory from "./info/FinderMemory";
 
 import { IState } from "../store/Store";
 import { ACTION_TYPE } from "assets/types";
@@ -24,6 +28,11 @@ export enum EnumSpanType {
   ENGINE_EDITION = "ENGINE_EDITION",
   S3_BUCKET_SRC_PREFIX = "S3_BUCKET_SRC_PREFIX",
   S3_BUCKET_DEST_PREFIX = "S3_BUCKET_DEST_PREFIX",
+  S3_BUCKET_SRC_PREFIX_LIST = "S3_BUCKET_SRC_PREFIX_LIST",
+  ENGINE_SETTINGS_COMPARISON = "ENGINE_SETTINGS_COMPARISON",
+  ENGINE_SETTINGS_FINDER_DEPTH = "ENGINE_SETTINGS_FINDER_DEPTH",
+  ENGINE_SETTINGS_FINDER_NUMBER = "ENGINE_SETTINGS_FINDER_NUMBER",
+  ENGINE_SETTINGS_FINDER_MEMORY = "ENGINE_SETTINGS_FINDER_MEMORY",
 }
 
 const mapState = (state: IState) => ({
@@ -68,6 +77,16 @@ const InfoBar: React.FC<InfoType> = (props: InfoType) => {
                   t("comps.s3BucketSrcPrefix.name")}
                 {infoSpanType === EnumSpanType.S3_BUCKET_DEST_PREFIX &&
                   t("comps.s3BucketDestPrefix.name")}
+                {infoSpanType === EnumSpanType.S3_BUCKET_SRC_PREFIX_LIST &&
+                  t("comps.s3BucketPrefixFileList.name")}
+                {infoSpanType === EnumSpanType.ENGINE_SETTINGS_COMPARISON &&
+                  t("comps.comparisonInfo.name")}
+                {infoSpanType === EnumSpanType.ENGINE_SETTINGS_FINDER_DEPTH &&
+                  t("comps.finderDepthNumber.depthName")}
+                {infoSpanType === EnumSpanType.ENGINE_SETTINGS_FINDER_NUMBER &&
+                  t("comps.finderDepthNumber.numberName")}
+                {infoSpanType === EnumSpanType.ENGINE_SETTINGS_FINDER_MEMORY &&
+                  t("comps.finderMemory.name")}
               </div>
               <div className="icon" onClick={closeInfoBar}>
                 <ClearIcon />
@@ -91,6 +110,20 @@ const InfoBar: React.FC<InfoType> = (props: InfoType) => {
               )}
               {infoSpanType === EnumSpanType.S3_BUCKET_DEST_PREFIX && (
                 <S3BucketDestPrefix name="s3StepTwo" />
+              )}
+              {infoSpanType === EnumSpanType.S3_BUCKET_SRC_PREFIX_LIST && (
+                <S3BucketSrcPrefixFilstLIst name="s3StepTwo" />
+              )}
+              {infoSpanType === EnumSpanType.ENGINE_SETTINGS_COMPARISON && (
+                <ComparisonInfo name="s3StepTwo" />
+              )}
+              {(infoSpanType === EnumSpanType.ENGINE_SETTINGS_FINDER_DEPTH ||
+                infoSpanType ===
+                  EnumSpanType.ENGINE_SETTINGS_FINDER_NUMBER) && (
+                <FinderDepthNumber name="s3StepTwo" />
+              )}
+              {infoSpanType === EnumSpanType.ENGINE_SETTINGS_FINDER_MEMORY && (
+                <FinderMemory name="s3StepTwo" />
               )}
             </div>
           </div>

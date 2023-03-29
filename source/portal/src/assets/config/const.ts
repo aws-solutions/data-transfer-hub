@@ -55,6 +55,9 @@ export const DEST_OBJECT_ACL_LINK =
 export const AUTO_SCALING_LINK =
   "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html";
 
+export const CRON_HELP_LINK =
+  "https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions";
+
 export const CUR_SUPPORT_LANGS: string[] = ["zh", "en"];
 
 export const GLOBAL_STR = "global";
@@ -106,6 +109,10 @@ export const S3_PARAMS_LIST_MAP: any = {
   srcPrefix: {
     en_name: "Source Bucket Object Prefix",
     zh_name: "源数据桶对象前缀",
+  },
+  srcPrefixsListFile: {
+    en_name: "Object Prefixes File",
+    zh_name: "源数据桶多对象前缀文件",
   },
   enableS3Event: {
     en_name: "Enable S3 Event",
@@ -183,6 +190,10 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Finder Number",
     zh_name: "查找器数量",
   },
+  finderEc2Memory: {
+    en_name: "Finder Memory",
+    zh_name: "查找器内存大小",
+  },
   workerNumber: {
     en_name: "Worker Number",
     zh_name: "工作线程数",
@@ -198,6 +209,14 @@ export const S3_PARAMS_LIST_MAP: any = {
   desiredCapacity: {
     en_name: "Desired Capacity",
     zh_name: "所需容量",
+  },
+  ec2CronExpression: {
+    en_name: "Cron Expression",
+    zh_name: "Cron表达式",
+  },
+  srcSkipCompare: {
+    en_name: "Need Data Comparison before Transfer",
+    zh_name: "是否需要数据比对",
   },
   lambdaMemory: {
     en_name: "Lambda Memory",
@@ -281,6 +300,12 @@ export enum YES_NO {
   NO = "No",
 }
 
+export enum CRON_TYPE {
+  ONE_TIME = "ONE_TIME",
+  FIXED_RATE = "FIXED_RATE",
+  CRON_EXPRESS = "CRON_EXPRESS",
+}
+
 export enum S3_EVENT_TYPE {
   NO = "No",
   CREATE_ONLY = "Create_Only",
@@ -290,6 +315,12 @@ export enum S3_EVENT_TYPE {
   CREATE_AND_DELETE_EC2 = "CreateAndDelete",
 }
 
+export enum S3SourcePrefixType {
+  FullBucket = "FullBucket",
+  SinglePrefix = "SinglePrefix",
+  MultiplePrefix = "MultiplePrefix",
+}
+
 export enum S3_STORAGE_CLASS_TYPE {
   STANDARD = "STANDARD",
   STANDARD_IA = "STANDARD_IA",
@@ -297,86 +328,124 @@ export enum S3_STORAGE_CLASS_TYPE {
   INTELLIGENT_TIERING = "INTELLIGENT_TIERING",
 }
 
+export enum CRON_FIX_UNIT {
+  DAYS = "DAYS",
+  MINUTES = "MINUTES",
+  HOURS = "HOURS",
+}
+
+export const S3SourcePrefixTypeList = [
+  {
+    value: S3SourcePrefixType.FullBucket,
+    name: "Full Bucket",
+  },
+  {
+    value: S3SourcePrefixType.SinglePrefix,
+    name: "Objects with a specific prefix",
+  },
+  {
+    value: S3SourcePrefixType.MultiplePrefix,
+    name: "Objects with defferent prefixes",
+  },
+];
+
+// https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 export const AWS_REGION_LIST = [
-  { value: "us-east-2", name: "Ohio(us-east-2)" },
-  { value: "us-east-1", name: "N. Virginia(us-east-1)" },
-  { value: "us-west-1", name: "N. California(us-west-1)" },
-  { value: "us-west-2", name: "Oregon(us-west-2)" },
-  { value: "af-south-1", name: "Cape Town(af-south-1)" },
-  { value: "ap-east-1", name: "Hong Kong(ap-east-1)" },
-  { value: "ap-south-1", name: "Mumbai(ap-south-1)" },
-  { value: "ap-northeast-3", name: "Osaka-Local(ap-northeast-3)" },
-  { value: "ap-northeast-2", name: "Seoul(ap-northeast-2)" },
-  { value: "ap-southeast-1", name: "Singapore(ap-southeast-1)" },
-  { value: "ap-southeast-2", name: "Sydney(ap-southeast-2)" },
-  { value: "ap-northeast-1", name: "Tokyo(ap-northeast-1)" },
-  { value: "ca-central-1", name: "Central(ca-central-1)" },
-  { value: "cn-north-1", name: "Beijing(cn-north-1)" },
-  { value: "cn-northwest-1", name: "Ningxia(cn-northwest-1)" },
-  { value: "eu-central-1", name: "Frankfurt(eu-central-1)" },
-  { value: "eu-west-1", name: "Ireland(eu-west-1)" },
-  { value: "eu-west-2", name: "London(eu-west-2)" },
-  { value: "eu-south-1", name: "Milan(eu-south-1)" },
-  { value: "eu-west-3", name: "Paris(eu-west-3)" },
-  { value: "eu-north-1", name: "Stockholm(eu-north-1)" },
-  { value: "me-south-1", name: "Bahrain(me-south-1)" },
-  { value: "sa-east-1", name: "São Paulo(sa-east-1)" },
-  { value: "us-gov-west-1", name: "US-Gov-West(us-gov-west-1)" },
-  { value: "us-gov-east-1", name: "US-Gov-East(us-gov-east-1)" },
+  { value: "us-east-2", name: "Ohio" },
+  { value: "us-east-1", name: "N. Virginia" },
+  { value: "us-west-1", name: "N. California" },
+  { value: "us-west-2", name: "Oregon" },
+  { value: "af-south-1", name: "Cape Town" },
+  { value: "ap-east-1", name: "Hong Kong" },
+  { value: "ap-south-2", name: "Hyderabad" },
+  { value: "ap-southeast-3", name: "Jakarta" },
+  { value: "ap-south-1", name: "Mumbai" },
+  { value: "ap-northeast-3", name: "Osaka" },
+  { value: "ap-northeast-2", name: "Seoul" },
+  { value: "ap-southeast-1", name: "Singapore" },
+  { value: "ap-southeast-2", name: "Sydney" },
+  { value: "ap-northeast-1", name: "Tokyo" },
+  { value: "ca-central-1", name: "Central" },
+  { value: "eu-central-1", name: "Frankfurt" },
+  { value: "eu-west-1", name: "Ireland" },
+  { value: "eu-west-2", name: "London" },
+  { value: "eu-south-1", name: "Milan" },
+  { value: "eu-west-3", name: "Paris" },
+  { value: "eu-south-2", name: "Spain" },
+  { value: "eu-north-1", name: "Stockholm" },
+  { value: "eu-central-2", name: "Zurich" },
+  { value: "me-south-1", name: "Bahrain" },
+  { value: "me-central-1", name: "UAE" },
+  { value: "sa-east-1", name: "São Paulo" },
+  { value: "cn-north-1", name: "Beijing" },
+  { value: "cn-northwest-1", name: "Ningxia" },
+  { value: "us-gov-west-1", name: "US-Gov-West" },
+  { value: "us-gov-east-1", name: "US-Gov-East" },
 ];
 
+// https://www.alibabacloud.com/help/en/basics-for-beginners/latest/regions-and-zones
 export const ALICLOUD_REGION_LIST = [
-  { value: "cn-qingdao", name: "Qingdao(cn-qingdao)" },
-  { value: "cn-beijing", name: "Beijing(cn-beijing)" },
-  { value: "cn-chengdu", name: "Chengdu(cn-chengdu)" },
-  { value: "cn-hangzhou", name: "Hangzhou(cn-hangzhou)" },
-  { value: "cn-shanghai", name: "Shanghai(cn-shanghai)" },
-  { value: "cn-zhangjiakou", name: "Zhangjiakou(cn-zhangjiakou)" },
-  { value: "cn-huhehaote", name: "Hohhot(cn-huhehaote)" },
-  { value: "cn-shenzhen", name: "Shenzhen(cn-shenzhen)" },
-  { value: "cn-heyuan", name: "Heyuan(cn-heyuan)" },
-  { value: "cn-guangzhou", name: "Guangzhou(cn-guangzhou)" },
-  { value: "cn-wulanchabu", name: "Ulanqab(cn-wulanchabu)" },
-  { value: "cn-hongkong", name: "Hong Kong(cn-hongkong)" },
-  { value: "ap-southeast-1", name: "Singapore(ap-southeast-1)" },
-  { value: "ap-southeast-2", name: "Sydney(ap-southeast-2)" },
-  { value: "ap-southeast-3", name: "Kuala Lumpur(ap-southeast-3)" },
-  { value: "ap-southeast-5", name: "Jakarta(ap-southeast-5)" },
-  { value: "ap-northeast-1", name: "Tokyo(ap-northeast-1)" },
-  { value: "eu-west-1", name: "London(eu-west-1)" },
-  { value: "eu-central-1", name: "Frankfurt(eu-central-1)" },
-  { value: "us-west-1", name: "Silicon Valley(us-west-1)" },
-  { value: "us-east-1", name: "Virginia(us-east-1)" },
-  { value: "me-east-1", name: "Dubai(me-east-1)" },
-  { value: "ap-south-1", name: "Mumbai(ap-south-1)" },
+  { value: "cn-qingdao", name: "Qingdao" },
+  { value: "cn-beijing", name: "Beijing" },
+  { value: "cn-chengdu", name: "Chengdu" },
+  { value: "cn-zhangjiakou", name: "Zhangjiakou" },
+  { value: "cn-hangzhou", name: "Hangzhou" },
+  { value: "cn-shanghai", name: "Shanghai" },
+  { value: "cn-huhehaote", name: "Hohhot" },
+  { value: "cn-shenzhen", name: "Shenzhen" },
+  { value: "cn-heyuan", name: "Heyuan" },
+  { value: "cn-guangzhou", name: "Guangzhou" },
+  { value: "cn-wulanchabu", name: "Ulanqab" },
+  { value: "cn-nanjing", name: "Nanjing" },
+  { value: "cn-fuzhou", name: "Fuzhou" },
+  { value: "cn-hongkong", name: "Hong Kong" },
+  { value: "ap-southeast-1", name: "Singapore" },
+  { value: "ap-southeast-2", name: "Sydney" },
+  { value: "ap-southeast-3", name: "Kuala Lumpur" },
+  { value: "ap-southeast-5", name: "Jakarta" },
+  { value: "ap-southeast-6", name: "Manila" },
+  { value: "ap-southeast-7", name: "Bangkok" },
+  { value: "ap-northeast-1", name: "Tokyo" },
+  { value: "ap-northeast-2", name: "Seoul" },
+  { value: "eu-west-1", name: "London" },
+  { value: "eu-central-1", name: "Frankfurt" },
+  { value: "us-west-1", name: "Silicon Valley" },
+  { value: "us-east-1", name: "Virginia" },
+  { value: "me-east-1", name: "Dubai" },
+  { value: "ap-south-1", name: "Mumbai" },
 ];
 
+// https://www.tencentcloud.com/document/product/213/6091
 export const TENCENT_REGION_LIST = [
-  { name: "Beijing(ap-beijing)", value: "ap-beijing" },
-  { name: "Nanjing(ap-nanjing)", value: "ap-nanjing" },
-  { name: "Shanghai(ap-shanghai)", value: "ap-shanghai" },
-  { name: "Guangzhou(ap-guangzhou)", value: "ap-guangzhou" },
-  { name: "Chengdu(ap-chengdu)", value: "ap-chengdu" },
-  { name: "Chongqing(ap-chongqing)", value: "ap-chongqing" },
-  { name: "Hong Kong(ap-hongkong)", value: "ap-hongkong" },
-  { name: "Singapore(ap-singapore)", value: "ap-singapore" },
-  { name: "Mumbai(ap-mumbai)", value: "ap-mumbai" },
-  { name: "Seoul(ap-seoul)", value: "ap-seoul" },
-  { name: "Bangkok(ap-bangkok)", value: "ap-bangkok" },
-  { name: "Tokyo(ap-tokyo)", value: "ap-tokyo" },
-  { name: "Silicon Valley(na-siliconvalley)", value: "na-siliconvalley" },
-  { name: "Virginia(na-ashburn)", value: "na-ashburn" },
-  { name: "Toronto(na-toronto)", value: "na-toronto" },
-  { name: "Frankfurt(eu-frankfurt)", value: "eu-frankfurt" },
-  { name: "Moscow(eu-moscowcom)", value: "eu-moscowcom" },
+  { value: "ap-beijing", name: "Beijing" },
+  { value: "ap-nanjing", name: "Nanjing" },
+  { value: "ap-shanghai", name: "Shanghai" },
+  { value: "ap-guangzhou", name: "Guangzhou" },
+  { value: "ap-chengdu", name: "Chengdu" },
+  { value: "ap-chongqing", name: "Chongqing" },
+  { value: "ap-hongkong", name: "Hong Kong" },
+  { value: "ap-singapore", name: "Singapore" },
+  { value: "ap-mumbai", name: "Mumbai" },
+  { value: "ap-seoul", name: "Seoul" },
+  { value: "ap-bangkok", name: "Bangkok" },
+  { value: "ap-tokyo", name: "Tokyo" },
+  { value: "na-siliconvalley", name: "Silicon Valley" },
+  { value: "na-ashburn", name: "Virginia" },
+  { value: "na-toronto", name: "Toronto" },
+  { value: "eu-frankfurt", name: "Frankfurt" },
+  { value: "eu-moscow", name: "Moscow" },
+  { value: "ap-jakarta", name: "Jakarta" },
 ];
 
+// https://developer.qiniu.com/kodo/1671/region-endpoint-fq
 export const QINIU_REGION_LIST = [
-  { name: "East China(cn-east-1)", value: "cn-east-1" },
-  { name: "North China(cn-north-1)", value: "cn-north-1" },
-  { name: "South China(cn-south-1)", value: "cn-south-1" },
-  { name: "North America(us-north-1)", value: "us-north-1" },
-  { name: "South East Asia(ap-southeast-1)", value: "ap-southeast-1" },
+  { value: "cn-east-1", name: "East China" },
+  { value: "cn-north-1", name: "North China" },
+  { value: "cn-south-1", name: "South China" },
+  { value: "us-north-1", name: "North America" },
+  { value: "ap-southeast-1", name: "South East Asia" },
+  { value: "cn-east-2	", name: "East China 2" },
+  { value: "ap-northeast-1", name: "Seoul" },
 ];
 
 export const getRegionListBySourceType = (sourceType: string) => {
@@ -444,6 +513,31 @@ export const MAXTHREADS_OPTIONS = [
   { name: 50, value: 50 },
 ];
 
+export const EC2_MEMORY_LIST = [
+  { name: "8G", value: "8" },
+  { name: "16G", value: "16" },
+  { name: "32GB", value: "32" },
+  { name: "64GB", value: "64" },
+  { name: "128GB", value: "128" },
+  { name: "256GB", value: "256" },
+];
+
+export const CRON_TYPE_LIST = [
+  { name: "Fixed Rate", value: CRON_TYPE.FIXED_RATE },
+  { name: "Cron Expression", value: CRON_TYPE.CRON_EXPRESS },
+];
+
+export const CRON_TYPE_LIST_WITH_ONE_TIME = [
+  { name: "One Time Transfer", value: CRON_TYPE.ONE_TIME },
+  ...CRON_TYPE_LIST,
+];
+
+export const CRON_UNIT_LIST = [
+  { name: "Days", value: CRON_FIX_UNIT.DAYS },
+  { name: "Minutes", value: CRON_FIX_UNIT.MINUTES },
+  { name: "Hours", value: CRON_FIX_UNIT.HOURS },
+];
+
 export const OBJECT_ACL_LIST = [
   { name: "bucket-owner-full-control", value: "bucket-owner-full-control" },
   { name: "private", value: "private" },
@@ -509,6 +603,8 @@ export const S3_EVENT_OPTIONS_EC2 = [
 // Clone task useless property
 export const CREATE_USE_LESS_PROPERTY = [
   "id",
+  "stackName",
+  "stackOutputs",
   "createdAt",
   "executionArn",
   "progress",
@@ -534,9 +630,7 @@ export const urlIsValid = (url: string): boolean => {
 };
 
 export const emailIsValid = (email: string): boolean => {
-  // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
   return re.test(String(email).toLowerCase());
 };
 
@@ -568,3 +662,61 @@ export const bucketNameIsValid = (bucketName: string): boolean => {
   }
   return false;
 };
+
+export const AMPLIFY_ZH_DICT = {
+  zh: {
+    "Sign In": "登录",
+    "Sign Up": "注册",
+    "Sign Out": "退出",
+    "Forgot your password?": "忘记密码？",
+    "Reset your password": "重置密码",
+    "Reset password": "重置密码",
+    Username: "用户名",
+    Password: "密码",
+    "Change Password": "修改密码",
+    Email: "邮箱",
+    email: "邮箱",
+    "Phone Number": "电话",
+    "Confirm a Code": "确认码",
+    "Confirm Sign In": "确认登录",
+    "Confirm Sign Up": "确认注册",
+    "Back to Sign In": "回到登录",
+    "Send Code": "发送确认码",
+    Confirm: "确认",
+    "Resend a Code": "重发确认码",
+    Submit: "提交",
+    Skip: "跳过",
+    Verify: "验证",
+    "Verify Contact": "验证联系方式",
+    Code: "确认码",
+    "Account recovery requires verified contact information":
+      "账户恢复需要验证过的联系方式",
+    "User does not exist": "用户不存在",
+    "User already exists": "用户已经存在",
+    "Incorrect username or password.": "用户名或密码错误",
+    "Invalid password format": "密码格式错误",
+    "Invalid phone number format": "电话格式错误，请使用格式 +12345678900",
+    "Enter your username": "请输入您的邮箱",
+    "Enter your password": "请输入您的密码",
+    "Enter your phone number": "请输入您的手机号",
+    "Enter your email": "请输入您的邮箱",
+    "Enter your code": "请输入您的验证码",
+    "Lost your code?": "没收到验证码？",
+    "Resend Code": "重新发送验证码",
+    "New password": "新密码",
+    "Enter your new password": "请输入新密码",
+    Change: "修改",
+  },
+};
+
+export enum MonitorTabType {
+  METRICS = "METRICS",
+  FINDER = "FINDER",
+  WORKER = "WORKER",
+}
+
+export const FINDER_DESC = "Finder Log Group Name";
+export const WORKER_DESC = "Worker Log Group Name";
+
+export const LOGTYPE_FINDER = MonitorTabType.FINDER;
+export const LOGTYPE_WORKER = MonitorTabType.WORKER;

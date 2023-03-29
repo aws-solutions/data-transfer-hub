@@ -1,21 +1,21 @@
-/**
- *  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import * as cdk from '@aws-cdk/core'
-import * as sfn from '@aws-cdk/aws-stepfunctions'
-import * as sfnTasks from '@aws-cdk/aws-stepfunctions-tasks'
-import * as lambda from '@aws-cdk/aws-lambda'
-import * as iam from '@aws-cdk/aws-iam'
+import {
+  Construct,
+} from 'constructs';
+import {
+  Aws,
+  Duration,
+  CfnOutput,
+  aws_stepfunctions as sfn,
+  aws_stepfunctions_tasks as sfnTasks,
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_logs as logs,
+  Fn
+} from 'aws-cdk-lib';
+
 import * as path from 'path'
 
 import { addCfnNagSuppressRules } from "./constructs-stack";
@@ -23,18 +23,19 @@ import { addCfnNagSuppressRules } from "./constructs-stack";
 export interface CloudFormationStateMachineProps {
   taskTableName: string,
   taskTableArn: string,
-  lambdaLayer: lambda.LayerVersion
+  lambdaLayer: lambda.LayerVersion,
+  taskMonitorSfnArn: string
 }
 
-export class CloudFormationStateMachine extends cdk.Construct {
+export class CloudFormationStateMachine extends Construct {
 
   readonly stateMachineArn: string
 
-  constructor(scope: cdk.Construct, id: string, props: CloudFormationStateMachineProps) {
+  constructor(scope: Construct, id: string, props: CloudFormationStateMachineProps) {
     super(scope, id);
 
     const createTaskCfnFn = new lambda.Function(this, 'CreateTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -44,7 +45,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       },
       layers: [props.lambdaLayer],
       memorySize: 512,
-      timeout: cdk.Duration.seconds(60),
+      timeout: Duration.seconds(60),
       description: 'Data Transfer Hub - Create Task'
     })
 
@@ -57,7 +58,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     ])
 
     const stopTaskCfnFn = new lambda.Function(this, 'StopTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -67,7 +68,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       },
       layers: [props.lambdaLayer],
       memorySize: 512,
-      timeout: cdk.Duration.seconds(60),
+      timeout: Duration.seconds(60),
       description: 'Data Transfer Hub - Stop Task'
     })
 
@@ -89,8 +90,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "states:TagResource",
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:activity:DTH*`,
-            `arn:${cdk.Aws.PARTITION}:states:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stateMachine:DTH*`,
+            `arn:${Aws.PARTITION}:states:${Aws.REGION}:${Aws.ACCOUNT_ID}:activity:DTH*`,
+            `arn:${Aws.PARTITION}:states:${Aws.REGION}:${Aws.ACCOUNT_ID}:stateMachine:DTH*`,
           ]
         }),
         new iam.PolicyStatement({
@@ -119,7 +120,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "SNS:Unsubscribe",
             "SNS:TagResource"
           ],
-          resources: [`arn:${cdk.Aws.PARTITION}:sns:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:DTH*`]
+          resources: [`arn:${Aws.PARTITION}:sns:${Aws.REGION}:${Aws.ACCOUNT_ID}:DTH*`]
         }),
         new iam.PolicyStatement({
           actions: [
@@ -138,7 +139,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "events:PutTargets",
             "events:DeleteRule",
           ],
-          resources: [`arn:${cdk.Aws.PARTITION}:events:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:rule/DTH*`]
+          resources: [`arn:${Aws.PARTITION}:events:${Aws.REGION}:${Aws.ACCOUNT_ID}:rule/DTH*`]
         }),
         new iam.PolicyStatement({
           actions: [
@@ -166,7 +167,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "dynamodb:UpdateContinuousBackups",
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/DTH*`,
+            `arn:${Aws.PARTITION}:dynamodb:${Aws.REGION}:${Aws.ACCOUNT_ID}:table/DTH*`,
             props.taskTableArn
           ]
         }),
@@ -178,7 +179,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "sqs:SetQueueAttributes",
             "sqs:DeleteQueue",
           ],
-          resources: [`arn:${cdk.Aws.PARTITION}:sqs:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:DTH*`]
+          resources: [`arn:${Aws.PARTITION}:sqs:${Aws.REGION}:${Aws.ACCOUNT_ID}:DTH*`]
         }),
         new iam.PolicyStatement({
           actions: [
@@ -219,7 +220,9 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "logs:GetLogEvents",
             "logs:PutMetricFilter",
             "logs:DeleteMetricFilter",
-            "logs:DescribeMetricFilters"
+            "logs:DescribeMetricFilters",
+            "logs:PutLogEvents",
+            "logs:TagResource"
           ],
           resources: [`*`]
         }),
@@ -269,9 +272,9 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "iam:DetachRolePolicy",
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:instance-profile/DTH*`,
-            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:role/DTH*`,
-            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:policy/DTH*`,
+            `arn:${Aws.PARTITION}:iam::${Aws.ACCOUNT_ID}:instance-profile/DTH*`,
+            `arn:${Aws.PARTITION}:iam::${Aws.ACCOUNT_ID}:role/DTH*`,
+            `arn:${Aws.PARTITION}:iam::${Aws.ACCOUNT_ID}:policy/DTH*`,
           ]
         }),
         new iam.PolicyStatement({
@@ -338,7 +341,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
             "iam:CreateServiceLinkedRole",
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:iam::${cdk.Aws.ACCOUNT_ID}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling`
+            `arn:${Aws.PARTITION}:iam::${Aws.ACCOUNT_ID}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling`
           ]
         }),
       ]
@@ -351,11 +354,11 @@ export class CloudFormationStateMachine extends cdk.Construct {
     addCfnNagSuppressRules(cfnTaskFnPolicy, [
       {
         id: 'F4',
-        reason: 'This policy requires releted actions in order to start/delete other cloudformation stacks of the plugin with many other services'
+        reason: 'This policy requires related actions in order to start/delete other cloudformation stacks of the plugin with many other services'
       },
       {
         id: 'F39',
-        reason: 'This policy requires releted PassRole actions to unknown resources created by plugin cloudformation stacks'
+        reason: 'This policy requires related PassRole actions to unknown resources created by plugin cloudformation stacks'
       },
       {
         id: 'W76',
@@ -368,7 +371,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
     ])
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
         exclude: ['api/*', 'layer/*']
       }),
@@ -378,7 +381,7 @@ export class CloudFormationStateMachine extends cdk.Construct {
       },
       layers: [props.lambdaLayer],
       memorySize: 512,
-      timeout: cdk.Duration.seconds(60),
+      timeout: Duration.seconds(60),
       description: 'Data Transfer Hub - Query Task'
     })
 
@@ -400,11 +403,56 @@ export class CloudFormationStateMachine extends cdk.Construct {
     }))
     queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      resources: [`arn:${cdk.Aws.PARTITION}:cloudformation:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:stack/DTH*`],
+      resources: [`arn:${Aws.PARTITION}:cloudformation:${Aws.REGION}:${Aws.ACCOUNT_ID}:stack/DTH*`],
       actions: [
         'cloudformation:DescribeStacks'
       ]
     }))
+    queryTaskCfnFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ["*"],
+      actions: [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }))
+
+    const startMonitorFlowFn = new lambda.Function(this, 'StartMonitorFlowFn', {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task-monitoring')),
+      handler: 'start_monitor_flow.lambda_handler',
+      environment: {
+        MONITOR_SFN_ARN: props.taskMonitorSfnArn
+      },
+      memorySize: 512,
+      timeout: Duration.seconds(60),
+      description: 'Data Transfer Hub - Start Task Monitoring Flow Handler'
+    })
+    startMonitorFlowFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [props.taskMonitorSfnArn],
+      actions: [
+        'states:StartExecution'
+      ]
+    }))
+    startMonitorFlowFn.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ["*"],
+      actions: [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }))
+
+    const cfnStartMonitorFlowFn = startMonitorFlowFn.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnStartMonitorFlowFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
 
     const startStackTask = new sfnTasks.LambdaInvoke(this, 'Start Stack', {
       lambdaFunction: createTaskCfnFn,
@@ -421,17 +469,24 @@ export class CloudFormationStateMachine extends cdk.Construct {
       outputPath: '$.Payload'
     })
 
+    const startMonitorFlow = new sfnTasks.LambdaInvoke(this, 'Start Monitoring Flow', {
+      lambdaFunction: startMonitorFlowFn,
+      outputPath: '$.Payload'
+    })
+
     const stackOperationSucceed = new sfn.Succeed(this, 'Stack Ops Succeed')
     const stackOperationFailed = new sfn.Fail(this, 'Stack Ops Failed')
 
     const waitFor5Seconds = new sfn.Wait(this, 'Wait for 5 seconds', {
-      time: sfn.WaitTime.duration(cdk.Duration.seconds(5))
+      time: sfn.WaitTime.duration(Duration.seconds(5))
     })
 
     const queryStackStatusChoice = new sfn.Choice(this, 'Query Stack Status Choice')
       .when(
+        sfn.Condition.stringEquals('$.stackStatus', 'CREATE_COMPLETE')
+        , startMonitorFlow.next(stackOperationSucceed))
+      .when(
         sfn.Condition.or(
-          sfn.Condition.stringEquals('$.stackStatus', 'CREATE_COMPLETE'),
           sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_COMPLETE'),
           sfn.Condition.stringEquals('$.stackStatus', 'DELETE_COMPLETE')
         )
@@ -440,7 +495,8 @@ export class CloudFormationStateMachine extends cdk.Construct {
         sfn.Condition.or(
           sfn.Condition.stringEquals('$.stackStatus', 'CREATE_FAILED'),
           sfn.Condition.stringEquals('$.stackStatus', 'DELETE_FAILED'),
-          sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_ROLLBACK_FAILED')
+          sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_ROLLBACK_FAILED'),
+          sfn.Condition.stringEquals('$.stackStatus', 'ROLLBACK_COMPLETE')
         )
         , stackOperationFailed
       )
@@ -455,12 +511,30 @@ export class CloudFormationStateMachine extends cdk.Construct {
 
     waitFor5Seconds.next(queryStackStatus).next(queryStackStatusChoice)
 
+    // State machine log group 
+    const logGroup = new logs.LogGroup(this, "CfnDeploySMLogGroup", {
+      logGroupName: `/aws/vendedlogs/states/${Fn.select(
+          6,
+          Fn.split(":", startMonitorFlowFn.functionArn)
+      )}-CfnDeploy-SM`,
+    });
+    const cfnLogGroup = logGroup.node.defaultChild as logs.CfnLogGroup
+    addCfnNagSuppressRules(cfnLogGroup, [
+      {
+          id: 'W84',
+          reason: 'log group is encrypted with the default master key'
+      }
+    ])
     const stateMachine = new sfn.StateMachine(this, 'CfnDeploymentStateMachine', {
       definition: definition,
-      timeout: cdk.Duration.minutes(120)
+      timeout: Duration.minutes(120),
+      logs: {
+        destination: logGroup,
+        level: sfn.LogLevel.ALL,
+      }
     })
 
-    new cdk.CfnOutput(this, 'CfnDeploymentStateMachineArn', {
+    new CfnOutput(this, 'CfnDeploymentStateMachineArn', {
       value: stateMachine.stateMachineArn,
       description: 'StateMachine Arn',
       exportName: 'StateMachineArn'

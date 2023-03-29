@@ -27,13 +27,39 @@ run() {
     $*
 }
 
-sedi() {
+do_cmd() 
+{
+    echo "------ EXEC $*"
+    $*
+    rc=$?
+    if [ $rc -gt 0 ]
+    then
+            echo "Aborted - rc=$rc"
+            exit $rc
+    fi
+}
+
+sedi() 
+{
     # cross-platform for sed -i
     sed -i $* 2>/dev/null || sed -i "" $*
 }
 
 ## Important: CDK global version number
 cdk_version=1.64.1
+cleanup_temporary_generted_files()
+{
+    echo "------------------------------------------------------------------------------"
+    echo "${bold}[Cleanup] Remove temporary files${normal}"
+    echo "------------------------------------------------------------------------------"
+
+    # Delete generated files: CDK Consctruct typescript transcompiled generted files
+    do_cmd cd $source_dir/constructs
+    do_cmd npm run cleanup:tsc
+
+    # Delete the temporary /staging folder
+    do_cmd rm -rf $staging_dist_dir
+}
 #
 # Check to see if the required parameters have been provided:
 if [ -z "$1" ] || [ -z "$2" ]; then
@@ -41,10 +67,10 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     echo "For example: ./build-s3-dist.sh solutions trademarked-solution-name v1.0.0"
     exit 1
 fi
-if [ -z "$3" ]; then
-    export VERSION=$(git describe --tags || echo v0.0.0)
+if [ ! -z $3 ]; then
+    export VERSION="$3"
 else
-    export VERSION=$3
+    export VERSION=$(git describe --tags --exact-match || { [ -n "$BRANCH_NAME" ] && echo "$BRANCH_NAME"; } || echo v0.0.0)
 fi
 
 # Get reference for all important folders
@@ -58,36 +84,25 @@ echo "--------------------------------------------------------------------------
 echo "[Init] Remove any old dist files from previous runs"
 echo "------------------------------------------------------------------------------"
 
-echo "rm -rf $template_dist_dir"
-rm -rf $template_dist_dir
-echo "mkdir -p $template_dist_dir"
-mkdir -p $template_dist_dir
-echo "rm -rf $build_dist_dir"
-rm -rf $build_dist_dir
-echo "mkdir -p $build_dist_dir"
-mkdir -p $build_dist_dir
-echo "rm -rf $staging_dist_dir"
-rm -rf $staging_dist_dir
-echo "mkdir -p $staging_dist_dir"
-mkdir -p $staging_dist_dir
-
-echo "VERSION=${VERSION}"
-echo "${VERSION}" > $template_dist_dir/version
+do_cmd rm -rf $template_dist_dir
+do_cmd mkdir -p $template_dist_dir
+do_cmd rm -rf $build_dist_dir
+do_cmd mkdir -p $build_dist_dir
+do_cmd rm -rf $staging_dist_dir
+do_cmd mkdir -p $staging_dist_dir
 
 echo "------------------------------------------------------------------------------"
 echo "[Init] Install dependencies for the cdk-solution-helper"
 echo "------------------------------------------------------------------------------"
 
-echo "cd $template_dir/cdk-solution-helper"
-cd $template_dir/cdk-solution-helper
-echo "npm install"
-npm install
+do_cmd cd $template_dir/cdk-solution-helper
+do_cmd npm install
 
 echo "------------------------------------------------------------------------------"
 echo "[Build] Build web portal artifacts"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/portal
-npm install
+npm install --legacy-peer-deps
 npm run build
 
 
@@ -191,14 +206,8 @@ for f in `find . -iname \*.zip`; do
     rm $fname
 done
 
-
-echo "------------------------------------------------------------------------------"
-echo "[Cleanup] Remove temporary files"
-echo "------------------------------------------------------------------------------"
-
-# Delete the temporary /staging folder
-echo "rm -rf $staging_dist_dir"
-rm -rf $staging_dist_dir
+# cleanup temporary generated files that are not needed for later stages of the build pipeline
+cleanup_temporary_generted_files
 
 
 

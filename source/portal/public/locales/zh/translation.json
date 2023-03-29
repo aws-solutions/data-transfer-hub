@@ -8,6 +8,19 @@
   "info": "信息",
   "optional": "可选",
   "recommened": "推荐",
+  "signin": {
+    "signInToDRH": "登录到 Data Transfer Hub",
+    "email": "邮箱地址 *",
+    "inputEmail": "输入您的邮箱地址",
+    "password": "密码 *",
+    "inputPassword": "输入您的密码",
+    "signIn": "登录"
+  },
+  "header": {
+    "name": "亚马逊云科技解决方案",
+    "welcome": "欢迎您",
+    "logout": "退出登录"
+  },
   "top": {
     "account": "我的账户"
   },
@@ -31,6 +44,8 @@
   },
   "home": {
     "title": {
+      "getStarted": "开始使用",
+      "getStartedDesc": "跨区域数据传输，或从其他云厂商迁移数据。",
       "createTitle": "创建任务",
       "quickStart": "快速开始",
       "moreResouce": "更多资源",
@@ -71,9 +86,9 @@
     },
     "tips": {
       "requiredCredential": "请选择凭证参数",
-      "store1": "选择",
+      "store1": "请选择在",
       "store2": "Secrets Manager",
-      "store3": "中的密钥. 如果数据桶是公开数据桶则可以为空."
+      "store3": "中创建的密钥, 如果数据桶是公开数据桶则可以为空."
     },
     "step1": {
       "engineType": "选择引擎类型",
@@ -107,7 +122,10 @@
           "objectACL": "目标对象ACL",
           "objectACLDesc1": "选择 ",
           "objectACLDesc2": "目标对象ACL.",
-          "objectACLDesc3": " 如果您不想设置对象ACL，请使用默认值."
+          "objectACLDesc3": " 如果您不想设置对象ACL，请使用默认值.",
+          "transferType": "传输类型",
+          "nameOfPrefixList": "前缀列表文件名",
+          "nameOfPrefixListDesc": "请将前缀文件以.txt的格式上传到源存储桶根目录，每行写一个前缀。例如: prefix_list.txt"
         },
         "dest": {
           "title": "目标桶设置",
@@ -151,7 +169,16 @@
           "finderNumber": "查找器数量",
           "finderNumberDesc": "要并行运行的查找线程数.",
           "workerThreadsNumber": "工作线程数",
-          "workerThreadsNumberDesc": "一个实例中要运行的工作线程数."
+          "workerThreadsNumberDesc": "一个实例中要运行的工作线程数.",
+          "schedulingSettings": "任务调度设置",
+          "schedulingSettingsDesc1": "可通过手动调整或CRON表达式来设置任务调度频率，如若单次传输，请选单次传输。详见",
+          "schedulingSettingsDesc2": "了解CRON表达式.",
+          "skipComparison": "是否需要数据比对",
+          "skipComparisonDesc": "如果选Yes, 在传输数据前进行数据比对以防止重复传输。如果选No，将直接传输源数据.",
+          "finderMemory": "查找器内存",
+          "finderMemoryDesc": "查找器内存大小",
+          "oneTimeTips": "当任务 'Completed' 时，传输操作将停止，您可以选择“停止”以删除并释放所有支持的资源。",
+          "fixedRateError": "任务调度必须大于或等于 2 分钟."
         },
         "more": {
           "title": "更多",
@@ -183,7 +210,8 @@
           "image1": "输入容器镜像名称",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "使用逗号分隔. 如果不指定tag, 则默认为latest."
+          "image4": "使用逗号分隔. 如果不指定 tag, 则默认为 latest.",
+          "image5": "如果 tag 是 ALL_TAGS，则将使用该容器镜像的所有 tag。"
         },
         "dest": {
           "title": "目标仓库设置",
@@ -239,9 +267,16 @@
       "source": "数据源",
       "destination": "数据目的地",
       "engineType": "引擎类型",
+      "scheduleType": "任务类型",
       "status": "状态",
       "createdTime": "创建时间"
-    }
+    },
+    "error": "错误: ",
+    "viewInCFN": "在 CloudFormation 中查看更多",
+    "viewInFinder": "在查找器日志中查看更多",
+    "viewWorker1": "请在邮箱中检查告警邮件或者 ",
+    "viewWorker2": "在工作线程日志中查看",
+    "viewWorker3": ", 或者重新创建传输任务补齐文件差异。"
   },
   "taskDetail": {
     "title": "",
@@ -286,6 +321,10 @@
     "prefix": "前缀",
     "taskMetrics": "任务指标",
     "dashboard": "CloudWatch 仪表盘",
+    "finderMetrics": "查找器日志",
+    "finderDashboard": "CloudWatch 日志流",
+    "workerMetrics": "工作线程日志",
+    "workerDashboard": "CloudWatch 日志流",
     "enableS3Event": "启用S3事件?",
     "storageClass": "存储类型",
     "copyMetadata": "传输元数据?",
@@ -300,10 +339,18 @@
     "advancedSettings": "高级设置",
     "finderDepth": "查找器深度",
     "finderNumber": "查找器数量",
-    "workerThreadsNumber": "工作线程数"
+    "workerThreadsNumber": "工作线程数",
+    "transferType": "传输类型",
+    "nameOfPrefixList": "前缀列表文件名",
+    "schedulingSettings": "任务调度设置",
+    "finderMemory": "查找器内存",
+    "skipComparison": "是否需要数据比对",
+    "monitor": "日志监控",
+    "startTime": "开始时间",
+    "endTime": "结束时间"
   },
   "bottom": {
-    "copy": "© 2008 - 2021, Amazon Web Services, Inc. 或其子公司.保留所有权利.",
+    "copy": "Amazon Web Services, Inc. 或其子公司.保留所有权利.",
     "feedback": "反馈",
     "privacy": "隐私政策",
     "use": "使用条款"
@@ -320,7 +367,8 @@
     "taskAction": "操作",
     "stopTask": "停止任务",
     "cloneTask": "复制任务",
-    "reLogin": "重新登录"
+    "reLogin": "重新登录",
+    "createTransferTask": "创建新任务"
   },
   "tips": {
     "error": {
@@ -388,6 +436,53 @@
       "tip1": "S3传输引擎在 包含 Amazon EC2 Graviton2 机型的 Auto Scaling 组进行对象传输。 您可以通过设置最小实例数，最大实例数和所需实例数来调整并发性。 传输引擎将在最小值和最大值之间自动缩放.",
       "tip2": "创建任务后，您可以在 Amazon Web Services Console 上调整这些数字.",
       "linkName": "调整 Auto Scaling 组以更改传输并发."
+    },
+    "s3BucketPrefixFileList": {
+      "name": "前缀列表文件名",
+      "example": "prefix_list.txt 的文件样例:"
+    },
+    "comparisonInfo": {
+      "name": "数据对比",
+      "tip1": "列举无需数据对比场景:",
+      "tip2": "1) 用户可确定源数据桶和目标数据桶重合度较低.",
+      "tip3": "2) 用户希望减少数据比对的时间."
+    },
+    "finderDepthNumber": {
+      "depthName": "查找器深度",
+      "numberName": "查找器数量",
+      "ex1": "举例 1: ",
+      "ex2": "举例 2: ",
+      "tip1": "假设用户一个桶下，有十个一级子目录，然后每一个子目录下有十万个文件。此时建议的配置为 finderDepth=1，finderNumber=10",
+      "tip2": "假设用户一个桶下，有十个一级子目录，每个一级子目录下有15个二级子目录，每个二级子目录下有十万个文件。此时建议的配置为 finderDepth=2，finderNumber=10*15=150"
+    },
+    "finderMemory": {
+      "name": "查找器内存",
+      "tip1": "内存配置和需传输的文件总数有关详情见附下表:",
+      "tableh1": "传输数量",
+      "tableh2": "建议配置内存",
+      "notSupport": "暂不支持，建议分解成多个传输任务， 或者使用 Finder Depth 和 Finder Number 来调优任务。"
     }
-  }
+  },
+  "logGroup": {
+    "details": "日志组详细信息",
+    "name": "日志组名称",
+    "logStrem": "日志流",
+    "filterStrem": "使用日志流前缀过滤",
+    "streamName": "日志流",
+    "streamCreated": "创建时间",
+    "streamEvent": "最后事件时间"
+  },
+  "logEvent": {
+    "name": "日志事件: ",
+    "timestamp": "时间",
+    "message": "消息",
+    "hasOlder": "有较早的事件可以加载。",
+    "loadMore": "加载更多",
+    "noOlder": "暂时没有更早的事件",
+    "retry": "重试",
+    "hasNewer": "有较新的事件可以加载。",
+    "noNewer": "暂时没有更新的事件。"
+  },
+  "noData": "暂无数据",
+  "loading": "加载中..."
 }

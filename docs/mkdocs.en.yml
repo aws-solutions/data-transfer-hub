@@ -1,0 +1,31 @@
+INHERIT: ./mkdocs.base.yml
+docs_dir: en-base
+site_dir: ./site/en
+theme:
+  language: en
+  favicon: images/aws-solutions.png
+  logo: images/aws-solutions.png
+  
+nav:
+
+  - Welcome: index.md
+  - Cost: cost.md
+  - Architecture overview: architecture.md
+  - Solution components: solution-components.md
+  - Security: security.md
+  - Supported regions: regions.md
+  - CloudFormation template: template.md
+  - Automated deployment: deployment.md
+  - Create Amazon S3 transfer task: tutorial-s3.md
+  - Create Amazon ECR transfer task: tutorial-ecr.md
+  - Tutorials:
+    - Transfer S3 object from Alibaba Cloud OSS: tutorial-oss.md
+    - Transfer S3 object via Direct Connect: tutorial-directconnect.md    
+    - Using AWS CLI to create S3 transfer task: tutorial-cli-launch.md    
+  - Additional resources: additional-resources.md
+  - Upgrade the solution: upgrade.md
+  - Uninstall the solution: uninstall.md
+  - FAQ: faq.md
+  - Source code: source.md
+  - Revisions: revisions.md
+

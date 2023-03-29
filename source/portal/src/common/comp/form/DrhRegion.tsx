@@ -16,7 +16,6 @@ type SelectMenuProp = {
   requiredErrorMsg?: string;
   showFormatError?: boolean;
   formatErrorMsg?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any;
 };
 
@@ -43,7 +42,7 @@ const DrhRegion: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
           options={optionList}
           value={regionValue}
           onChange={(event, data) => onChange(event, data)}
-          getOptionLabel={(option) => option.name}
+          getOptionLabel={(option) => `${option.name}(${option.value})`}
           style={{ width: 565 }}
           renderInput={(params) => (
             <div ref={params.InputProps.ref}>

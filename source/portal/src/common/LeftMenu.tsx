@@ -43,7 +43,7 @@ const LeftMenu: React.FC = () => {
           <div className="is-open">
             <div>
               <div className="title">
-                <a className="link" href="/#/">
+                <a className="link" href="/">
                   {t("leftBar.title")}
                 </a>
               </div>

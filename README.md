@@ -67,7 +67,7 @@ Follow the step-by-step instructions to configure and deploy the Data Transfer H
 1. Click the following button to launch the CloudFormation Stack in your account.
 
     [![Launch Stack](./launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DataTransferHub&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferHub-cognito.template)
-1. Input **AdminEmail** parameter. An email containing the temporary password is sent to this email. You'll need access to this email to sign in.
+1. Input **AdminEmail** parameter. An email containing the temporary password will be sent to this email. You need to this email to sign in.
 1. Click **Next** and select **Create Stack**.
 
 ### Login into the Data Transfer Hub Portal
@@ -108,3 +108,5 @@ of Account A.
 
 * [How to customize this solution and build your own distributable?](./docs/build-your-own-distributable.md)
 * [Deploy this solution via AWS CDK](./docs/deploy-via-cdk.md)
+* [Data Transfer Hub S3 Plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin)
+* [Data Transfer Hub ECR Plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)

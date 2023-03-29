@@ -11,7 +11,6 @@ const PrimaryButtonLoading = withStyles({
     fontWeight: "bold",
     padding: "5px 15px",
     border: "1px solid",
-    // lineHeight: 1.5,
     backgroundColor: "#dd9461",
     borderColor: "#dd9461",
     borderRadius: 0,

@@ -73,4 +73,4 @@ Open AWS Management Console, Go to IAM > User, click **Add User**, follow the wi
 1. Review the user details, and Click **Create User**
 1. Make sure you copied/saved the credential, and then click **Close**
 
-![Create User](./images/tutortial/IAM-Policy/user.png)
+![Create User](./images/tutorial/IAM-Policy/user.png)

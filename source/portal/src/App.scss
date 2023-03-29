@@ -7,6 +7,22 @@
   pointer-events: none;
 }
 
+.oidc-login {
+  min-height: 40vh; // height of the browser viewport
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0px;
+  padding: 0px;
+  .title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #666;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -26,6 +42,32 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.drh-cron {
+  // justify-content: center;
+  align-items: center;
+}
+
+.fix-rate {
+  align-items: center;
+}
+
+.info-table {
+  background-color: #ccc;
+  width: 100%;
+  th,
+  td {
+    text-align: left;
+    background-color: #fff;
+    padding: 2px 5px;
+  }
+  th {
+    font-size: 12px;
+  }
+  .object-number {
+    width: 80px;
+  }
 }
 
 @keyframes App-logo-spin {

@@ -21,9 +21,16 @@ export const createTask = /* GraphQL */ `
         replicated
       }
       stackId
+      stackName
+      stackOutputs {
+        Description
+        OutputKey
+        OutputValue
+      }
       stackStatus
       stackStatusReason
       executionArn
+      scheduleType
     }
   }
 `;
@@ -46,9 +53,16 @@ export const stopTask = /* GraphQL */ `
         replicated
       }
       stackId
+      stackName
+      stackOutputs {
+        Description
+        OutputKey
+        OutputValue
+      }
       stackStatus
       stackStatusReason
       executionArn
+      scheduleType
     }
   }
 `;

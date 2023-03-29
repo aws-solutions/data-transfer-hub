@@ -1,35 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { AUTH_TYPE } from "aws-appsync";
 import { useMappedState } from "redux-react-hook";
 
 import "./TopBar.scss";
 
 import DRHSignOut from "./comp/SignOut";
-import { AUTH_TYPE_NAME, AUTH_USER_EMAIL } from "../assets/config/const";
+import { DRH_CONFIG_JSON_NAME } from "../assets/config/const";
 
 import { IState } from "store/Store";
+import { AppSyncAuthType } from "assets/types";
 
-const authType = localStorage.getItem(AUTH_TYPE_NAME);
 interface TopBarProps {
   logout: any;
 }
-const mapState = (state: IState) => ({
-  auth0LogoutUrl: state.auth0LogoutUrl,
-});
 
 const TopBar: React.FC<TopBarProps> = (props) => {
   const { t } = useTranslation();
+  const mapState = (state: IState) => ({
+    userEmail: state.userEmail,
+    amplifyConfig: state.amplifyConfig,
+  });
   const { logout } = props;
-  const [curUserEmail, setCurUserEmail] = useState("");
-  const { auth0LogoutUrl } = useMappedState(mapState);
-
-  useEffect(() => {
-    setTimeout(() => {
-      const authDataEmail = localStorage.getItem(AUTH_USER_EMAIL);
-      setCurUserEmail(authDataEmail || "");
-    }, 100);
-  }, []);
+  const { userEmail, amplifyConfig } = useMappedState(mapState);
+  const oidcSignOut = () => {
+    localStorage.removeItem(DRH_CONFIG_JSON_NAME);
+    if (logout) {
+      logout();
+    }
+    window.location.reload();
+  };
 
   return (
     <div className="drh-top-bar">
@@ -37,24 +36,24 @@ const TopBar: React.FC<TopBarProps> = (props) => {
         <span>Data Transfer Hub</span>
       </div>
       <div className="options">
-        <div className="user-item">{curUserEmail}</div>
-        <div className="logout-item">
-          {authType === AUTH_TYPE.OPENID_CONNECT ? (
-            <div
-              className="logout-btn-style"
+        <div className="user-item">
+          {t("header.welcome")}, {userEmail} (
+          {amplifyConfig.aws_appsync_authenticationType ===
+            AppSyncAuthType.OPEN_ID && (
+            <span
+              className="cp sign-out"
               onClick={() => {
-                if (auth0LogoutUrl) {
-                  window.location.href = auth0LogoutUrl;
-                } else {
-                  logout();
-                }
+                oidcSignOut();
               }}
             >
-              (<span>{t("signOut")}</span>)
-            </div>
-          ) : (
+              {t("signOut")}
+            </span>
+          )}
+          {amplifyConfig.aws_appsync_authenticationType ===
+            AppSyncAuthType.AMAZON_COGNITO_USER_POOLS && (
             <DRHSignOut className="logout-btn-style" />
           )}
+          )
         </div>
       </div>
     </div>

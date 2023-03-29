@@ -8,6 +8,19 @@
   "info": "Info",
   "optional": "optional",
   "recommened": "Recommened",
+  "signin": {
+    "signInToDRH": "Sign in to Data Transfer Hub",
+    "email": "Email *",
+    "inputEmail": "Enter your email",
+    "password": "Password *",
+    "inputPassword": "Enter your password",
+    "signIn": "Sign In"
+  },
+  "header": {
+    "name": "AWS Solutions",
+    "welcome": "Welcome",
+    "logout": "Sign Out"
+  },
   "top": {
     "account": "Account"
   },
@@ -22,15 +35,17 @@
     "tasks": "Tasks"
   },
   "step": {
-    "oneTitle": "Step1",
+    "oneTitle": "Step 1",
     "oneDesc": "Select engine type",
-    "twoTitle": "Step2",
+    "twoTitle": "Step 2",
     "twoDesc": "Specify task details",
-    "threeTitle": "Step3",
+    "threeTitle": "Step 3",
     "threeDesc": "Review and create"
   },
   "home": {
     "title": {
+      "getStarted": "Get started",
+      "getStartedDesc": "Transfer data across partitions, or move from other cloud providers.",
       "createTitle": "Create Transfer Task",
       "quickStart": "Quick Start",
       "moreResouce": "More Resources",
@@ -71,9 +86,9 @@
     },
     "tips": {
       "requiredCredential": "Please select a Secret Key in Secrets Manager",
-      "store1": "Select the",
-      "store2": "Secrets Manager",
-      "store3": "which stores the credentials. Leave it blank for open bucket."
+      "store1": "Select a secret created by",
+      "store2": "Secrets Manager.",
+      "store3": "Leave it bland for public bucket."
     },
     "step1": {
       "engineType": "Select engine type",
@@ -98,7 +113,7 @@
           "enableS3EventDesc1": "Whether to enable ",
           "enableS3EventDesc2": "S3 Event Notifications",
           "enableS3EventDesc3": " to trigger the transfer.",
-          "objectPrefix": "Bucket Object Prefix",
+          "objectPrefix": "Object Prefix",
           "prefixDesc": "It will only transfer objects with the provided prefix.",
           "includeMetadata": "Include Object Metadata?",
           "includeMetadataDesc1": "Copy of ",
@@ -107,7 +122,10 @@
           "objectACL": "Object ACL",
           "objectACLDesc1": "Select the ",
           "objectACLDesc2": "Object ACL.",
-          "objectACLDesc3": " Use the default value if you don't want to set the object ACL."
+          "objectACLDesc3": " Use the default value if you don't want to set the object ACL.",
+          "transferType": "Transfer Type",
+          "nameOfPrefixList": "Name of Prefix List",
+          "nameOfPrefixListDesc": "Upload the prefix list (.txt file, one prefix per line) in root directory of source bucket. E.g. prefix_list.txt"
         },
         "dest": {
           "title": "Destination settings",
@@ -151,7 +169,16 @@
           "finderNumber": "Finder Number",
           "finderNumberDesc": "The number of find threads to run in parrallel.",
           "workerThreadsNumber": "Worker Threads Number",
-          "workerThreadsNumberDesc": "The number of worker threads to run in one insance."
+          "workerThreadsNumberDesc": "The number of worker threads to run in one insance.",
+          "schedulingSettings": "Task Scheduling Settings",
+          "schedulingSettingsDesc1": "Set task scheduling by selecting fixed rate manually or using CRON expression. Please select 'One time transfer' if it is an one-time task. See",
+          "schedulingSettingsDesc2": "to understand CRON expression.",
+          "skipComparison": "Need Data Comparison before Transfer",
+          "skipComparisonDesc": "If select yes, a finder will execute data comparison before transferring to avoid duplicated transfer. If select no, a worker will start transfer directly.",
+          "finderMemory": "Finder Memory",
+          "finderMemoryDesc": "Memory size of the finder",
+          "oneTimeTips": "When the task 'Completed', the transfer action will stop and you can select 'Stop' to delete and release all backed resource. ",
+          "fixedRateError": "Task Scheduling must larger or equal than 2 minutes."
         },
         "more": {
           "title": "More",
@@ -183,7 +210,8 @@
           "image1": "Enter all images in format of",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "delimited by comma. If tag is ommited, the latest tag will be used."
+          "image4": "delimited by comma. If tag is ommited, the latest tag will be used.",
+          "image5": " If tag is ALL_TAGS, all the tags of this image will be used."
         },
         "dest": {
           "title": "Destination settings",
@@ -239,9 +267,16 @@
       "source": "Source",
       "destination": "Destination",
       "engineType": "Engine Type",
+      "scheduleType": "Schedule Type",
       "status": "Status",
       "createdTime": "Created time"
-    }
+    },
+    "error": "Error: ",
+    "viewInCFN": "View more logs in CloudFormation",
+    "viewInFinder": "View more logs in Finder Logs",
+    "viewWorker1": "Please check the warning email in the mailbox or ",
+    "viewWorker2": "View more logs in Worker Logs",
+    "viewWorker3": ", or re-create the transfer task to complete the difference"
   },
   "taskDetail": {
     "title": "",
@@ -286,6 +321,10 @@
     "prefix": "Prefix",
     "taskMetrics": "Task Metrics",
     "dashboard": "CloudWatch Dashboard",
+    "finderMetrics": "Finder Logs",
+    "finderDashboard": "CloudWatch Log Streams",
+    "workerMetrics": "Worker Logs",
+    "workerDashboard": "CloudWatch Log Streams",
     "enableS3Event": "Enable S3 Event?",
     "storageClass": "Storage Class",
     "copyMetadata": "Copy Metadata?",
@@ -300,10 +339,18 @@
     "advancedSettings": "Advanced Settings",
     "finderDepth": "Finder Depth",
     "finderNumber": "Finder Number",
-    "workerThreadsNumber": "Worker Threads Number"
+    "workerThreadsNumber": "Worker Threads Number",
+    "transferType": "Transfer Type",
+    "nameOfPrefixList": "Name of Prefix List",
+    "schedulingSettings": "Task Scheduling Settings",
+    "finderMemory": "Finder Memory",
+    "skipComparison": "Need Data Comparison before Transfer",
+    "monitor": "Monitoring",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "bottom": {
-    "copy": "© 2008 - 2021, Amazon Web Services, Inc. or its affiliates. All rights reserved.",
+    "copy": "Amazon Web Services, Inc. or its affiliates. All rights reserved.",
     "feedback": "Feedback",
     "privacy": "Privacy Policy",
     "use": "Terms of Use"
@@ -320,7 +367,8 @@
     "taskAction": "Task Action",
     "stopTask": "Stop Task",
     "cloneTask": "Clone Task",
-    "reLogin": "Login Again"
+    "reLogin": "Login Again",
+    "createTransferTask": "Start a new transfer task"
   },
   "tips": {
     "error": {
@@ -388,6 +436,53 @@
       "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimun,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
       "tip2": "You can adjust these numbers on Amazon Web Services Console after creating the task.",
       "linkName": "Adjust the Auto Scaling Group to change the transfer concurrency."
+    },
+    "s3BucketPrefixFileList": {
+      "name": "Name of Prefix List",
+      "example": "Example of prefix_list.txt:"
+    },
+    "comparisonInfo": {
+      "name": "Data Comparison",
+      "tip1": "Examples of skipping data comparison:",
+      "tip2": "1) Less data duplication between source and destination.",
+      "tip3": "2) Willing to reduce the time for data comparison."
+    },
+    "finderDepthNumber": {
+      "depthName": "Finder Depth",
+      "numberName": "Finder Number",
+      "ex1": "Example 1: ",
+      "ex2": "Example 2: ",
+      "tip1": "If there're 10 subdirectories with over 100k files each, it's recommended to set finderDepth=1 and finderNumber=10",
+      "tip2": "If the transferred files are under two tier subdirectories, with 10 tier 1 subdirectories and 15 tier 2 subdirectories incl. over 100k leaf objects each. It is recommended to set finderDepth=2，finderNumber=10*15=150"
+    },
+    "finderMemory": {
+      "name": "Finder Memory",
+      "tip1": "Memory setting is relevant to the number of objects to be transferred, see details as below:",
+      "tableh1": "Object #",
+      "tableh2": "Recommended Memory",
+      "notSupport": "Doesn't support for now. Recommend dividing into multiple tasks. Or using Finder Depth and Finder Number to tuning the task."
     }
-  }
+  },
+  "logGroup": {
+    "details": "Log group details",
+    "name": "Log Group Name",
+    "logStrem": "Log streams",
+    "filterStrem": "Filter log streams or try prefix search",
+    "streamName": "Log stream",
+    "streamCreated": "Creation time",
+    "streamEvent": "Last event time"
+  },
+  "logEvent": {
+    "name": "Log events: ",
+    "timestamp": "Timestamp",
+    "message": "Message",
+    "hasOlder": "There are older events to load. ",
+    "loadMore": "Load more.",
+    "noOlder": "No older events at this moment.",
+    "retry": "Retry.",
+    "hasNewer": "There are newer events to load. ",
+    "noNewer": "No newer events at this moment. "
+  },
+  "noData": "No Data",
+  "loading": "Loading..."
 }

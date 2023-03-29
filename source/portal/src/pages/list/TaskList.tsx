@@ -4,7 +4,6 @@ import { useHistory, Link } from "react-router-dom";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import Moment from "react-moment";
 import Swal from "sweetalert2";
 
 import Loading from "common/Loading";
@@ -19,18 +18,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-// import Pagination from "@material-ui/lab/Pagination";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-// import { API } from "aws-amplify";
-import { listTasks } from "graphql/queries";
+import { listTasksV2 } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
-import gql from "graphql-tag";
-import ClientContext from "common/context/ClientContext";
 
 import { IState } from "store/Store";
 
@@ -47,11 +42,6 @@ import "./TaskList.scss";
 
 import STATUS_OK from "@material-ui/icons/CheckCircleOutline";
 
-import PAGE_PREV from "@material-ui/icons/NavigateBefore";
-import PAGE_PREV_DISABLED from "@material-ui/icons/NavigateBefore";
-import PAGE_NEXT from "@material-ui/icons/NavigateNext";
-import PAGE_NEXT_DISABLED from "@material-ui/icons/NavigateNext";
-
 import {
   EnumTaskStatus,
   EnumTaskType,
@@ -64,7 +54,16 @@ import {
   YES_NO,
   AWS_REGION_LIST,
   getRegionListBySourceType,
+  S3SourcePrefixType,
+  CRON_TYPE_LIST_WITH_ONE_TIME,
 } from "assets/config/const";
+import { Pagination } from "@material-ui/lab";
+import {
+  appSyncRequestMutation,
+  appSyncRequestQuery,
+} from "assets/utils/request";
+import { formatLocalTime } from "assets/utils/utils";
+import { ScheduleType } from "API";
 
 const StyledMenu = withStyles({
   paper: {
@@ -87,7 +86,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const StyledMenuItem = withStyles((theme) => ({
+const StyledMenuItem = withStyles(() => ({
   root: {
     width: 130,
     "& .MuiTypography-body1": {
@@ -108,13 +107,12 @@ const mapState = (state: IState) => ({
   createTaskFlag: state.createTaskFlag,
 });
 
+const PAGE_SIZE = 20;
+
 const List: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const client: any = React.useContext(ClientContext);
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -128,65 +126,42 @@ const List: React.FC = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [isStopLoading, setIsStopLoading] = useState(false);
-  const [nextToken, setNextToken] = useState<string | null>(null);
   const [curPage, setCurPage] = useState(1);
-  const [isLastpage, setIsLast] = useState(false);
-  const [pageTokenArr, setPageTokenArr] = useState<any>([null]);
+  const [totalCount, setTotalCount] = useState(0);
   const [taskListData, setTaskListData] = useState<any>([]);
   const [curSelectTask, setCurSelectTask] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
 
-  async function getTaskList(token: string | null, direction: string) {
-    console.info("getTaskList:getTaskList:", token, direction);
-    console.info("client:", client);
-    setIsLoading(true);
+  const getTaskList = async () => {
     try {
-      const query = gql(listTasks);
-      const apiData: any = await client?.query({
-        fetchPolicy: "no-cache",
-        query: query,
-        variables: {
-          limit: 30,
-          nextToken: token,
-        },
+      setIsLoading(true);
+      const resData: any = await appSyncRequestQuery(listTasksV2, {
+        page: curPage,
+        count: PAGE_SIZE,
       });
-      // Build Pagination Data
-      // First build Table Data
-      // const dataListArr: any = [];
-      // If click the next, set New Next token
+      console.info("resData:", resData);
       setIsLoading(false);
-      if (direction === "next") {
-        if (apiData?.data?.listTasks?.nextToken) {
-          setNextToken(apiData.data.listTasks.nextToken);
-        } else {
-          setIsLast(true);
-        }
-      }
       if (
-        apiData &&
-        apiData.data &&
-        apiData.data.listTasks &&
-        apiData.data.listTasks.items
+        resData &&
+        resData.data &&
+        resData.data.listTasksV2 &&
+        resData.data.listTasksV2.items
       ) {
-        const orderedList = apiData.data.listTasks.items;
-        orderedList.sort((a: any, b: any) =>
-          a.createdAt < b.createdAt ? 1 : -1
-        );
+        const orderedList = resData.data.listTasksV2.items;
         setTaskListData(orderedList);
+        setTotalCount(resData.data.listTasksV2.total);
       }
-    } catch (error: any) {
+    } catch (error) {
       setIsLoading(false);
-      Swal.fire("Oops...", error.message, "error");
     }
-  }
+  };
 
   useEffect(() => {
-    getTaskList(null, "next");
+    getTaskList();
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [curPage]);
 
   // Hide Create Flag in 3 seconds
   useEffect(() => {
@@ -219,20 +194,15 @@ const List: React.FC = () => {
   };
 
   async function stopTaskFunc(taskId: string) {
-    setIsStopLoading(true);
     try {
-      const mutationStop = gql(stopTask);
-      const stopResData: any = await client?.mutate({
-        fetchPolicy: "no-cache",
-        mutation: mutationStop,
-        variables: {
-          id: taskId,
-        },
+      setIsStopLoading(true);
+      const stopResData = await appSyncRequestMutation(stopTask, {
+        id: taskId,
       });
-      setIsStopLoading(false);
-      setOpen(false);
-      refreshData();
       console.info("stopResData:", stopResData);
+      setOpen(false);
+      setIsStopLoading(false);
+      refreshData();
     } catch (error: any) {
       const errorMsg = error?.errors?.[0]?.message?.toString() || "Error";
       setIsStopLoading(false);
@@ -268,7 +238,7 @@ const List: React.FC = () => {
     const tmpTaskInfo = curSelectTask;
     tmpTaskInfo.parametersObj = {};
     // when need to clone task type is S3 (Lambda Version)
-    let isSrcInAccount = getIsSrcInAccount(curSelectTask.parameters);
+    const isSrcInAccount = getIsSrcInAccount(curSelectTask.parameters);
     if (curSelectTask.type === EnumTaskType.S3) {
       // Clone Lambda Version Task
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
@@ -329,7 +299,11 @@ const List: React.FC = () => {
     // when need to clone task type is S3 (EC2 Version)
     if (curSelectTask.type === EnumTaskType.S3_EC2) {
       // Clone EC2 Version Task
+      console.info("curSelectTask.parameters:", curSelectTask.parameters);
       if (curSelectTask.parameters && curSelectTask.parameters.length > 0) {
+        // Set Default src prefix type
+        tmpTaskInfo.parametersObj.srcPrefixType = S3SourcePrefixType.FullBucket;
+
         curSelectTask.parameters.forEach((element: any) => {
           // Set All Properties
           tmpTaskInfo.parametersObj[element.ParameterKey] =
@@ -423,9 +397,35 @@ const List: React.FC = () => {
               element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
           }
 
+          // set srcPrefixType = MultiplePrefix when srcPrefixsListFile has value
+          if (element.ParameterKey === "srcPrefixsListFile") {
+            if (element.ParameterValue) {
+              tmpTaskInfo.parametersObj.srcPrefixType =
+                S3SourcePrefixType.MultiplePrefix;
+            }
+          }
+
+          // set srcPrefixType = SinglePrefix when srcPrefixsListFile has value
+          if (element.ParameterKey === "srcPrefix") {
+            if (element.ParameterValue) {
+              tmpTaskInfo.parametersObj.srcPrefixType =
+                S3SourcePrefixType.SinglePrefix;
+            }
+          }
+
+          // Set Skip Comparsion
+          if (element.ParameterKey === "srcSkipCompare") {
+            tmpTaskInfo.parametersObj.srcSkipCompare =
+              element.ParameterValue === "true" ? YES_NO.NO : YES_NO.YES;
+          }
+
           // Set Description
           tmpTaskInfo.parametersObj.description =
             tmpTaskInfo?.description || "";
+
+          // Set scheduleType
+          tmpTaskInfo.parametersObj.scheduleType =
+            tmpTaskInfo?.scheduleType || ScheduleType.FIXED_RATE;
         });
       }
     }
@@ -480,7 +480,10 @@ const List: React.FC = () => {
       }
     }
     dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
+      type:
+        curSelectTask.type === EnumTaskType.ECR
+          ? ACTION_TYPE.UPDATE_ECR_TASK_INFO
+          : ACTION_TYPE.UPDATE_TASK_INFO,
       taskInfo: tmpTaskInfo,
     });
     // Redirect to Create S3 Task Step two
@@ -500,38 +503,17 @@ const List: React.FC = () => {
     console.info("event:", event);
   };
 
-  const clickTaskInfo = (taskInfo: any, event: any) => {
+  const clickTaskInfo = (taskInfo: any) => {
     setCurSelectTask(taskInfo);
   };
 
   const refreshData = () => {
-    setCurPage(1);
-    setIsLast(false);
     setCurSelectTask(null);
-    getTaskList(null, "next");
-  };
-
-  const toPrevPage = () => {
-    setIsLast(false);
-    setCurSelectTask(null);
-    const newCurPage = curPage - 1;
-    setCurPage(newCurPage < 1 ? 1 : newCurPage);
-    getTaskList(pageTokenArr[newCurPage - 1], "prev");
-  };
-
-  const toNextPage = () => {
-    setCurSelectTask(null);
-    const newCurPage = curPage + 1;
-    if (pageTokenArr.indexOf(nextToken) === -1) {
-      pageTokenArr.push(nextToken);
-    }
-    setPageTokenArr(pageTokenArr);
-    if (pageTokenArr[newCurPage - 1]) {
-      getTaskList(pageTokenArr[newCurPage - 1], "next");
+    if (curPage === 1) {
+      getTaskList();
     } else {
-      getTaskList(nextToken, "next");
+      setCurPage(1);
     }
-    setCurPage(newCurPage);
   };
 
   const [tipsOpen, setTipsOpen] = useState(false);
@@ -549,6 +531,12 @@ const List: React.FC = () => {
 
   const handleCloseMessage = () => {
     setMessageOpen(false);
+  };
+
+  const handlePageChange = (event: any, value: number) => {
+    console.info("event:", event);
+    console.info("value:", value);
+    setCurPage(value);
   };
 
   const getParamsValueByName = (name: string, paramList: any) => {
@@ -623,6 +611,17 @@ const List: React.FC = () => {
     return "";
   };
 
+  const buildScheduleType = (item: any) => {
+    if (item.type === EnumTaskType.S3_EC2) {
+      return CRON_TYPE_LIST_WITH_ONE_TIME.find(
+        (element) => element.value === item.scheduleType
+      )?.name;
+    }
+    if (item.type === EnumTaskType.ECR) {
+      return "Fixed Rate";
+    }
+  };
+
   return (
     <div className="drh-page">
       <Dialog
@@ -689,7 +688,7 @@ const List: React.FC = () => {
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
             >
-              <MLink color="inherit" href="/#/">
+              <MLink color="inherit" href="/">
                 {t("breadCrumb.home")}
               </MLink>
               <Typography color="textPrimary">
@@ -763,25 +762,12 @@ const List: React.FC = () => {
                   </div>
                   <div className="pagination">
                     <div>
-                      {curPage > 1 && !isLoading ? (
-                        <span onClick={toPrevPage} className="item prev">
-                          <PAGE_PREV />
-                        </span>
-                      ) : (
-                        <span className="item prev disabled">
-                          <PAGE_PREV_DISABLED color="disabled" />
-                        </span>
-                      )}
-                      <span className="cur-page">{curPage}</span>
-                      {isLastpage || isLoading ? (
-                        <span className="item next disabled">
-                          <PAGE_NEXT_DISABLED color="disabled" />
-                        </span>
-                      ) : (
-                        <span onClick={toNextPage} className="item next">
-                          <PAGE_NEXT />
-                        </span>
-                      )}
+                      <Pagination
+                        count={Math.ceil(totalCount / PAGE_SIZE)}
+                        page={curPage}
+                        onChange={handlePageChange}
+                        size="small"
+                      />
                     </div>
                   </div>
                   <div className="setting-icon">
@@ -809,6 +795,9 @@ const List: React.FC = () => {
                         {t("taskList.table.engineType")}
                       </div>
                       <div className="table-item header-item">
+                        {t("taskList.table.scheduleType")}
+                      </div>
+                      <div className="table-item header-item">
                         {t("taskList.table.status")}
                       </div>
                       <div className="table-item create-time">
@@ -823,8 +812,8 @@ const List: React.FC = () => {
                       });
                       return (
                         <div
-                          onClick={(event) => {
-                            clickTaskInfo(element, event);
+                          onClick={() => {
+                            clickTaskInfo(element);
                           }}
                           data-uuid={element.id}
                           key={index}
@@ -850,7 +839,7 @@ const List: React.FC = () => {
                               <Link
                                 to={`/task/detail/s3/${element.type}/${element.id}`}
                               >
-                                {element.id}
+                                {element.stackName || element.id}
                               </Link>
                             )}
                             {element.type !== EnumTaskType.S3 &&
@@ -858,7 +847,7 @@ const List: React.FC = () => {
                                 <Link
                                   to={`/task/detail/${element.type}/${element.id}`}
                                 >
-                                  {element.id}
+                                  {element.stackName || element.id}
                                 </Link>
                               )}
                           </div>
@@ -874,16 +863,25 @@ const List: React.FC = () => {
                           >
                             {buildTaskDestination(element)}
                           </div>
-                          <div className="table-item body-item">
+                          <div
+                            className="table-item body-item"
+                            title={buildTaskType(element)}
+                          >
                             {buildTaskType(element)}
                           </div>
                           <div className="table-item body-item">
-                            <TaskStatusComp progress={element.progress} />
+                            {buildScheduleType(element)}
+                          </div>
+                          <div className="table-item body-item task-list-status">
+                            <TaskStatusComp
+                              showLink
+                              taskId={element.id}
+                              cfnId={element.stackName}
+                              progress={element.progress}
+                            />
                           </div>
                           <div className="table-item create-time">
-                            <Moment format="YYYY-MM-DD HH:mm:ss">
-                              {element.createdAt}
-                            </Moment>
+                            {formatLocalTime(element.createdAt)}
                           </div>
                         </div>
                       );

@@ -31,48 +31,46 @@ const OptionSettings: React.FC = () => {
 
   const [advancedShow, setAdvancedShow] = useState(false);
   const [lambdaMemory, setLambdaMemory] = useState(
-    tmpTaskInfo.parametersObj?.lambdaMemory || 256
+    tmpTaskInfo?.parametersObj?.lambdaMemory || "256"
   );
   const [multipartThreshold, setMultipartThreshold] = useState(
-    tmpTaskInfo.parametersObj?.multipartThreshold || 10
+    tmpTaskInfo?.parametersObj?.multipartThreshold || "10"
   );
   const [chunkSize, setChunkSize] = useState(
-    tmpTaskInfo.parametersObj?.chunkSize || 5
+    tmpTaskInfo?.parametersObj?.chunkSize || "5"
   );
   const [maxThreads, setMaxThreads] = useState(
-    tmpTaskInfo.parametersObj?.maxThreads || 10
+    tmpTaskInfo?.parametersObj?.maxThreads || "10"
   );
 
   const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+    const param: any = { ...tmpTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpTaskInfo) {
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: Object.assign(tmpTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Select Change
   useEffect(() => {
     updateTmpTaskInfo("lambdaMemory", lambdaMemory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lambdaMemory]);
 
   useEffect(() => {
     updateTmpTaskInfo("multipartThreshold", multipartThreshold);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multipartThreshold]);
 
   useEffect(() => {
     updateTmpTaskInfo("chunkSize", chunkSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chunkSize]);
 
   useEffect(() => {
     updateTmpTaskInfo("maxThreads", maxThreads);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maxThreads]);
 
   return (

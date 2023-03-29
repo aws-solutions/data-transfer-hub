@@ -8,7 +8,7 @@ import FeedbackIcon from "@material-ui/icons/Feedback";
 import { URL_FEEDBACK } from "../assets/config/const";
 
 const EN_LANGUAGE_LIST = ["en", "en_US", "en_GB"];
-const ZH_LANGUAGE_LIST = ["zh", "zh_CN"];
+export const ZH_LANGUAGE_LIST = ["zh", "zh_CN"];
 
 const langList = [
   {
@@ -89,7 +89,10 @@ const Bottom: React.FC = () => {
 
       <span className="privacy">{t("bottom.use")}</span>
       <span className="privacy">{t("bottom.privacy")}</span>
-      <span className="notice">{t("bottom.copy")}</span>
+      <span className="notice">
+        {`© 2008 -${new Date().getFullYear()}, `}
+        {t("bottom.copy")}
+      </span>
     </div>
   );
 };

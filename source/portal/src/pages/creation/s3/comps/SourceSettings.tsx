@@ -22,6 +22,8 @@ import {
   getRegionListBySourceType,
   METADATA_LINK,
   S3_EVENT_LINK,
+  S3SourcePrefixType,
+  S3SourcePrefixTypeList,
 } from "assets/config/const";
 
 import {
@@ -62,18 +64,18 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const srcRegionRef = useRef<any>(null);
 
   const [sourceType, setSourceType] = useState<string>(
-    tmpTaskInfo.parametersObj?.sourceType || EnumSourceType.S3
+    tmpTaskInfo?.parametersObj?.sourceType || EnumSourceType.S3
   );
 
   const [srcCredentialsParameterStore, setSrcCredentialsParameterStore] =
-    useState(tmpTaskInfo.parametersObj?.srcCredentialsParameterStore || "");
+    useState(tmpTaskInfo?.parametersObj?.srcCredentialsParameterStore || "");
 
   const [sourceInAccount, setSourceInAccount] = useState<string>(
-    tmpTaskInfo.parametersObj?.sourceInAccount || YES_NO.NO
+    tmpTaskInfo?.parametersObj?.sourceInAccount || YES_NO.NO
   );
 
   const [srcRegionObj, setSrcRegionObj] = useState<IRegionType | null>(
-    tmpTaskInfo.parametersObj?.srcRegionObj || null
+    tmpTaskInfo?.parametersObj?.srcRegionObj || null
   );
 
   // DRH S3 Dynamic Class
@@ -83,18 +85,18 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [showSrcRegion, setShowSrcRegion] = useState(true);
 
   const [srcEndpoint, setSrcEndpoint] = useState(
-    tmpTaskInfo.parametersObj?.srcEndpoint || ""
+    tmpTaskInfo?.parametersObj?.srcEndpoint || ""
   );
 
   const [srcBucketName, setSrcBucketName] = useState(
-    tmpTaskInfo.parametersObj?.srcBucketName || ""
+    tmpTaskInfo?.parametersObj?.srcBucketName || ""
   );
 
   const [enableS3Event, setEnableS3Event] = useState<string>(
-    tmpTaskInfo.parametersObj?.enableS3Event || S3_EVENT_TYPE.NO
+    tmpTaskInfo?.parametersObj?.enableS3Event || S3_EVENT_TYPE.NO
   );
   const [includeMetadata, setIncludeMetadata] = useState<string>(
-    tmpTaskInfo.parametersObj?.includeMetadata || YES_NO.NO
+    tmpTaskInfo?.parametersObj?.includeMetadata || YES_NO.NO
   );
 
   const [srcBucketRequiredError, setSrcBucketRequiredError] = useState(false);
@@ -102,12 +104,18 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   const [srcRegionReqired, setSrcRegionReqired] = useState(false);
   const [srcEndpointFormatError, setSrcEndpointFormatError] = useState(false);
   const [srcBucketPrefix, setSrcBucketPrefix] = useState(
-    tmpTaskInfo.parametersObj?.srcBucketPrefix
-      ? decodeURIComponent(tmpTaskInfo.parametersObj.srcBucketPrefix)
+    tmpTaskInfo?.parametersObj?.srcBucketPrefix
+      ? decodeURIComponent(tmpTaskInfo?.parametersObj.srcBucketPrefix)
       : ""
   );
 
   const [regionList, setRegionList] = useState<IRegionType[]>([]);
+  const [srcPrefixType, setSrcPrefixType] = useState<string>(
+    tmpTaskInfo?.parametersObj?.srcPrefixType || S3SourcePrefixType.FullBucket
+  );
+  const [srcPrefixsListFile, setSrcPrefixsListFile] = useState(
+    tmpTaskInfo?.parametersObj?.srcPrefixsListFile || ""
+  );
 
   // Monitor the sourceType change
   useEffect(() => {
@@ -195,34 +203,32 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       // If engine type is EC2 always show region
       setShowSrcRegion(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceInAccount]);
 
   const updateTmpTaskInfo = (key: string, value: any) => {
-    const param: any = { ...tmpTaskInfo.parametersObj };
+    const param: any = { ...tmpTaskInfo?.parametersObj };
     param[key] = value;
-    dispatch({
-      type: ACTION_TYPE.UPDATE_TASK_INFO,
-      taskInfo: Object.assign(tmpTaskInfo, {
-        parametersObj: param,
-      }),
-    });
+    if (tmpTaskInfo) {
+      dispatch({
+        type: ACTION_TYPE.UPDATE_TASK_INFO,
+        taskInfo: Object.assign(tmpTaskInfo, {
+          parametersObj: param,
+        }),
+      });
+    }
   };
 
   // Monitor Data Change
   useEffect(() => {
     updateTmpTaskInfo("srcEndpoint", srcEndpoint);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcEndpoint]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcBucketName", srcBucketName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketName]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcBucketPrefix", encodeURIComponent(srcBucketPrefix));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBucketPrefix]);
 
   useEffect(() => {
@@ -230,24 +236,42 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       "srcCredentialsParameterStore",
       srcCredentialsParameterStore
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcCredentialsParameterStore]);
 
   useEffect(() => {
     updateTmpTaskInfo("srcRegionObj", srcRegionObj);
     updateTmpTaskInfo("srcRegionName", srcRegionObj?.value || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcRegionObj]);
 
   useEffect(() => {
     updateTmpTaskInfo("enableS3Event", enableS3Event);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableS3Event]);
 
   useEffect(() => {
     updateTmpTaskInfo("includeMetadata", includeMetadata);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [includeMetadata]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("srcPrefixType", srcPrefixType);
+  }, [srcPrefixType]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("srcPrefixsListFile", srcPrefixsListFile);
+  }, [srcPrefixsListFile]);
+
+  useEffect(() => {
+    // Reset src bucket prefix and src prefix list file
+    if (srcPrefixType === S3SourcePrefixType.SinglePrefix) {
+      setSrcPrefixsListFile("");
+    }
+    if (srcPrefixType === S3SourcePrefixType.MultiplePrefix) {
+      setSrcBucketPrefix("");
+    }
+    if (srcPrefixType === S3SourcePrefixType.FullBucket) {
+      setSrcPrefixsListFile("");
+      setSrcBucketPrefix("");
+    }
+  }, [srcPrefixType]);
 
   return (
     <div className="box-shadow card-list">
@@ -314,20 +338,54 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
           </div>
 
           <div className="form-items">
-            <DrhInput
-              showInfo={true}
-              infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
-              optionTitle={t("creation.step2.settings.source.objectPrefix")}
-              optionDesc={t("creation.step2.settings.source.prefixDesc")}
+            <DrhSelect
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setSrcBucketPrefix(event.target.value);
+                setSrcPrefixType(event.target.value);
               }}
-              isOptional={true}
-              inputName="srcBucketPrefix"
-              inputValue={srcBucketPrefix}
-              placeholder="object-prefix/"
+              optionTitle={t("creation.step2.settings.source.transferType")}
+              optionDesc=""
+              selectValue={srcPrefixType}
+              optionList={S3SourcePrefixTypeList}
             />
           </div>
+
+          {srcPrefixType === S3SourcePrefixType.SinglePrefix && (
+            <div className="form-items">
+              <DrhInput
+                showInfo={true}
+                infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX}
+                optionTitle={t("creation.step2.settings.source.objectPrefix")}
+                optionDesc={t("creation.step2.settings.source.prefixDesc")}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSrcBucketPrefix(event.target.value);
+                }}
+                inputName="srcBucketPrefix"
+                inputValue={srcBucketPrefix}
+                placeholder="object-prefix/"
+              />
+            </div>
+          )}
+
+          {srcPrefixType === S3SourcePrefixType.MultiplePrefix && (
+            <div className="form-items">
+              <DrhInput
+                showInfo={true}
+                infoType={EnumSpanType.S3_BUCKET_SRC_PREFIX_LIST}
+                optionTitle={t(
+                  "creation.step2.settings.source.nameOfPrefixList"
+                )}
+                optionDesc={t(
+                  "creation.step2.settings.source.nameOfPrefixListDesc"
+                )}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setSrcPrefixsListFile(event.target.value);
+                }}
+                inputName="srcPrefixsListFile"
+                inputValue={srcPrefixsListFile}
+                placeholder="prefix_list.txt"
+              />
+            </div>
+          )}
 
           <div className={sourceInAccountClass}>
             <DrhSelect
@@ -380,10 +438,11 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 setEnableS3Event(event.target.value);
               }}
               optionTitle={t("creation.step2.settings.source.enableS3Event")}
-              optionDesc="{t(creation.step2.settings.source.enableS3EventDesc)}"
+              optionDesc={t("creation.step2.settings.source.enableS3EventDesc")}
               optionDescHtml={[
                 t("creation.step2.settings.source.enableS3EventDesc1"),
                 <DescLink
+                  key={1}
                   link={S3_EVENT_LINK}
                   title={t("creation.step2.settings.source.enableS3EventDesc2")}
                 />,
@@ -411,6 +470,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 optionDescHtml={[
                   t("creation.step2.settings.source.includeMetadataDesc1"),
                   <DescLink
+                    key={1}
                     title={t(
                       "creation.step2.settings.source.includeMetadataDesc2"
                     )}

@@ -24,6 +24,57 @@
     }
   }
 
+  .log-stream-table {
+    width: 100%;
+    a {
+      color: #0073bb;
+      text-decoration: none;
+      cursor: pointer;
+      &:hover {
+        color: #0073bb;
+      }
+    }
+    th,
+    td {
+      text-align: left;
+      padding: 8px 20px;
+      border-bottom: 1px solid #eaeded;
+    }
+    // tr:nth-child(odd) > td,
+    // .tr:nth-child(odd) > th {
+    //   background-color: #fafafa; // Choose your own color here
+    // }
+    th {
+      background-color: #fafafa;
+      border-top: 1px solid #eaeded;
+      border-bottom: 1px solid #eaeded;
+    }
+  }
+
+  .action-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    .filter-input {
+      position: relative;
+      .search-icon {
+        position: absolute;
+        margin: 4px 0 0 4px;
+        color: #444;
+      }
+      .text-input {
+        width: 565px;
+        border: 1px solid #aab7b8;
+        background-color: #fff;
+        height: 32px;
+        line-height: 32px;
+        padding: 0 5px 0px 30px;
+        margin-right: 10px;
+      }
+    }
+  }
+
   .general-info {
     font-size: 14px;
     &.tab-padding {
@@ -32,6 +83,21 @@
     &.box-shadow {
       background-color: #ffffff;
       box-shadow: 0px 2px 2px #ccc;
+    }
+    .header {
+      background-color: #fafafa;
+      border-bottom: 1px solid #eaeded;
+      padding: 15px 20px 15px 20px;
+      .header-title {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        .big-title {
+          color: #000000;
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
     }
     .title {
       color: #000000;
@@ -96,5 +162,62 @@
   }
   .tab-content {
     margin: 40px 0 0 0;
+  }
+}
+
+.log-table {
+  margin: 10px 0px 10px 40px;
+  &.box-shadow {
+    background-color: #ffffff;
+    box-shadow: 0px 2px 2px #ccc;
+  }
+  .header {
+    background-color: #fafafa;
+    border-bottom: 1px solid #eaeded;
+    padding: 15px 20px 15px 20px;
+    .header-title {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      .big-title {
+        color: #000000;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+  .title {
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #fafafa;
+    border-bottom: 1px solid #eaeded;
+    padding: 15px 0 15px 20px;
+  }
+  table {
+    width: 100%;
+    a {
+      color: #0073bb;
+      cursor: pointer;
+      &:hover {
+        color: #0073bb;
+        text-decoration: underline;
+      }
+    }
+    th,
+    td {
+      text-align: left;
+      padding: 8px 20px;
+      border-bottom: 1px solid #eaeded;
+    }
+    tr:nth-child(even) > td,
+    .tr:nth-child(even) > th {
+      background: rgba(0, 0, 0, 0.05); // Choose your own color here
+    }
+    th {
+      background-color: #fafafa;
+      border-top: 1px solid #eaeded;
+      border-bottom: 1px solid #eaeded;
+    }
   }
 }

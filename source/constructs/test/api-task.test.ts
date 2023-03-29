@@ -1,5 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import * as task from '../lambda/api/api-task'
-import { TaskType } from '../lambda/common'
+import { TaskType, ScheduleType } from '../lambda/common'
 import * as AWSMock from 'aws-sdk-mock'
 import * as AWS from 'aws-sdk'
 import { StartExecutionOutput } from "aws-sdk/clients/stepfunctions"
@@ -42,6 +45,7 @@ test('createTask', async () => {
       input: {
         type: TaskType.S3,
         description: "Test",
+        scheduleType: ScheduleType.ONE_TIME,
         parameters: [
           {
             ParameterKey: "srcBucket",

@@ -60,8 +60,8 @@ S3插件使用凭证从AWS另一个区的Amazon S3或其他云提供商中复制
 
 ## 更多详细教程
 
-1. [将Amazon S3 的数据从北京 (cn-north-1) 传输到 俄勒冈州(us-west-2)](./tutortial-beijing-to-oregon-s3_CN.md)
-2. [将阿里云 OSS 中的数据迁移到 Amazon S3](./tutortial-migration-oss-to-s3_CN.md)
+1. [将Amazon S3 的数据从北京 (cn-north-1) 传输到 俄勒冈州(us-west-2)](./tutorial-beijing-to-oregon-s3_CN.md)
+2. [将阿里云 OSS 中的数据迁移到 Amazon S3](./tutorial-migration-oss-to-s3_CN.md)
 3. [在AWS中国区部署 Data Transfer Hub](./DeployInChinaWithAuthing_CN.md)
 4. [通过CDK部署](./deploy-via-cdk.md)
 

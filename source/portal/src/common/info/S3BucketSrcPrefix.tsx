@@ -9,7 +9,7 @@ interface Page {
   name: string | undefined;
 }
 
-const S3BucketSrcPrefix: React.FC<Page> = (props: Page) => {
+const S3BucketSrcPrefix: React.FC<Page> = () => {
   const { t } = useTranslation();
   return (
     <div className="credential">

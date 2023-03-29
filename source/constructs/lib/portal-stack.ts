@@ -1,26 +1,28 @@
-/**
- *  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import * as cdk from '@aws-cdk/core';
+import {
+  Construct,
+} from 'constructs';
+import {  
+  CfnCondition,
+  CfnResource,
+  CfnCustomResource,
+  RemovalPolicy,
+  Duration,
+  Aws,
+  aws_cloudfront as cloudfront,
+  aws_s3 as s3,
+  aws_s3_deployment as s3Deployment,
+  aws_iam as iam,
+  aws_lambda as lambda, 
+} from 'aws-cdk-lib';
 import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as iam from '@aws-cdk/aws-iam';
-import * as s3 from '@aws-cdk/aws-s3';
-import * as cloudfront from '@aws-cdk/aws-cloudfront';
-import * as s3Deployment from '@aws-cdk/aws-s3-deployment';
+
 import * as path from 'path'
 import { AuthType } from './constructs-stack';
 import { addCfnNagSuppressRules } from "./constructs-stack";
+import { NagSuppressions } from 'cdk-nag';
 
 // const { BUCKET_NAME, SOLUTION_NAME, VERSION } = process.env
 
@@ -29,8 +31,8 @@ import { addCfnNagSuppressRules } from "./constructs-stack";
  */
 interface CustomResourceConfig {
   readonly properties?: { path: string, value: any }[];
-  readonly condition?: cdk.CfnCondition;
-  readonly dependencies?: cdk.CfnResource[];
+  readonly condition?: CfnCondition;
+  readonly dependencies?: CfnResource[];
 }
 
 export interface PortalStackProps {
@@ -48,11 +50,11 @@ export interface PortalStackProps {
   }
 }
 
-export class PortalStack extends cdk.Construct {
+export class PortalStack extends Construct {
 
   readonly websiteURL: string
 
-  constructor(scope: cdk.Construct, id: string, props: PortalStackProps) {
+  constructor(scope: Construct, id: string, props: PortalStackProps) {
     super(scope, id);
 
     const website = new CloudFrontToS3(this, 'Web', {
@@ -61,7 +63,7 @@ export class PortalStack extends cdk.Construct {
         encryption: s3.BucketEncryption.S3_MANAGED,
         accessControl: s3.BucketAccessControl.PRIVATE,
         enforceSSL: true,
-        removalPolicy: cdk.RemovalPolicy.RETAIN,
+        removalPolicy: RemovalPolicy.RETAIN,
         autoDeleteObjects: false,
       },
       cloudFrontDistributionProps: {
@@ -80,6 +82,21 @@ export class PortalStack extends cdk.Construct {
       },
       insertHttpSecurityHeaders: false,
     });
+    NagSuppressions.addResourceSuppressions(
+      website.cloudFrontWebDistribution,
+      [
+        {
+          id: 'AwsSolutions-CFR1',
+          reason: 'Use case does not warrant CloudFront Geo restriction'
+        }, {
+          id: 'AwsSolutions-CFR2',
+          reason: 'Use case does not warrant CloudFront integration with AWS WAF'
+        }, {
+          id: 'AwsSolutions-CFR4',
+          reason: 'CloudFront automatically sets the security policy to TLSv1 when the distribution uses the CloudFront domain name'
+        }
+      ],
+    );
 
     const websiteBucket = website.s3Bucket as s3.Bucket;
     const websiteDist = website.cloudFrontWebDistribution.node.defaultChild as cloudfront.CfnDistribution
@@ -97,13 +114,13 @@ export class PortalStack extends cdk.Construct {
       })
     } else {
       const cfFunction = new cloudfront.Function(this, "DataTransferHubSecurityHeader", {
-        functionName: `DTHSecHdr${cdk.Aws.REGION}${cdk.Aws.STACK_NAME}`,
+        functionName: `DTHSecHdr${Aws.REGION}${Aws.STACK_NAME}`,
         code: cloudfront.FunctionCode.fromInline(`
 function handler(event) {
     var response = event.response;
     var headers = response.headers;
     headers['strict-transport-security'] = { value: 'max-age=63072000; includeSubdomains; preload' };
-    headers['content-security-policy'] = { value: "default-src 'self'; upgrade-insecure-requests; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ${props.aws_appsync_graphqlEndpoint} https://cognito-idp.${cdk.Aws.REGION}.amazonaws.com/" };
+    headers['content-security-policy'] = { value: "default-src 'self'; upgrade-insecure-requests; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ${props.aws_appsync_graphqlEndpoint} https://cognito-idp.${Aws.REGION}.amazonaws.com/" };
     headers['x-content-type-options'] = { value: 'nosniff' };
     headers['x-frame-options'] = { value: 'DENY' };
     headers['x-xss-protection'] = { value: '1; mode=block' };
@@ -128,14 +145,14 @@ function handler(event) {
     const customResourceRole = new iam.Role(this, 'CustomResourceRole', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       path: '/',
-      // roleName: `${cdk.Aws.STACK_NAME}CustomResourceRole-${cdk.Aws.REGION}`
+      // roleName: `${Aws.STACK_NAME}CustomResourceRole-${Aws.REGION}`
     })
     const cfnCustomResourceRole = customResourceRole.node.defaultChild as iam.CfnRole;
     cfnCustomResourceRole.overrideLogicalId('CustomResourceRole');
 
     // CustomResourcePolicy
     const customResourcePolicy = new iam.Policy(this, 'CustomResourcePolicy', {
-      policyName: `${cdk.Aws.STACK_NAME}CustomResourcePolicy`,
+      policyName: `${Aws.STACK_NAME}CustomResourcePolicy`,
       statements: [
         new iam.PolicyStatement({
           actions: [
@@ -144,7 +161,7 @@ function handler(event) {
             'logs:PutLogEvents'
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:logs:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:log-group:/aws/lambda/*`
+            `arn:${Aws.PARTITION}:logs:${Aws.REGION}:${Aws.ACCOUNT_ID}:log-group:/aws/lambda/*`
           ]
         }),
         new iam.PolicyStatement({
@@ -154,7 +171,7 @@ function handler(event) {
             's3:ListBucket'
           ],
           resources: [
-            `arn:${cdk.Aws.PARTITION}:s3:::*`
+            `arn:${Aws.PARTITION}:s3:::*`
           ]
         })
       ]
@@ -165,15 +182,15 @@ function handler(event) {
 
     const customResourceFunction = new lambda.Function(this, 'CustomHandler', {
       description: 'Data Transfer Hub - Custom resource',
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'index.handler',
-      timeout: cdk.Duration.seconds(30),
+      timeout: Duration.seconds(30),
       memorySize: 512,
       role: customResourceRole,
       code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/'),
         {
           bundling: {
-            image: lambda.Runtime.NODEJS_14_X.bundlingImage,
+            image: lambda.Runtime.NODEJS_16_X.bundlingImage,
             command: [
               'bash', '-c', [
                 `cd /asset-output/`,
@@ -208,11 +225,11 @@ function handler(event) {
     // CustomResourceConfig
     this.createCustomResource('CustomResourceConfig', customResourceFunction, {
       properties: [
-        { path: 'Region', value: cdk.Aws.REGION },
+        { path: 'Region', value: Aws.REGION },
         {
           path: 'configItem', value: {
-            aws_project_region: cdk.Aws.REGION,
-            aws_cognito_region: cdk.Aws.REGION,
+            aws_project_region: Aws.REGION,
+            aws_cognito_region: Aws.REGION,
             aws_cloudfront_url: this.websiteURL,
             aws_user_pools_id: props.aws_user_pools_id,
             aws_user_pools_web_client_id: props.aws_user_pools_web_client_id,
@@ -221,7 +238,7 @@ function handler(event) {
             aws_oidc_provider: props.aws_oidc_provider,
             aws_oidc_client_id: props.aws_oidc_client_id,
             aws_appsync_graphqlEndpoint: props.aws_appsync_graphqlEndpoint,
-            aws_appsync_region: cdk.Aws.REGION,
+            aws_appsync_region: Aws.REGION,
             aws_appsync_authenticationType: props.auth_type === AuthType.OPENID ? 'OPENID_CONNECT' : 'AMAZON_COGNITO_USER_POOLS',
             taskCluster: props.taskCluster
           }
@@ -238,10 +255,10 @@ function handler(event) {
 
   /**
    * Adds dependencies to the AWS CloudFormation resource.
-   * @param {cdk.CfnResource} resource Resource to add AWS CloudFormation dependencies
-   * @param {cdk.CfnResource[]} dependencies Dependencies to be added to the AWS CloudFormation resource
+   * @param {CfnResource} resource Resource to add AWS CloudFormation dependencies
+   * @param {CfnResource[]} dependencies Dependencies to be added to the AWS CloudFormation resource
    */
-  addDependencies(resource: cdk.CfnResource, dependencies: cdk.CfnResource[]) {
+  addDependencies(resource: CfnResource, dependencies: CfnResource[]) {
     for (let dependency of dependencies) {
       resource.addDependsOn(dependency);
     }
@@ -252,10 +269,10 @@ function handler(event) {
    * @param {string} id Custom resource ID
    * @param {lambda.Function} customResourceFunction Custom resource Lambda function
    * @param {CustomResourceConfig} config Custom resource configuration
-   * @return {cdk.CfnCustomResource}
+   * @return {CfnCustomResource}
    */
-  createCustomResource(id: string, customResourceFunction: lambda.Function, config?: CustomResourceConfig): cdk.CfnCustomResource {
-    const customResource = new cdk.CfnCustomResource(this, id, {
+  createCustomResource(id: string, customResourceFunction: lambda.Function, config?: CustomResourceConfig): CfnCustomResource {
+    const customResource = new CfnCustomResource(this, id, {
       serviceToken: customResourceFunction.functionArn
     });
     customResource.addOverride('Type', 'Custom::CustomResource');

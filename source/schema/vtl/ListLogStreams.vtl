@@ -1,0 +1,9 @@
+#if($ctx.args.count<1 or $ctx.args.count>1000)
+    $util.error("Count (per page) must between 1 and 1000")
+#end
+
+#if($ctx.args.page<1 or $ctx.args.page>1000)
+    $util.error("Page must between 1 and 1000")
+#end
+
+{"version": "2017-02-28", "operation": "Invoke", "payload": $util.toJson($ctx)}
