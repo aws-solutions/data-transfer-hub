@@ -9,9 +9,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
 
-// import { API } from "aws-amplify";
 import { createTask as createTaskMutaion } from "graphql/mutations";
-// import gql from "graphql-tag";
 import { IState } from "store/Store";
 
 import InfoBar from "common/InfoBar";
@@ -22,8 +20,6 @@ import CreateButtonLoading from "common/comp/PrimaryButtonLoading";
 import NextButton from "common/comp/PrimaryButton";
 import NormalButton from "common/comp/NormalButton";
 import TextButton from "common/comp/TextButton";
-
-// import IMG_STATUS from "assets/images/status.svg";
 
 import "../Creation.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -67,7 +63,6 @@ const StepThreeECR: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    // if the taskInfo has no taskType, redirect to Step one
     // eslint-disable-next-line no-prototype-builtins
     if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
       const toPath = "/create/step1/ECR";
@@ -305,12 +300,12 @@ const StepThreeECR: React.FC = () => {
                             {t("creation.step3.step2Value")}
                           </div>
                         </div>
-                        {paramsList.map((element: any, index: any) => {
+                        {paramsList.map((element: any) => {
                           return (
                             ECR_PARAMS_LIST_MAP[element.ParameterKey] && (
                               <div
                                 className="preview-row preview-data"
-                                key={index}
+                                key={element.ParameterKey}
                               >
                                 <div className="table-td key">
                                   {ECR_PARAMS_LIST_MAP[element.ParameterKey] &&

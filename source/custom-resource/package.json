@@ -1,11 +1,14 @@
 {
     "name": "ui-framework-helper",
+    
     "description": "UI Framework custom resource helper Lambda function",
     "main": "index.js",
+    "version": "2.4.0",
+    "license": "Apache-2.0",
     "author": {
-        "name": "aws-solutions-builder"
+      "name": "Amazon Web Services",
+      "url": "https://aws.amazon.com/solutions"
     },
-    "version": "5.0.0",
     "private": true,
     "dependencies": {
         "moment": "^2.24.0",
@@ -32,6 +35,5 @@
     "bundledDependencies": [
         "moment",
         "uuid"
-    ],
-    "license": "Apache-2.0"
+    ]
 }

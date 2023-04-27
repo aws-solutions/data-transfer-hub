@@ -6,7 +6,7 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import CopyToClipboard from "react-copy-to-clipboard";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import {
-  SSM_LINK_MAP,
+  buildSecretMangerLink,
   SSM_PARASTORE_HELP_LINK_MAP,
   DRH_REGION_TYPE_NAME,
   DRH_REGION_NAME,
@@ -47,12 +47,14 @@ const CredentialInfo: React.FC<Page> = () => {
           className="a-link"
           rel="noopener noreferrer"
           target="_blank"
-          href={SSM_LINK_MAP[curRegionType] + "?region=" + curRegion}
+          href={buildSecretMangerLink(curRegion)}
         >
           {t("comps.credential.store")}
         </a>{" "}
         {t("comps.credential.save1")}
-        <i>{t("comps.credential.save2")}</i>
+        <code>
+          <i>{t("comps.credential.save2")}</i>
+        </code>
         {t("comps.credential.save3")}
       </div>
       <div className="tips-title">{t("comps.credential.format")}</div>

@@ -8,6 +8,7 @@
   "info": "信息",
   "optional": "可选",
   "recommened": "推荐",
+  "credentialsGuide": "创建密钥指南和 AK/SK 格式",
   "signin": {
     "signInToDRH": "登录到 Data Transfer Hub",
     "email": "邮箱地址 *",
@@ -125,7 +126,10 @@
           "objectACLDesc3": " 如果您不想设置对象ACL，请使用默认值.",
           "transferType": "传输类型",
           "nameOfPrefixList": "前缀列表文件名",
-          "nameOfPrefixListDesc": "请将前缀文件以.txt的格式上传到源存储桶根目录，每行写一个前缀。例如: prefix_list.txt"
+          "nameOfPrefixListDesc": "请将前缀文件以.txt的格式上传到源存储桶根目录，每行写一个前缀。例如: prefix_list.txt",
+          "govCloudTips": "GovCloud 数据传输仅限在美国",
+          "payerRequest": "使用申请方付款?",
+          "payerRequestDesc": "使用申请方付款存储桶时，申请方将支付请求和从存储桶下载数据的费用"
         },
         "dest": {
           "title": "目标桶设置",
@@ -193,6 +197,11 @@
       "taskDetail": "填写任务信息",
       "sourceType": "源仓库类型",
       "selectContainerType": "选择容器仓库类型",
+      "valid": {
+        "srcRegionRequired": "请选择源仓库区域",
+        "accountRequired": "请输入 Amazon Web Services 账户 ID",
+        "accountFormatInvalid": "账户 ID 不合法"
+      },
       "settings": {
         "source": {
           "title": "源仓库设置",
@@ -388,7 +397,7 @@
   "comps": {
     "credential": {
       "name": "凭证",
-      "create": "创建一个",
+      "create": "在 Secret Manager 中创建一个",
       "store": "Secret Key",
       "save1": "用于凭证. 选择 ",
       "save2": " 其他类型的密钥 ",

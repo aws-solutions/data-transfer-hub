@@ -24,12 +24,10 @@ import {
 
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
 
-//  import { Construct, CfnParameter, Duration, Stack, RemovalPolicy, CustomResource, Aws, CfnOutput } from '@aws-cdk/core';
  import * as path from 'path';
  import * as cfnSate from './cfn-step-functions';
  import * as monitorSate from './monitor-step-functions'
- import { AuthType } from './constructs-stack';
- import { addCfnNagSuppressRules } from "./constructs-stack";
+ import { AuthType, addCfnNagSuppressRules } from './constructs-stack';
  
  
  export interface ApiProps {
@@ -53,11 +51,11 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
      // Can define custom bucket to hold the plugin url. Default to aws-gcr-solutions
      const templateBucket = process.env.TEMPLATE_OUTPUT_BUCKET || 'aws-gcr-solutions'
  
-     let s3PluginVersion = 'v2.3.0'
+     let s3PluginVersion = 'v2.4.0'
      let ecrPluginVersion = 'v2.3.0'
      let suffix = '-plugin'
      if (templateBucket === 'aws-gcr-solutions') {
-       s3PluginVersion = 'v2.3.0'
+       s3PluginVersion = 'v2.4.0'
        ecrPluginVersion = 'v2.3.0'
        suffix = ''
      }
@@ -330,9 +328,6 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
        })
  
        // Create an Admin User
-       // TODO: The user can be created, however, the state is FORCE_PASSWORD_CHANGE, the customer still cannot use the account yet.
-       // https://stackoverflow.com/questions/40287012/how-to-change-user-status-force-change-password
-       // resolution: create a custom lambda to set user password
        new cognito.CfnUserPoolUser(this, 'AdminUser', {
          userPoolId: this.userPool.userPoolId,
          username: props?.usernameParameter?.valueAsString,
@@ -351,11 +346,6 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
          }
        })
  
-       // const userPoolDomainOutput = new cdk.CfnOutput(this, 'UserPoolDomainOutput', {
-       //   exportName: 'UserPoolDomain',
-       //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
-       //   description: 'Cognito Hosted UI domain name'
-       // })
        this.authDefaultConfig = {
          authorizationType: appsync.AuthorizationType.USER_POOL,
          userPoolConfig: {

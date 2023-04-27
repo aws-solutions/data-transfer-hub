@@ -49,6 +49,8 @@ const mapState = (state: IState) => ({
 
 const MAX_LENGTH = 4096;
 
+const ACCOUNT_REGEX = /^\d{12}$/;
+
 const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
 const defaultTxtValueSourceECR =
   "my-ecr-repo:ALL_TAGS,\nubuntu:14.04,\namazon-linux:latest,\nmysql";
@@ -70,6 +72,17 @@ const StepTwoECR: React.FC = () => {
   const [destRegionRequiredError, setDestRegionRequiredError] = useState(false);
   const [alramEmailRequireError, setAlramEmailRequireError] = useState(false);
   const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
+
+  const [sourceRegionRequiredError, setSourceRegionRequiredError] =
+    useState(false);
+  const [sourceAccountRequiredError, setSourceAccountRequiredError] =
+    useState(false);
+  const [sourceAccountInvalidError, setSourceAccountInvalidError] =
+    useState(false);
+
+  const [destAccountRequiredError, setDestAccountRequiredError] =
+    useState(false);
+  const [destAccountInvalidError, setDestAccountInvalidError] = useState(false);
 
   const [classSourceRegion, setClassSourceRegion] = useState("form-items");
   const [classIsSourceInAccount, setClassIsSourceAccount] =
@@ -150,6 +163,50 @@ const StepTwoECR: React.FC = () => {
     let errorCount = 0;
 
     if (paramsObj) {
+      // if the source type is ECR
+      if (paramsObj.sourceType === ECREnumSourceType.ECR) {
+        // Check Source Region Required
+        if (!paramsObj.srcRegion) {
+          errorCount++;
+          setSourceRegionRequiredError(true);
+        }
+
+        // Check Source Account ID Required
+        if (
+          paramsObj.sourceInAccount === YES_NO.NO &&
+          !paramsObj.srcAccountId
+        ) {
+          errorCount++;
+          setSourceAccountRequiredError(true);
+        }
+
+        // Check Source Account ID Valid
+        if (
+          paramsObj.sourceInAccount === YES_NO.NO &&
+          paramsObj.srcAccountId &&
+          !ACCOUNT_REGEX.test(paramsObj.srcAccountId)
+        ) {
+          errorCount++;
+          setSourceAccountInvalidError(true);
+        }
+      }
+
+      // Check Destination Account ID Required
+      if (paramsObj.destInAccount === YES_NO.NO && !paramsObj.destAccountId) {
+        errorCount++;
+        setDestAccountRequiredError(true);
+      }
+
+      // Check Destination Account ID Valid
+      if (
+        paramsObj.destInAccount === YES_NO.NO &&
+        paramsObj.destAccountId &&
+        !ACCOUNT_REGEX.test(paramsObj.destAccountId)
+      ) {
+        errorCount++;
+        setDestAccountInvalidError(true);
+      }
+
       // Check Destination Region
       if (!paramsObj.destRegion) {
         errorCount++;
@@ -373,13 +430,13 @@ const StepTwoECR: React.FC = () => {
                   <div className="option-content">
                     <div> {t("creation.step2ECR.selectContainerType")}</div>
                     <div>
-                      {ECR_SOURCE_TYPE.map((item: any, index: any) => {
+                      {ECR_SOURCE_TYPE.map((item: any) => {
                         const stClass = classNames({
                           "st-item": true,
                           active: sourceType === item.value,
                         });
                         return (
-                          <div key={index} className={stClass}>
+                          <div key={item.value} className={stClass}>
                             <label>
                               <div>
                                 <input
@@ -424,8 +481,13 @@ const StepTwoECR: React.FC = () => {
                             event: React.ChangeEvent<HTMLInputElement>,
                             data: IRegionType
                           ) => {
+                            setSourceRegionRequiredError(false);
                             setSrcRegionObj(data);
                           }}
+                          showRequiredError={sourceRegionRequiredError}
+                          requiredErrorMsg={t(
+                            "creation.step2ECR.valid.srcRegionRequired"
+                          )}
                         />
                       </div>
 
@@ -459,12 +521,22 @@ const StepTwoECR: React.FC = () => {
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
+                            setSourceAccountRequiredError(false);
+                            setSourceAccountInvalidError(false);
                             setSrcAccountId(event.target.value);
                           }}
                           inputType="number"
                           inputName="srcAccountId"
                           inputValue={srcAccountId}
                           placeholder="123456789012"
+                          showRequiredError={sourceAccountRequiredError}
+                          requiredErrorMsg={t(
+                            "creation.step2ECR.valid.accountRequired"
+                          )}
+                          showFormatError={sourceAccountInvalidError}
+                          formatErrorMsg={t(
+                            "creation.step2ECR.valid.accountFormatInvalid"
+                          )}
                         />
                       </div>
 
@@ -490,13 +562,13 @@ const StepTwoECR: React.FC = () => {
                           )}
                         </div>
                         <div className="select">
-                          {DOCKER_IMAGE_TYPE.map((item: any, index: any) => {
+                          {DOCKER_IMAGE_TYPE.map((item: any) => {
                             const stClass = classNames({
                               "st-item": true,
                               active: srcList === item.value,
                             });
                             return (
-                              <div key={index} className={stClass}>
+                              <div key={item.value} className={stClass}>
                                 <label>
                                   <div>
                                     <input
@@ -614,13 +686,22 @@ const StepTwoECR: React.FC = () => {
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
+                            setDestAccountRequiredError(false);
+                            setDestAccountInvalidError(false);
                             setDestAccountId(event.target.value);
                           }}
                           inputType="number"
-                          isOptional={true}
                           inputName="destAccountId"
                           inputValue={destAccountId}
                           placeholder="123456789012"
+                          showRequiredError={destAccountRequiredError}
+                          requiredErrorMsg={t(
+                            "creation.step2ECR.valid.accountRequired"
+                          )}
+                          showFormatError={destAccountInvalidError}
+                          formatErrorMsg={t(
+                            "creation.step2ECR.valid.accountFormatInvalid"
+                          )}
                         />
                       </div>
 

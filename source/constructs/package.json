@@ -1,6 +1,6 @@
 {
   "name": "data-transfer-hub",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",
@@ -24,7 +24,7 @@
     "@types/uuid": "^8.3.1",
     "aws-cdk": "2.74.0",
     "aws-cdk-lib": "2.74.0",
-    "aws-sdk": "2.814.0",
+    "aws-sdk": "2.1360.0",
     "aws-sdk-mock": "^5.4.0",
     "jest": "^29.4.3",
     "ts-jest": "^29.0.5",

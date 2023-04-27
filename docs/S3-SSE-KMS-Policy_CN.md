@@ -37,7 +37,7 @@ _注意_：如果是针对中国地区的 S3 存储桶，请确保您也更改�
                 "kms:DescribeKey"
             ],
             "Resource": [
-                "arn:aws:kms:us-west-2:123456789012:key/f5cd8cb7-476c-4322-ac9b-0c94a687700d <Please replace to your own KMS key arn>"
+                "arn:aws:kms:us-west-2:111122223333:key/f5cd8cb7-476c-4322-ac9b-0c94a687700d <Please replace to your own KMS key arn>"
             ]
         }
     ]

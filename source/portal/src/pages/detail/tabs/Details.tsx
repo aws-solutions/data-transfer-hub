@@ -1,7 +1,5 @@
 import React from "react";
-// import Moment from "react-moment";
 import { useTranslation } from "react-i18next";
-// import {} from "utils"
 
 import {
   S3SourcePrefixType,

@@ -1,12 +1,12 @@
-The following are common issues you may face in deploying and using the solution.
+The following are common questions you might have when deploying and using the solution.
 
 ## Deployment
 
 **1. In which AWS Regions can this solution be deployed?**</br>
 
-For the list of supported regions, refer to [supported regions](./regions.md).
+For the list of supported regions, refer to [supported regions](../plan-deployment/regions).
 
-**2. When creating a transfer task, shall I deploy it on the data source side or the destination side?**</br>
+**2. When creating a transfer task, should I deploy it on the data source side or the destination side?**</br>
 
 The transfer performance of the solution will not be affected by whether the deployment is on the data source or destination side.
 
@@ -35,7 +35,7 @@ Not supported currently. For this scenario, we recommend using Amazon S3's [Cros
 
 **7. Can I use AWS CLI to create a DTH S3 Transfer Task?**</br>
 
-Yes. Please refer to the tutorial [Using AWS CLI to launch DTH S3 Transfer task](./tutorial-cli-launch.md).
+Yes. Please refer to the tutorial [Using AWS CLI to launch DTH S3 Transfer task](../user-guide/tutorial-cli-launch).
 
 ## Performance
 
@@ -89,7 +89,7 @@ By authentication through the Access Keyid and Access Key of the other party’s
 
 **5. Does the solution support SSE-S3, SSE-KMS, and SSE-CMK?**</br>
 
-Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the [tutorial](../tutorial-s3/#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3).
+Yes. The solution supports the use of SSE-S3 and SSE-KMS data sources. If your source bucket has SSE-CMK enabled, refer to the [tutorial](../user-guide/tutorial-s3/#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3).
 
 ## Features
 
@@ -126,7 +126,7 @@ At **Task Scheduling Settings**, you can make the task scheduling configuration.
 
 **4. Is it possible for real-time synchronization of newly added files?**</br>
 
-Near-real-time synchronization can be achieved, only if the Data Transfer Hub is deployed in the same AWS account and the same region as the data source. If the data source and the solution are not in the same account, you can configure it manually. For more information, refer to the [tutorial](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/s3-event-trigger-config.md).
+Near-real-time synchronization can be achieved, only if the Data Transfer Hub is deployed in the same AWS account and the same region as the data source. If the data source and the solution are not in the same account, you can configure it manually. For more information, refer to the [tutorial](https://github.com/awslabs/data-transfer-hub/blob/main/docs/s3-event-trigger-config.md).
 
 **5. Are there restrictions on the number of files and the size of files?**</br>
 
@@ -164,36 +164,9 @@ What will **not be lost** are all files under `bucket_name/Jan/33/`, all files u
 
 Currently, when Data Transfer Hub perceived that the Access Key of S3 has been rotated, it will fetch the latest key from AWS Secrets Manager automatically. Therefore, the Access Key Rotation will not affect the migrating process of DTH.
 
-## Error messages
+**11. Does the Payer Request mode support Public Data Set?**</br>
 
-After creating the task, you may encounter some error messages. The following list the error messages and provide general steps to troubleshoot them.
-
-**1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid**
-
-If you get this error message, confirm that your secret is configured in the following format. You can copy and paste it directly.
-
-```json
-{
-    "access_key_id": "<Your Access Key ID>",
-    "secret_access_key": "<Your Access Key Secret>"
-}
-```
-
-**2. StatusCode: 403, InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records**
-
-If you get this error message, check if your bucket name and region name are configured correctly.
-
-**3. StatusCode: 403, InvalidAccessKeyId: UnknownError**
-
-If you get this error message, check whether the Credential stored in Secrets Manager has the proper permissions. For more information, refer to [IAM Policy](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md).
-
-**4. StatusCode: 400, AccessDeniedException: Access to KMS is not allowed**
-
-If you get this error message, confirm that your secret is not encrypted by SSE-CMK. Currently, DTH does not support SSE-CMK encrypted secrets.
-
-**5. dial tcp: lookup xxx.xxxxx.xxxxx.xx (http://xxx.xxxxx.xxxxx.xx/) on xxx.xxx.xxx.xxx:53: no such host**
-
-If you get this error message, check if your endpoint is configured correctly.
+No. Currently, Payer Request data synchronization is only supported through Access Key and Private Key authentication methods.
 
 ## Others
 **1. The cluster node (EC2) is terminated by mistake. How to resolve it?**</br>
@@ -218,7 +191,7 @@ You need to update Secrets in Secrets Manager first, and then go to the EC2 cons
 
     When deploying the stack, you will be asked to enter the stack name (`DTHS3Stack` by default), and most resources will be created with the name prefix as the stack name. For example, the format of the queue name is `<StackName>-S3TransferQueue-<random suffix>`. This plugin will create two main log groups.
 
-    - If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the [Error Code List](#error-messages) section.
+    - If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the [Troubleshooting](../troubleshooting) section.
         
         `<StackName>-EC2FinderLogGroup<random suffix>`
 

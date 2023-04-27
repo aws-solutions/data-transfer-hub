@@ -42,8 +42,8 @@ const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
       </div>
       <div className="desc">
         {optionDescHtml
-          ? optionDescHtml.map((element: any, index: number) => {
-              return <span key={index}>{element}</span>;
+          ? optionDescHtml.map((element: any) => {
+              return <span key={element?.toString()}>{element}</span>;
             })
           : optionDesc}
       </div>
@@ -54,13 +54,17 @@ const DrhSelect: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
           onChange={(event) => onChange(event)}
           input={<SelectInput style={{ width: 565 }} />}
         >
-          {optionList.map((option, index) => {
+          {optionList.map((option) => {
             return isI18n ? (
-              <MenuItem key={index} value={option.value}>
+              <MenuItem key={option.value} value={option.value}>
                 <Trans i18nKey={`${option.name}`} />
               </MenuItem>
             ) : (
-              <MenuItem key={index} className="font14px" value={option.value}>
+              <MenuItem
+                key={option.value}
+                className="font14px"
+                value={option.value}
+              >
                 {option.name}
               </MenuItem>
             );

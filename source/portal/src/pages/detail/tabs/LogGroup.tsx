@@ -10,7 +10,7 @@ import DataLoading from "common/Loading";
 import { Pagination } from "@material-ui/lab";
 import { Link } from "react-router-dom";
 import {
-  CLOUD_WATCH_DASHBOARD_LINK_MAP,
+  buildCloudWatchLink,
   FINDER_DESC,
   LOGTYPE_FINDER,
   LOGTYPE_WORKER,
@@ -30,14 +30,7 @@ interface LogGroupProps {
 
 const PAGE_SIZE = 20;
 const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
-  const {
-    taskId,
-    curTaskInfo,
-    groupType,
-    logGroupName,
-    curRegionType,
-    curRegion,
-  } = props;
+  const { taskId, curTaskInfo, groupType, logGroupName, curRegion } = props;
   const { t } = useTranslation();
   const [logStreams, setLogStreams] = useState<LogStream[]>([]);
   const [loadingData, setLoadingData] = useState(false);
@@ -94,9 +87,9 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
                         className="a-link"
                         rel="noopener noreferrer"
                         target="_blank"
-                        href={`${
-                          CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                        }?region=${curRegion}#logStream:group=${getOutputValueByDesc(
+                        href={`${buildCloudWatchLink(
+                          curRegion
+                        )}?region=${curRegion}#logStream:group=${getOutputValueByDesc(
                           FINDER_DESC,
                           curTaskInfo
                         )}`}
@@ -122,9 +115,9 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
                         className="a-link"
                         rel="noopener noreferrer"
                         target="_blank"
-                        href={`${
-                          CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-                        }?region=${curRegion}#logStream:group=${getOutputValueByDesc(
+                        href={`${buildCloudWatchLink(
+                          curRegion
+                        )}?region=${curRegion}#logStream:group=${getOutputValueByDesc(
                           WORKER_DESC,
                           curTaskInfo
                         )}`}
@@ -212,9 +205,9 @@ const LogGroup: React.FC<LogGroupProps> = (props: LogGroupProps) => {
                     </td>
                   </tr>
                 ) : logStreams && logStreams.length > 0 ? (
-                  logStreams.map((element, index) => {
+                  logStreams.map((element) => {
                     return (
-                      <tr key={index}>
+                      <tr key={element.creationTime}>
                         <td>
                           <Link
                             target="_blank"

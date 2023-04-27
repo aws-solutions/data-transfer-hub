@@ -1,9 +1,6 @@
 // Task Type Icons
 import ICON_S3 from "../images/icon-s3.png";
 import ICON_ECR from "../images/icon-ecr.png";
-// import ICON_DYDB from "../images/icon-dydb.png";
-// import ICON_MONGO from "../images/icon-mongo.png";
-// import ICON_MYSQL from "../images/icon-mysql.png";
 
 import STATUS_PENDING from "@material-ui/icons/Schedule";
 import STATUS_PROGRESS from "@material-ui/icons/RemoveCircleOutline";

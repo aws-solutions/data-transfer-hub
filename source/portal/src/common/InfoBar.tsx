@@ -1,5 +1,4 @@
 import React from "react";
-// import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
@@ -41,7 +40,7 @@ const mapState = (state: IState) => ({
 });
 
 interface InfoType {
-  page?: string | undefined;
+  page?: string;
 }
 
 const InfoBar: React.FC<InfoType> = (props: InfoType) => {

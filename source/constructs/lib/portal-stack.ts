@@ -20,8 +20,7 @@ import {
 import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
 
 import * as path from 'path'
-import { AuthType } from './constructs-stack';
-import { addCfnNagSuppressRules } from "./constructs-stack";
+import { AuthType, addCfnNagSuppressRules } from './constructs-stack';
 import { NagSuppressions } from 'cdk-nag';
 
 // const { BUCKET_NAME, SOLUTION_NAME, VERSION } = process.env
@@ -276,7 +275,6 @@ function handler(event) {
       serviceToken: customResourceFunction.functionArn
     });
     customResource.addOverride('Type', 'Custom::CustomResource');
-    // customResource.overrideLogicalId(id);
 
     if (config) {
       const { properties, condition, dependencies } = config;

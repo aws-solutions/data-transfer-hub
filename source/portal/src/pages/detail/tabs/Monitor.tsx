@@ -11,14 +11,13 @@ import { RangePicker } from "react-minimal-datetime-range";
 import "react-minimal-datetime-range/lib/react-minimal-datetime-range.min.css";
 
 import {
-  CLOUD_WATCH_DASHBOARD_LINK_MAP,
+  buildCloudWatchLink,
   FINDER_DESC,
   LOGTYPE_FINDER,
   LOGTYPE_WORKER,
   MonitorTabType,
   WORKER_DESC,
 } from "assets/config/const";
-// import { ZH_LANGUAGE_LIST } from "common/Bottom";
 
 const buildPreTime = (nowTime: number, period: string) => {
   switch (period) {
@@ -99,9 +98,7 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
 
   const goToCloudWatch = () => {
     window.open(
-      `${
-        CLOUD_WATCH_DASHBOARD_LINK_MAP[curRegionType]
-      }?region=${curRegion}#dashboards:name=${
+      `${buildCloudWatchLink(curRegion)}?region=${curRegion}#dashboards:name=${
         curTaskInfo?.stackId?.split("/")[1]
       }-Dashboard-${curRegion}`
     );
@@ -119,10 +116,10 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
       <div className="w-100p">
         <div className="monitor-menu">
           <div className="monitor-tabs">
-            {METRICS_TAB_LIST.map((element, index) => {
+            {METRICS_TAB_LIST.map((element) => {
               return (
                 <div
-                  key={index}
+                  key={element.value}
                   className={`tab-item ${
                     monitorTab === element.value ? "item-active" : ""
                   }`}
@@ -150,10 +147,10 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
                 )}
 
                 <div className="specify-time">
-                  {SPECIFY_TIME_ITEMS.map((element, index) => {
+                  {SPECIFY_TIME_ITEMS.map((element) => {
                     return (
                       <span
-                        key={index}
+                        key={element.name}
                         className={`item ${
                           curSpecifyRange === element.name ? "item-active" : ""
                         }`}
@@ -244,60 +241,49 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
         </div>
         {monitorTab === MonitorTabType.METRICS && (
           <div className="monitor-chart-list">
-            <table width="100%">
-              <tr>
-                <td style={{ width: "50%" }}>
-                  <div className="monitor-chart">
-                    <MonitorCharts
-                      graphTitle="Network"
-                      yAxisUnit="No unit"
-                      startTime={startTime}
-                      endTime={endTime}
-                      taskId={curTaskInfo.id}
-                      graphName={GraphName.Network}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className="monitor-chart">
-                    <MonitorCharts
-                      graphTitle="Running/Waiting Jobs History"
-                      yAxisUnit="Count"
-                      startTime={startTime}
-                      endTime={endTime}
-                      taskId={curTaskInfo.id}
-                      graphName={GraphName.RunningWaitingJobHistory}
-                    />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="monitor-chart">
-                    <MonitorCharts
-                      graphTitle="Transferred/Failed Objects"
-                      yAxisUnit="Count"
-                      startTime={startTime}
-                      endTime={endTime}
-                      taskId={curTaskInfo.id}
-                      graphName={GraphName.TransferredFailedObjects}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className="monitor-chart">
-                    <MonitorCharts
-                      graphTitle="Desired / InService Instances"
-                      yAxisUnit="Count"
-                      startTime={startTime}
-                      endTime={endTime}
-                      taskId={curTaskInfo.id}
-                      graphName={GraphName.DesiredInServiceInstances}
-                    />
-                  </div>
-                </td>
-              </tr>
-            </table>
+            <div className="monitor-chart">
+              <MonitorCharts
+                graphTitle="Network"
+                yAxisUnit="No unit"
+                startTime={startTime}
+                endTime={endTime}
+                taskId={curTaskInfo.id}
+                graphName={GraphName.Network}
+              />
+            </div>
+
+            <div className="monitor-chart">
+              <MonitorCharts
+                graphTitle="Running/Waiting Jobs History"
+                yAxisUnit="Count"
+                startTime={startTime}
+                endTime={endTime}
+                taskId={curTaskInfo.id}
+                graphName={GraphName.RunningWaitingJobHistory}
+              />
+            </div>
+
+            <div className="monitor-chart">
+              <MonitorCharts
+                graphTitle="Transferred/Failed Objects"
+                yAxisUnit="Count"
+                startTime={startTime}
+                endTime={endTime}
+                taskId={curTaskInfo.id}
+                graphName={GraphName.TransferredFailedObjects}
+              />
+            </div>
+
+            <div className="monitor-chart">
+              <MonitorCharts
+                graphTitle="Desired / InService Instances"
+                yAxisUnit="Count"
+                startTime={startTime}
+                endTime={endTime}
+                taskId={curTaskInfo.id}
+                graphName={GraphName.DesiredInServiceInstances}
+              />
+            </div>
           </div>
         )}
         {monitorTab === MonitorTabType.FINDER && (

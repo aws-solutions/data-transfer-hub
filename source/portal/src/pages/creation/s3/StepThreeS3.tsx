@@ -22,8 +22,6 @@ import NextButton from "common/comp/PrimaryButton";
 import NormalButton from "common/comp/NormalButton";
 import TextButton from "common/comp/TextButton";
 
-// import IMG_STATUS from "assets/images/status.svg";
-
 import "../Creation.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
@@ -92,82 +90,6 @@ const StepThreeS3: React.FC = () => {
     );
   };
 
-  const buildLambdaParams = (parametersObj: any) => {
-    const taskParamArr = [];
-    console.info("parametersObj:", parametersObj);
-    // Special Parameters
-    const jobType =
-      parametersObj.sourceInAccount === YES_NO.YES ? "PUT" : "GET";
-    const credentialsParameterStore =
-      parametersObj.sourceInAccount === YES_NO.YES
-        ? parametersObj.destCredentialsParameterStore
-        : parametersObj.srcCredentialsParameterStore;
-    const regionName =
-      parametersObj.sourceInAccount === YES_NO.YES
-        ? parametersObj.destRegionName
-        : parametersObj.srcRegionName;
-
-    // Build Parameter Data with Lambda Version
-    taskParamArr.push({
-      ParameterKey: "sourceType",
-      ParameterValue: parametersObj.sourceType,
-    });
-    taskParamArr.push({ ParameterKey: "jobType", ParameterValue: jobType });
-    taskParamArr.push({
-      ParameterKey: "srcBucketName",
-      ParameterValue: parametersObj.srcBucketName,
-    });
-    taskParamArr.push({
-      ParameterKey: "srcBucketPrefix",
-      ParameterValue: parametersObj.srcBucketPrefix,
-    });
-    taskParamArr.push({
-      ParameterKey: "enableS3Event",
-      ParameterValue: parametersObj.enableS3Event,
-    });
-    taskParamArr.push({
-      ParameterKey: "destBucketName",
-      ParameterValue: parametersObj.destBucketName,
-    });
-    taskParamArr.push({
-      ParameterKey: "destBucketPrefix",
-      ParameterValue: parametersObj.destBucketPrefix,
-    });
-    taskParamArr.push({
-      ParameterKey: "destStorageClass",
-      ParameterValue: parametersObj.destStorageClass,
-    });
-    taskParamArr.push({
-      ParameterKey: "credentialsParameterStore",
-      ParameterValue: credentialsParameterStore,
-    });
-    taskParamArr.push({
-      ParameterKey: "regionName",
-      ParameterValue: regionName,
-    });
-    taskParamArr.push({
-      ParameterKey: "lambdaMemory",
-      ParameterValue: parametersObj.lambdaMemory,
-    });
-    taskParamArr.push({
-      ParameterKey: "multipartThreshold",
-      ParameterValue: parametersObj.multipartThreshold,
-    });
-    taskParamArr.push({
-      ParameterKey: "chunkSize",
-      ParameterValue: parametersObj.chunkSize,
-    });
-    taskParamArr.push({
-      ParameterKey: "maxThreads",
-      ParameterValue: parametersObj.maxThreads,
-    });
-    taskParamArr.push({
-      ParameterKey: "alarmEmail",
-      ParameterValue: parametersObj.alarmEmail,
-    });
-    return taskParamArr;
-  };
-
   const buildEC2Params = (parametersObj: S3_EC2_TASK) => {
     const taskParamArr: any = [];
     console.info("parametersObj:", parametersObj);
@@ -190,6 +112,9 @@ const StepThreeS3: React.FC = () => {
 
     const tmpSrcSkipCompare =
       parametersObj.srcSkipCompare === YES_NO.YES ? "false" : "true";
+
+    const tmpIsPayerRequest =
+      parametersObj.isPayerRequest === YES_NO.YES ? "true" : "false";
 
     // Build Parameter Data with EC2 Version
     taskParamArr.push({
@@ -258,6 +183,10 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: tmpIncludeMetaData,
     });
     taskParamArr.push({
+      ParameterKey: "isPayerRequest",
+      ParameterValue: tmpIsPayerRequest,
+    });
+    taskParamArr.push({
       ParameterKey: "destAcl",
       ParameterValue: parametersObj.destAcl,
     });
@@ -316,10 +245,6 @@ const StepThreeS3: React.FC = () => {
       }
 
       let taskParamArr: any = [];
-      if (engine === S3_ENGINE_TYPE.LAMBDA) {
-        taskParamArr = buildLambdaParams(parametersObj);
-        setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
-      }
       if (engine === S3_ENGINE_TYPE.EC2) {
         taskParamArr = buildEC2Params(parametersObj as any);
         setParamShowList(JSON.parse(JSON.stringify(taskParamArr)));
@@ -430,6 +355,9 @@ const StepThreeS3: React.FC = () => {
     if (key === "srcSkipCompare") {
       return value === "true" ? YES_NO.NO : YES_NO.YES;
     }
+    if (key === "isPayerRequest") {
+      return value === "true" ? YES_NO.YES : YES_NO.NO;
+    }
     return decodeURIComponent(value);
   };
 
@@ -504,12 +432,12 @@ const StepThreeS3: React.FC = () => {
                             {t("creation.step3.step2Value")}
                           </div>
                         </div>
-                        {paramShowList.map((element: any, index: any) => {
+                        {paramShowList.map((element: any) => {
                           return (
                             S3_PARAMS_LIST_MAP[element.ParameterKey] && (
                               <div
                                 className="preview-row preview-data"
-                                key={index}
+                                key={element.ParameterKey}
                               >
                                 <div className="table-td key">
                                   {S3_PARAMS_LIST_MAP[element.ParameterKey] &&

@@ -23,7 +23,7 @@ stepfunctions_client = boto3.client('stepfunctions')
 monitor_sfn_arn = os.environ.get("MONITOR_SFN_ARN")
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     # logger.info("Received event: " + json.dumps(event, indent=2))
 
     task_id = event.get("id")
@@ -34,7 +34,7 @@ def lambda_handler(event, context):
         }
     }
 
-    response = stepfunctions_client.start_execution(
+    stepfunctions_client.start_execution(
         stateMachineArn=monitor_sfn_arn,
         input=json.dumps(input_data),
     )

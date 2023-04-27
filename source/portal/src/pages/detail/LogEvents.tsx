@@ -68,7 +68,6 @@ const LogEvents: React.FC = () => {
             setLogEventList((prev) => {
               return [...prev, ...resData.data.getLogEvents.logEvents];
             });
-            // setForwardToken(resData.data.getLogEvents.nextForwardToken);
             setBackwardToken(resData.data.getLogEvents.nextBackwardToken);
           } else {
             if (resData.data.getLogEvents.logEvents.length > 0) {
@@ -79,7 +78,6 @@ const LogEvents: React.FC = () => {
             setLogEventList((prev) => {
               return [...resData.data.getLogEvents.logEvents, ...prev];
             });
-            // setForwardToken(resData.data.getLogEvents.nextForwardToken);
             setBackwardToken(resData.data.getLogEvents.nextBackwardToken);
           }
         }
@@ -204,9 +202,9 @@ const LogEvents: React.FC = () => {
                       </td>
                     </tr>
                   ) : logEventList && logEventList.length > 0 ? (
-                    logEventList.map((element, index) => {
+                    logEventList.map((element) => {
                       return (
-                        <tr key={index}>
+                        <tr key={element.timestamp}>
                           <td>
                             {formatLocalTime(
                               parseInt(element.timestamp || "0")

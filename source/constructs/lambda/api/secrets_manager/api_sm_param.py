@@ -9,7 +9,7 @@ logger.setLevel(logging.INFO)
 
 client = boto3.client('secretsmanager')
 
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     result = []
     
     response = client.list_secrets(SortOrder='asc')

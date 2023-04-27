@@ -37,7 +37,7 @@ _Note_: If it's for S3 buckets in China regions, please make sure you also chang
                 "kms:DescribeKey"
             ],
             "Resource": [
-                "arn:aws:kms:us-west-2:123456789012:key/f5cd8cb7-476c-4322-ac9b-0c94a687700d <Please replace to your own KMS key arn>"
+                "arn:aws:kms:us-west-2:111122223333:key/f5cd8cb7-476c-4322-ac9b-0c94a687700d <Please replace to your own KMS key arn>"
             ]
         }
     ]

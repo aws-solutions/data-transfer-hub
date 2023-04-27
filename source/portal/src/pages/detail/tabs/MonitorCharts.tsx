@@ -24,6 +24,7 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
   const chartDefaultOptions: ApexOptions = {
     chart: {
       id: graphName,
+      redrawOnParentResize: true,
       width: "100%",
       height: 200,
       type: "line",
@@ -34,7 +35,7 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
         enabled: false,
       },
     },
-    colors: ["#0073bb", "#ec7211"],
+    colors: ["#0073bb", "#ec7211", "#2ca02c", "#d62728"],
     grid: {
       padding: {
         top: 20,
@@ -107,8 +108,7 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
     },
 
     noData: {
-      text: `No data available. 
-      Try adjusting the dashboard time range.`,
+      text: `No data available.`,
       align: "center",
       verticalAlign: "middle",
       style: {
@@ -139,6 +139,7 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
       tickAmount: 10,
       categories: [startTime * 1000, endTime * 1000],
       labels: {
+        datetimeUTC: false,
         datetimeFormatter: {
           year: "yyyy",
           month: "yyyy-MM",
@@ -221,12 +222,14 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
 
   return (
     <div className="pr">
-      {loadingData && (
-        <div className="chart-mask">
-          <Loading />
-        </div>
-      )}
-      <Chart options={options} series={series} />
+      <div className="pr">
+        {loadingData && (
+          <div className="chart-mask">
+            <Loading />
+          </div>
+        )}
+        <Chart width="100%" options={options} series={series} />
+      </div>
     </div>
   );
 };

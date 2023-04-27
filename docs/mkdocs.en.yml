@@ -5,27 +5,39 @@ theme:
   language: en
   favicon: images/aws-solutions.png
   logo: images/aws-solutions.png
-  
-nav:
 
-  - Welcome: index.md
-  - Cost: cost.md
-  - Architecture overview: architecture.md
-  - Solution components: solution-components.md
-  - Security: security.md
-  - Supported regions: regions.md
-  - CloudFormation template: template.md
-  - Automated deployment: deployment.md
-  - Create Amazon S3 transfer task: tutorial-s3.md
-  - Create Amazon ECR transfer task: tutorial-ecr.md
-  - Tutorials:
-    - Transfer S3 object from Alibaba Cloud OSS: tutorial-oss.md
-    - Transfer S3 object via Direct Connect: tutorial-directconnect.md    
-    - Using AWS CLI to create S3 transfer task: tutorial-cli-launch.md    
-  - Additional resources: additional-resources.md
-  - Upgrade the solution: upgrade.md
-  - Uninstall the solution: uninstall.md
-  - FAQ: faq.md
-  - Source code: source.md
-  - Revisions: revisions.md
+nav:
+  - Implementation Guide:
+    - Solution Overview:
+        - Overview: solution-overview/index.md
+        - Features and benefits: solution-overview/features-and-benefits.md
+        - Use cases: solution-overview/use-cases.md
+    - Architecture Overview:
+        - Architecture diagram: architecture-overview/architecture.md
+        - AWS Well-Architected pillars: architecture-overview/design-considerations.md
+    - Architecture details: architecture-overview/architecture-details.md
+    - Plan your deployment:
+        - Cost: plan-deployment/cost.md
+        - Security: plan-deployment/security.md
+        - Supported Regions: plan-deployment/regions.md
+        - Quotas: plan-deployment/quotas.md
+    - Deploy the solution:
+        - Deployment overview: deployment/deployment-overview.md
+        - AWS CloudFormation template: deployment/template.md
+        - Deployment: deployment/deployment.md
+    - Use Data Transfer Hub:
+        - Create Amazon S3 transfer task: user-guide/tutorial-s3.md
+        - Create Amazon ECR transfer task: user-guide/tutorial-ecr.md
+        - Transfer S3 object from Alibaba Cloud OSS: user-guide/tutorial-oss.md
+        - Transfer S3 object via Direct Connect: user-guide/tutorial-directconnect.md
+        - Use AWS CLI to create S3 transfer task: user-guide/tutorial-cli-launch.md
+    - Upgrade the solution: update.md
+    - Uninstall the solution: uninstall.md
+    - FAQ: faq.md 
+    - Troubleshooting: troubleshooting.md
+    - Developer guide:
+        - Source code: developer-guide/source.md
+    - Contributors: contributors.md
+    - Revisions: revisions.md
+    - Notices: notices.md
 

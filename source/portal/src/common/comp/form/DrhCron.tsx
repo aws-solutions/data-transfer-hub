@@ -64,7 +64,6 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
     if (hasOneTime) {
       setCronTypeList(CRON_TYPE_LIST_WITH_ONE_TIME);
     } else {
-      // Reset fixed rate after change s3 event
       setCronTypeList(CRON_TYPE_LIST);
       setCronType(CRON_TYPE.FIXED_RATE);
       setCronUnitType(CRON_FIX_UNIT.HOURS);
@@ -91,8 +90,8 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
       <div className="title">{optionTitle}</div>
       <div className="desc">
         {optionDescHtml
-          ? optionDescHtml.map((element: any, index: number) => {
-              return <span key={index}>{element}</span>;
+          ? optionDescHtml.map((element: any) => {
+              return <span key={element.toString()}>{element}</span>;
             })
           : optionDesc}
       </div>
@@ -106,13 +105,17 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
             }}
             input={<SelectInput style={{ width: 200 }} />}
           >
-            {cronTypeList.map((option, index) => {
+            {cronTypeList.map((option) => {
               return isI18n ? (
-                <MenuItem key={index} value={option.value}>
+                <MenuItem key={option.value} value={option.value}>
                   <Trans i18nKey={`${option.name}`} />
                 </MenuItem>
               ) : (
-                <MenuItem key={index} className="font14px" value={option.value}>
+                <MenuItem
+                  key={option.value}
+                  className="font14px"
+                  value={option.value}
+                >
                   {option.name}
                 </MenuItem>
               );
@@ -157,14 +160,14 @@ const DrhCron: React.FC<DrhCronProp> = (props: DrhCronProp) => {
                   }}
                   input={<SelectInput style={{ width: 190 }} />}
                 >
-                  {CRON_UNIT_LIST.map((option, index) => {
+                  {CRON_UNIT_LIST.map((option) => {
                     return isI18n ? (
-                      <MenuItem key={index} value={option.value}>
+                      <MenuItem key={option.value} value={option.value}>
                         <Trans i18nKey={`${option.name}`} />
                       </MenuItem>
                     ) : (
                       <MenuItem
-                        key={index}
+                        key={option.value}
                         className="font14px"
                         value={option.value}
                       >

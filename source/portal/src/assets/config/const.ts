@@ -16,14 +16,19 @@ export const REPORT_ISSUE_LINK = GITHUB_LINK + "/issues/new";
 // URL to be done
 export const URL = "";
 export const URL_FEEDBACK = GITHUB_LINK + "/issues/new";
-export const SSM_LINK_MAP: any = {
-  china: "https://console.amazonaws.cn/secretsmanager",
-  global: "https://console.aws.amazon.com/secretsmanager",
+
+export const buildSecretMangerLink = (region: string) => {
+  if (region.startsWith("cn")) {
+    return `https://${region}.console.amazonaws.cn/secretsmanager/listsecrets?region=${region}`;
+  }
+  return `https://${region}.console.aws.amazon.com/secretsmanager/listsecrets?region=${region}`;
 };
 
-export const CLOUD_WATCH_DASHBOARD_LINK_MAP: any = {
-  china: "https://console.amazonaws.cn/cloudwatch/home",
-  global: "https://console.aws.amazon.com/cloudwatch/home",
+export const buildCloudWatchLink = (region: string) => {
+  if (region.startsWith("cn")) {
+    return `https://${region}.console.amazonaws.cn/cloudwatch/home`;
+  }
+  return `https://${region}.console.aws.amazon.com/cloudwatch/home`;
 };
 
 export const SSM_PARASTORE_HELP_LINK_MAP: any = {
@@ -133,6 +138,10 @@ export const S3_PARAMS_LIST_MAP: any = {
   srcCredentials: {
     en_name: "Source Secret Key for Credential in Secrets Manager",
     zh_name: "源数据凭证中的密钥名称名称",
+  },
+  isPayerRequest: {
+    en_name: "Enable Payer Request?",
+    zh_name: "使用申请方付款？",
   },
   destBucketName: {
     en_name: "Destination Bucket Name",
@@ -546,7 +555,6 @@ export const OBJECT_ACL_LIST = [
   { name: "authenticated-read", value: "authenticated-read" },
   { name: "aws-exec-read", value: "aws-exec-read" },
   { name: "bucket-owner-read", value: "bucket-owner-read" },
-  // { name: "bucket-owner-full-control", value: "bucket-owner-full-control" },
 ];
 
 export const S3_STORAGE_CLASS_OPTIONS = [
@@ -617,12 +625,6 @@ export const CREATE_USE_LESS_PROPERTY = [
   "__typename",
 ];
 
-// export const fixedEncodeURIComponent = (str: string) => {
-//   return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-//     return "%" + c.charCodeAt(0).toString(16);
-//   });
-// };
-
 export const urlIsValid = (url: string): boolean => {
   const REG =
     /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/;
@@ -635,7 +637,6 @@ export const emailIsValid = (email: string): boolean => {
 };
 
 export const bucketNameIsValid = (bucketName: string): boolean => {
-  // return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const REG1 = bucketName && /^[a-z\d.-]*$/.test(bucketName);
   const REG2 = bucketName && /^[a-z\d]/.test(bucketName);
   const REG3 = bucketName && !/-$/.test(bucketName);

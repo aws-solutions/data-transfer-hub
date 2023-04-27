@@ -51,7 +51,6 @@ export interface SignedInAppProps {
 
 // loading component for suspense fallback
 const Loader = () => {
-  // console.info("window.location:", JSON.parse(JSON.stringify(window.location)));
   return (
     <div className="App">
       <div className="app-loading">
@@ -162,7 +161,6 @@ const OIDCAppRouter: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // the `return` is important - addAccessTokenExpiring() returns a cleanup function
     return auth?.events?.addAccessTokenExpiring((event) => {
       console.info("addAccessTokenExpiring:event:", event);
       auth.signinSilent();
@@ -269,7 +267,6 @@ const App: React.FC = () => {
     });
     setAuthType(configData.aws_appsync_authenticationType);
     if (configData.aws_appsync_authenticationType === AppSyncAuthType.OPEN_ID) {
-      // Amplify.configure(configData);
       const settings = {
         userStore: new WebStorageStateStore({ store: window.localStorage }),
         authority: configData.aws_oidc_provider,
@@ -320,7 +317,6 @@ const App: React.FC = () => {
     document.title = t("title");
     if (window.performance) {
       if (performance.navigation.type === 1) {
-        // console.info("This page is reloaded");
         const timeStamp = new Date().getTime();
         setLoadingConfig(true);
         Axios.get(`/aws-exports.json?timestamp=${timeStamp}`).then((res) => {
@@ -342,7 +338,6 @@ const App: React.FC = () => {
           setLoadingConfig(false);
         });
       } else {
-        // console.info("This page is not reloaded");
         setLocalStorageAfterLoad();
       }
     } else {

@@ -227,6 +227,16 @@ const DestSettings: React.FC<DestPropType> = (props) => {
     setDestPrefixFormatError(false);
   }, [tmpTaskInfo?.parametersObj?.sourceType]);
 
+  // Change dest region to null when src region changed.
+  useEffect(() => {
+    if (
+      !tmpTaskInfo?.parametersObj?.srcRegionName ||
+      tmpTaskInfo?.parametersObj?.srcRegionName.startsWith("us-gov-")
+    ) {
+      setDestRegionObj(null);
+    }
+  }, [tmpTaskInfo?.parametersObj?.srcRegionName]);
+
   return (
     <div className="box-shadow card-list">
       <div className="option">
@@ -282,7 +292,13 @@ const DestSettings: React.FC<DestPropType> = (props) => {
             <div className="form-items" ref={destRegionRef}>
               <DrhRegion
                 regionValue={destRegionObj}
-                optionList={AWS_REGION_LIST}
+                optionList={
+                  tmpTaskInfo?.parametersObj.srcRegionName.startsWith("us-gov-")
+                    ? AWS_REGION_LIST.filter((element) => {
+                        return element.value.startsWith("us-");
+                      })
+                    : AWS_REGION_LIST
+                }
                 optionTitle={t("creation.step2.settings.dest.destRegionName")}
                 optionDesc={t(
                   "creation.step2.settings.dest.destRegionNameDesc"

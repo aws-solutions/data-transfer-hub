@@ -3,7 +3,7 @@
 
 **1. 哪些亚马逊云科技区域可以部署该方案?**</br>
 
-请参考[区域支持](./regions.md)。
+请参考[区域支持](../plan-deployment/regions)。
 
 **2. 创建传输任务时，建议部署在数据源端还是目标端？**</br>
 
@@ -34,7 +34,7 @@
 
 **7. 能否使用 AWS CLI 创建 DTH S3 传输任务？**</br>
 
-可以。请参考[使用AWS CLI启动DTH S3 Transfer任务](./tutorial-cli-launch.md)指南。
+可以。请参考[使用AWS CLI启动DTH S3 Transfer任务](../user-guide/tutorial-cli-launch)指南。
 
 ## 性能相关问题
 
@@ -86,7 +86,7 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量[自动放大或缩�
 
 **5. 支持SSE-S3，SSE-KMS，SSE-CMK吗？**</br>
 
-是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考[教程](../tutorial-s3/#kms-amazon-s3-s3)。
+是的。支持使用SSE-S3和SSE-KMS的数据源。如果您的源存储桶启用了SSE-CMK，请参考[教程](../user-guide/tutorial-s3/#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3)。
 
 ## 功能相关问题
 
@@ -151,35 +151,6 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量[自动放大或缩�
 **10. 如何处理Access Key 轮换?**</br>
 目前，当 Data Transfer Hub 感知到 S3 的 Access Key 被轮换时，它会自动从 AWS Secrets Manager 中获取最新的密钥。 因此，Access Key Rotation 不会影响DTH 的迁移过程。
 
-## 错误消息列表 <a name="error-code-list"></a>
-
-**1. StatusCode: 400, InvalidToken: The provided token is malformed or otherwise invalid**
-
-如果您收到此错误消息，请确认您的 Secret 配置为以下格式，建议您通过复制粘贴的方式创建。
-
-```json
-{
-    "access_key_id": "<Your Access Key ID>",
-    "secret_access_key": "<Your Access Key Secret>"
-}
-```
-
-**2. StatusCode: 403, InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records**
-
-如果您收到此错误消息，请检查您的存储桶名称和区域名称是否配置正确。
-
-**3. StatusCode: 403, InvalidAccessKeyId: UnknownError**
-
-请检查Secrets Manager中存放的Credential是否具有应有的权限，具体可参考[IAM Policy](https://github.com/awslabs/data-transfer-hub/blob/v2.0.0/docs/IAM-Policy.md)。
-
-**4. StatusCode: 400, AccessDeniedException: Access to KMS is not allowed**
-
-如果您收到此错误消息，请确认您的密钥没有被SSE-CMK加密。目前，DTH不支持被SSE-CMK加密的密钥。
-
-**5. dial tcp: lookup xxx.xxxxx.xxxxx.xx (http://xxx.xxxxx.xxxxx.xx/) on xxx.xxx.xxx.xxx:53: no such host**
-
-如果您收到此错误消息，请检查您的端点URL是否配置正确。
-
 ## 其它相关问题
 **1. 集群节点（EC2）被失误Terminate了，如何解决？**</br>
 
@@ -215,11 +186,11 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量[自动放大或缩�
 
 **5. 部署完成后，为什么在两个CloudWatch日志组中找不到任何日志流？**</br>
 
-这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取映像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
+这是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此Fargate任务无法拉取镜像，并且EC2无法下载CloudWatch 代理将日志发送到CloudWatch。请检查您的VPC设置。解决问题后，您需要通过此解决方案手动终止正在运行的EC2实例（如果有的话）。随后，弹性伸缩组会自动启动新的实例。
 
 **6. 如何在此解决方案中使用TLSv1.2_2021或更高版本?**</br>
 
-在部署数据传输中心解决方案后，请前往 [CloudFront控制台](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home#/distributions) 配置安全策略。您需要准备一个域名和相应的TLS证书，从而可以实现更加安全的TLS配置。
+在部署数据传输解决方案后，请前往 [CloudFront控制台](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home#/distributions) 配置安全策略。您需要准备一个域名和相应的TLS证书，从而可以实现更加安全的TLS配置。
 
 [crr]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html#crr-scenario
 [asg_scale]: https://docs.aws.amazon.com/zh_cn/autoscaling/ec2/userguide/as-scaling-simple-step.html#as-scaling-steps

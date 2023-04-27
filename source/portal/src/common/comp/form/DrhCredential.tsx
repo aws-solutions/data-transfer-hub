@@ -13,15 +13,11 @@ import NormalButton from "common/comp/NormalButton";
 import { listSecrets } from "graphql/queries";
 import DescLink from "common/comp/DescLink";
 
-import {
-  MenuProps,
-  SSM_LINK_MAP,
-  DRH_REGION_NAME,
-  DRH_REGION_TYPE_NAME,
-  GLOBAL_STR,
-} from "assets/config/const";
+import { MenuProps, buildSecretMangerLink } from "assets/config/const";
 import { EnumSpanType } from "common/InfoBar";
 import { appSyncRequestQuery } from "assets/utils/request";
+import { IState } from "store/Store";
+import { useMappedState } from "redux-react-hook";
 
 interface SelectMenuProp {
   hideBucket?: boolean;
@@ -29,15 +25,16 @@ interface SelectMenuProp {
   onChange: any;
 }
 
-const curRegionType: string =
-  localStorage.getItem(DRH_REGION_TYPE_NAME) || GLOBAL_STR;
-const curRegion = localStorage.getItem(DRH_REGION_NAME) || "";
-
 const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
   const { t } = useTranslation();
   const { credentialValue, hideBucket, onChange } = props;
   const [ssmParamList, setSSMParamList] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
+
+  const mapState = (state: IState) => ({
+    amplifyConfig: state.amplifyConfig,
+  });
+  const { amplifyConfig } = useMappedState(mapState);
 
   async function getSSMParamsList() {
     try {
@@ -65,13 +62,16 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
     <>
       <div className="title">
         {t("creation.step2ECR.settings.source.credentialsStore")}{" "}
-        <InfoSpan spanType={EnumSpanType.CREDENTIAL} />
+        <InfoSpan
+          spanType={EnumSpanType.CREDENTIAL}
+          infoText={t("credentialsGuide")}
+        />
       </div>
       <div className="desc">
         {t("creation.tips.store1")}{" "}
         <DescLink
           title={t("creation.tips.store2")}
-          link={SSM_LINK_MAP[curRegionType] + "?region=" + curRegion}
+          link={buildSecretMangerLink(amplifyConfig.aws_project_region)}
         />
         {!hideBucket && t("creation.tips.store3")}
       </div>
@@ -100,9 +100,13 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
               className="font14px credential-empty"
               value=""
             ></MenuItem>
-            {ssmParamList.map((param: any, index: number) => {
+            {ssmParamList.map((param: any) => {
               return (
-                <MenuItem key={index} className="font14px" value={param.name}>
+                <MenuItem
+                  key={param.name}
+                  className="font14px"
+                  value={param.name}
+                >
                   {param.name}
                 </MenuItem>
               );

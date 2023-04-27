@@ -146,14 +146,14 @@ const StepOne: React.FC = (props: any) => {
                     {t("creation.step1.engineOptions")}
                   </div>
                   <div className="option-list">
-                    {TYPE_LIST.map((item, index) => {
+                    {TYPE_LIST.map((item) => {
                       const optionClass = classNames({
                         "option-list-item": true,
                         "hand-point": !item.disabled,
                         active: taskType === item.value,
                       });
                       return (
-                        <div key={index} className={optionClass}>
+                        <div key={item.value} className={optionClass}>
                           <label>
                             <div>
                               <input

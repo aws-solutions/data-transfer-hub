@@ -98,7 +98,6 @@ export const appSyncRequestQuery = (query: any, params?: any): any => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      // const result: any = await API.graphql(graphqlOperation(query, params));
       const result: any = await client.query({
         query: gql(query),
         variables: params,
@@ -143,8 +142,6 @@ export const appSyncRequestMutation = (mutation: any, params?: any): any => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      // const result: any = await API.graphql(graphqlOperation(query, params));
-      // encode params string value
       const encodedParams = encodeParams(mutation, cloneDeep(params));
       const result: any = await client.mutate({
         mutation: gql(mutation),

@@ -439,7 +439,10 @@ code {
 .monitor-chart-list {
   margin-top: 37px;
   background-color: #fff;
+  display: flex;
+  flex-wrap: wrap;
   .monitor-chart {
+    width: 50%;
     margin-top: 10px;
     padding: 10px 10px 20px;
   }
@@ -534,7 +537,7 @@ $loading-color: #555;
       color: #000;
     }
     &-content {
-      padding-top: 2px;
+      padding-top: 4px;
       font-size: 14px;
     }
   }

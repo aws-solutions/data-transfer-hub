@@ -65,10 +65,10 @@ const Bottom: React.FC = () => {
         {showLang ? (
           <div className="language-select">
             <ul>
-              {langList.map((item: any, index) => {
+              {langList.map((item: any) => {
                 return (
                   <li
-                    key={index}
+                    key={item.id}
                     data-lang={JSON.stringify(item)}
                     onClick={changeSelectLang}
                   >

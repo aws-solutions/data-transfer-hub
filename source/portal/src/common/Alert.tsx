@@ -13,12 +13,14 @@ interface AlertProps {
   content: string | JSX.Element;
   actions?: ReactElement;
   noMargin?: boolean;
+  width?: number;
 }
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
-  const { type, title, content, actions, noMargin } = props;
+  const { type, title, content, actions, noMargin, width } = props;
   return (
     <div
+      style={{ width: width ? width : "auto" }}
       className={`gsui-alert-wrap ${
         !noMargin ? "margin" : ""
       } ${type?.toLowerCase()}`}

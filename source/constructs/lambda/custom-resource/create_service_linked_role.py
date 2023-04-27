@@ -11,16 +11,16 @@ iam = boto3.client('iam')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     request_type = event['RequestType']
     if request_type == 'Create' or request_type == 'Update':
         try:
-            response = iam.get_role(
+            iam.get_role(
                 RoleName='AWSServiceRoleForAppSync',
             )
-        except Exception as err:
+        except Exception:
             logger.info("AWSServiceRoleForAppSync does not exist, create it.")
-            response = iam.create_service_linked_role(
+            iam.create_service_linked_role(
                 AWSServiceName='appsync.amazonaws.com'
             )
             time.sleep(5)

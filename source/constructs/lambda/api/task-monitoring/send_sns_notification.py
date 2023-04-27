@@ -8,7 +8,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     # logger.info("Received event: " + json.dumps(event, indent=2))
 
     args = event["arguments"]

@@ -45,6 +45,7 @@ export interface S3_EC2_TASK {
     multipartThreshold?: string;
     chunkSize?: string;
     maxThreads?: string;
+    isPayerRequest: string;
   };
   [key: string]: any;
 }

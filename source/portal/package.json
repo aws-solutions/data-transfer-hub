@@ -1,6 +1,6 @@
 {
   "name": "data-transfer-hub-portal",
-  "version": "0.1.0",
+  "version": "2.4.0",
   "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",
@@ -33,11 +33,11 @@
     "classnames": "^2.3.2",
     "date-fns": "^2.29.3",
     "i18next": "^20.2.1",
-    "moment": "^2.29.1",
     "i18next-browser-languagedetector": "^6.1.4",
     "i18next-http-backend": "^1.4.1",
     "lodash.clonedeep": "^4.5.0",
-    "node-sass": "^7.0.1",
+    "moment": "^2.29.1",
+    "node-sass": "^8.0.0",
     "oidc-client": "^1.11.5",
     "oidc-client-ts": "^2.2.0",
     "react": "^17.0.2",
@@ -50,10 +50,9 @@
     "react-number-format": "^4.9.3",
     "react-oidc-context": "^2.2.0",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "5.0.1",
     "redux": "^4.2.0",
     "redux-react-hook": "^4.0.3",
-    "sweetalert2": "10.16.11",
+    "sweetalert2": "11.4.8",
     "typescript": "^4.9.3"
   },
   "scripts": {
@@ -93,6 +92,10 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.31.11",
     "prettier": "^2.2.1",
+    "react-scripts": "^5.0.1",
     "rimraf": "^3.0.2"
+  },
+  "overrides": {
+    "nth-check": "2.1.1"
   }
 }

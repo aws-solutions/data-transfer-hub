@@ -8,6 +8,7 @@
   "info": "Info",
   "optional": "optional",
   "recommened": "Recommened",
+  "credentialsGuide": "Create secret guide & AK/SK format",
   "signin": {
     "signInToDRH": "Sign in to Data Transfer Hub",
     "email": "Email *",
@@ -88,7 +89,7 @@
       "requiredCredential": "Please select a Secret Key in Secrets Manager",
       "store1": "Select a secret created by",
       "store2": "Secrets Manager.",
-      "store3": "Leave it bland for public bucket."
+      "store3": "Leave it blank for public bucket."
     },
     "step1": {
       "engineType": "Select engine type",
@@ -125,7 +126,10 @@
           "objectACLDesc3": " Use the default value if you don't want to set the object ACL.",
           "transferType": "Transfer Type",
           "nameOfPrefixList": "Name of Prefix List",
-          "nameOfPrefixListDesc": "Upload the prefix list (.txt file, one prefix per line) in root directory of source bucket. E.g. prefix_list.txt"
+          "nameOfPrefixListDesc": "Upload the prefix list (.txt file, one prefix per line) in root directory of source bucket. E.g. prefix_list.txt",
+          "govCloudTips": "GovCloud data transfer limited in US",
+          "payerRequest": "Enable S3 Payer Request?",
+          "payerRequestDesc": "S3 Payer Request required the Requestor pay DTO fee"
         },
         "dest": {
           "title": "Destination settings",
@@ -193,6 +197,11 @@
       "taskDetail": "Specify task details",
       "sourceType": "Source Type",
       "selectContainerType": "Select container registry type",
+      "valid": {
+        "srcRegionRequired": "Source Region is Required",
+        "accountRequired": "Please input Amazon Web Services account ID",
+        "accountFormatInvalid": "Account ID is invalid"
+      },
       "settings": {
         "source": {
           "title": "Source settings",
@@ -391,7 +400,7 @@
       "create": "Create a",
       "store": "Secret Key",
       "save1": "in Secrets Manager. Select ",
-      "save2": " Other type of secrets ",
+      "save2": " Other type of secret",
       "save3": " as the type.",
       "format": "Format",
       "formatDesc": "Copy the following credential, and replace with your own value in the plaintext tab.",

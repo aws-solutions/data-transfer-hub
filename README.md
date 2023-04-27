@@ -17,6 +17,8 @@ gcr.io, Red Hat Quay.io) to Amazon ECR.
 
 ![](docs/images/homepage.png)
 
+You will be responsible for your compliance with all applicable laws in respect of your data transfer tasks.
+
 ## Features
 
 - [x] Authentication (Cognito User Pool, OIDC)
@@ -90,8 +92,8 @@ Create your first data transfer task, For the complete user guide, refer to
 
 ## FAQ
 
-**Q. Which are the supported Reigons of this solution?**</br>
-You can deploy this solution in these Reigons: N.Virginia (us-east-1), Ohio (us-east-2), N.California (us-west-1), 
+**Q. Which are the supported Regions of this solution?**</br>
+You can deploy this solution in these Regions: N.Virginia (us-east-1), Ohio (us-east-2), N.California (us-west-1), 
 Oregon (us-west-2), Mumbai (ap-south-1), Seoul (ap-northeast-2), Singapore (ap-southeast-1), Sydney (ap-southeast-2),
 Tokyo (ap-northeast-1), Canada (ca-central-1), Frankfurt (eu-central-1), Ireland (eu-west-1), London (eu-west-2), 
 Paris (eu-west-3), Stockholm (eu-north-1), São Paulo (sa-east-1), Beijing (cn-north-1), Ningxia (cn-northwest-1).

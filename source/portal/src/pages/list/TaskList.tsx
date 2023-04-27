@@ -355,6 +355,11 @@ const List: React.FC = () => {
               element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
           }
 
+          if (element.ParameterKey === "isPayerRequest") {
+            tmpTaskInfo.parametersObj.isPayerRequest =
+              element.ParameterValue === "true" ? YES_NO.YES : YES_NO.NO;
+          }
+
           if (element.ParameterKey === "srcCredentials") {
             tmpTaskInfo.parametersObj.srcCredentialsParameterStore =
               element.ParameterValue;
@@ -804,7 +809,7 @@ const List: React.FC = () => {
                         {t("taskList.table.createdTime")}
                       </div>
                     </div>
-                    {taskListData.map((element: any, index: any) => {
+                    {taskListData.map((element: any) => {
                       const rowClass = classNames({
                         "table-row": true,
                         active:
@@ -816,7 +821,7 @@ const List: React.FC = () => {
                             clickTaskInfo(element);
                           }}
                           data-uuid={element.id}
-                          key={index}
+                          key={element.id}
                           className={rowClass}
                         >
                           <div className="table-item check-item center">

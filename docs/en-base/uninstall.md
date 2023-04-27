@@ -1,8 +1,4 @@
-You can uninstall the Data Transfer Hub solution from the AWS Management Console or by using the AWS Command Line Interface.  
-
-!!! note "Note"
-
-    Before uninstalling the solution, you must manually stop any active data transfer tasks.
+You can uninstall the Data Transfer Hub solution from the AWS Management Console or by using the AWS Command Line Interface. You must manually stop any active transfer tasks before uninstalling. 
 
 ## Using the AWS Management Console
 
@@ -22,9 +18,9 @@ $ aws cloudformation delete-stack --stack-name <installation-stack-name>
 ## Deleting the Amazon S3 buckets
 This solution is configured to retain the solution-created Amazon S3 bucket (for deploying in an opt-in Region) if you decide to delete the AWS CloudFormation stack to prevent accidental data loss. After uninstalling the solution, you can manually delete this S3 bucket if you do not need to retain the data. Follow these steps to delete the Amazon S3 bucket. 
 
-1.	Sign in to the [Amazon S3](https://console.aws.amazon.com/s3/home) console
+1.	Sign in to the [Amazon S3](https://console.aws.amazon.com/s3/home) console.
 2.	Choose Buckets from the left navigation pane. 
-3.	Locate the <stack-name> S3 buckets. 
+3.	Locate the `<stack-name>` S3 buckets. 
 4.	Select the S3 bucket and choose **Delete**. 
 
 To delete the S3 bucket using AWS CLI, run the following command: 

@@ -41,7 +41,7 @@ def handle_error(func):
 
 
 @handle_error
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     # logger.info("Received event: " + json.dumps(event, indent=2))
 
     action = event["info"]["fieldName"]

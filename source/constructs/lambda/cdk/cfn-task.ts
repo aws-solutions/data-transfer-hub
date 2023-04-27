@@ -169,7 +169,6 @@ exports.queryTaskCfn = async function (input: QueryCfnTaskInput) {
       ReturnValues: "ALL_NEW"
     }).promise()
 
-    // TODO: if failed, update the reason.
     pprint('updatedTask.Attributes', updatedTask.Attributes)
     return updatedTask.Attributes
   } else {

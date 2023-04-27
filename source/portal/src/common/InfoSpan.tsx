@@ -5,10 +5,11 @@ import { ACTION_TYPE } from "assets/types";
 
 interface spanInfo {
   spanType: string;
+  infoText?: string;
 }
 
 const InfoSpan: React.FC<spanInfo> = (props) => {
-  const { spanType } = props;
+  const { spanType, infoText } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const openInfoBar = React.useCallback(() => {
@@ -18,7 +19,7 @@ const InfoSpan: React.FC<spanInfo> = (props) => {
   }, [dispatch, spanType]);
   return (
     <span className="info-span" onClick={openInfoBar}>
-      {t("info")}
+      {infoText || t("info")}
     </span>
   );
 };

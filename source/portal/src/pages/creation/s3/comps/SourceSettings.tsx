@@ -33,6 +33,7 @@ import {
 } from "assets/types/index";
 
 import { IState } from "store/Store";
+import Alert from "common/Alert";
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
 });
@@ -115,6 +116,10 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   );
   const [srcPrefixsListFile, setSrcPrefixsListFile] = useState(
     tmpTaskInfo?.parametersObj?.srcPrefixsListFile || ""
+  );
+
+  const [isPayerRequest, setIsPayerRequest] = useState(
+    tmpTaskInfo?.parametersObj?.isPayerRequest || YES_NO.NO
   );
 
   // Monitor the sourceType change
@@ -236,6 +241,9 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       "srcCredentialsParameterStore",
       srcCredentialsParameterStore
     );
+    if (!srcCredentialsParameterStore) {
+      setIsPayerRequest(YES_NO.NO);
+    }
   }, [srcCredentialsParameterStore]);
 
   useEffect(() => {
@@ -272,6 +280,10 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       setSrcBucketPrefix("");
     }
   }, [srcPrefixType]);
+
+  useEffect(() => {
+    updateTmpTaskInfo("isPayerRequest", isPayerRequest);
+  }, [isPayerRequest]);
 
   return (
     <div className="box-shadow card-list">
@@ -410,26 +422,54 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
             </div>
           )}
 
-          {showSrcRegion && (
-            <div className="form-items" ref={srcRegionRef}>
-              <DrhRegion
-                regionValue={srcRegionObj}
-                optionList={regionList}
-                optionTitle={t("creation.step2.settings.source.srcRegionName")}
-                optionDesc={t(
-                  "creation.step2.settings.source.srcRegionNameDesc"
-                )}
-                showRequiredError={srcRegionReqired}
-                requiredErrorMsg={t("tips.error.srcRegionRequired")}
-                onChange={(
-                  event: React.ChangeEvent<HTMLInputElement>,
-                  data: IRegionType
-                ) => {
-                  setSrcRegionReqired(false);
-                  setSrcRegionObj(data);
+          {sourceInAccount === YES_NO.NO && srcCredentialsParameterStore && (
+            <div className="form-items">
+              <DrhSelect
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setIsPayerRequest(event.target.value);
                 }}
+                optionTitle={t("creation.step2.settings.source.payerRequest")}
+                optionDesc={t(
+                  "creation.step2.settings.source.payerRequestDesc"
+                )}
+                selectValue={isPayerRequest}
+                optionList={YES_NO_LIST}
               />
             </div>
+          )}
+
+          {showSrcRegion && (
+            <>
+              <div className="form-items" ref={srcRegionRef}>
+                <DrhRegion
+                  regionValue={srcRegionObj}
+                  optionList={regionList}
+                  optionTitle={t(
+                    "creation.step2.settings.source.srcRegionName"
+                  )}
+                  optionDesc={t(
+                    "creation.step2.settings.source.srcRegionNameDesc"
+                  )}
+                  showRequiredError={srcRegionReqired}
+                  requiredErrorMsg={t("tips.error.srcRegionRequired")}
+                  onChange={(
+                    event: React.ChangeEvent<HTMLInputElement>,
+                    data: IRegionType
+                  ) => {
+                    setSrcRegionReqired(false);
+                    setSrcRegionObj(data);
+                  }}
+                />
+                {tmpTaskInfo?.parametersObj?.srcRegionName?.startsWith(
+                  "us-gov-"
+                ) && (
+                  <Alert
+                    width={565}
+                    content={t("creation.step2.settings.source.govCloudTips")}
+                  />
+                )}
+              </div>
+            </>
           )}
 
           <div className={s3EventClass}>

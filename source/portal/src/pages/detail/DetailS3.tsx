@@ -52,8 +52,6 @@ import {
 } from "assets/utils/request";
 import Monitor from "./tabs/Monitor";
 
-// const S3_EVENT_OPTIONS_MAP = ConverListToMap(S3_EVENT_OPTIONS);
-
 interface StyledTabProps {
   label: string;
 }
