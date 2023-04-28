@@ -1,28 +1,30 @@
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="zh" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="数据传输解决方案实施指南">
       
       
-        <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/solution-overview/use-cases/">
       
-      <link rel="icon" href="../../images/aws-solutions.png">
+        <link rel="canonical" href="https://awslabs.github.io/data-transfer-hub/">
+      
+      <link rel="icon" href="images/aws-solutions.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
       
-        <title>Use cases - Data Transfer Hub</title>
+        <title>概述 - 数据传输解决方案</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.edf004c2.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.e6a45f82.min.css">
         
       
     
@@ -36,7 +38,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL(".",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,10 +76,10 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Data Transfer Hub" class="md-header__button md-logo" aria-label="Data Transfer Hub" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="." title="数据传输解决方案" class="md-header__button md-logo" aria-label="数据传输解决方案" data-md-component="logo">
       
-  <img src="../../images/aws-solutions.png" alt="logo">
+  <img src="images/aws-solutions.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -87,13 +89,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Data Transfer Hub
+            数据传输解决方案
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Use cases
+              概述
             
           </span>
         </div>
@@ -104,7 +106,7 @@
       <div class="md-header__option">
         <div class="md-select">
           
-          <button class="md-header__button md-icon" aria-label="Select language">
+          <button class="md-header__button md-icon" aria-label="选择当前语言">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24z"/></svg>
           </button>
           <div class="md-select__inner">
@@ -135,14 +137,14 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="查找">
         
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" aria-label="清空当前内容" tabindex="-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
       </nav>
@@ -154,7 +156,7 @@
       <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            正在初始化搜索引擎
           </div>
           <ol class="md-search-result__list"></ol>
         </div>
@@ -165,7 +167,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/awslabs/data-transfer-hub/" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/awslabs/data-transfer-hub/" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
@@ -186,7 +188,7 @@
         
           
             
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
       
@@ -206,8 +208,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link md-tabs__link--active">
-        Implementation Guide
+      <a href="." class="md-tabs__link md-tabs__link--active">
+        实施指南
       </a>
     </li>
   
@@ -234,18 +236,18 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Data Transfer Hub" class="md-nav__button md-logo" aria-label="Data Transfer Hub" data-md-component="logo">
+    <a href="." title="数据传输解决方案" class="md-nav__button md-logo" aria-label="数据传输解决方案" data-md-component="logo">
       
-  <img src="../../images/aws-solutions.png" alt="logo">
+  <img src="images/aws-solutions.png" alt="logo">
 
     </a>
-    Data Transfer Hub
+    数据传输解决方案
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/awslabs/data-transfer-hub/" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/awslabs/data-transfer-hub/" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
@@ -277,14 +279,14 @@
       
       
         <label class="md-nav__link" for="__nav_1">
-          Implementation Guide
+          实施指南
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Implementation Guide" data-md-level="1">
+      <nav class="md-nav" aria-label="实施指南" data-md-level="1">
         <label class="md-nav__title" for="__nav_1">
           <span class="md-nav__icon md-icon"></span>
-          Implementation Guide
+          实施指南
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -305,44 +307,16 @@
       
       
         <label class="md-nav__link" for="__nav_1_1">
-          Solution Overview
+          方案概述
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Solution Overview" data-md-level="2">
+      <nav class="md-nav" aria-label="方案概述" data-md-level="2">
         <label class="md-nav__title" for="__nav_1_1">
           <span class="md-nav__icon md-icon"></span>
-          Solution Overview
+          方案概述
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../features-and-benefits/" class="md-nav__link">
-        Features and benefits
-      </a>
-    </li>
-  
-
-            
           
             
               
@@ -357,10 +331,38 @@
       
       
       
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Use cases
+      <a href="." class="md-nav__link md-nav__link--active">
+        概述
       </a>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="solution-overview/features-and-benefits/" class="md-nav__link">
+        功能和优势
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="solution-overview/use-cases/" class="md-nav__link">
+        客户用例
+      </a>
     </li>
   
 
@@ -388,14 +390,14 @@
       
       
         <label class="md-nav__link" for="__nav_1_2">
-          Architecture Overview
+          架构概览
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Architecture Overview" data-md-level="2">
+      <nav class="md-nav" aria-label="架构概览" data-md-level="2">
         <label class="md-nav__title" for="__nav_1_2">
           <span class="md-nav__icon md-icon"></span>
-          Architecture Overview
+          架构概览
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -405,8 +407,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture-overview/architecture/" class="md-nav__link">
-        Architecture diagram
+      <a href="architecture-overview/architecture/" class="md-nav__link">
+        架构图
       </a>
     </li>
   
@@ -419,8 +421,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture-overview/design-considerations/" class="md-nav__link">
-        AWS Well-Architected pillars
+      <a href="architecture-overview/design-considerations/" class="md-nav__link">
+        架构设计思路
       </a>
     </li>
   
@@ -440,8 +442,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture-overview/architecture-details/" class="md-nav__link">
-        Architecture details
+      <a href="architecture-overview/architecture-details/" class="md-nav__link">
+        架构细节
       </a>
     </li>
   
@@ -463,14 +465,14 @@
       
       
         <label class="md-nav__link" for="__nav_1_4">
-          Plan your deployment
+          部署前的规划
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Plan your deployment" data-md-level="2">
+      <nav class="md-nav" aria-label="部署前的规划" data-md-level="2">
         <label class="md-nav__title" for="__nav_1_4">
           <span class="md-nav__icon md-icon"></span>
-          Plan your deployment
+          部署前的规划
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -480,8 +482,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plan-deployment/cost/" class="md-nav__link">
-        Cost
+      <a href="plan-deployment/cost/" class="md-nav__link">
+        成本预估
       </a>
     </li>
   
@@ -494,8 +496,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plan-deployment/security/" class="md-nav__link">
-        Security
+      <a href="plan-deployment/security/" class="md-nav__link">
+        安全信息
       </a>
     </li>
   
@@ -508,8 +510,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plan-deployment/regions/" class="md-nav__link">
-        Supported Regions
+      <a href="plan-deployment/regions/" class="md-nav__link">
+        区域支持
       </a>
     </li>
   
@@ -522,8 +524,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plan-deployment/quotas/" class="md-nav__link">
-        Quotas
+      <a href="plan-deployment/quotas/" class="md-nav__link">
+        配额信息
       </a>
     </li>
   
@@ -552,14 +554,14 @@
       
       
         <label class="md-nav__link" for="__nav_1_5">
-          Deploy the solution
+          部署解决方案
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Deploy the solution" data-md-level="2">
+      <nav class="md-nav" aria-label="部署解决方案" data-md-level="2">
         <label class="md-nav__title" for="__nav_1_5">
           <span class="md-nav__icon md-icon"></span>
-          Deploy the solution
+          部署解决方案
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -569,8 +571,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/deployment-overview/" class="md-nav__link">
-        Deployment overview
+      <a href="deployment/deployment-overview/" class="md-nav__link">
+        部署概览
       </a>
     </li>
   
@@ -583,8 +585,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/template/" class="md-nav__link">
-        AWS CloudFormation template
+      <a href="deployment/template/" class="md-nav__link">
+        模板信息
       </a>
     </li>
   
@@ -597,8 +599,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/deployment/" class="md-nav__link">
-        Deployment
+      <a href="deployment/deployment/" class="md-nav__link">
+        部署步骤
       </a>
     </li>
   
@@ -627,14 +629,14 @@
       
       
         <label class="md-nav__link" for="__nav_1_6">
-          Use Data Transfer Hub
+          用户指南
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Use Data Transfer Hub" data-md-level="2">
+      <nav class="md-nav" aria-label="用户指南" data-md-level="2">
         <label class="md-nav__title" for="__nav_1_6">
           <span class="md-nav__icon md-icon"></span>
-          Use Data Transfer Hub
+          用户指南
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -644,8 +646,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/tutorial-s3/" class="md-nav__link">
-        Create Amazon S3 transfer task
+      <a href="user-guide/tutorial-s3/" class="md-nav__link">
+        创建 Amazon S3 传输任务
       </a>
     </li>
   
@@ -658,8 +660,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/tutorial-ecr/" class="md-nav__link">
-        Create Amazon ECR transfer task
+      <a href="user-guide/tutorial-ecr/" class="md-nav__link">
+        创建 Amazon ECR 传输任务
       </a>
     </li>
   
@@ -672,8 +674,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/tutorial-oss/" class="md-nav__link">
-        Transfer S3 object from Alibaba Cloud OSS
+      <a href="user-guide/tutorial-oss/" class="md-nav__link">
+        从阿里云 OSS 传输 S3 对象
       </a>
     </li>
   
@@ -686,8 +688,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/tutorial-directconnect/" class="md-nav__link">
-        Transfer S3 object via Direct Connect
+      <a href="user-guide/tutorial-directconnect/" class="md-nav__link">
+        通过 Direct Connect 传输 S3 对象
       </a>
     </li>
   
@@ -700,8 +702,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/tutorial-cli-launch/" class="md-nav__link">
-        Use AWS CLI to create S3 transfer task
+      <a href="user-guide/tutorial-cli-launch/" class="md-nav__link">
+        使用 AWS CLI 创建 S3 传输任务
       </a>
     </li>
   
@@ -721,8 +723,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../update/" class="md-nav__link">
-        Upgrade the solution
+      <a href="update/" class="md-nav__link">
+        更新解决方案
       </a>
     </li>
   
@@ -735,8 +737,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../uninstall/" class="md-nav__link">
-        Uninstall the solution
+      <a href="uninstall/" class="md-nav__link">
+        卸载解决方案
       </a>
     </li>
   
@@ -749,8 +751,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../faq/" class="md-nav__link">
-        FAQ
+      <a href="faq/" class="md-nav__link">
+        常见问题解答
       </a>
     </li>
   
@@ -763,8 +765,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/" class="md-nav__link">
-        Troubleshooting
+      <a href="troubleshooting/" class="md-nav__link">
+        故障排除
       </a>
     </li>
   
@@ -786,14 +788,14 @@
       
       
         <label class="md-nav__link" for="__nav_1_11">
-          Developer guide
+          开发者指南
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Developer guide" data-md-level="2">
+      <nav class="md-nav" aria-label="开发者指南" data-md-level="2">
         <label class="md-nav__title" for="__nav_1_11">
           <span class="md-nav__icon md-icon"></span>
-          Developer guide
+          开发者指南
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -803,8 +805,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer-guide/source/" class="md-nav__link">
-        Source code
+      <a href="developer-guide/source/" class="md-nav__link">
+        源代码
       </a>
     </li>
   
@@ -824,8 +826,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributors/" class="md-nav__link">
-        Contributors
+      <a href="contributors/" class="md-nav__link">
+        贡献人员
       </a>
     </li>
   
@@ -838,22 +840,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../revisions/" class="md-nav__link">
-        Revisions
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notices/" class="md-nav__link">
-        Notices
+      <a href="revisions/" class="md-nav__link">
+        文档修订信息
       </a>
     </li>
   
@@ -878,22 +866,48 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/awslabs/data-transfer-hub/edit/master/docs/solution-overview/use-cases.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/awslabs/data-transfer-hub/edit/master/docs/index.md" title="编辑此页" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-  <h1>Use cases</h1>
+  <h1>概述</h1>
 
-<p>Today, the China market is one of biggest markets in the world. Many international companies are seeking their success in China, as well as a number of Chinese companies are expanding their businesses globally. One of most important steps of in the business is moving their data. </p>
-<p>S3 Cross-Region Replication and ECR Cross-Region Replication are popular but customers cannot use them to replicate data into China Regions. With the launch of Data Transfer Hub solution, customers can now create S3 and ECR data transfer tasks between AWS Regions and AWS China Regions in a web portal. Moreover, it supports replicating data from cloud providers to AWS.</p>
-<p>Data Transfer Hub supports the following use cases:</p>
-<ul>
-<li>Copy Amazon S3 objects between AWS Regions and AWS China Regions. </li>
-<li>Copy data from other cloud providers’ object storage services (including Alibaba Cloud OSS, Tencent COS, Qiniu Kodo) to Amazon S3. </li>
-<li>Transfer Amazon ECR images between AWS Regions and AWS China Regions. </li>
-<li>Transfer Dockers image from public docker registry (for example, Docker Hub, Google gcr.io, Red Hat Quay.io) to Amazon ECR.</li>
-</ul>
+<p><strong>数据传输解决方案</strong>（Data Transfer Hub）为 Amazon Simple Storage Service（Amazon S3）对象和 Amazon Elastic Container Registry（Amazon ECR）镜像提供安全、可扩展和可跟踪的数据传输。该数据传输帮助客户通过轻松地在亚马逊云科技（Amazon Web Services，AWS）中国区域内进出数据来拓展其全球业务。</p>
+<p>本实施指南提供了数据传输解决方案的概述、参考架构和组件、规划部署的注意事项以及将数据传输解决方案部署到 AWS 云的配置步骤。</p>
+<p>您可以使用以下表格快速导航至相关内容：</p>
+<table>
+<thead>
+<tr>
+<th>如果您想要...</th>
+<th>请阅读...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>了解运行此解决方案的成本</td>
+<td><a href="./plan-deployment/cost">成本</a></td>
+</tr>
+<tr>
+<td>理解此解决方案的安全注意事项</td>
+<td><a href="./plan-deployment/security">安全</a></td>
+</tr>
+<tr>
+<td>知道如何为此解决方案计划配额</td>
+<td><a href="./plan-deployment/quotas">配额</a></td>
+</tr>
+<tr>
+<td>知道此解决方案支持哪些 AWS 区域</td>
+<td><a href="./plan-deployment/regions">支持的 AWS 区域</a></td>
+</tr>
+<tr>
+<td>查看或下载此解决方案中包含的 AWS CloudFormation 模板以自动部署此解决方案的基础设施资源（“堆栈”）</td>
+<td><a href="./deployment/template">AWS CloudFormation 模板</a></td>
+</tr>
+</tbody>
+</table>
+<p>本指南适用于在 AWS 云中进行实际架构工作的 IT 架构师、开发人员、DevOps、数据分析师和市场技术专业人员。</p>
+<p>您将负责遵守与您的数据传输任务相关的所有适用法律。</p>
 
               
             </article>
@@ -904,32 +918,17 @@
       
         <footer class="md-footer">
   
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
-      
-        
-        <a href="../features-and-benefits/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Features and benefits" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Features and benefits
-            </div>
-          </div>
-        </a>
+    <nav class="md-footer__inner md-grid" aria-label="页脚">
       
       
         
-        <a href="../../architecture-overview/architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Architecture diagram" rel="next">
+        <a href="solution-overview/features-and-benefits/" class="md-footer__link md-footer__link--next" aria-label="下一页: 功能和优势" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
-                Next
+                下一页
               </span>
-              Architecture diagram
+              功能和优势
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -954,10 +953,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js", "version": "latest"}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "\u590d\u5236", "clipboard.copied": "\u5df2\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "search": "assets/javascripts/workers/search.0bbba5b5.min.js", "version": "latest"}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="assets/javascripts/bundle.e1a181d9.min.js"></script>
       
     
   </body>
