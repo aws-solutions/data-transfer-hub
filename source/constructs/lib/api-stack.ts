@@ -50,18 +50,11 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
  
      // Can define custom bucket to hold the plugin url. Default to aws-gcr-solutions
      const templateBucket = process.env.TEMPLATE_OUTPUT_BUCKET || 'aws-gcr-solutions'
+     const solutionName = process.env.SOLUTION_TRADEMARKEDNAME || 'data-transfer-hub'
+     const solutionVersion = process.env.VERSION || 'v1.0.0'
  
-     let s3PluginVersion = 'v2.4.0'
-     let ecrPluginVersion = 'v2.3.0'
-     let suffix = '-plugin'
-     if (templateBucket === 'aws-gcr-solutions') {
-       s3PluginVersion = 'v2.4.0'
-       ecrPluginVersion = 'v2.3.0'
-       suffix = ''
-     }
- 
-     const PLUGIN_TEMPLATE_S3EC2 = `https://${templateBucket}.s3.amazonaws.com/data-transfer-hub-s3${suffix}/${s3PluginVersion}/DataTransferS3Stack-ec2.template`;
-     const PLUGIN_TEMPLATE_ECR = `https://${templateBucket}.s3.amazonaws.com/data-transfer-hub-ecr${suffix}/${ecrPluginVersion}/DataTransferECRStack.template`;
+     const PLUGIN_TEMPLATE_S3EC2 = `https://${templateBucket}.s3.amazonaws.com/${solutionName}/${solutionVersion}/DataTransferS3Stack.template`;
+     const PLUGIN_TEMPLATE_ECR = `https://${templateBucket}.s3.amazonaws.com/${solutionName}/${solutionVersion}/DataTransferECRStack.template`;
  
      // This Lambda is to create the AppSync Service Linked Role
      const appSyncServiceLinkRoleFn = new lambda.Function(this, 'AppSyncServiceLinkRoleFn', {
@@ -220,25 +213,6 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
      const cfnAlarmTopic = alarmTopic.node.defaultChild as sns.CfnTopic;
      cfnAlarmTopic.overrideLogicalId('DTHCentralAlarmTopic')
  
-     const lambdaLayer = new lambda.LayerVersion(this, 'Layer', {
-       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/layer/api/'), {
-         bundling: {
-           image: lambda.Runtime.NODEJS_16_X.bundlingImage,
-           command: [
-             'bash', '-c', [
-               `cd /asset-output/`,
-               `mkdir nodejs`,
-               `cp /asset-input/nodejs/package.json /asset-output/nodejs/`,
-               `cd /asset-output/nodejs/`,
-               `npm install`
-             ].join(' && ')
-           ],
-           user: 'root'
-         }
-       }),
-       compatibleRuntimes: [lambda.Runtime.NODEJS_16_X],
-       description: 'Data Transfer Hub - Lambda Layer'
-     })
 
      const monitorStateMachine = new monitorSate.MonitorStateMachine(this, 'taskMonitorFlow', {
       taskTable: this.taskTable,
@@ -248,7 +222,6 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
      const stateMachine = new cfnSate.CloudFormationStateMachine(this, 'CfnWorkflow', {
        taskTableName: this.taskTable.tableName,
        taskTableArn: this.taskTable.tableArn,
-       lambdaLayer: lambdaLayer,
        taskMonitorSfnArn: monitorStateMachine.taskMonitorStateMachineArn
      })
 
@@ -408,13 +381,6 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
  
      const taskDS = this.api.addDynamoDbDataSource('TaskTableDS', this.taskTable)
  
-     taskDS.createResolver('QueryListTasksResolver', {
-       typeName: 'Query',
-       fieldName: 'listTasks',
-       requestMappingTemplate: appsync.MappingTemplate.fromFile(path.join(__dirname, '../../schema/vtl/DynamoDBScanTable.vtl')),
-       responseMappingTemplate: appsync.MappingTemplate.fromFile(path.join(__dirname, '../../schema/vtl/DynamoDBScanTableResult.vtl'))
-     })
- 
      taskDS.createResolver('QueryGetTaskResolver', {
        typeName: 'Query',
        fieldName: 'getTask',
@@ -425,23 +391,22 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
  
      // Create Lambda Data Source
      const isDryRun = this.node.tryGetContext('DRY_RUN')
-     const taskHandlerFn = new lambda.Function(this, 'TaskHandlerFn', {
-       code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-         exclude: ['cdk/*', 'layer/*']
-       }),
-       runtime: lambda.Runtime.NODEJS_16_X,
-       handler: 'api/api-task.handler',
-       timeout: Duration.seconds(10),
-       memorySize: 512,
-       environment: {
-         STATE_MACHINE_ARN: stateMachine.stateMachineArn,
-         TASK_TABLE: this.taskTable.tableName,
-         PLUGIN_TEMPLATE_S3EC2: PLUGIN_TEMPLATE_S3EC2,
-         PLUGIN_TEMPLATE_ECR: PLUGIN_TEMPLATE_ECR,
-         DRY_RUN: isDryRun ? 'True' : 'False'
-       },
-       layers: [lambdaLayer]
-     })
+    const taskHandlerFn = new lambda.Function(this, 'TaskHandlerFn', {
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/api/task'), {
+      }),
+      runtime: lambda.Runtime.PYTHON_3_9,
+      description: 'Data Transfer Hub - API V1',
+      handler: 'api_task_v2.lambda_handler',
+      timeout: Duration.seconds(60),
+      memorySize: 512,
+      environment: {
+        STATE_MACHINE_ARN: stateMachine.stateMachineArn,
+        TRANSFER_TASK_TABLE: this.taskTable.tableName,
+        PLUGIN_TEMPLATE_S3EC2: PLUGIN_TEMPLATE_S3EC2,
+        PLUGIN_TEMPLATE_ECR: PLUGIN_TEMPLATE_ECR,
+        DRY_RUN: isDryRun ? 'True' : 'False'
+      },
+    })
  
      const cfnTaskHandlerFn = taskHandlerFn.node.defaultChild as lambda.CfnFunction
      addCfnNagSuppressRules(cfnTaskHandlerFn, [
@@ -486,13 +451,6 @@ import * as appsync from "@aws-cdk/aws-appsync-alpha";
        requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
        responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
      })
- 
-     // lambdaDS.createResolver({
-     //   typeName: 'Mutation',
-     //   fieldName: 'updateTaskProgress',
-     //   requestMappingTemplate: appsync.MappingTemplate.lambdaRequest(),
-     //   responseMappingTemplate: appsync.MappingTemplate.lambdaResult()
-     // })
  
      // Create Lambda Data Source for listing secrets
      const secretManagerHandlerFn = new lambda.Function(this, 'SecretManagerHandlerFn', {

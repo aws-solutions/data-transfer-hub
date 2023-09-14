@@ -1,7 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
-import Loader from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -22,17 +24,22 @@ import NormalButton from "common/comp/NormalButton";
 import TextButton from "common/comp/TextButton";
 
 import "../Creation.scss";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
   ECR_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
   CREATE_USE_LESS_PROPERTY,
   getRegionNameById,
   DRH_CONFIG_JSON_NAME,
+  YES_NO,
 } from "assets/config/const";
-import { ACTION_TYPE } from "assets/types";
+import {
+  ACTION_TYPE,
+  ECREnumSourceType,
+  EnumDockerImageType,
+} from "assets/types";
 import { appSyncRequestMutation } from "assets/utils/request";
 import { ScheduleType } from "API";
+import cloneDeep from "lodash.clonedeep";
 
 const mapState = (state: IState) => ({
   tmpECRTaskInfo: state.tmpECRTaskInfo,
@@ -60,15 +67,12 @@ const StepThreeECR: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // eslint-disable-next-line no-prototype-builtins
     if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
-      const toPath = "/create/step1/ECR";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/create/step1/ECR");
     }
   }, [history, tmpECRTaskInfo]);
 
@@ -96,6 +100,10 @@ const StepThreeECR: React.FC = () => {
       ParameterValue: parametersObj.srcList,
     });
     taskParamArr.push({
+      ParameterKey: "includeUntagged",
+      ParameterValue: parametersObj.includeUntagged,
+    });
+    taskParamArr.push({
       ParameterKey: "srcImageList",
       ParameterValue: parametersObj.srcImageList,
     });
@@ -119,7 +127,6 @@ const StepThreeECR: React.FC = () => {
       ParameterKey: "destPrefix",
       ParameterValue: parametersObj.destPrefix,
     });
-
     taskParamArr.push({
       ParameterKey: "alarmEmail",
       ParameterValue: parametersObj.alarmEmail,
@@ -167,7 +174,7 @@ const StepThreeECR: React.FC = () => {
         }
       }
 
-      // Remove uesless property when clone task
+      // Remove useless property when clone task
       for (const key in createTaskInfo) {
         if (CREATE_USE_LESS_PROPERTY.indexOf(key) > -1) {
           delete createTaskInfo?.[key];
@@ -189,27 +196,18 @@ const StepThreeECR: React.FC = () => {
         type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
       });
       // Redirect to task list page
-      const toPath = "/task/list";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/task/list");
     } catch (error) {
       setIsCreating(false);
     }
   }
 
   const goToHomePage = () => {
-    const toPath = "/";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/");
   };
 
   const goToStepTwo = () => {
-    const toPath = "/create/step2/ECR";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/create/step2/ECR");
   };
 
   const goToTaskList = () => {
@@ -231,6 +229,36 @@ const StepThreeECR: React.FC = () => {
       return getRegionNameById(value);
     } else {
       return value || "-";
+    }
+  };
+
+  const renderKeyValue = (item: any) => {
+    return (
+      <>
+        <div className="table-td key">
+          {ECR_PARAMS_LIST_MAP[item.ParameterKey] &&
+            ECR_PARAMS_LIST_MAP[item.ParameterKey][nameStr]}
+        </div>
+        <div className="table-td value">
+          {buildParamValue(item.ParameterKey, item.ParameterValue)}
+        </div>
+      </>
+    );
+  };
+
+  const buildPreviewKeyValue = (item: any) => {
+    if (item.ParameterKey === "includeUntagged") {
+      item.ParameterValue =
+        item.ParameterValue === "true" ? YES_NO.NO : YES_NO.YES;
+      return renderKeyValue(item);
+    } else if (item.ParameterKey === "srcImageList") {
+      if (tmpECRTaskInfo?.parametersObj.srcList === EnumDockerImageType.ALL) {
+        return "";
+      } else {
+        return renderKeyValue(item);
+      }
+    } else {
+      return renderKeyValue(item);
     }
   };
 
@@ -287,7 +315,16 @@ const StepThreeECR: React.FC = () => {
                 <div className="option">
                   <div className="option-title">
                     {t("creation.step3.step2TaskParams")}{" "}
-                    <span>({paramsList.length - 4})</span>
+                    <span>
+                      (
+                      {tmpECRTaskInfo?.parametersObj.sourceType ===
+                        ECREnumSourceType.ECR &&
+                      tmpECRTaskInfo?.parametersObj.srcList ===
+                        EnumDockerImageType.ALL
+                        ? paramsList.length - 5
+                        : paramsList.length - 4}
+                      )
+                    </span>
                   </div>
                   <div className="option-content padding0">
                     <div className="table-wrap">
@@ -300,25 +337,14 @@ const StepThreeECR: React.FC = () => {
                             {t("creation.step3.step2Value")}
                           </div>
                         </div>
-                        {paramsList.map((element: any) => {
+                        {cloneDeep(paramsList).map((element: any) => {
                           return (
                             ECR_PARAMS_LIST_MAP[element.ParameterKey] && (
                               <div
                                 className="preview-row preview-data"
                                 key={element.ParameterKey}
                               >
-                                <div className="table-td key">
-                                  {ECR_PARAMS_LIST_MAP[element.ParameterKey] &&
-                                    ECR_PARAMS_LIST_MAP[element.ParameterKey][
-                                      nameStr
-                                    ]}
-                                </div>
-                                <div className="table-td value">
-                                  {buildParamValue(
-                                    element.ParameterKey,
-                                    element.ParameterValue
-                                  )}
-                                </div>
+                                {buildPreviewKeyValue(element)}
                               </div>
                             )
                           );
@@ -338,7 +364,7 @@ const StepThreeECR: React.FC = () => {
                 </NormalButton>
                 {isCreating ? (
                   <CreateButtonLoading disabled={true}>
-                    <Loader type="ThreeDots" color="#ffffff" height={10} />
+                    <ThreeDots color="#ffffff" height={10} />
                   </CreateButtonLoading>
                 ) : (
                   <NextButton onClick={goToTaskList}>

@@ -2,7 +2,7 @@
 
 # 为 Amazon S3 设置凭证
 
-- ## Step 1: 创建 IAM Policy
+## Step 1: 创建 IAM Policy
 
 打开 AWS 管理控制台，转到 IAM > 策略，单击 **Create Policy**
 
@@ -12,7 +12,7 @@ Create a policy using below example IAM policy statement with minimum permission
 
 _Note_: 如果是针对中国地区的 S3 存储桶，请确保您更改为使用 `arn:aws-cn:s3::::` 而不是 `arn:aws:s3:::`
 
-- ### 对于源存储桶
+### 对于源存储桶
 
 ```
 {
@@ -35,7 +35,7 @@ _Note_: 如果是针对中国地区的 S3 存储桶，请确保您更改为使�
 ```
 
 
-- ### 对于目标存储桶
+### 对于目标存储桶
 
 ```
 {
@@ -65,7 +65,7 @@ _Note_: 如果是针对中国地区的 S3 存储桶，请确保您更改为使�
 
 > Data Transfer Hub 原生支持使用 SSE-S3 和 SSE-KMS 的数据源，但如果您的源存储桶启用了 *SSE-CMK*，请将源存储桶策略替换为链接 [for S3 SSE-CMK](./S3-SSE-KMS-Policy_CN.md)中的策略。
 
-- ## Step 2: 创建 User
+## Step 2: 创建 User
 
 打开 AWS 管理控制台，转至 IAM > 用户，单击 **添加用户**，按照向导创建具有凭证的用户。
 

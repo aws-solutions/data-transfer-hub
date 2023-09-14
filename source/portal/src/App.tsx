@@ -1,10 +1,11 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useDispatch } from "redux-react-hook";
-import { I18n } from "aws-amplify";
 
-import Amplify, { Hub } from "aws-amplify";
-import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react";
+import { Amplify, Auth, Hub, I18n } from "aws-amplify";
+import { Authenticator } from "@aws-amplify/ui-react";
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Axios from "axios";
 
@@ -22,6 +23,8 @@ import StepThreeS3 from "./pages/creation/s3/StepThreeS3";
 import StepTwoECR from "./pages/creation/ecr/StepTwoECR";
 import StepThreeECR from "./pages/creation/ecr/StepThreeECR";
 import List from "./pages/list/TaskList";
+
+import "@aws-amplify/ui-react/styles.css";
 import {
   ACTION_TYPE,
   AmplifyConfigType,
@@ -61,96 +64,104 @@ const Loader = () => {
   );
 };
 
+const loginComponents = {
+  Header() {
+    const { t } = useTranslation();
+    return <div className="dth-login-title">{t("signin.signInToDRH")}</div>;
+  },
+};
+
 const AmplifyLoginPage: React.FC = () => {
   const { t } = useTranslation();
   return (
-    <div>
-      <AmplifyAuthenticator>
-        <AmplifySignIn
-          headerText={t("signin.signInToDRH")}
-          slot="sign-in"
-          usernameAlias="username"
-          submitButtonText={t("signin.signIn")}
-          formFields={[
-            {
-              type: "username",
-              label: t("signin.email"),
-              placeholder: t("signin.inputEmail"),
-              required: true,
-              inputProps: { autoComplete: "off" },
+    <div className="dth-login">
+      <Authenticator
+        hideSignUp
+        components={loginComponents}
+        formFields={{
+          signIn: {
+            username: {
+              label: t("signin.email") || "",
+              placeholder: t("signin.inputEmail") || "",
+              isRequired: true,
             },
-            {
-              type: "password",
-              label: t("signin.password"),
-              placeholder: t("signin.inputPassword"),
-              required: true,
-              inputProps: { autoComplete: "off" },
+            password: {
+              label: t("signin.password") || "",
+              placeholder: t("signin.inputPassword") || "",
+              isRequired: true,
             },
-          ]}
-        >
-          <div slot="secondary-footer-content"></div>
-        </AmplifySignIn>
-      </AmplifyAuthenticator>
+          },
+        }}
+      ></Authenticator>
     </div>
   );
 };
 
 const SignedInApp: React.FC<SignedInAppProps> = (props: SignedInAppProps) => {
   const { oidcSignOut } = props;
+  const { t } = useTranslation();
   return (
     <>
       <TopBar logout={oidcSignOut} />
-      <BrowserRouter>
-        <Route path="/" exact component={Home}></Route>
-        <Route path="/home" exact component={Home}></Route>
-        <Route path="/create/step1/:type" exact component={StepOne}></Route>
-        <Route
-          path="/create/step1/:type/:engine"
-          exact
-          component={StepOne}
-        ></Route>
-        <Route
-          path={`/create/step2/${EnumTaskType.S3}/:engine`}
-          exact
-          component={StepTwoS3}
-        ></Route>
-        <Route
-          path={`/create/step2/${EnumTaskType.ECR}`}
-          exact
-          component={StepTwoECR}
-        ></Route>
-        <Route
-          path={`/create/step3/${EnumTaskType.S3}/:engine`}
-          exact
-          component={StepThreeS3}
-        ></Route>
-        <Route
-          path={`/create/step3/${EnumTaskType.ECR}`}
-          exact
-          component={StepThreeECR}
-        ></Route>
-        <Route path="/task/list" exact component={List}></Route>
-        <Route
-          path={`/task/detail/s3/:type/:id`}
-          exact
-          component={DetailS3}
-        ></Route>
-        <Route
-          path={`/task/detail/s3/:type/:id/:logType`}
-          exact
-          component={DetailS3}
-        ></Route>
-        <Route
-          path={`/task/detail/s3/:id/:logType/:logGroupName/:logStreamName`}
-          exact
-          component={LogEvents}
-        ></Route>
-        <Route
-          path={`/task/detail/${EnumTaskType.ECR}/:id`}
-          exact
-          component={DetailECR}
-        ></Route>
-      </BrowserRouter>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/home" element={<Home />}></Route>
+          <Route path="/create/step1/:type" element={<StepOne />}></Route>
+          <Route
+            path="/create/step1/:type/:engine"
+            element={<StepOne />}
+          ></Route>
+          <Route
+            path={`/create/step2/${EnumTaskType.S3}/:engine`}
+            element={<StepTwoS3 />}
+          ></Route>
+          <Route
+            path={`/create/step2/${EnumTaskType.ECR}`}
+            element={<StepTwoECR />}
+          ></Route>
+          <Route
+            path={`/create/step3/${EnumTaskType.S3}/:engine`}
+            element={<StepThreeS3 />}
+          ></Route>
+          <Route
+            path={`/create/step3/${EnumTaskType.ECR}`}
+            element={<StepThreeECR />}
+          ></Route>
+          <Route path="/task/list" element={<List />}></Route>
+          <Route
+            path={`/task/detail/s3/:type/:id`}
+            element={<DetailS3 />}
+          ></Route>
+          <Route
+            path={`/task/detail/s3/:type/:id/:logType`}
+            element={<DetailS3 />}
+          ></Route>
+          <Route
+            path={`/task/detail/s3/:id/:logType/:logGroupName/:logStreamName`}
+            element={<LogEvents />}
+          ></Route>
+          <Route
+            path={`/task/detail/${EnumTaskType.ECR}/:id`}
+            element={<DetailECR />}
+          ></Route>
+          <Route
+            path="*"
+            element={
+              <div className="lh-main-content">
+                <div className="lh-container pd-20">
+                  <div className="not-found">
+                    <h1>{t("pageNotFound")}</h1>
+                    <Link to="/">
+                      <PrimaryButton>{t("home.name")}</PrimaryButton>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            }
+          />
+        </Routes>
+      </Router>
     </>
   );
 };
@@ -161,8 +172,8 @@ const OIDCAppRouter: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    return auth?.events?.addAccessTokenExpiring((event) => {
-      console.info("addAccessTokenExpiring:event:", event);
+    // the `return` is important - addAccessTokenExpiring() returns a cleanup function
+    return auth?.events?.addAccessTokenExpiring(() => {
       auth.signinSilent();
     });
   }, [auth.events, auth.signinSilent]);
@@ -226,21 +237,48 @@ const AmplifyAppRouter: React.FC = () => {
     if (payload?.data?.code === "ResourceNotFoundException") {
       window.localStorage.removeItem(DRH_CONFIG_JSON_NAME);
       window.location.reload();
+    } else {
+      Auth?.currentAuthenticatedUser()
+        .then((authData: any) => {
+          dispatch({
+            type: ACTION_TYPE.UPDATE_USER_EMAIL,
+            email: authData?.attributes?.email,
+          });
+          setAuthState(AuthState.SignedIn);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
+
   Hub.listen("auth", (data) => {
     const { payload } = data;
     onAuthEvent(payload);
   });
+
   useEffect(() => {
+    if (authState === undefined) {
+      Auth?.currentAuthenticatedUser()
+        .then((authData: any) => {
+          dispatch({
+            type: ACTION_TYPE.UPDATE_USER_EMAIL,
+            userEmail: authData?.attributes?.email,
+          });
+          setAuthState(AuthState.SignedIn);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
     return onAuthUIStateChange((nextAuthState, authData: any) => {
+      setAuthState(nextAuthState);
       dispatch({
         type: ACTION_TYPE.UPDATE_USER_EMAIL,
         userEmail: authData?.attributes?.email,
       });
-      setAuthState(nextAuthState);
     });
-  }, []);
+  }, [authState]);
 
   return authState === AuthState.SignedIn ? (
     <SignedInApp />
@@ -316,7 +354,7 @@ const App: React.FC = () => {
   useEffect(() => {
     document.title = t("title");
     if (window.performance) {
-      if (performance.navigation.type === 1) {
+      if ((performance.getEntriesByType("navigation") as any)?.[0]?.type === "reload") {
         const timeStamp = new Date().getTime();
         setLoadingConfig(true);
         Axios.get(`/aws-exports.json?timestamp=${timeStamp}`).then((res) => {

@@ -28,7 +28,9 @@ def test_lambda_function(sfn_client):
     # Create a service linked role in a brand new account
     result = start_monitor_flow.lambda_handler(
         {
-            "id": "0ff94440-331e-4678-a53c-768c6720db55"
+            "id": {
+                "S": "0ff94440-331e-4678-a53c-768c6720db55"
+            }
         },
         None,
     )

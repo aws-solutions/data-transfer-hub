@@ -52,8 +52,8 @@ invokes the CloudFormation API to deploy another stack to provision all resource
 only provision resources when needed. You can also choose to deploy the data transfer plugin independently. 
 
 Available Plugins:
-* [S3 Plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin)
-* [ECR Plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
+* [S3 Plugin](./docs/S3_PLUGIN.md)
+* [ECR Plugin](./docs/ECR_PLUGIN.md)
 
 ## Solution Deployment
 
@@ -110,5 +110,5 @@ of Account A.
 
 * [How to customize this solution and build your own distributable?](./docs/build-your-own-distributable.md)
 * [Deploy this solution via AWS CDK](./docs/deploy-via-cdk.md)
-* [Data Transfer Hub S3 Plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin)
-* [Data Transfer Hub ECR Plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
+* [Data Transfer Hub S3 Plugin](./docs/S3_PLUGIN.md)
+* [Data Transfer Hub ECR Plugin](./docs/ECR_PLUGIN.md)

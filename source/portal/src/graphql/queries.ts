@@ -1,45 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 /* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const listTasks = /* GraphQL */ `
-  query ListTasks($limit: Int, $nextToken: String) {
-    listTasks(limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        description
-        type
-        templateUrl
-        parameters {
-          ParameterKey
-          ParameterValue
-        }
-        createdAt
-        stoppedAt
-        progress
-        progressInfo {
-          total
-          replicated
-        }
-        stackId
-        stackName
-        stackOutputs {
-          Description
-          OutputKey
-          OutputValue
-        }
-        stackStatus
-        stackStatusReason
-        executionArn
-        scheduleType
-      }
-      nextToken
-    }
-  }
-`;
 export const listTasksV2 = /* GraphQL */ `
-  query ListTasksV2($page: Int, $count: Int) {
-    listTasksV2(page: $page, count: $count) {
+  query ListTasksV2($progress: TaskProgress, $page: Int, $count: Int) {
+    listTasksV2(progress: $progress, page: $page, count: $count) {
       items {
         id
         description
@@ -48,6 +15,7 @@ export const listTasksV2 = /* GraphQL */ `
         parameters {
           ParameterKey
           ParameterValue
+          __typename
         }
         createdAt
         stoppedAt
@@ -55,6 +23,7 @@ export const listTasksV2 = /* GraphQL */ `
         progressInfo {
           total
           replicated
+          __typename
         }
         stackId
         stackName
@@ -62,13 +31,16 @@ export const listTasksV2 = /* GraphQL */ `
           Description
           OutputKey
           OutputValue
+          __typename
         }
         stackStatus
         stackStatusReason
         executionArn
         scheduleType
+        __typename
       }
       total
+      __typename
     }
   }
 `;
@@ -82,6 +54,7 @@ export const getTask = /* GraphQL */ `
       parameters {
         ParameterKey
         ParameterValue
+        __typename
       }
       createdAt
       stoppedAt
@@ -89,6 +62,7 @@ export const getTask = /* GraphQL */ `
       progressInfo {
         total
         replicated
+        __typename
       }
       stackId
       stackName
@@ -96,11 +70,13 @@ export const getTask = /* GraphQL */ `
         Description
         OutputKey
         OutputValue
+        __typename
       }
       stackStatus
       stackStatusReason
       executionArn
       scheduleType
+      __typename
     }
   }
 `;
@@ -109,6 +85,7 @@ export const listSecrets = /* GraphQL */ `
     listSecrets {
       name
       description
+      __typename
     }
   }
 `;
@@ -134,8 +111,10 @@ export const listLogStreams = /* GraphQL */ `
         uploadSequenceToken
         arn
         storedBytes
+        __typename
       }
       total
+      __typename
     }
   }
 `;
@@ -156,9 +135,11 @@ export const getLogEvents = /* GraphQL */ `
         timestamp
         message
         ingestionTime
+        __typename
       }
       nextForwardToken
       nextBackwardToken
+      __typename
     }
   }
 `;
@@ -180,10 +161,13 @@ export const getMetricHistoryData = /* GraphQL */ `
       series {
         name
         data
+        __typename
       }
       xaxis {
         categories
+        __typename
       }
+      __typename
     }
   }
 `;
@@ -192,6 +176,7 @@ export const getErrorMessage = /* GraphQL */ `
     getErrorMessage(id: $id) {
       errMessage
       errCode
+      __typename
     }
   }
 `;

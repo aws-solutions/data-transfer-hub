@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 // @font-face {font-family: "Amazon Ember"; src: url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.eot"); src: url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.woff") format("woff"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/157c6cc36dd65b1b2adc9e7f3329c761.svg#Amazon Ember") format("svg"); }
 // $font-family: "Amazon Ember", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
 // 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -37,6 +39,12 @@ a:hover {
   }
 }
 
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .text-center {
   text-align: center;
 }
@@ -44,6 +52,14 @@ a:hover {
 .no-data {
   padding: 15px;
   color: #888;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
 }
 
 .desc-link {
@@ -152,7 +168,10 @@ code {
 }
 
 .loading-style {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
   margin: 40px auto;
 }
 
@@ -358,10 +377,22 @@ code {
   }
 }
 
+.modal-time-range {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+  z-index: 999;
+}
+
 .monitor-filters {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.modal-time-range,
+.monitor-filters {
   .metrics-time-filter {
     display: flex;
     align-items: center;
@@ -438,13 +469,21 @@ code {
 
 .monitor-chart-list {
   margin-top: 37px;
-  background-color: #fff;
   display: flex;
   flex-wrap: wrap;
   .monitor-chart {
+    background-color: #fff;
     width: 50%;
-    margin-top: 10px;
+    margin-top: 3px;
     padding: 10px 10px 20px;
+    box-shadow: 0 2px 2px #ccc;
+    .zoom {
+      position: absolute;
+      cursor: pointer;
+      right: 5px;
+      top: 5px;
+      z-index: 10;
+    }
   }
 }
 
@@ -545,4 +584,32 @@ $loading-color: #555;
     display: flex;
     justify-content: space-between;
   }
+}
+
+.dth-login-title {
+  color: #444;
+  font-size: 24px;
+  padding: 0 0 5px 0;
+  text-align: center;
+}
+
+.dth-login {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+}
+
+.modal-chart-container {
+  min-height: 430px;
 }

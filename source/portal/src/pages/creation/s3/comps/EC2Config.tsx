@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useMappedState } from "redux-react-hook";
@@ -180,35 +182,17 @@ const EC2ConfigSettings: React.FC<EC2ConfigSettingsProps> = (
               <DrhInput
                 inputType="number"
                 optionTitle={t(
-                  "creation.step2.settings.advance.minimumCapacity"
+                  "creation.step2.settings.advance.workerThreadsNumber"
                 )}
                 optionDesc={t(
-                  "creation.step2.settings.advance.minimumCapacityDesc"
+                  "creation.step2.settings.advance.workerThreadsNumberDesc"
                 )}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setMinCapacity(event.target.value);
+                  setWorkerNumber(event.target.value);
                 }}
-                inputName="minCapacity"
-                inputValue={minCapacity}
-                placeholder="minCapacity"
-              />
-            </div>
-
-            <div className="form-items">
-              <DrhInput
-                inputType="number"
-                optionTitle={t(
-                  "creation.step2.settings.advance.desiredCapacity"
-                )}
-                optionDesc={t(
-                  "creation.step2.settings.advance.desiredCapacityDesc"
-                )}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setDesiredCapacity(event.target.value);
-                }}
-                inputName="desiredCapacity"
-                inputValue={desiredCapacity}
-                placeholder="desiredCapacity"
+                inputName="workerNumber"
+                inputValue={workerNumber}
+                placeholder="workerNumber"
               />
             </div>
 
@@ -271,6 +255,46 @@ const EC2ConfigSettings: React.FC<EC2ConfigSettingsProps> = (
               </div>
               {professionShow && (
                 <div>
+                  <div className="form-items">
+                    <DrhInput
+                      inputType="number"
+                      optionTitle={t(
+                        "creation.step2.settings.advance.minimumCapacity"
+                      )}
+                      optionDesc={t(
+                        "creation.step2.settings.advance.minimumCapacityDesc"
+                      )}
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        setMinCapacity(event.target.value);
+                      }}
+                      inputName="minCapacity"
+                      inputValue={minCapacity}
+                      placeholder="minCapacity"
+                    />
+                  </div>
+
+                  <div className="form-items">
+                    <DrhInput
+                      inputType="number"
+                      optionTitle={t(
+                        "creation.step2.settings.advance.desiredCapacity"
+                      )}
+                      optionDesc={t(
+                        "creation.step2.settings.advance.desiredCapacityDesc"
+                      )}
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        setDesiredCapacity(event.target.value);
+                      }}
+                      inputName="desiredCapacity"
+                      inputValue={desiredCapacity}
+                      placeholder="desiredCapacity"
+                    />
+                  </div>
+
                   <div className="form-items">
                     <DrhSelect
                       infoType={EnumSpanType.ENGINE_SETTINGS_COMPARISON}
@@ -349,26 +373,6 @@ const EC2ConfigSettings: React.FC<EC2ConfigSettingsProps> = (
                       )}
                       selectValue={finderEc2Memory}
                       optionList={EC2_MEMORY_LIST}
-                    />
-                  </div>
-
-                  <div className="form-items">
-                    <DrhInput
-                      inputType="number"
-                      optionTitle={t(
-                        "creation.step2.settings.advance.workerThreadsNumber"
-                      )}
-                      optionDesc={t(
-                        "creation.step2.settings.advance.workerThreadsNumberDesc"
-                      )}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        setWorkerNumber(event.target.value);
-                      }}
-                      inputName="workerNumber"
-                      inputValue={workerNumber}
-                      placeholder="workerNumber"
                     />
                   </div>
                 </div>

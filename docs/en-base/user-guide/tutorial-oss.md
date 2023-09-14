@@ -24,7 +24,7 @@ You have already deployed the Data Transfer Hub in **Oregon (us-west-2)** region
 1. Click **Store**.
 
 ## Step 2: Create an OSS transfer task
-1. From the **Create Transfer Task** page, select **Create New Task**, and then select **Next**.
+1. From the **Create Transfer Task** page, select **Start a New Task**, and then select **Next**.
 
 2. From the **Engine options** page, under engine, select **Amazon S3**, and then choose **Next Step**.
 

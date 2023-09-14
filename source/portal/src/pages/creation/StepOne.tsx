@@ -1,5 +1,7 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "redux-react-hook";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -28,11 +30,11 @@ import {
   S3_ENGINE_TYPE,
 } from "assets/types/index";
 
-const StepOne: React.FC = (props: any) => {
+const StepOne: React.FC = () => {
   const { t } = useTranslation();
-  const { engine } = useParams() as any;
+  const { engine, type } = useParams();
 
-  const [taskType, setTaskType] = useState(props.match.params.type);
+  const [taskType, setTaskType] = useState(type);
   const [editionType, setEditionType] = useState(engine);
 
   const dispatch = useDispatch();
@@ -66,21 +68,16 @@ const StepOne: React.FC = (props: any) => {
     updateTmpTaskInfo();
   }, [taskType, updateTmpTaskInfo]);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const goToHomePage = () => {
-    const toPath = "/";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/");
   };
   const goToStepTwo = () => {
     let toPath = `/create/step2/${taskType}`;
     if (taskType === EnumTaskType.S3) {
       toPath = `/create/step2/${taskType}/${editionType}`;
     }
-    history.push({
-      pathname: toPath,
-    });
+    navigate(toPath);
   };
 
   const changeDataType = (event: any) => {

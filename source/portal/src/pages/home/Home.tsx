@@ -1,10 +1,11 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
 
-import { useHistory } from "react-router-dom";
-import { useMappedState } from "redux-react-hook";
+import { useNavigate } from "react-router-dom";
+import { useMappedState, useDispatch } from "redux-react-hook";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "redux-react-hook";
 
 import LeftMenu from "common/LeftMenu";
 import Bottom from "common/Bottom";
@@ -55,13 +56,10 @@ const Home: React.FC = () => {
   const { isOpen } = useMappedState(mapState);
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const startToCreate = () => {
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
-    const toPath = `/create/step1/S3/ec2`;
-    history.push({
-      pathname: toPath,
-    });
+    navigate(`/create/step1/S3/ec2`);
   };
 
   const topShowClass = classNames({

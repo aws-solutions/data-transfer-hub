@@ -1,6 +1,7 @@
 {
-  "app": "npx ts-node bin/cdk-solution.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/cdk-solution.ts",
   "context": {
-    "@aws-cdk/core:newStyleStackSynthesis": true
+    "@aws-cdk/core:newStyleStackSynthesis": true,
+    "@aws-cdk/customresources:installLatestAwsSdkDefault": false
   }
 }

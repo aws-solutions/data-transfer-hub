@@ -6,3 +6,4 @@
 | July 2022 | Released version 2.2 <br> 1. Support transfer data through Direct Connect| 
 | March 2023 | Released version 2.3 <br> 1. Support embedded dashboard and logs <br> 2. Support S3 Access Key Rotation <br> 3. Enhance One Time Transfer Task monitoring| 
 | April 2023 | Released version 2.4 <br> 1. Support payer request S3 object transfer| 
+| September 2023 | Released version 2.5 <br> 1. Added support for transferring ECR assets without tags <br> 2. Optimize stop task operation, add new filter condition to view all history tasks <br> 3. Enhanced transfer performance by utilizing cluster capabilities through parallel multipart upload for large file transfers <br> 4.Added automatic restart functionality for the Worker CLI <br> 5.Enabled IMDSv2 by default for Auto Scaling Groups | 

@@ -13,17 +13,8 @@ schema {
 type Query {
     """
     Get a task list.
-
-    Arguments
-    limit: The max number of items to return. Default 20.
-    nextToken: Pagination token. Optional.
     """
-    listTasks(limit: Int = 20, nextToken: String): ListTasksResponse
-
-    """
-    Get a task list v2.
-    """
-    listTasksV2(page: Int, count: Int): ListTasksResponseV2
+    listTasksV2(progress: TaskProgress, page: Int, count: Int): ListTasksResponseV2
 
     """
     Get a task object by ID.
@@ -234,11 +225,6 @@ type StackOutputs {
 type TaskParameter {
     ParameterKey: String
     ParameterValue: String
-}
-
-type ListTasksResponse {
-    items: [Task],
-    nextToken: String
 }
 
 type ListTasksResponseV2 {

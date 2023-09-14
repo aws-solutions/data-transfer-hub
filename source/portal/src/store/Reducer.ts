@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { Action } from "./Store";
 import { ACTION_TYPE } from "../assets/types/index";
 

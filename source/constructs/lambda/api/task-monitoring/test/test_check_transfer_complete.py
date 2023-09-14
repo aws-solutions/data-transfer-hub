@@ -109,7 +109,7 @@ def clw_client():
             MetricData=[
                 {
                     'MetricName': 'TransferredObjects',
-                    'Timestamp': datetime.utcnow(),
+                    'Timestamp': datetime.utcnow()- timedelta(minutes=1),
                     'Value': 1,
                 },
             ]
@@ -158,7 +158,6 @@ def test_lambda_function(cfn_client, clw_client, ddb_client):
         },
         None,
     )
-    print(result)
     # Expect Execute successfully.
     assert result == {
         'isCompleted': 'true',

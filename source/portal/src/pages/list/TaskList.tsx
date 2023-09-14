@@ -1,8 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useEffect, useState } from "react";
 import { useDispatch, useMappedState } from "redux-react-hook";
-import { useHistory, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import classNames from "classnames";
-import Loader from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 
@@ -23,7 +25,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
-
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { listTasksV2 } from "graphql/queries";
 import { stopTask } from "graphql/mutations";
 
@@ -64,6 +66,7 @@ import {
 } from "assets/utils/request";
 import { formatLocalTime } from "assets/utils/utils";
 import { ScheduleType } from "API";
+import DTHSelect from "common/comp/select/select";
 
 const StyledMenu = withStyles({
   paper: {
@@ -123,7 +126,7 @@ const List: React.FC = () => {
 
   const { createTaskFlag } = useMappedState(mapState);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isStopLoading, setIsStopLoading] = useState(false);
   const [curPage, setCurPage] = useState(1);
@@ -133,6 +136,7 @@ const List: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("");
 
   const getTaskList = async () => {
     try {
@@ -140,6 +144,7 @@ const List: React.FC = () => {
       const resData: any = await appSyncRequestQuery(listTasksV2, {
         page: curPage,
         count: PAGE_SIZE,
+        progress: filterStatus ? filterStatus : undefined,
       });
       console.info("resData:", resData);
       setIsLoading(false);
@@ -159,9 +164,20 @@ const List: React.FC = () => {
   };
 
   useEffect(() => {
-    getTaskList();
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
+  }, []);
+
+  useEffect(() => {
+    getTaskList();
   }, [curPage]);
+
+  useEffect(() => {
+    if (curPage !== 1) {
+      setCurPage(1);
+    } else {
+      getTaskList();
+    }
+  }, [filterStatus]);
 
   // Hide Create Flag in 3 seconds
   useEffect(() => {
@@ -174,10 +190,7 @@ const List: React.FC = () => {
 
   const goToStepOne = () => {
     dispatch({ type: ACTION_TYPE.CLOSE_SIDE_BAR });
-    const toPath = "/create/step1/S3/ec2";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/create/step1/S3/ec2");
   };
 
   const goToDetail = () => {
@@ -188,9 +201,7 @@ const List: React.FC = () => {
     ) {
       toPath = `/task/detail/s3/${curSelectTask.type}/${curSelectTask.id}`;
     }
-    history.push({
-      pathname: toPath,
-    });
+    navigate(toPath);
   };
 
   async function stopTaskFunc(taskId: string) {
@@ -200,9 +211,9 @@ const List: React.FC = () => {
         id: taskId,
       });
       console.info("stopResData:", stopResData);
-      setOpen(false);
-      setIsStopLoading(false);
       refreshData();
+      setIsStopLoading(false);
+      setOpen(false);
     } catch (error: any) {
       const errorMsg = error?.errors?.[0]?.message?.toString() || "Error";
       setIsStopLoading(false);
@@ -499,9 +510,7 @@ const List: React.FC = () => {
     if (curSelectTask.type === EnumTaskType.S3_EC2) {
       toPath = `/create/step2/s3/${S3_ENGINE_TYPE.EC2}`;
     }
-    history.push({
-      pathname: toPath,
-    });
+    navigate(toPath);
   };
 
   const changeRadioSelect = (event: any) => {
@@ -651,7 +660,7 @@ const List: React.FC = () => {
             </NormalButton>
             {isStopLoading ? (
               <StopButtonLoading disabled={true}>
-                <Loader type="ThreeDots" color="#ffffff" height={10} />
+                <ThreeDots color="#ffffff" height={10} />
               </StopButtonLoading>
             ) : (
               <PrimaryButton
@@ -713,48 +722,74 @@ const List: React.FC = () => {
                     <NormalButton onClick={refreshData}>
                       <RefreshIcon width="10" />
                     </NormalButton>
+
+                    <DTHSelect
+                      isI18N
+                      allowEmpty
+                      width={110}
+                      value={filterStatus}
+                      optionList={[
+                        {
+                          name: "taskList.activated",
+                          value: "",
+                        },
+                        {
+                          name: "taskList.deleted",
+                          value: "STOPPED",
+                        },
+                      ]}
+                      onChange={(e) => {
+                        setFilterStatus(e.target.value);
+                      }}
+                    />
+
                     <NormalButton
                       disabled={curSelectTask === null}
-                      onClick={goToDetail}
+                      aria-controls="customized-menu"
+                      onClick={handleClick}
+                      style={{ height: 37, display: "flex" }}
                     >
-                      {t("btn.viewDetail")}
+                      {t("btn.taskAction")}
+                      <span
+                        style={{
+                          marginLeft: 3,
+                          marginBottom: -8,
+                          marginRight: -10,
+                        }}
+                      >
+                        <ArrowDropDownIcon fontSize="medium" />
+                      </span>
                     </NormalButton>
-                    <div style={{ display: "inline-block" }}>
-                      <NormalButton
-                        disabled={curSelectTask === null}
-                        aria-controls="customized-menu"
-                        onClick={handleClick}
-                      >
-                        {t("btn.taskAction")}
-                        <span style={{ marginLeft: 3 }}>▼</span>
-                      </NormalButton>
-                      <StyledMenu
-                        id="customized-menu"
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleCloseMenu}
-                      >
-                        {!(
-                          curSelectTask === null ||
-                          curSelectTask.progress === EnumTaskStatus.STOPPING ||
-                          curSelectTask.progress === EnumTaskStatus.STOPPED
-                        ) && (
-                          <StyledMenuItem>
-                            <ListItemText
-                              onClick={stopCurTask}
-                              primary={t("btn.stopTask")}
-                            />
-                          </StyledMenuItem>
-                        )}
-                        <StyledMenuItem>
-                          <ListItemText
-                            onClick={cloneCurTask}
-                            primary={t("btn.cloneTask")}
-                          />
-                        </StyledMenuItem>
-                      </StyledMenu>
-                    </div>
+                    <NormalButton
+                      disabled={
+                        curSelectTask === null ||
+                        curSelectTask.progress === EnumTaskStatus.STOPPING ||
+                        curSelectTask.progress === EnumTaskStatus.STOPPED
+                      }
+                      onClick={stopCurTask}
+                    >
+                      {t("btn.deleteTask")}
+                    </NormalButton>
+                    <StyledMenu
+                      id="customized-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseMenu}
+                    >
+                      <StyledMenuItem>
+                        <ListItemText
+                          onClick={goToDetail}
+                          primary={t("btn.viewDetail")}
+                        />
+                      </StyledMenuItem>
+                      <StyledMenuItem>
+                        <ListItemText
+                          onClick={cloneCurTask}
+                          primary={t("btn.cloneTask")}
+                        />
+                      </StyledMenuItem>
+                    </StyledMenu>
 
                     <PrimaryButton onClick={goToStepOne}>
                       {t("btn.createTask")}

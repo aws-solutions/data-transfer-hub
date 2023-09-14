@@ -4,7 +4,7 @@ The following are common questions you might have when deploying and using the s
 
 **1. In which AWS Regions can this solution be deployed?**</br>
 
-For the list of supported regions, refer to [supported regions](../plan-deployment/regions).
+For the list of supported Regions, refer to [supported Regions](../plan-deployment/regions).
 
 **2. When creating a transfer task, should I deploy it on the data source side or the destination side?**</br>
 
@@ -14,8 +14,8 @@ If you do not have a domain name registered by ICP in AWS China Regions, we reco
 
 If you need to deploy in AWS China Regions but do not have a domain name, you can directly deploy the back-end version:
 
-- Amazon S3 Plugin: [https://github.com/awslabs/amazon-s3-data-replication-hub-plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin) 
-- Amazon ECR Plugin: [https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
+- Amazon S3 Plugin: [https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN.md](https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN.md) 
+- Amazon ECR Plugin: [https://github.com/awslabs/data-transfer-hub/blob/main/docs/ECR_PLUGIN.md](https://github.com/awslabs/data-transfer-hub/blob/main/docs/ECR_PLUGIN.md)
 
 **3. Do I need to deploy the solution on the data source and destination side separately?**</br>
 
@@ -193,7 +193,7 @@ You need to update Secrets in Secrets Manager first, and then go to the EC2 cons
 
     - If there is no data transfer, you need to check whether there is a problem in the Finder task log. The following is the log group for scheduling Finder tasks. For more information, refer to the [Troubleshooting](../troubleshooting) section.
         
-        `<StackName>-EC2FinderLogGroup<random suffix>`
+        `<StackName>-CommonS3RepWorkerLogGroup<random suffix>`
 
     - The following are the log groups of all EC2 instances, and you can find detailed transfer logs.
 
@@ -201,7 +201,7 @@ You need to update Secrets in Secrets Manager first, and then go to the EC2 cons
 
 **4. How to make customized build?**</br>
 
-If you want to make customized changes to this plugin, refer to [Custom Build](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md).
+If you want to make customized changes to this plugin, refer to [Custom Build](https://github.com/awslabs/data-transfer-hub/blob/main/CUSTOM_BUILD.md).
 
 **5. After the deployment is complete, why can't I find any log streams in the two CloudWatch log groups?**</br>
 

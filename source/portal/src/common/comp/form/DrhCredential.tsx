@@ -1,10 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import Loader from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 
 import SelectInput from "common/comp/SelectInput";
 import InfoSpan from "common/InfoSpan";
@@ -41,14 +43,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
       setLoadingData(true);
       const apiData: any = await appSyncRequestQuery(listSecrets, {});
       setLoadingData(false);
-      if (
-        apiData &&
-        apiData.data &&
-        apiData.data.listSecrets &&
-        apiData.data.listSecrets.length > 0
-      ) {
-        setSSMParamList(apiData.data.listSecrets);
-      }
+      setSSMParamList(apiData?.data?.listSecrets ?? []);
     } catch (error) {
       setLoadingData(false);
     }
@@ -120,7 +115,7 @@ const DrhCredential: React.FC<SelectMenuProp> = (props: SelectMenuProp) => {
               style={{ width: 50, height: 32 }}
               disabled={true}
             >
-              <Loader type="ThreeDots" color="#888" height={10} />
+              <ThreeDots color="#888" height={10} />
             </NormalButton>
           ) : (
             <NormalButton

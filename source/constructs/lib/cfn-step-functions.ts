@@ -23,7 +23,6 @@ import { addCfnNagSuppressRules } from "./constructs-stack";
 export interface CloudFormationStateMachineProps {
   taskTableName: string,
   taskTableArn: string,
-  lambdaLayer: lambda.LayerVersion,
   taskMonitorSfnArn: string
 }
 
@@ -35,15 +34,13 @@ export class CloudFormationStateMachine extends Construct {
     super(scope, id);
 
     const createTaskCfnFn = new lambda.Function(this, 'CreateTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_16_X,
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: ['api/*', 'layer/*']
+      runtime: lambda.Runtime.PYTHON_3_9,
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/cdk'), {
       }),
-      handler: 'cdk/cfn-task.createTaskCfn',
+      handler: 'lambda_function.create_task_cfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [props.lambdaLayer],
       memorySize: 512,
       timeout: Duration.seconds(60),
       description: 'Data Transfer Hub - Create Task'
@@ -58,15 +55,13 @@ export class CloudFormationStateMachine extends Construct {
     ])
 
     const stopTaskCfnFn = new lambda.Function(this, 'StopTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_16_X,
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: ['api/*', 'layer/*']
+      runtime: lambda.Runtime.PYTHON_3_9,
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/cdk'), {
       }),
-      handler: 'cdk/cfn-task.stopTaskCfn',
+      handler: 'lambda_function.stop_task_cfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [props.lambdaLayer],
       memorySize: 512,
       timeout: Duration.seconds(60),
       description: 'Data Transfer Hub - Stop Task'
@@ -178,6 +173,7 @@ export class CloudFormationStateMachine extends Construct {
             "sqs:GetQueueAttributes",
             "sqs:SetQueueAttributes",
             "sqs:DeleteQueue",
+            "sqs:TagQueue",
           ],
           resources: [`arn:${Aws.PARTITION}:sqs:${Aws.REGION}:${Aws.ACCOUNT_ID}:DTH*`]
         }),
@@ -192,9 +188,22 @@ export class CloudFormationStateMachine extends Construct {
             "ec2:DescribeTags",
             "ec2:CreateSecurityGroup",
             "ec2:DeleteSecurityGroup",
+            "ec2:LaunchTemplate",
+            "ec2:CreateLaunchTemplate",
+            "ec2:DeleteLaunchTemplate",
+            'ec2:CreateLaunchTemplateVersion',
+            'ec2:DeleteLaunchTemplateVersions',
+            'ec2:GetLaunchTemplateData',
             "ec2:DescribeSecurityGroups",
             "ec2:RevokeSecurityGroupEgress",
             "ec2:AuthorizeSecurityGroupEgress",
+            "ec2:DescribeLaunchTemplates",
+            "ec2:DescribeLaunchTemplateVersions",
+            'ec2:Describe*',
+            'ec2:AuthorizeSecurityGroupIngress',
+            'ec2:RevokeSecurityGroupIngress',
+            'ec2:RunInstances',
+            'ec2:TerminateInstances',
           ],
           resources: [`*`]
         }),
@@ -270,6 +279,8 @@ export class CloudFormationStateMachine extends Construct {
             "iam:DeleteRole",
             "iam:DeleteRolePolicy",
             "iam:DetachRolePolicy",
+            "iam:GetInstanceProfile",
+            "iam:TagRole",
           ],
           resources: [
             `arn:${Aws.PARTITION}:iam::${Aws.ACCOUNT_ID}:instance-profile/DTH*`,
@@ -371,15 +382,13 @@ export class CloudFormationStateMachine extends Construct {
     ])
 
     const queryTaskCfnFn = new lambda.Function(this, 'QueryTaskCfnFn', {
-      runtime: lambda.Runtime.NODEJS_16_X,
-      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/'), {
-        exclude: ['api/*', 'layer/*']
+      runtime: lambda.Runtime.PYTHON_3_9,
+      code: lambda.AssetCode.fromAsset(path.join(__dirname, '../lambda/cdk'), {
       }),
-      handler: 'cdk/cfn-task.queryTaskCfn',
+      handler: 'lambda_function.query_task_cfn',
       environment: {
         TASK_TABLE: props.taskTableName
       },
-      layers: [props.lambdaLayer],
       memorySize: 512,
       timeout: Duration.seconds(60),
       description: 'Data Transfer Hub - Query Task'
@@ -483,20 +492,20 @@ export class CloudFormationStateMachine extends Construct {
 
     const queryStackStatusChoice = new sfn.Choice(this, 'Query Stack Status Choice')
       .when(
-        sfn.Condition.stringEquals('$.stackStatus', 'CREATE_COMPLETE')
+        sfn.Condition.stringEquals('$.stackStatus.S', 'CREATE_COMPLETE')
         , startMonitorFlow.next(stackOperationSucceed))
       .when(
         sfn.Condition.or(
-          sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_COMPLETE'),
-          sfn.Condition.stringEquals('$.stackStatus', 'DELETE_COMPLETE')
+          sfn.Condition.stringEquals('$.stackStatus.S', 'UPDATE_COMPLETE'),
+          sfn.Condition.stringEquals('$.stackStatus.S', 'DELETE_COMPLETE')
         )
         , stackOperationSucceed)
       .when(
         sfn.Condition.or(
-          sfn.Condition.stringEquals('$.stackStatus', 'CREATE_FAILED'),
-          sfn.Condition.stringEquals('$.stackStatus', 'DELETE_FAILED'),
-          sfn.Condition.stringEquals('$.stackStatus', 'UPDATE_ROLLBACK_FAILED'),
-          sfn.Condition.stringEquals('$.stackStatus', 'ROLLBACK_COMPLETE')
+          sfn.Condition.stringEquals('$.stackStatus.S', 'CREATE_FAILED'),
+          sfn.Condition.stringEquals('$.stackStatus.S', 'DELETE_FAILED'),
+          sfn.Condition.stringEquals('$.stackStatus.S', 'UPDATE_ROLLBACK_FAILED'),
+          sfn.Condition.stringEquals('$.stackStatus.S', 'ROLLBACK_COMPLETE')
         )
         , stackOperationFailed
       )
@@ -526,12 +535,13 @@ export class CloudFormationStateMachine extends Construct {
       }
     ])
     const stateMachine = new sfn.StateMachine(this, 'CfnDeploymentStateMachine', {
-      definition: definition,
+      definitionBody: sfn.DefinitionBody.fromChainable(definition),
       timeout: Duration.minutes(120),
       logs: {
         destination: logGroup,
         level: sfn.LogLevel.ALL,
-      }
+      },
+      tracingEnabled: true,
     })
 
     new CfnOutput(this, 'CfnDeploymentStateMachineArn', {

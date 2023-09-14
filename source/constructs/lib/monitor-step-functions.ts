@@ -112,6 +112,15 @@ export class MonitorStateMachine extends Construct {
                     resources: [
                         `*`,
                     ]
+                }),
+                new iam.PolicyStatement({
+                    actions: [
+                        "states:ListExecutions",
+                        "states:ListStateMachines"
+                    ],
+                    resources: [
+                        `*`,
+                    ]
                 })
             ]
         });
@@ -439,7 +448,7 @@ export class MonitorStateMachine extends Construct {
         scareDownAsgTask.next(sendSnsNotificationTask
             .next(taskMonitoringComplete))
 
-        const checkSqsEmptyChoice = new sfn.Choice(this, 'SQS is Empty?')
+        const checkSqsEmptyChoice = new sfn.Choice(this, 'SQS and SFN are Empty?')
             .when(sfn.Condition.stringEquals('$.isEmpty', 'true'),
                 new sfn.Choice(this, 'Has Checked 3 times?')
                     .when(
@@ -483,11 +492,12 @@ export class MonitorStateMachine extends Construct {
             }
         ])
         const taskMonitorStateMachine = new sfn.StateMachine(this, 'taskMonitorStateMachine', {
-            definition: definition,
+            definitionBody: sfn.DefinitionBody.fromChainable(definition),
             logs: {
                 destination: logGroup,
                 level: sfn.LogLevel.ALL,
-            }
+            },
+            tracingEnabled: true,
         })
 
         this.taskMonitorStateMachineArn = taskMonitorStateMachine.stateMachineArn

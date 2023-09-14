@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { createStyles, withStyles, Theme } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 

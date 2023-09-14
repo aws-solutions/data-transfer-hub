@@ -3,7 +3,7 @@ You can use the web console to create an Amazon S3 transfer task. For more infor
 !!! Note "Note"
     Data Transfer Hub also supports using AWS CLI to create an Amazon S3 transfer task. For details, refer to this [tutorial](./tutorial-cli-launch.md).
 
-1. From the **Create Transfer Task** page, select **Create New Task**, and then select **Next**.
+1. From the **Create Transfer Task** page, select **Start a New Task**, and then select **Next**.
 
 2. From the **Engine options** page, under engine, select **Amazon S3**, and then choose **Next Step**.
 
@@ -15,7 +15,7 @@ You can use the web console to create an Amazon S3 transfer task. For more infor
         - If you need to achieve real-time incremental data synchronization, please configure whether to enable S3 event notification. Note that this option can only be configured when the program and your data source are deployed in the same area of the same account.
         - If you do not enable S3 event notification, the program will periodically synchronize incremental data according to the scheduling frequency you configure in the future.
     - If the source bucket is not in the same account where Data Transfer Hub was deployed, select **No**, then specify the credentials for the source bucket. 
-    - If you choose to synchronize objects with multiple prefixes, please transfer the prefix list file separated by rows to the root directory of the data source bucket, and then fill in the name of the file. For details, please refer to [Multi-Prefix List Configuration Tutorial](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/r2_1/docs/USING_PREFIX_LIST_EN.md)。
+    - If you choose to synchronize objects with multiple prefixes, please transfer the prefix list file separated by rows to the root directory of the data source bucket, and then fill in the name of the file. For details, please refer to [Multi-Prefix List Configuration Tutorial](https://github.com/awslabs/data-transfer-hub/blob/main/docs/USING_PREFIX_LIST.md)。
 
 5. To create credential information, select [Secrets Manager](https://console.aws.amazon.com/secretsmanager/home) to jump to the AWS Secrets Manager console in the current region.
     - From the left menu, select **Secrets**, then choose **Store a new secret** and select the **other type of secrets** key type.
