@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { EnumSourceType } from "../types/index";
 
 export const GITHUB_LINK =
@@ -293,6 +295,10 @@ export const ECR_PARAMS_LIST_MAP: any = {
   destPrefix: {
     en_name: "Destination Image Prefix",
     zh_name: "目标容器镜像前缀",
+  },
+  includeUntagged: {
+    en_name: "Only transfer the 'Tagged' images",
+    zh_name: "仅传输被“标记”的镜像",
   },
   destCredential: {
     en_name: "Destination Credential Parameter Name",

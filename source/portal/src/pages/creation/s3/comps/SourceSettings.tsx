@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useMappedState } from "redux-react-hook";
@@ -135,10 +137,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
       setSrcEndpoint("");
     }
     // Set Is Bucket In Account to No
-    if (
-      sourceType !== EnumSourceType.S3 ||
-      sourceType !== EnumSourceType.S3_EC2
-    ) {
+    if (sourceType !== EnumSourceType.S3) {
       setSourceInAccount(YES_NO.NO);
     }
     if (sourceType === EnumSourceType.S3) {

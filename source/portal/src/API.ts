@@ -5,12 +5,18 @@
 export type CreateTaskInput = {
   type: TaskType;
   description?: string | null;
+  scheduleType: ScheduleType;
   parameters?: Array<TaskParameterInput | null> | null;
 };
 
 export enum TaskType {
   S3EC2 = "S3EC2",
   ECR = "ECR",
+}
+
+export enum ScheduleType {
+  ONE_TIME = "ONE_TIME",
+  FIXED_RATE = "FIXED_RATE",
 }
 
 export type TaskParameterInput = {
@@ -64,17 +70,6 @@ export type StackOutputs = {
   Description?: string | null;
   OutputKey?: string | null;
   OutputValue?: string | null;
-};
-
-export enum ScheduleType {
-  ONE_TIME = "ONE_TIME",
-  FIXED_RATE = "FIXED_RATE",
-}
-
-export type ListTasksResponse = {
-  __typename: "ListTasksResponse";
-  items?: Array<Task | null> | null;
-  nextToken?: string | null;
 };
 
 export type ListTasksResponseV2 = {
@@ -236,51 +231,8 @@ export type StopTaskMutation = {
   } | null;
 };
 
-export type ListTasksQueryVariables = {
-  limit?: number | null;
-  nextToken?: string | null;
-};
-
-export type ListTasksQuery = {
-  listTasks?: {
-    __typename: "ListTasksResponse";
-    items?: Array<{
-      __typename: "Task";
-      id: string;
-      description?: string | null;
-      type?: TaskType | null;
-      templateUrl?: string | null;
-      parameters?: Array<{
-        __typename: "TaskParameter";
-        ParameterKey?: string | null;
-        ParameterValue?: string | null;
-      } | null> | null;
-      createdAt?: string | null;
-      stoppedAt?: string | null;
-      progress?: TaskProgress | null;
-      progressInfo?: {
-        __typename: "CommonProgressInfo";
-        total?: number | null;
-        replicated?: number | null;
-      } | null;
-      stackId?: string | null;
-      stackName?: string | null;
-      stackOutputs?: Array<{
-        __typename: "StackOutputs";
-        Description?: string | null;
-        OutputKey?: string | null;
-        OutputValue?: string | null;
-      } | null> | null;
-      stackStatus?: string | null;
-      stackStatusReason?: string | null;
-      executionArn?: string | null;
-      scheduleType?: ScheduleType | null;
-    } | null> | null;
-    nextToken?: string | null;
-  } | null;
-};
-
 export type ListTasksV2QueryVariables = {
+  progress?: TaskProgress | null;
   page?: number | null;
   count?: number | null;
 };

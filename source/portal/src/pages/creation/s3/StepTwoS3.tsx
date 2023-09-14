@@ -1,5 +1,7 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMappedState } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
 
@@ -41,9 +43,9 @@ const mapState = (state: IState) => ({
 const StepTwoS3: React.FC = () => {
   const { tmpTaskInfo } = useMappedState(mapState);
   const { t } = useTranslation();
-  const { engine } = useParams() as any;
+  const { engine } = useParams();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [srcBucketRequiredError, setSrcBucketRequiredError] = useState(false);
   const [srcBucketFormatError, setSrcBucketFormatError] = useState(false);
@@ -63,10 +65,7 @@ const StepTwoS3: React.FC = () => {
     // if the taskInfo has no taskType, redirect to Step one
     // eslint-disable-next-line no-prototype-builtins
     if (!tmpTaskInfo?.hasOwnProperty("type")) {
-      const toPath = "/create/step1/S3/ec2";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/create/step1/S3/ec2");
     }
   }, [tmpTaskInfo]);
 
@@ -191,27 +190,18 @@ const StepTwoS3: React.FC = () => {
 
   // END Monitor tmpTaskInfo and hide validation error
   const goToHomePage = () => {
-    const toPath = "/";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/");
   };
 
   const goToStepOne = () => {
-    const toPath = `/create/step1/S3/${engine}`;
-    history.push({
-      pathname: toPath,
-    });
+    navigate(`/create/step1/S3/${engine}`);
   };
 
   const goToStepThree = () => {
     console.info("TO STEP THREE");
     console.info("tmpTaskInfo:", tmpTaskInfo);
     if (validateInput()) {
-      const toPath = `/create/step3/s3/${engine}`;
-      history.push({
-        pathname: toPath,
-      });
+      navigate(`/create/step3/s3/${engine}`);
     }
   };
 
@@ -257,14 +247,14 @@ const StepTwoS3: React.FC = () => {
                 {t("creation.step2.taskDetail")}
               </div>
               <SourceSettings
-                engineType={engine}
+                engineType={engine ?? ""}
                 srcShowBucketRequiredError={srcBucketRequiredError}
                 srcShowBucketValidError={srcBucketFormatError}
                 srcRegionRequiredError={srcRegionRequiredError}
                 srcShowEndPointFormatError={srcShowEndPointFormatError}
               />
               <DestSettings
-                engineType={engine}
+                engineType={engine ?? ""}
                 destShowBucketRequiredError={destBucketRequiredError}
                 destShowBucketValidError={destBucketFormatError}
                 destShowRegionRequiredError={destRegionRequiredError}

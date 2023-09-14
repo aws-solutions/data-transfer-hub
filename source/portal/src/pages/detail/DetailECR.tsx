@@ -1,11 +1,14 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
-import Loader from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import Loading from "common/Loading";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -34,13 +37,14 @@ import {
   EnumDockerImageType,
 } from "assets/types/index";
 
-import { getRegionNameById } from "assets/config/const";
+import { YES_NO, getRegionNameById } from "assets/config/const";
 
 import "./Detail.scss";
 import {
   appSyncRequestMutation,
   appSyncRequestQuery,
 } from "assets/utils/request";
+import { formatLocalTime } from "assets/utils/utils";
 
 interface StyledTabProps {
   label: string;
@@ -106,8 +110,9 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const Detail: React.FC = (props: any) => {
+const Detail: React.FC = () => {
   const { t } = useTranslation();
+  const { id } = useParams();
 
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,8 +142,10 @@ const Detail: React.FC = (props: any) => {
   }
 
   useEffect(() => {
-    fetchNotes(props.match.params.id);
-  }, []);
+    if (id) {
+      fetchNotes(id);
+    }
+  }, [id]);
 
   const handleChange: any = (event: React.ChangeEvent, newValue: number) => {
     setValue(newValue);
@@ -152,12 +159,26 @@ const Detail: React.FC = (props: any) => {
       });
       setIsStopLoading(false);
       setOpen(false);
-      fetchNotes(props.match.params.id);
+      fetchNotes(id ?? "");
       console.info(stopResData);
     } catch (error) {
       setIsLoading(false);
     }
   }
+
+  const buildAllImageDisplay = () => {
+    return (
+      <>
+        <div className="sub-name">{t("taskDetail.images")}</div>
+        <div>ALL</div>
+        <br />
+        <div className="sub-name">{t("creation.step2ECR.onlyTag")}</div>
+        <div>
+          {curTaskInfo.includeUntagged === "false" ? YES_NO.YES : YES_NO.NO}
+        </div>
+      </>
+    );
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -168,7 +189,7 @@ const Detail: React.FC = (props: any) => {
   };
 
   const confirmStopTask = () => {
-    stopTaskFunc(props.match.params.id);
+    stopTaskFunc(id ?? "");
   };
 
   return (
@@ -194,7 +215,7 @@ const Detail: React.FC = (props: any) => {
             </NormalButton>
             {isStopLoading ? (
               <StopButtonLoading disabled={true}>
-                <Loader type="ThreeDots" color="#ffffff" height={10} />
+                <ThreeDots color="#ffffff" height={10} />
               </StopButtonLoading>
             ) : (
               <PrimaryButton
@@ -288,11 +309,7 @@ const Detail: React.FC = (props: any) => {
                           <div className="sub-name">
                             {t("taskDetail.createdAt")}
                           </div>
-                          {/* <div>
-                            <Moment format="YYYY-MM-DD HH:mm">
-                              {curTaskInfo.createdAt}
-                            </Moment>
-                          </div> */}
+                          <div>{formatLocalTime(curTaskInfo.createdAt)}</div>
                         </div>
                         <div className="split-item">
                           <div className="sub-name">
@@ -357,7 +374,7 @@ const Detail: React.FC = (props: any) => {
                       <div className="general-info-content">
                         <div className="split-item">
                           {curTaskInfo.srcList === EnumDockerImageType.ALL ? (
-                            "ALL"
+                            buildAllImageDisplay()
                           ) : (
                             <textarea
                               readOnly={true}

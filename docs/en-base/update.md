@@ -36,19 +36,8 @@ You can view the status of the stack in the AWS CloudFormation console in the **
 
 ## Step 2. (Optional) Update the OIDC configuration <a name="oidc-update"></a>
 
-If you have deployed the solution in China Region with OIDC, refer to the [deployment](../deployment/#prerequisite-1-create-an-oidc-user-pool) section to update the authorization and authentication configuration in OIDC.
+If you have deployed the solution in China Region with OIDC, refer to the [deployment](deployment/deployment.md#prerequisite-1-create-an-oidc-user-pool) section to update the authorization and authentication configuration in OIDC.
 
-## Step 3. Create an invalidation on CloudFront
-
-CloudFront has cached an old version of Data Transfer Hub console at its pop locations. We need to create an invalidation on the CloudFront console to 
-force the deletion of cache. 
-
-1. Go to the [AWS CloudFront console](https://console.aws.amazon.com/cloudfront/){target='_blank'}.
-
-2. Choose the Distribution of Data Transfer Hub. The Description is like `SolutionName - Web Console Distribution (RegionName)`.
-
-3. On the **Invalidation** page, click **Create invalidation**, and create an invalidation with `/*`.
-
-## Step 4. Refresh the web console
+## Step 3. Refresh the web console
 
 Now you have completed all the upgrade steps. Please click the **refresh** button in your browser.

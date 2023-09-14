@@ -1,10 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Typography from "@material-ui/core/Typography";
 import MLink from "@material-ui/core/Link";
-import Loader from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -243,7 +245,7 @@ const Detail: React.FC = () => {
             </NormalButton>
             {isStopLoading ? (
               <StopButtonLoading disabled={true}>
-                <Loader type="ThreeDots" color="#ffffff" height={10} />
+                <ThreeDots color="#ffffff" height={10} />
               </StopButtonLoading>
             ) : (
               <PrimaryButton

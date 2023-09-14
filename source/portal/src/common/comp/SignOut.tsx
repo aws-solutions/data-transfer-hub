@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React from "react";
 import { Auth } from "aws-amplify";
 import { useTranslation } from "react-i18next";

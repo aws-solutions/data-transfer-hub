@@ -13,8 +13,8 @@
 
 如果客户想在中国区域部署，但是没有域名，可以直接部署后端版本：
 
-- Amazon S3 Plugin: [https://github.com/awslabs/amazon-s3-data-replication-hub-plugin](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin) 
-- Amazon ECR Plugin: [https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin](https://github.com/awslabs/amazon-ecr-data-replication-hub-plugin)
+- Amazon S3 Plugin: [https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN.md](https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN.md) 
+- Amazon ECR Plugin: [https://github.com/awslabs/data-transfer-hub/blob/main/docs/ECR_PLUGIN.md](https://github.com/awslabs/data-transfer-hub/blob/main/docs/ECR_PLUGIN.md)
 
 **3. 是否需要分别在数据源和目标端各部署一次数据传输解决方案吗？**</br>
 
@@ -178,11 +178,11 @@ Auto Scaling Group 的大小会根据 SQS 中的任务数量[自动放大或缩�
 
     - 以下是所有EC2实例的日志组，您可以找到详细的传输日志。
 
-        `<StackName>-EC2WorkerStackS3RepWorkerLogGroup<random suffix>`
+        `<StackName>-CommonS3RepWorkerLogGroup<random suffix>`
 
 **4. 如何进行自定义更改？**</br>
 
-如果要对此插件进行自定义更改，请参阅[自定义构建](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/main/docs/CUSTOM_BUILD.md)。
+如果要对此插件进行自定义更改，请参阅[自定义构建](https://github.com/awslabs/data-transfer-hub/blob/main/CUSTOM_BUILD.md)。
 
 **5. 部署完成后，为什么在两个CloudWatch日志组中找不到任何日志流？**</br>
 

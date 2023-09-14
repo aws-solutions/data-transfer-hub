@@ -3,14 +3,8 @@ You can use the [AWS CLI][aws-cli] to create an Amazon S3 transfer task. Note th
 1. Create an Amazon VPC with two public subnets or two private subnets with [NAT gateway][nat].
 
 2. Replace `<CLOUDFORMATION_URL>` as shown below.
-
-    - Global Region: 
     ```
-    https://s3.amazonaws.com/solutions-reference/data-transfer-hub-s3-plugin/latest/DataTransferS3Stack-ec2.template
-    ```
-    - China Region: 
-    ```
-    https://s3.amazonaws.com/solutions-reference/data-transfer-hub-s3-plugin/latest/DataTransferS3Stack-ec2.template
+    https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template
     ```
 
 3. Go to your terminal and enter the following command. For the parameter details, refer to the Parameters table.

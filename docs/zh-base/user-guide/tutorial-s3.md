@@ -12,7 +12,7 @@
         - 如果您需要实现实时的增量数据同步，请配置是否启用S3事件通知。注意，只有当该方案和您的数据源部署在同一个账户的同一个区域内时，方可配置该选项。
         - 如果您不启用S3事件通知，该方案会按照您在后续所配置的调度频率来定期实现增量数据的同步。
     - 如果数据源桶不在方案部署的账户中，请选择**No**，然后指定源存储桶的凭证。
-    - 如果您选择同步多个前缀的对象，请将以换行为分隔的前缀列表文件传输到数据源桶的根目录下，然后填写该文件的名称。具体可参考[多前缀列表配置教程](https://github.com/awslabs/amazon-s3-data-replication-hub-plugin/blob/r2_1/docs/USING_PREFIX_LIST_CN.md)。
+    - 如果您选择同步多个前缀的对象，请将以换行为分隔的前缀列表文件传输到数据源桶的根目录下，然后填写该文件的名称。具体可参考[多前缀列表配置教程](https://github.com/awslabs/data-transfer-hub/blob/main/docs/USING_PREFIX_LIST_CN.md)。
 5. 要创建凭证信息，请选择[Secrets Manager](https://console.aws.amazon.com/secretsmanager/home)以跳转到当前区域的AWS Secrets Manager控制台。
     - 从左侧菜单中，选择**密钥**，然后选择**储存新的密钥**并选择**其他类型的密钥**类型。
     - 根据下面的格式在Plaintext输入框中填写`access_key_id`和`secret_access_key`信息。有关更多信息，请参阅*IAM用户指南*中的[IAM功能](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)。选择**下一步**。

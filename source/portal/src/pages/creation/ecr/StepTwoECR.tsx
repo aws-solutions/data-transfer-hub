@@ -1,5 +1,7 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -51,12 +53,13 @@ const MAX_LENGTH = 4096;
 
 const ACCOUNT_REGEX = /^\d{12}$/;
 
-const defaultTxtValue = "ubuntu:14.04,\namazon-linux:latest,\nmysql";
+const defaultTxtValue =
+  "ubuntu:14.04,\namazon-linux:latest,\nmysql,\npublic.ecr.aws/amaonlinux/amazonlinux:latest";
 const defaultTxtValueSourceECR =
-  "my-ecr-repo:ALL_TAGS,\nubuntu:14.04,\namazon-linux:latest,\nmysql";
+  "my-ecr-repo:ALL_TAGS,\nmy-oci-repo,\nubuntu:14.04,\namazon-linux:latest,\nmysql";
 
 const StepTwoECR: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { tmpECRTaskInfo } = useMappedState(mapState);
@@ -129,6 +132,9 @@ const StepTwoECR: React.FC = () => {
   const [destPrefix, setDestPrefix] = useState(
     tmpECRTaskInfo?.parametersObj?.destPrefix || ""
   );
+  const [includeUntagged, setIncludeUntagged] = useState(
+    tmpECRTaskInfo?.parametersObj?.includeUntagged ?? "true"
+  );
   const [description, setDescription] = useState(
     tmpECRTaskInfo?.parametersObj?.description
       ? decodeURIComponent(tmpECRTaskInfo?.parametersObj?.description)
@@ -150,10 +156,7 @@ const StepTwoECR: React.FC = () => {
     // if the taskInfo has no taskType, redirect to Step one
     // eslint-disable-next-line no-prototype-builtins
     if (!tmpECRTaskInfo?.hasOwnProperty("type")) {
-      const toPath = "/create/step1/ECR";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/create/step1/ECR");
     }
   }, [history, tmpECRTaskInfo]);
 
@@ -285,26 +288,16 @@ const StepTwoECR: React.FC = () => {
   };
 
   const goToHomePage = () => {
-    const toPath = "/";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/");
   };
 
   const goToStepOne = () => {
-    const toPath = "/create/step1/ECR";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/create/step1/ECR");
   };
 
   const goToStepThree = () => {
-    console.info("tmpECRTaskInfo:", tmpECRTaskInfo);
     if (validateInput()) {
-      const toPath = "/create/step3/ECR";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/create/step3/ECR");
     }
   };
 
@@ -387,6 +380,11 @@ const StepTwoECR: React.FC = () => {
 
   useEffect(() => {
     // Update tmpECRTaskInfo
+    updatetmpECRTaskInfo("includeUntagged", includeUntagged);
+  }, [includeUntagged]);
+
+  useEffect(() => {
+    // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("description", encodeURIComponent(description));
   }, [description]);
 
@@ -429,7 +427,7 @@ const StepTwoECR: React.FC = () => {
                   </div>
                   <div className="option-content">
                     <div> {t("creation.step2ECR.selectContainerType")}</div>
-                    <div>
+                    <div className="select">
                       {ECR_SOURCE_TYPE.map((item: any) => {
                         const stClass = classNames({
                           "st-item": true,
@@ -588,6 +586,27 @@ const StepTwoECR: React.FC = () => {
                             );
                           })}
                         </div>
+                        {tmpECRTaskInfo?.parametersObj?.sourceType ===
+                          ECREnumSourceType.ECR &&
+                          tmpECRTaskInfo?.parametersObj?.srcList ===
+                            EnumDockerImageType.ALL && (
+                            <div className="mt-10">
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={includeUntagged === "false"}
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLInputElement>
+                                  ) => {
+                                    setIncludeUntagged(
+                                      event.target.checked ? "false" : "true"
+                                    );
+                                  }}
+                                />{" "}
+                                {t("creation.step2ECR.onlyTag")}
+                              </label>
+                            </div>
+                          )}
                       </div>
 
                       <div className={classImageList}>
@@ -618,7 +637,25 @@ const StepTwoECR: React.FC = () => {
                               }
                               rows={7}
                             ></textarea>
-                            <div className="max-tips">{`${curLength}/${MAX_LENGTH}`}</div>
+                            <div className="flex-center">
+                              <div>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    checked={includeUntagged === "false"}
+                                    onChange={(
+                                      event: React.ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                      setIncludeUntagged(
+                                        event.target.checked ? "false" : "true"
+                                      );
+                                    }}
+                                  />{" "}
+                                  {t("creation.step2ECR.onlyTag")}
+                                </label>
+                              </div>
+                              <div className="max-tips">{`${curLength}/${MAX_LENGTH}`}</div>
+                            </div>
                           </div>
                         </div>
                       </div>

@@ -29,6 +29,7 @@ sqs_client = boto3.client('sqs', config=default_config)
 sts_client = boto3.client('sts', config=default_config)
 asg_client = boto3.client('autoscaling', config=default_config)
 sns_client = boto3.client('sns', config=default_config)
+sfn_client = boto3.client('stepfunctions', config=default_config)
 
 transfer_task_table_name = os.environ.get('TRANSFER_TASK_TABLE')
 transfer_task_table = dynamodb_resource.Table(transfer_task_table_name)
@@ -314,13 +315,14 @@ class S3TaskMonitorHelper(MonitorHelper):
         self._stack_name = self.get_stack_name(self.stack_id)
         self._name_space = self.get_stack_name(self.stack_id)
         self._sqs_name = self.get_task_attributes(resp, "Queue Name")
+        self._sfn_arn = self.get_task_attributes(resp, "SFN ARN")
         self._task_schedule = self.get_task_param(resp, "ec2CronExpression")
         self._finder_object_count = resp["Item"].get("totalObjectCount")
         self._worker_asg_name = self._stack_name + "-Worker-ASG"
         self._stack_create_time = self.get_cloudformation_stack_info(
             self._stack_name, "CreationTime")
 
-    def _get_worker_asg_transsferred_task_count(self):
+    def _get_worker_asg_transferred_task_count(self):
         """
         This function will return the worker asg transsferred task count.
         Here we assume that a one time transfer task will completed in 60 days(3600 seconds * 1440).
@@ -351,6 +353,7 @@ class S3TaskMonitorHelper(MonitorHelper):
     def check_sqs_empty(self, check_round):
         """
         This function will check the SQS queue is empty or not .
+        After v2.5.0, it will also check the Giant Controller Step Function is completed or not.
 
         Args:
             check_round
@@ -376,7 +379,15 @@ class S3TaskMonitorHelper(MonitorHelper):
         logger.info(
             f"The approximate avaliable message count {message_available} and in flight message cound {message_in_flight}")
 
-        if int(message_in_flight) == 0 and int(message_available) == 0:
+        # Get the giant object merging step function status
+        sfn_response = sfn_client.list_executions(
+            stateMachineArn=self._sfn_arn,
+            statusFilter='RUNNING'
+        )
+
+        giant_merging_running_task_count = len(sfn_response['executions'])
+
+        if int(message_in_flight) == 0 and int(message_available) == 0 and giant_merging_running_task_count == 0:
             check_round += 1
             return {
                 "isEmpty": "true",
@@ -396,7 +407,7 @@ class S3TaskMonitorHelper(MonitorHelper):
 
     def check_transfer_complete(self):
         """This function will check the transfer task is completed or not ."""
-        transferred_object_count = self._get_worker_asg_transsferred_task_count()
+        transferred_object_count = self._get_worker_asg_transferred_task_count()
 
         # One Time Transfer task completed
         if int(transferred_object_count) == int(self._finder_object_count):

@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 // Task Type Icons
 import ICON_S3 from "../images/icon-s3.png";
 import ICON_ECR from "../images/icon-ecr.png";
@@ -139,7 +141,6 @@ export enum EnumBucketType {
 
 // Task Tyep Enum
 export enum EnumSourceType {
-  S3_EC2 = "Amazon_S3",
   S3 = "Amazon_S3",
   S3_COMPATIBLE = "Amazon_S3_Compatible",
   Qiniu = "Qiniu_Kodo",
@@ -176,6 +177,7 @@ export const TASK_STATUS_MAP: any = {
   IN_PROGRESS: { name: "In Progress", src: STATUS_PROGRESS, class: "gray" },
   DONE: { name: "Completed", src: STATUS_DONE, class: "success" },
   STOPPED: { name: "Stopped", src: STATUS_PENDING, class: "gray" },
+  UNKNOWN: { name: "Unkonwn", src: STATUS_PENDING, class: "gray" },
 };
 
 export interface ISouceType {
@@ -215,8 +217,8 @@ export const DOCKER_IMAGE_TYPE = [
     en_name: "All",
     zh_name: "全部",
     value: EnumDockerImageType.ALL,
-    en_desc: "Transfer all images in the source.",
-    zh_desc: "传输源地址所有容器镜像",
+    en_desc: "Transfer all images in the source with tagged and untagged.",
+    zh_desc: "传输源中带有标记和未标记的所有容器镜像",
   },
   {
     id: 2,

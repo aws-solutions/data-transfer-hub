@@ -7,7 +7,7 @@
   "reLoignTips": "This session has expired. To log in to Data Transfer Hub again, please click Login Again.",
   "info": "Info",
   "optional": "optional",
-  "recommened": "Recommened",
+  "recommened": "Recommend",
   "credentialsGuide": "Create secret guide & AK/SK format",
   "signin": {
     "signInToDRH": "Sign in to Data Transfer Hub",
@@ -44,6 +44,7 @@
     "threeDesc": "Review and create"
   },
   "home": {
+    "name": "Home",
     "title": {
       "getStarted": "Get started",
       "getStartedDesc": "Transfer data across partitions, or move from other cloud providers.",
@@ -138,7 +139,7 @@
           "destInAccount": "Is Bucket in this account?",
           "destInAccountDesc": "Select Yes, if the bucket is in the same Amazon Web Services account as Data Transfer Hub.",
           "objectPrefix": "Prefix to Insert",
-          "prefixDesc": "The data transfer engine will insert this prefix for all objects. It will automatically append ‘/‘.",
+          "prefixDesc": "The data transfer engine will insert this prefix for all objects. It will automatically append '/'.",
           "storageClass": "Storage Class",
           "storageClassDesc": "Objects will be stored with the selected storage class.",
           "destRegionName": "Region Name",
@@ -171,9 +172,9 @@
           "finderDepth": "Finder Depth",
           "finderDepthDesc": "The depth of sub folders to compare in parallel. 0 means comparing all objects in sequence.",
           "finderNumber": "Finder Number",
-          "finderNumberDesc": "The number of find threads to run in parrallel.",
+          "finderNumberDesc": "The number of find threads to run in parallel.",
           "workerThreadsNumber": "Worker Threads Number",
-          "workerThreadsNumberDesc": "The number of worker threads to run in one insance.",
+          "workerThreadsNumberDesc": "The number of worker threads to run in one instance. By default is 4, for those small objects. When the object size more than 1TB, recommend set up to 1.",
           "schedulingSettings": "Task Scheduling Settings",
           "schedulingSettingsDesc1": "Set task scheduling by selecting fixed rate manually or using CRON expression. Please select 'One time transfer' if it is an one-time task. See",
           "schedulingSettingsDesc2": "to understand CRON expression.",
@@ -197,6 +198,7 @@
       "taskDetail": "Specify task details",
       "sourceType": "Source Type",
       "selectContainerType": "Select container registry type",
+      "onlyTag": "Only transfer the 'Tagged' images",
       "valid": {
         "srcRegionRequired": "Source Region is Required",
         "accountRequired": "Please input Amazon Web Services account ID",
@@ -219,7 +221,7 @@
           "image1": "Enter all images in format of",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "delimited by comma. If tag is ommited, the latest tag will be used.",
+          "image4": "delimited by comma. If tag is omitted, the latest tag will be used.",
           "image5": " If tag is ALL_TAGS, all the tags of this image will be used."
         },
         "dest": {
@@ -241,7 +243,7 @@
           "descriptionDesc": "Description about this task",
           "email": "Alarm Notification",
           "optional": "optional",
-          "emailDesc": "Receive notificaiton when transfer failed."
+          "emailDesc": "Receive notification when transfer failed."
         }
       }
     },
@@ -265,6 +267,8 @@
   "taskList": {
     "title": "Tasks",
     "stopTask": "Stop Task",
+    "activated": "Activated",
+    "deleted": "Deleted",
     "tips": {
       "selectTask": "Please select a task",
       "selectTaskStop": "Please select a task to stop",
@@ -303,7 +307,7 @@
     "status": "Status",
     "inProgress": "Transfer in progress",
     "totalObjects": "Total Objects",
-    "repObjects": "Transfered Objects",
+    "repObjects": "Transferred Objects",
     "srcEndpoint": "Source Endpoint URL",
     "srcRegion": "Source Region",
     "srcName": "Source Bucket Name",
@@ -313,7 +317,7 @@
     "destName": "Destination Bucket Name",
     "destPrefix": "Destination Bucket Prefix",
     "destInThisAccount": "Bucket in This Account?",
-    "credentials": "Paramete Store for credentials",
+    "credentials": "Parameter Store for credentials",
     "images": "Images",
     "option": "Options",
     "description": "Description",
@@ -375,9 +379,11 @@
     "viewDetail": "View Details",
     "taskAction": "Task Action",
     "stopTask": "Stop Task",
+    "deleteTask": "Delete Task",
     "cloneTask": "Clone Task",
     "reLogin": "Login Again",
-    "createTransferTask": "Start a new transfer task"
+    "createTransferTask": "Start a new transfer task",
+    "close": "Close"
   },
   "tips": {
     "error": {
@@ -442,7 +448,7 @@
     },
     "engineSettingsEC2": {
       "name": "Engine settings",
-      "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimun,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
+      "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimum,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
       "tip2": "You can adjust these numbers on Amazon Web Services Console after creating the task.",
       "linkName": "Adjust the Auto Scaling Group to change the transfer concurrency."
     },
@@ -462,7 +468,7 @@
       "ex1": "Example 1: ",
       "ex2": "Example 2: ",
       "tip1": "If there're 10 subdirectories with over 100k files each, it's recommended to set finderDepth=1 and finderNumber=10",
-      "tip2": "If the transferred files are under two tier subdirectories, with 10 tier 1 subdirectories and 15 tier 2 subdirectories incl. over 100k leaf objects each. It is recommended to set finderDepth=2，finderNumber=10*15=150"
+      "tip2": "If the transferred files are under two tier subdirectories, with 10 tier 1 subdirectories and 15 tier 2 subdirectories incl. over 100k leaf objects each. It is recommended to set finderDepth=2, finderNumber=10*15=150"
     },
     "finderMemory": {
       "name": "Finder Memory",
@@ -493,5 +499,6 @@
     "noNewer": "No newer events at this moment. "
   },
   "noData": "No Data",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "pageNotFound": "Page Not Found"
 }

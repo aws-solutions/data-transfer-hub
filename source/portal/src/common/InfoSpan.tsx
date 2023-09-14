@@ -1,14 +1,16 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React from "react";
 import { useDispatch } from "redux-react-hook";
 import { useTranslation } from "react-i18next";
 import { ACTION_TYPE } from "assets/types";
 
-interface spanInfo {
+interface SpanInfoProps {
   spanType: string;
   infoText?: string;
 }
 
-const InfoSpan: React.FC<spanInfo> = (props) => {
+const InfoSpan: React.FC<SpanInfoProps> = (props) => {
   const { spanType, infoText } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();

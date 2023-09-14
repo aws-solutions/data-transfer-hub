@@ -39,22 +39,28 @@ export function addCfnNagSuppressRules(resource: CfnResource, rules: CfnNagSuppr
   });
 }
 
+export interface ConstructsProps extends StackProps {
+  /**
+   * Indicate the auth type in which main stack uses
+   */
+  authType?: AuthType;
+}
+
 
 /**
  * @class ConstructsStack
  */
 export class ConstructsStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: ConstructsProps) {
     super(scope, id, props);
 
-    const authType = this.node.tryGetContext('authType') || AuthType.COGNITO
     let usernameParameter: CfnParameter | null = null;
     let oidcProvider: CfnParameter | null = null;
     let oidcClientId: CfnParameter | null = null;
     let oidcCustomerDomain: CfnParameter | null = null;
 
     // CFN parameters
-    if (authType === AuthType.OPENID) {
+    if (props.authType === AuthType.OPENID) {
       oidcProvider = new CfnParameter(this, 'OidcProvider', {
         type: 'String',
         description: 'Open Id Connector Provider Issuer',
@@ -128,10 +134,11 @@ export class ConstructsStack extends Stack {
     const taskCluster = new TaskCluster(this, 'TaskCluster')
 
     // API props
+    const authTypeString: string = props.authType || AuthType.COGNITO;
     const drhProps: ApiProps = {
-      authType,
-      oidcProvider,
-      usernameParameter,
+      authType: authTypeString,
+      oidcProvider: oidcProvider,
+      usernameParameter: usernameParameter,
     }
     // API Stack
     const apiStack = new ApiStack(this, 'API', drhProps);
@@ -145,7 +152,7 @@ export class ConstructsStack extends Stack {
     );
     // Portal - S3 Static Website
     const portal = new PortalStack(this, 'Portal', {
-      auth_type: authType,
+      auth_type: authTypeString,
       aws_oidc_customer_domain: oidcCustomerDomain?.valueAsString || '',
       aws_oidc_provider: oidcProvider?.valueAsString || '',
       aws_oidc_client_id: oidcClientId?.valueAsString || '',

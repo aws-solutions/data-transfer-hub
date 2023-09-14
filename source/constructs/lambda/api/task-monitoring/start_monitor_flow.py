@@ -26,7 +26,7 @@ monitor_sfn_arn = os.environ.get("MONITOR_SFN_ARN")
 def lambda_handler(event, _):
     # logger.info("Received event: " + json.dumps(event, indent=2))
 
-    task_id = event.get("id")
+    task_id = event["id"]["S"]
 
     input_data = {
         "arguments": {

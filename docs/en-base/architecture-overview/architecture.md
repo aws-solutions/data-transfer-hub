@@ -10,9 +10,9 @@ This solution deploys the Amazon CloudFormation template in your AWS Cloud accou
 3.	Users are authenticated by either [Amazon Cognito][cognito] User Pool (in AWS Regions) or by an OpenID connect provider (in AWS China Regions) such as [Authing](https://www.authing.cn/), [Auth0](https://auth0.com/), etc.
 4.	AWS AppSync runs [AWS Lambda][lambda] to call backend APIs.
 5.	Lambda starts an [AWS Step Functions][stepfunction] workflow that uses [AWS CloudFormation][cloudformation] to start or stop/delete the Amazon ECR or Amazon S3 plugin template.
-6.	The plugin templates are hosted in a centralized Amazon S3 bucket manged by AWS.
+6.	The plugin templates are hosted in a centralized Amazon S3 bucket managed by AWS.
 7.	The solution also provisions an [Amazon ECS][ecs] cluster that runs the container images used by the plugin template, and the container images are hosted in [Amazon ECR][ecr].
-8.	The data transfer task information is stored in in [Amazon DynamoDB][dynamodb].
+8.	The data transfer task information is stored in [Amazon DynamoDB][dynamodb].
 
 After deploying the solution, you can use [AWS WAF][waf] to protect CloudFront or AppSync.
 
@@ -22,7 +22,7 @@ After deploying the solution, you can use [AWS WAF][waf] to protect CloudFront o
 
 The web console is a centralized place to create and manage all data transfer jobs. Each data type (for example, Amazon S3 or Amazon ECR) is a plugin for Data Transfer Hub, and is packaged as an AWS CloudFormation template hosted in an S3 bucket that AWS owns. When the you create a transfer task, an AWS Lambda function initiates the Amazon CloudFormation template, and state of each task is stored and displayed in the DynamoDB tables.
 
-As of April 2023, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. 
+As of this revision, the solution supports two data transfer plugins: an Amazon S3 plugin and an Amazon ECR plugin. 
 
 ## Amazon S3 plugin
 
@@ -36,14 +36,15 @@ The Amazon S3 plugin runs the following workflows:
 3. The job lists all the objects in the source and destination
 buckets, makes comparisons among objects and determines which objects should be transferred.
 4.	Amazon EC2 sends a message for each object that will be transferred to [Amazon Simple Queue Service (Amazon SQS)][sqs]. Amazon S3 event messages can also be supported for more real-time data transfer; whenever there is object uploaded to source bucket, the event message is sent to the same Amazon SQS queue.
-5.	A JobWorker running in Amazon EC2 consumes the messages in SQS and transfers the object from the source bucket to the destination bucket. You can use an Auto Scaling Group to control the number of EC2 instances to transfer the data based on business need.
+5.	A JobWorker running in Amazon EC2 consumes the messages in SQS and transfers the object from the source bucket to the destination bucket. You can use an Auto Scaling group to control the number of EC2 instances to transfer the data based on business need.
 6.	A record with transfer status for each object is stored in Amazon DynamoDB. 
 7.	The Amazon EC2 instance will get (download) the object from the source bucket based on the Amazon SQS message. 
 8.	The Amazon EC2 instance will put (upload) the object to the destination bucket based on the Amazon SQS message. 
-
+9.  When the JobWorker node identifies a large file (with a default threshold of 1 GB) for the first time, a Multipart Upload task running in Amazon EC2 is initiated. The corresponding UploadId is then conveyed to the AWS Step Functions, which invokes a scheduled recurring task. Every minute, AWS Step Functions verifies the successful transmission of the distributed shards associated with the UploadId across the entire cluster.
+10. If all shards have been transmitted successfully, Amazon EC2 invokes the CompleteMultipartUpload API in Amazon S3 to finalize the consolidation of the shards. Otherwise, any invalid shards are discarded.
 
 !!! note "Note"
-    If an object (or part of an object) failed to transfer, the JobWorker releases the message in the queue, and the object is transferred again after the message is visible in the queue (default visibility timeout is set to 15 minutes). If the transfer fails again, the message is sent to the dead letter queue and a notification alarm is sent.
+    If an object (or part of an object) transfer failed, the JobWorker releases the message in the queue, and the object is transferred again after the message is visible in the queue (default visibility timeout is set to 15 minutes). If the transfer failed five times, the message is sent to the dead letter queue and a notification alarm is initiated.
 
 ## Amazon ECR plugin
 
