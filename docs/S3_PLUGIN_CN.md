@@ -56,7 +56,7 @@ _本项目（Date Replication Hub - S3 Plugin）是基于[huangzbaws@](https://g
 - 部署预计用时3-5分钟
 - 一旦部署完成，复制任务就会马上开始
 
-请参考[部署指南](./docs/DEPLOYMENT_CN.md)里的步骤进行部署。
+请参考[部署指南](./S3_DEPLOYMENT_CN.md)里的步骤进行部署。
 
 > 注意：如果不再需要数据传输任务，则可以从CloudFormation控制台中删除堆栈。
 
@@ -99,7 +99,7 @@ _本项目（Date Replication Hub - S3 Plugin）是基于[huangzbaws@](https://g
 
 **问题**：我部署完该插件, 但我在在CloudWatch日志组里没有找到任何日志
 
-**回答**：这一定是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此 Fargate任务无法拉取映像，而EC2实例则无法下载 CloudWatch Agent以将日志发送到 CloudWatch。 请检查您的 VPC 设置（请参阅[部署指南](./docs/DEPLOYMENT_CN.md) 步骤 1）。 修复问题后，您需要手动终止正在运行的此方案的EC2 实例（如果有的话）。之后，Auto Scaling Group将自动启动新实例。
+**回答**：这一定是因为您在部署此解决方案时选择的子网没有公共网络访问权限，因此 Fargate任务无法拉取映像，而EC2实例则无法下载 CloudWatch Agent以将日志发送到 CloudWatch。 请检查您的 VPC 设置（请参阅[部署指南](./S3_DEPLOYMENT_CN.md) 步骤 1）。 修复问题后，您需要手动终止正在运行的此方案的EC2 实例（如果有的话）。之后，Auto Scaling Group将自动启动新实例。
 
 
 ### 如何客制化

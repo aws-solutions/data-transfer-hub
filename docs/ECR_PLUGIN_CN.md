@@ -49,7 +49,7 @@ Lambda将列出源ECR中的所有存储库，或者从 AWS System Manager Parame
 - 部署预计用时3-5分钟
 - 一旦部署完成，复制任务就会马上开始
 
-请参考[部署指南](./docs/DEPLOYMENT_CN.md)里的步骤进行部署。
+请参考[部署指南](./ECR_DEPLOYMENT_CN.md)里的步骤进行部署。
 
 > 注意：如果不再需要数据传输任务，则可以从CloudFormation控制台中删除堆栈。
 ## FAQ
