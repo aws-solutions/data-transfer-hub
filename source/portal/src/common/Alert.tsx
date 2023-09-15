@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { ReactElement } from "react";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
@@ -10,7 +12,7 @@ export enum AlertType {
 interface AlertProps {
   type?: AlertType;
   title?: string;
-  content: string | JSX.Element;
+  content: string | ReactElement;
   actions?: ReactElement;
   noMargin?: boolean;
   width?: number;

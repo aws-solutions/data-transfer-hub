@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React from "react";
 import classNames from "classnames";
 import { useDispatch, useMappedState } from "redux-react-hook";

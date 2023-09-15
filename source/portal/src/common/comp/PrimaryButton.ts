@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -8,6 +10,7 @@ const PrimaryButton = withStyles({
     textTransform: "none",
     fontSize: 14,
     fontWeight: "bold",
+    height: 36,
     padding: "5px 15px",
     border: "1px solid",
     backgroundColor: "#EC7211",

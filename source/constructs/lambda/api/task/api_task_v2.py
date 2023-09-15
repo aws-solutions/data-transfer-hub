@@ -5,17 +5,31 @@ import json
 import logging
 import os
 import re
-
+import uuid
+import datetime
+from decimal import Decimal
 import boto3
 from boto3.dynamodb.conditions import Attr
-from util.task_helper import TaskErrorHelper
+from botocore import config
+
+from util.task_helper import TaskErrorHelper, make_id
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+solution_version = os.environ.get("SOLUTION_VERSION", "v1.0.0")
+solution_id = os.environ.get("SOLUTION_ID", "SO8001")
+user_agent_config = {
+    "user_agent_extra": f"AwsSolution/{solution_id}/{solution_version}"
+}
+default_config = config.Config(**user_agent_config)
+
+default_region = os.environ.get("AWS_REGION")
 
 # Get DDB resource.
-dynamodb = boto3.resource('dynamodb')
+dynamodb = boto3.resource('dynamodb', config=default_config)
+sfn_client = boto3.client('stepfunctions', config=default_config)
+ddb_client = boto3.client('dynamodb', config=default_config)
 
 transfer_task_table_name = os.environ.get('TRANSFER_TASK_TABLE')
 default_region = os.environ.get('AWS_REGION')
@@ -33,6 +47,12 @@ def lambda_handler(event, _):
     elif action == "getErrorMessage":
         task_id = args.get("id")
         return get_error_message(task_id)
+    elif action == "createTask":
+        return create_task(args.get("input"))
+    elif action == "stopTask":
+        return stop_task(args.get("id"))
+    elif action == "updateTaskProgress":
+        return update_task_progress(args.get("id"), args.get("input"))
     else:
         logger.info('Event received: ' + json.dumps(event, indent=2))
         raise RuntimeError(f'Unknown action {action}')
@@ -128,6 +148,7 @@ def get_stack_schedule_type(task_schedule: str):
         return "ONE_TIME"
     return "FIXED_RATE"
 
+
 def get_task_param(item, param_description):
     """ Get the task param from ddb
     """
@@ -135,3 +156,85 @@ def get_task_param(item, param_description):
         if stack_param.get("ParameterKey") == param_description:
             return stack_param.get("ParameterValue")
     return ""
+
+
+def create_task(task_input):
+    """ Create a transfer task """
+    plugin_template_url = os.environ.get(
+        f"PLUGIN_TEMPLATE_{task_input['type'].upper()}")
+    is_dry_run = os.environ.get('DRY_RUN') == 'True'
+    created_at_iso = datetime.datetime.utcnow().isoformat() + 'Z'
+    task = {
+        **task_input,
+        'id': str(uuid.uuid4()),
+        'templateUrl': plugin_template_url,
+        'createdAt': created_at_iso
+    }
+
+    if not is_dry_run:
+        sfn_res = sfn_client.start_execution(
+            stateMachineArn=os.environ['STATE_MACHINE_ARN'],
+            input=json.dumps({**task, 'action': 'START'})
+        )
+        execution_arn = sfn_res['executionArn']
+    else:
+        execution_arn = f'dry-run-execution-arn-{make_id(5)}'
+
+    item = {**task, 'executionArn': execution_arn}
+
+    transfer_task_table.put_item(Item=item)
+
+    return item
+
+
+def stop_task(task_id):
+    """ Stop a transfer task """
+    is_dry_run = os.environ.get('DRY_RUN') == 'True'
+
+    resp = transfer_task_table.get_item(Key={"id": task_id})
+    task = resp['Item']
+
+    if not is_dry_run:
+        sfn_res = sfn_client.start_execution(
+            stateMachineArn=os.environ['STATE_MACHINE_ARN'],
+            input=json.dumps({**task, 'action': 'STOP'},
+                             default=decimal_to_float)
+        )
+        execution_arn = sfn_res['executionArn']
+    else:
+        execution_arn = f'dry-run-execution-arn-{make_id(5)}'
+
+    ddb_client.update_item(
+        TableName=transfer_task_table_name,
+        Key={'id': {'S': task_id}},
+        UpdateExpression='set executionArn = :executionArn, progress = :progress',
+        ExpressionAttributeValues={':executionArn': {
+            'S': execution_arn}, ':progress': {'S': 'STOPPING'}},
+        ReturnValues='ALL_NEW'
+    )
+
+    task['progress'] = 'STOPPING'
+    task['executionArn'] = execution_arn
+
+    return task
+
+
+def update_task_progress(task_id, progress):
+    """ Update a transfer task progress """
+    update_task_res = ddb_client.update_item(
+        TableName=transfer_task_table_name,
+        Key={'id': {'S': task_id}},
+        UpdateExpression='set progressInfo = :progressInfo',
+        ExpressionAttributeValues={
+            ':progressInfo': {'S': json.dumps(progress)}},
+        ReturnValues='ALL_NEW'
+    )
+
+    return update_task_res['Attributes']
+
+
+def decimal_to_float(obj):
+    """ Convert Decimal values to float for JSON serialization """
+    if isinstance(obj, Decimal):
+        return float(obj)
+    raise TypeError

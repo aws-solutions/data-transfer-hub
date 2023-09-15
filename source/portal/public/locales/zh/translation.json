@@ -44,6 +44,7 @@
     "threeDesc": "预览并创建"
   },
   "home": {
+    "name": "首页",
     "title": {
       "getStarted": "开始使用",
       "getStartedDesc": "跨区域数据传输，或从其他云厂商迁移数据。",
@@ -173,7 +174,7 @@
           "finderNumber": "查找器数量",
           "finderNumberDesc": "要并行运行的查找线程数.",
           "workerThreadsNumber": "工作线程数",
-          "workerThreadsNumberDesc": "一个实例中要运行的工作线程数.",
+          "workerThreadsNumberDesc": "一个实例中要运行的工作线程数.对于那些小对象，默认值为 4。 当对象大小超过 1TB 时，建议设置为 1。",
           "schedulingSettings": "任务调度设置",
           "schedulingSettingsDesc1": "可通过手动调整或CRON表达式来设置任务调度频率，如若单次传输，请选单次传输。详见",
           "schedulingSettingsDesc2": "了解CRON表达式.",
@@ -197,6 +198,7 @@
       "taskDetail": "填写任务信息",
       "sourceType": "源仓库类型",
       "selectContainerType": "选择容器仓库类型",
+      "onlyTag": "仅传输被“标记”的镜像",
       "valid": {
         "srcRegionRequired": "请选择源仓库区域",
         "accountRequired": "请输入 Amazon Web Services 账户 ID",
@@ -219,7 +221,7 @@
           "image1": "输入容器镜像名称",
           "image2": "image-name",
           "image3": "tag",
-          "image4": "使用逗号分隔. 如果不指定 tag, 则默认为 latest.",
+          "image4": "使用逗号分隔. 如果不指定 tag, 则默认为 latest。",
           "image5": "如果 tag 是 ALL_TAGS，则将使用该容器镜像的所有 tag。"
         },
         "dest": {
@@ -265,6 +267,8 @@
   "taskList": {
     "title": "任务",
     "stopTask": "停止任务",
+    "activated": "活动的",
+    "deleted": "已删除",
     "tips": {
       "selectTask": "请选择一个任务",
       "selectTaskStop": "请选择需要停止的任务",
@@ -376,8 +380,10 @@
     "taskAction": "操作",
     "stopTask": "停止任务",
     "cloneTask": "复制任务",
+    "deleteTask": "删除任务",
     "reLogin": "重新登录",
-    "createTransferTask": "创建新任务"
+    "createTransferTask": "创建新任务",
+    "close": "关闭"
   },
   "tips": {
     "error": {
@@ -493,5 +499,6 @@
     "noNewer": "暂时没有更新的事件。"
   },
   "noData": "暂无数据",
-  "loading": "加载中..."
+  "loading": "加载中...",
+  "pageNotFound": "没找到页面"
 }

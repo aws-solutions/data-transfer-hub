@@ -5,9 +5,6 @@ import {
   Construct,
 } from 'constructs';
 import {  
-  CfnCondition,
-  CfnResource,
-  CfnCustomResource,
   RemovalPolicy,
   Duration,
   Aws,
@@ -16,6 +13,7 @@ import {
   aws_s3_deployment as s3Deployment,
   aws_iam as iam,
   aws_lambda as lambda, 
+  custom_resources as cr,
 } from 'aws-cdk-lib';
 import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
 
@@ -25,14 +23,6 @@ import { NagSuppressions } from 'cdk-nag';
 
 // const { BUCKET_NAME, SOLUTION_NAME, VERSION } = process.env
 
-/**
- * Custom resource config interface
- */
-interface CustomResourceConfig {
-  readonly properties?: { path: string, value: any }[];
-  readonly condition?: CfnCondition;
-  readonly dependencies?: CfnResource[];
-}
 
 export interface PortalStackProps {
   auth_type: string,
@@ -172,45 +162,22 @@ function handler(event) {
           resources: [
             `arn:${Aws.PARTITION}:s3:::*`
           ]
+        }),
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'cloudfront:GetInvalidation',
+            'cloudfront:CreateInvalidation',
+          ],
+          resources: [
+            `arn:${Aws.PARTITION}:cloudfront::${Aws.ACCOUNT_ID}:distribution/${website.cloudFrontWebDistribution.distributionId}`,
+          ],
         })
       ]
     });
     customResourcePolicy.attachToRole(customResourceRole);
     const cfnCustomResourcePolicy = customResourcePolicy.node.defaultChild as iam.CfnPolicy;
     cfnCustomResourcePolicy.overrideLogicalId('CustomResourcePolicy');
-
-    const customResourceFunction = new lambda.Function(this, 'CustomHandler', {
-      description: 'Data Transfer Hub - Custom resource',
-      runtime: lambda.Runtime.NODEJS_16_X,
-      handler: 'index.handler',
-      timeout: Duration.seconds(30),
-      memorySize: 512,
-      role: customResourceRole,
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/'),
-        {
-          bundling: {
-            image: lambda.Runtime.NODEJS_16_X.bundlingImage,
-            command: [
-              'bash', '-c', [
-                `cd /asset-output/`,
-                `cp -r /asset-input/* /asset-output/`,
-                `cd /asset-output/`,
-                `npm install`
-              ].join(' && ')
-            ],
-            user: 'root'
-          }
-        }
-      )
-    })
-
-    const cfnCustomResourceFn = customResourceFunction.node.defaultChild as lambda.CfnFunction
-    addCfnNagSuppressRules(cfnCustomResourceFn, [
-      {
-        id: 'W58',
-        reason: 'Lambda function already has permission to write CloudWatch Logs'
-      }
-    ])
 
     new s3Deployment.BucketDeployment(this, 'DeployWebsite', {
       sources: [s3Deployment.Source.asset(path.join(__dirname, '../../portal/build'))],
@@ -221,77 +188,59 @@ function handler(event) {
 
     this.websiteURL = website.cloudFrontWebDistribution.distributionDomainName
 
-    // CustomResourceConfig
-    this.createCustomResource('CustomResourceConfig', customResourceFunction, {
-      properties: [
-        { path: 'Region', value: Aws.REGION },
-        {
-          path: 'configItem', value: {
-            aws_project_region: Aws.REGION,
-            aws_cognito_region: Aws.REGION,
-            aws_cloudfront_url: this.websiteURL,
-            aws_user_pools_id: props.aws_user_pools_id,
-            aws_user_pools_web_client_id: props.aws_user_pools_web_client_id,
-            oauth: {},
-            aws_oidc_customer_domain: props.aws_oidc_customer_domain,
-            aws_oidc_provider: props.aws_oidc_provider,
-            aws_oidc_client_id: props.aws_oidc_client_id,
-            aws_appsync_graphqlEndpoint: props.aws_appsync_graphqlEndpoint,
-            aws_appsync_region: Aws.REGION,
-            aws_appsync_authenticationType: props.auth_type === AuthType.OPENID ? 'OPENID_CONNECT' : 'AMAZON_COGNITO_USER_POOLS',
-            taskCluster: props.taskCluster
-          }
+    const customResourceFunction = new lambda.Function(this, 'CustomHandler', {
+      description: `${Aws.STACK_NAME} - - Custom resource`,
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: 'lambda_function.lambda_handler',
+      timeout: Duration.seconds(30),
+      memorySize: 512,
+      role: customResourceRole,
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/')),
+      environment: {
+        WEB_BUCKET_NAME: websiteBucket.bucketName,
+        API_ENDPOINT: props.aws_appsync_graphqlEndpoint,
+        OIDC_PROVIDER: props.aws_oidc_provider,
+        OIDC_CLIENT_ID: props.aws_oidc_client_id,
+        OIDC_CUSTOMER_DOMAIN: props.aws_oidc_customer_domain,
+        CLOUDFRONT_URL: this.websiteURL,
+        CLOUDFRONT_DISTRIBUTION_ID: website.cloudFrontWebDistribution.distributionId,
+        AUTHENTICATION_TYPE: props.auth_type === AuthType.OPENID ? 'OPENID_CONNECT' : 'AMAZON_COGNITO_USER_POOLS',
+        USER_POOL_ID: props.aws_user_pools_id,
+        USER_POOL_CLIENT_ID: props.aws_user_pools_web_client_id,
+        SOLUTION_VERSION: process.env.VERSION || "v1.0.0",
+        ECS_VPC_ID: props.taskCluster?.ecsVpcId || "",
+        ECS_CLUSTER_NAME: props.taskCluster?.ecsClusterName || "",
+        ECS_SUBNETS: props.taskCluster?.ecsSubnets.join(",") || ""
+      }
+    })
+
+    const cfnCustomResourceFn = customResourceFunction.node.defaultChild as lambda.CfnFunction
+    addCfnNagSuppressRules(cfnCustomResourceFn, [
+      {
+        id: 'W58',
+        reason: 'Lambda function already has permission to write CloudWatch Logs'
+      }
+    ])
+
+    const crLambda = new cr.AwsCustomResource(this, "CustomResourceConfig", {
+      policy: cr.AwsCustomResourcePolicy.fromStatements([
+        new iam.PolicyStatement({
+          actions: ["lambda:InvokeFunction"],
+          effect: iam.Effect.ALLOW,
+          resources: [customResourceFunction.functionArn],
+        }),
+      ]),
+      timeout: Duration.minutes(15),
+      onUpdate: {
+        service: "Lambda",
+        action: "invoke",
+        parameters: {
+          FunctionName: customResourceFunction.functionName,
+          InvocationType: "Event",
         },
-        { path: 'destS3Bucket', value: websiteBucket.bucketName },
-        { path: 'destS3key', value: 'aws-exports.json' },
-        { path: 'customAction', value: 'putConfigFile' }
-      ],
-      dependencies: [cfnCustomResourceRole, cfnCustomResourcePolicy]
+        physicalResourceId: cr.PhysicalResourceId.of(Date.now().toString()),
+      },
     });
-
-  }
-
-
-  /**
-   * Adds dependencies to the AWS CloudFormation resource.
-   * @param {CfnResource} resource Resource to add AWS CloudFormation dependencies
-   * @param {CfnResource[]} dependencies Dependencies to be added to the AWS CloudFormation resource
-   */
-  addDependencies(resource: CfnResource, dependencies: CfnResource[]) {
-    for (let dependency of dependencies) {
-      resource.addDependsOn(dependency);
-    }
-  }
-
-  /**
-   * Creates custom resource to the AWS CloudFormation template.
-   * @param {string} id Custom resource ID
-   * @param {lambda.Function} customResourceFunction Custom resource Lambda function
-   * @param {CustomResourceConfig} config Custom resource configuration
-   * @return {CfnCustomResource}
-   */
-  createCustomResource(id: string, customResourceFunction: lambda.Function, config?: CustomResourceConfig): CfnCustomResource {
-    const customResource = new CfnCustomResource(this, id, {
-      serviceToken: customResourceFunction.functionArn
-    });
-    customResource.addOverride('Type', 'Custom::CustomResource');
-
-    if (config) {
-      const { properties, condition, dependencies } = config;
-
-      if (properties) {
-        for (let property of properties) {
-          customResource.addPropertyOverride(property.path, property.value);
-        }
-      }
-
-      if (dependencies) {
-        this.addDependencies(customResource, dependencies);
-      }
-
-      customResource.cfnOptions.condition = condition;
-    }
-
-    return customResource;
+    crLambda.node.addDependency(customResourceFunction);
   }
 }

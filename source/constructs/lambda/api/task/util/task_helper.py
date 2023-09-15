@@ -5,6 +5,8 @@ import logging
 import os
 import re
 import boto3
+import random
+import string
 
 from botocore import config
 
@@ -54,7 +56,7 @@ class TaskErrorHelper:
         """
         Get the error reason of transfer task
         """
-        if "FAILED" in self._stack_status:
+        if "FAILED" in self._stack_status or "ROLLBACK" in self._stack_status:
             err_message = self.get_cfn_stack_first_error_event()
             err_code = "CFN_ERROR"
         else:
@@ -127,3 +129,10 @@ def get_stack_name(stack_id):
         raise APIException("Error parse stack name.")
 
     return stack_name
+
+
+def make_id(length):
+    """Generate a random string of fixed length """
+    characters = string.ascii_letters
+    result = ''.join(random.choice(characters) for _ in range(length))
+    return result

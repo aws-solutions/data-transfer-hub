@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect, useRef } from "react";
 import { EnumTaskStatus, TASK_STATUS_MAP } from "assets/types/index";
 
@@ -29,6 +31,7 @@ const STATUS_ICON_MAP: any = {
   IN_PROGRESS: <STATUS_PROGRESS fontSize="small" />,
   DONE: <STATUS_DONE fontSize="small" />,
   STOPPED: <STATUS_STOPED fontSize="small" />,
+  UNKNOWN: <STATUS_STOPED fontSize="small" />,
 };
 
 const TaskStatusComp: React.FC<StatusProps> = ({
@@ -42,7 +45,7 @@ const TaskStatusComp: React.FC<StatusProps> = ({
   const [errorMessage, setErrorMessage] = useState<GetErrorMessageResponse>();
   const [showError, setShowError] = useState(false);
   const [curRegion, setCurRegion] = useState("");
-
+  progress = progress || "UNKNOWN";
   function useOutsideAlerter(ref: any) {
     useEffect(() => {
       /**
@@ -97,13 +100,13 @@ const TaskStatusComp: React.FC<StatusProps> = ({
           }
         }}
         className={
-          progress ? TASK_STATUS_MAP[progress].class + " status" : "status"
+          progress ? TASK_STATUS_MAP[progress]?.class + " status" : "status"
         }
       >
         <span className="icon">
           {progress ? STATUS_ICON_MAP[progress] : ""}
         </span>
-        {progress ? TASK_STATUS_MAP[progress].name : ""}
+        {progress ? TASK_STATUS_MAP[progress]?.name : ""}
       </div>
       {progress === EnumTaskStatus.ERROR && showError && (
         <div ref={wrapperRef} className="status-pop">

@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { format } from "date-fns";
 // format date
 export const formatLocalTime = (time: any): string => {

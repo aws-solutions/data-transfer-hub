@@ -1,9 +1,11 @@
-import { createStore } from "redux";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { legacy_createStore as createStore } from "redux";
 import reducer from "./Reducer";
 import { ACTION_TYPE } from "assets/types/index";
 import { S3SourcePrefixType } from "assets/config/const";
 
-export interface S3_EC2_TASK {
+export interface S3ec2Task {
   description: string;
   type: string;
   scheduleType: string;
@@ -50,7 +52,7 @@ export interface S3_EC2_TASK {
   [key: string]: any;
 }
 
-interface ECR_TASK {
+interface ECRTask {
   description: string;
   scheduleType: string;
   parameters: any;
@@ -72,6 +74,7 @@ interface ECR_TASK {
     destRegionObj?: any;
     sourceInAccount?: string;
     destInAccount?: string;
+    includeUntagged?: string;
   };
   [key: string]: any;
 }
@@ -81,8 +84,8 @@ export interface IState {
   amplifyConfig: any;
   infoSpanType: string;
   createTaskFlag: boolean;
-  tmpTaskInfo: S3_EC2_TASK | null;
-  tmpECRTaskInfo: ECR_TASK | null;
+  tmpTaskInfo: S3ec2Task | null;
+  tmpECRTaskInfo: ECRTask | null;
   infoIsOpen?: boolean;
   isOpen: boolean;
   auth0LogoutUrl: string;

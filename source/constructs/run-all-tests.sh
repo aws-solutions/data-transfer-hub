@@ -137,7 +137,14 @@ run_python_test $construct_dir/lambda/api/cwl cloudwatch_api
 run_python_test $construct_dir/lambda/api/secrets_manager secrets_manager_api
 run_python_test $construct_dir/lambda/api/task task_api
 run_python_test $construct_dir/lambda/api/task-monitoring task_monitoring_api
+run_python_test $construct_dir/lambda/cdk cdk_api
 run_python_test $construct_dir/lambda/custom-resource custom-resource
+run_python_test $construct_dir/lambda/plugin/s3/asg-helper s3-plugin-asg-helper
+run_python_test $construct_dir/lambda/plugin/s3/custom-resource s3-plugin-custom-resource
+run_python_test $construct_dir/lambda/plugin/s3/multi-part-controller s3-plugin-multi-part-controller
+run_python_test $construct_dir/lambda/plugin/ecr/ecr_helper ecr_helper
+run_python_test $construct_dir/lambda/plugin/ecr/sfn_helper sfn_helper
+run_python_test $construct_dir/../custom-resource cloudfront_cfn
 
 # Return to the source/ level
 cd $source_dir

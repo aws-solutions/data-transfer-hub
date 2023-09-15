@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 .task-status {
   padding-left: 0px;
   .content {
@@ -40,12 +42,9 @@
         flex: 1;
       }
       .buttons {
-        text-align: right;
-        width: 620px;
-        button {
-          margin-left: 8px;
-          font-weight: bold;
-        }
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
       }
     }
     .search {

@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 // No UpdateInstanceGroup, UpdateSubAccountLink function in UI
 const NEED_ENCODE_PARAM_KEYS: string[] = [];
 

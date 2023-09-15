@@ -1,5 +1,11 @@
 Data Transfer Hub
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Licensed under the Apache License Version 2.0 (the "License"). You may not use this file except
+in compliance with the License. A copy of the License is located at http://www.apache.org/licenses/
+or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
 
 **********************
 THIRD PARTY COMPONENTS
@@ -83,3 +89,54 @@ eslint-plugin-n under the Massachusetts Institute of Technology (MIT) license
 eslint-plugin-prettier under the Massachusetts Institute of Technology (MIT) license
 eslint-plugin-react under the Massachusetts Institute of Technology (MIT) license
 prettier under the Massachusetts Institute of Technology (MIT) license
+attrs under MIT
+boto3 under Apache License 2.0
+botocore under Apache License 2.0
+cffi under MIT
+coverage under Apache License 2.0
+defusedxml under PSF
+docker under Apache License 2.0
+filelock under Apache License 2.0
+flake8 under MIT
+iniconfig under MIT
+jmespath under MIT
+jsonschema under MIT
+jsonschema-spec under MIT
+jsonschema-specifications under MIT
+mccabe under MIT
+moto under Apache License 2.0
+openapi-spec-validator under MIT
+pluggy under MIT
+py-serializable under Apache License 2.0
+pycodestyle under MIT
+pyflakes under MIT
+pytest under MIT
+pytest-cov under MIT
+pytz under MIT
+referencing under MIT
+responses under Apache License 2.0
+rfc3339-validator under MIT
+rpds-py under MIT
+s3transfer under Apache License 2.0
+tomli under MIT
+types-PyYAML under MIT
+websocket-client under LGPL
+xmltodict under MIT
+exceptiongroup under the MIT License
+moment under the MIT License
+@testing-library/react under the MIT License
+@aws-amplify/ui-react under the Apache License Version 2.0
+@aws-amplify/ui-components under the Apache License Version 2.0
+fs under the MIT License
+Jinja2 under the BSD-3-Clause
+MarkupSafe under the BSD-3-Clause
+Werkzeug under the BSD-3-Clause
+cryptography under the Apache License Version 2.0 or OR BSD-3-Clause
+lazy-object-proxy under the BSD-2-Clause
+openapi-schema-validator under the BSD-3-Clause
+pathable under the Apache License Version 2.0 (details in this link: https://github.com/p1c2u/pathable/blob/master/LICENSE)
+pycparser under the BSD License
+python-dateutil under Apache Software License, BSD License (Dual License)
+typing_extensions under Python Software Foundation License
+boolean.py under BSD-2-Clause
+license-expression under Apache License Version 2.0

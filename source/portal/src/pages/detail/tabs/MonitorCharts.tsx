@@ -1,3 +1,5 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import { GraphName } from "API";
 import { appSyncRequestQuery } from "assets/utils/request";
 import Loading from "common/Loading";
@@ -6,12 +8,18 @@ import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { humanFileSize } from "assets/utils/utils";
+import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
+import NormalButton from "common/comp/NormalButton";
+import { useTranslation } from "react-i18next";
+import Modal from "common/comp/Modal";
+import TimeRange from "common/comp/TimeRange";
 
 interface MonitorChartsProps {
   taskId: string;
   graphTitle: string;
   yAxisUnit: string;
   graphName: GraphName;
+  rangeType: string;
   startTime: number;
   endTime: number;
 }
@@ -19,8 +27,15 @@ interface MonitorChartsProps {
 const MonitorCharts: React.FC<MonitorChartsProps> = (
   props: MonitorChartsProps
 ) => {
-  const { taskId, graphTitle, yAxisUnit, startTime, endTime, graphName } =
-    props;
+  const {
+    taskId,
+    graphTitle,
+    yAxisUnit,
+    rangeType,
+    startTime,
+    endTime,
+    graphName,
+  } = props;
   const chartDefaultOptions: ApexOptions = {
     chart: {
       id: graphName,
@@ -33,6 +48,9 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
       },
       animations: {
         enabled: false,
+      },
+      toolbar: {
+        show: false,
       },
     },
     colors: ["#0073bb", "#ec7211", "#2ca02c", "#d62728"],
@@ -153,62 +171,128 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
   const [loadingData, setLoadingData] = useState(false);
   const [options, setOptions] = useState<ApexOptions>(chartDefaultOptions);
   const [series, setSeries] = useState<any[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [chartModalStartTime, setChartModalStartTime] = useState(startTime);
+  const [chartModalEndTime, setChartModalEndTime] = useState(endTime);
+  const [chartModalRangeType, setchartModalRangeType] = useState(rangeType);
+  const [loadingModalData, setLoadingModalData] = useState(false);
+  const [chartModalOptions, setChartModalOptions] =
+    useState(chartDefaultOptions);
+  const [chartModalSeries, setChartModalSeries] = useState<any[]>([]);
+  const { t } = useTranslation();
 
-  const getMetricsData = async () => {
-    setLoadingData(true);
+  const getMetricsData = async (
+    isModal?: boolean,
+    modalStartTime?: number,
+    modalEndTime?: number
+  ) => {
+    if (isModal) {
+      setLoadingModalData(true);
+    } else {
+      setLoadingData(true);
+    }
     try {
       const resData: any = await appSyncRequestQuery(getMetricHistoryData, {
         id: taskId,
         graphName: graphName,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: isModal ? modalStartTime : startTime,
+        endTime: isModal ? modalEndTime : endTime,
         period: 60,
       });
       console.info("resData:", resData);
       if (resData?.data?.getMetricHistoryData?.xaxis?.categories?.length > 0) {
-        setOptions({
-          ...chartDefaultOptions,
-          xaxis: {
-            ...chartDefaultOptions.xaxis,
-            categories: [
-              startTime * 1000,
-              ...resData.data.getMetricHistoryData.xaxis.categories.map(
-                (x: number) => x * 1000
-              ),
-              endTime * 1000,
-            ],
-          },
-        });
-        setSeries(
-          resData.data.getMetricHistoryData.series.map((element: any) => {
-            return {
-              name:
-                graphName === GraphName.Network
-                  ? "Completed(Bytes)	"
-                  : element.name,
-              data: [null, ...element.data, null].map((val) => {
-                return val === -1
-                  ? graphName === GraphName.TransferredFailedObjects
-                    ? 0
-                    : null
-                  : val;
-              }),
-            };
-          })
-        );
+        if (isModal) {
+          setChartModalOptions({
+            ...chartDefaultOptions,
+            chart: {
+              ...chartDefaultOptions.chart,
+            },
+            xaxis: {
+              ...chartDefaultOptions.xaxis,
+              categories: [
+                startTime * 1000,
+                ...resData.data.getMetricHistoryData.xaxis.categories.map(
+                  (x: number) => x * 1000
+                ),
+                endTime * 1000,
+              ],
+            },
+          });
+          setChartModalSeries(
+            resData.data.getMetricHistoryData.series.map((element: any) => {
+              return {
+                name:
+                  graphName === GraphName.Network
+                    ? "Completed(Bytes)	"
+                    : element.name,
+                data: [null, ...element.data, null].map((val) => {
+                  return val === -1
+                    ? graphName === GraphName.TransferredFailedObjects
+                      ? 0
+                      : null
+                    : val;
+                }),
+              };
+            })
+          );
+        } else {
+          setOptions({
+            ...chartDefaultOptions,
+            xaxis: {
+              ...chartDefaultOptions.xaxis,
+              categories: [
+                startTime * 1000,
+                ...resData.data.getMetricHistoryData.xaxis.categories.map(
+                  (x: number) => x * 1000
+                ),
+                endTime * 1000,
+              ],
+            },
+          });
+          setSeries(
+            resData.data.getMetricHistoryData.series.map((element: any) => {
+              return {
+                name:
+                  graphName === GraphName.Network
+                    ? "Completed(Bytes)	"
+                    : element.name,
+                data: [null, ...element.data, null].map((val) => {
+                  return val === -1
+                    ? graphName === GraphName.TransferredFailedObjects
+                      ? 0
+                      : null
+                    : val;
+                }),
+              };
+            })
+          );
+        }
       } else {
-        setOptions({
-          ...chartDefaultOptions,
-          xaxis: {
-            ...chartDefaultOptions.xaxis,
-            categories: [startTime * 1000, endTime * 1000],
-          },
-        });
-        setSeries([]);
+        if (isModal) {
+          setChartModalOptions({
+            ...chartDefaultOptions,
+            xaxis: {
+              ...chartDefaultOptions.xaxis,
+              categories: [startTime * 1000, endTime * 1000],
+            },
+          });
+          setChartModalSeries([]);
+        } else {
+          setOptions({
+            ...chartDefaultOptions,
+            xaxis: {
+              ...chartDefaultOptions.xaxis,
+              categories: [startTime * 1000, endTime * 1000],
+            },
+          });
+          setSeries([]);
+        }
       }
       setLoadingData(false);
+      setLoadingModalData(false);
     } catch (error) {
       setLoadingData(false);
+      setLoadingModalData(false);
       console.error(error);
     }
   };
@@ -220,17 +304,94 @@ const MonitorCharts: React.FC<MonitorChartsProps> = (
     }
   }, [taskId, startTime, endTime]);
 
+  useEffect(() => {
+    if (graphName && chartModalStartTime && chartModalEndTime) {
+      getMetricsData(true, chartModalStartTime, chartModalEndTime);
+    }
+  }, [chartModalStartTime, chartModalEndTime]);
+
   return (
-    <div className="pr">
-      <div className="pr">
-        {loadingData && (
-          <div className="chart-mask">
-            <Loading />
-          </div>
-        )}
-        <Chart width="100%" options={options} series={series} />
+    <>
+      <div className="pr chart-item">
+        <div className="pr chart-container">
+          <span
+            className="zoom"
+            onClick={() => {
+              setchartModalRangeType(rangeType);
+              setChartModalStartTime(startTime);
+              setChartModalEndTime(endTime);
+              setOpenModal(true);
+            }}
+          >
+            <ZoomOutMapIcon />
+          </span>
+          {loadingData && (
+            <div className="chart-mask">
+              <Loading />
+            </div>
+          )}
+          <Chart width="100%" options={options} series={series} />
+        </div>
       </div>
-    </div>
+      <Modal
+        title={graphTitle}
+        isOpen={openModal}
+        fullWidth={true}
+        closeModal={() => {
+          setOpenModal(false);
+        }}
+        actions={
+          <div className="button-action no-pb text-right">
+            <NormalButton
+              onClick={() => {
+                setOpenModal(false);
+              }}
+            >
+              {t("btn.close")}
+            </NormalButton>
+          </div>
+        }
+      >
+        <div className="gsui-modal-content">
+          <>
+            <div className="modal-time-range mt-10">
+              <div>&nbsp;</div>
+              <TimeRange
+                startTime={chartModalStartTime}
+                endTime={chartModalEndTime}
+                curTimeRangeType={chartModalRangeType}
+                changeTimeRange={(range) => {
+                  setChartModalStartTime(range[0]);
+                  setChartModalEndTime(range[1]);
+                }}
+                changeRangeType={(type) => {
+                  setchartModalRangeType(type);
+                }}
+              />
+            </div>
+            <div className="monitor-chart mt-20">
+              <div className="pr">
+                {loadingModalData && (
+                  <div className="chart-mask">
+                    <Loading />
+                  </div>
+                )}
+                <div
+                  className="modal-chart-container"
+                  style={{ padding: "0 20px" }}
+                >
+                  <Chart
+                    options={chartModalOptions}
+                    height={400}
+                    series={chartModalSeries}
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        </div>
+      </Modal>
+    </>
   );
 };
 

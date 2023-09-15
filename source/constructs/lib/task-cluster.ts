@@ -30,7 +30,7 @@ export class TaskCluster extends Construct {
     super(scope, id);
 
     const vpc = new ec2.Vpc(this, 'TaskVPC', {
-      cidr: props?.cidr || '10.0.0.0/16',
+      ipAddresses: ec2.IpAddresses.cidr(props?.cidr || '10.0.0.0/16'),
       enableDnsHostnames: true,
       enableDnsSupport: true,
       subnetConfiguration: [

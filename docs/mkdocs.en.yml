@@ -9,7 +9,7 @@ theme:
 nav:
   - Implementation Guide:
     - Solution Overview:
-        - Overview: solution-overview/index.md
+        - Overview: index.md
         - Features and benefits: solution-overview/features-and-benefits.md
         - Use cases: solution-overview/use-cases.md
     - Architecture Overview:

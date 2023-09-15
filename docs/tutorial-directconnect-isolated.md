@@ -78,11 +78,11 @@ We recommend using the **DTH S3-plugin** to create the transfer task, instead of
 
 **For AWS China Regions**
 
-[![Launch Stack](./images/launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://s3.amazonaws.com/solutions-reference/data-transfer-hub-s3-plugin/latest/DataTransferS3Stack-ec2.template)
+[![Launch Stack](./images/launch-stack.png)](https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
 
 **For AWS Global Regions**
 
-[![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://s3.amazonaws.com/solutions-reference/data-transfer-hub-s3-plugin/latest/DataTransferS3Stack-ec2.template)
+[![Launch Stack](./images/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
     
 1. For **Source Type**, choose **Amazon_S3**.
 

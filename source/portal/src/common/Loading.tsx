@@ -1,11 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React from "react";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { ThreeDots } from "react-loader-spinner";
 
 const DataLoading: React.FC = () => {
   return (
     <div className="loading-style">
-      <Loader type="ThreeDots" color="#444444" height={50} width={50} />
+      <ThreeDots color="#444444" height={50} width={50} />
     </div>
   );
 };

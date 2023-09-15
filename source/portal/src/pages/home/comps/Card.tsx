@@ -1,14 +1,16 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CUR_SUPPORT_LANGS } from "assets/config/const";
 
 import "./Card.scss";
 
-interface DATA_TYPE {
+interface DataType {
   contentInfo: any;
 }
 
-const Card: React.FC<DATA_TYPE> = (props: any) => {
+const Card: React.FC<DataType> = (props: any) => {
   const { i18n } = useTranslation();
   const [titleStr, setTitleStr] = useState("en_title");
   const [nameStr, setNameStr] = useState("en_name");

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import LogGroup from "./LogGroup";
 import MonitorCharts from "./MonitorCharts";
@@ -7,8 +9,6 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { GraphName } from "API";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { getOutputValueByDesc } from "assets/utils/utils";
-import { RangePicker } from "react-minimal-datetime-range";
-import "react-minimal-datetime-range/lib/react-minimal-datetime-range.min.css";
 
 import {
   buildCloudWatchLink,
@@ -18,54 +18,12 @@ import {
   MonitorTabType,
   WORKER_DESC,
 } from "assets/config/const";
-
-const buildPreTime = (nowTime: number, period: string) => {
-  switch (period) {
-    case "1h":
-      return Math.floor((nowTime - 1000 * 60 * 60) / 1000);
-    case "3h":
-      return Math.floor((nowTime - 1000 * 60 * 60 * 3) / 1000);
-    case "12h":
-      return Math.floor((nowTime - 1000 * 60 * 60 * 12) / 1000);
-    case "1d":
-      return Math.floor((nowTime - 1000 * 60 * 60 * 24) / 1000);
-    case "3d":
-      return Math.floor((nowTime - 1000 * 60 * 60 * 24 * 3) / 1000);
-    case "1w":
-      return Math.floor((nowTime - 1000 * 60 * 60 * 24 * 7) / 1000);
-    default:
-      return Math.floor(nowTime / 1000);
-  }
-};
+import TimeRange, { changeSpecifyTimeRange } from "common/comp/TimeRange";
 
 const METRICS_TAB_LIST = [
   { name: "taskDetail.taskMetrics", value: MonitorTabType.METRICS },
   { name: "taskDetail.finderMetrics", value: MonitorTabType.FINDER },
   { name: "taskDetail.workerMetrics", value: MonitorTabType.WORKER },
-];
-
-const SPECIFY_TIME_ITEMS = [
-  {
-    name: "1h",
-  },
-  {
-    name: "3h",
-  },
-  {
-    name: "12h",
-  },
-  {
-    name: "1d",
-  },
-  {
-    name: "3d",
-  },
-  {
-    name: "1w",
-  },
-  {
-    name: "Custom",
-  },
 ];
 
 interface MonitorProps {
@@ -87,14 +45,6 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
     Math.floor((Date.now() - 1000 * 60 * 60 * 3) / 1000)
   );
   const [endTime, setEndTime] = useState(Math.floor(Date.now() / 1000));
-  const [customDateRage, setCustomDateRage] = useState<any>([]);
-  const [customTimeRage, setCustomTimeRage] = useState<any>(["00:00", "23:59"]);
-
-  const changeSpecifyTimeRange = (range: string) => {
-    const tmpEndTime = Date.now();
-    setEndTime(Math.floor(tmpEndTime / 1000));
-    setStartTime(buildPreTime(tmpEndTime, range));
-  };
 
   const goToCloudWatch = () => {
     window.open(
@@ -103,13 +53,6 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
       }-Dashboard-${curRegion}`
     );
   };
-
-  useEffect(() => {
-    if (curSpecifyRange && curSpecifyRange !== "Custom") {
-      setCustomDateRage([]);
-      changeSpecifyTimeRange(curSpecifyRange);
-    }
-  }, [curSpecifyRange]);
 
   return (
     <div className="general-info-content">
@@ -146,91 +89,28 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
                   </div>
                 )}
 
-                <div className="specify-time">
-                  {SPECIFY_TIME_ITEMS.map((element) => {
-                    return (
-                      <span
-                        key={element.name}
-                        className={`item ${
-                          curSpecifyRange === element.name ? "item-active" : ""
-                        }`}
-                        onClick={() => {
-                          setCurSpecifyRange(element.name);
-                        }}
-                      >
-                        {element.name}
-                      </span>
-                    );
-                  })}
-                  {curSpecifyRange === "Custom" && (
-                    <span className="item custom">
-                      <div className="time-range-picker">
-                        <RangePicker
-                          // locale={
-                          //   ZH_LANGUAGE_LIST.includes(i18n.language)
-                          //     ? "zh-cn"
-                          //     : "en-us"
-                          // } // ['en-us', 'zh-cn','ko-kr']; default is en-us
-                          show={false} // default is false
-                          disabled={false} // default is false
-                          allowPageClickToClose={true} // default is true
-                          onConfirm={(res: any) => {
-                            console.log(res);
-                            setCurSpecifyRange("Custom");
-                            const customStartDate = res[0]?.split(" ")?.[0];
-                            const customEndDate = res[1]?.split(" ")?.[0];
-                            setCustomDateRage([customStartDate, customEndDate]);
-                            const customStartTime = res[0]?.split(" ")?.[1];
-                            const customEndTime = res[1]?.split(" ")?.[1];
-                            setCustomTimeRage([customStartTime, customEndTime]);
-
-                            setStartTime(
-                              Math.floor(new Date(res[0]).getTime() / 1000)
-                            );
-                            setEndTime(
-                              Math.floor(new Date(res[1]).getTime() / 1000)
-                            );
-                          }}
-                          onClose={() => {
-                            console.log("onClose");
-                          }}
-                          onClear={() => {
-                            console.log("onClear");
-                          }}
-                          style={{ width: "300px", margin: "0 auto" }}
-                          placeholder={[
-                            t("taskDetail.startTime"),
-                            t("taskDetail.endTime"),
-                          ]}
-                          showOnlyTime={false} // default is false, only select time
-                          ////////////////////
-                          // IMPORTANT DESC //
-                          ////////////////////
-                          defaultDates={customDateRage}
-                          // ['YYYY-MM-DD', 'YYYY-MM-DD']
-                          // This is the value you choosed every time.
-                          defaultTimes={customTimeRage}
-                          // ['hh:mm', 'hh:mm']
-                          // This is the value you choosed every time.
-                          initialDates={customDateRage}
-                          // ['YYYY-MM-DD', 'YYYY-MM-DD']
-                          // This is the initial dates.
-                          // If provied, input will be reset to this value when the clear icon hits,
-                          // otherwise input will be display placeholder
-                          initialTimes={customTimeRage}
-                          // ['hh:mm', 'hh:mm']
-                          // This is the initial times.
-                          // If provied, input will be reset to this value when the clear icon hits,
-                          // otherwise input will be display placeholder
-                        />
-                      </div>
-                    </span>
-                  )}
-                </div>
+                <TimeRange
+                  curTimeRangeType={curSpecifyRange}
+                  startTime={startTime}
+                  endTime={endTime}
+                  changeTimeRange={(timeRange) => {
+                    if (timeRange.length === 2) {
+                      setStartTime(timeRange[0]);
+                      setEndTime(timeRange[1]);
+                    }
+                  }}
+                  changeRangeType={(rangeType) => {
+                    setCurSpecifyRange(rangeType);
+                  }}
+                />
                 <NormalButton
                   onClick={() => {
                     console.info("refresh");
-                    changeSpecifyTimeRange(curSpecifyRange);
+                    const timeRange = changeSpecifyTimeRange(curSpecifyRange);
+                    if (timeRange.length === 2) {
+                      setStartTime(timeRange[0]);
+                      setEndTime(timeRange[1]);
+                    }
                   }}
                 >
                   <RefreshIcon width="10" />
@@ -244,7 +124,8 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
             <div className="monitor-chart">
               <MonitorCharts
                 graphTitle="Network"
-                yAxisUnit="No unit"
+                yAxisUnit="File Size Transferred per Minute"
+                rangeType={curSpecifyRange}
                 startTime={startTime}
                 endTime={endTime}
                 taskId={curTaskInfo.id}
@@ -256,6 +137,7 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
               <MonitorCharts
                 graphTitle="Running/Waiting Jobs History"
                 yAxisUnit="Count"
+                rangeType={curSpecifyRange}
                 startTime={startTime}
                 endTime={endTime}
                 taskId={curTaskInfo.id}
@@ -267,6 +149,7 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
               <MonitorCharts
                 graphTitle="Transferred/Failed Objects"
                 yAxisUnit="Count"
+                rangeType={curSpecifyRange}
                 startTime={startTime}
                 endTime={endTime}
                 taskId={curTaskInfo.id}
@@ -278,6 +161,7 @@ const Monitor: React.FC<MonitorProps> = (props: MonitorProps) => {
               <MonitorCharts
                 graphTitle="Desired / InService Instances"
                 yAxisUnit="Count"
+                rangeType={curSpecifyRange}
                 startTime={startTime}
                 endTime={endTime}
                 taskId={curTaskInfo.id}

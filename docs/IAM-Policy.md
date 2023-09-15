@@ -2,7 +2,7 @@
 
 # Set up Credential for Amazon S3
 
-- ## Step 1: Create IAM Policy
+## Step 1: Create IAM Policy
 
 Open AWS Management Console, Go to IAM > Policy, click **Create Policy**
 
@@ -10,7 +10,7 @@ Create a policy using below example IAM policy statement with minimum permission
 
 _Note_: If it's for S3 buckets in China regions, please make sure you also change to use `arn:aws-cn:s3:::` instead of `arn:aws:s3:::`
 
-- ### For Source Bucket
+### For Source Bucket
 
 ```
 {
@@ -33,7 +33,7 @@ _Note_: If it's for S3 buckets in China regions, please make sure you also chang
 ```
 
 
-- ### For Destination Bucket
+### For Destination Bucket
 
 ```
 {
@@ -63,7 +63,7 @@ _Note_: If it's for S3 buckets in China regions, please make sure you also chang
 
 > Data Transfer Hub native support the S3 source bucket enabled SSE-S3 and SSE-KMS, but if your source bucket enabled *SSE-CMK*, please replace the source bucket policy with the policy in the link [for S3 SSE-KMS](./S3-SSE-KMS-Policy.md).
 
-- ## Step 2: Create User
+## Step 2: Create User
 
 Open AWS Management Console, Go to IAM > User, click **Add User**, follow the wizard to create the user with credential.
 

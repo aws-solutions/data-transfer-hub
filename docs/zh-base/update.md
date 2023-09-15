@@ -37,19 +37,8 @@
 
 ## 第 2 步.（可选）更新 OIDC 配置 <a name="oidc-update"></a>
 
-如果您已经在中国区结合 OIDC 部署了该方案，请参考[部署](../deployment/#1oidc)章节更新 OIDC 中的授权、认证配置。
+如果您已经在中国区结合 OIDC 部署了该方案，请参考[部署](deployment/deployment.md#launch-openid)章节更新 OIDC 中的授权、认证配置。
 
-
-## 步骤 3. 在 CloudFront 创建 CDN 刷新 <a name="cloudfront"></a>
-
-CloudFront 已在其边缘节点缓存旧版本的 Data Transfer Hub 控制台。 我们需要在 CloudFront 控制台上创建一个失效（invalidation）以强制删除缓存。 
-
-1. 登录 [AWS CloudFront 控制台](https://console.aws.amazon.com/cloudfront/){target='_blank'}。
-
-2. 选择并点击 Data Transfer Hub 的分配。 其说明类似于 `SolutionName - Web Console Distribution (RegionName)`。
-
-3. 在**失效**界面，点击**创建失效**，并以 `/*` 路径创建一个失效。
-
-## 步骤 4. 刷新网页控制台
+## 步骤 3. 刷新网页控制台
 
 现在您已完成所有升级步骤。 请点击浏览器中的**刷新**按钮。

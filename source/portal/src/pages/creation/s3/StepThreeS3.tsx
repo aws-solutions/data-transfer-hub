@@ -1,7 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useMappedState } from "redux-react-hook";
-import Loader from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -11,7 +13,7 @@ import MLink from "@material-ui/core/Link";
 
 import { createTask as createTaskMutaion } from "graphql/mutations";
 
-import { IState, S3_EC2_TASK } from "store/Store";
+import { IState, S3ec2Task } from "store/Store";
 
 import InfoBar from "common/InfoBar";
 import LeftMenu from "common/LeftMenu";
@@ -23,7 +25,6 @@ import NormalButton from "common/comp/NormalButton";
 import TextButton from "common/comp/TextButton";
 
 import "../Creation.scss";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
   S3_PARAMS_LIST_MAP,
   CUR_SUPPORT_LANGS,
@@ -54,7 +55,7 @@ const StepThreeS3: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [nameStr, setNameStr] = useState("en_name");
 
-  const { engine } = useParams() as any;
+  const { engine } = useParams();
   console.info("type:", engine);
 
   useEffect(() => {
@@ -70,16 +71,13 @@ const StepThreeS3: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
     // eslint-disable-next-line no-prototype-builtins
     if (!tmpTaskInfo?.hasOwnProperty("type")) {
-      const toPath = "/create/step1/S3/ec2";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/create/step1/S3/ec2");
     }
   }, [history, tmpTaskInfo]);
 
@@ -90,7 +88,7 @@ const StepThreeS3: React.FC = () => {
     );
   };
 
-  const buildEC2Params = (parametersObj: S3_EC2_TASK) => {
+  const buildEC2Params = (parametersObj: S3ec2Task) => {
     const taskParamArr: any = [];
     console.info("parametersObj:", parametersObj);
     if (!parametersObj) {
@@ -309,27 +307,18 @@ const StepThreeS3: React.FC = () => {
         type: ACTION_TYPE.SET_CREATE_TASK_FLAG,
       });
       // Redirect to task list page
-      const toPath = "/task/list";
-      history.push({
-        pathname: toPath,
-      });
+      navigate("/task/list");
     } catch (error) {
       setIsCreating(false);
     }
   }
 
   const goToHomePage = () => {
-    const toPath = "/";
-    history.push({
-      pathname: toPath,
-    });
+    navigate("/");
   };
 
   const goToStepTwo = () => {
-    const toPath = `/create/step2/s3/${engine}`;
-    history.push({
-      pathname: toPath,
-    });
+    navigate(`/create/step2/s3/${engine}`);
   };
 
   const goToTaskList = () => {
@@ -472,7 +461,7 @@ const StepThreeS3: React.FC = () => {
                 </NormalButton>
                 {isCreating ? (
                   <CreateButtonLoading disabled={true}>
-                    <Loader type="ThreeDots" color="#ffffff" height={10} />
+                    <ThreeDots color="#ffffff" height={10} />
                   </CreateButtonLoading>
                 ) : (
                   <NextButton onClick={goToTaskList}>

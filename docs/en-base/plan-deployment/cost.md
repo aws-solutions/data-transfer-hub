@@ -16,7 +16,7 @@ Transfer 1 TB of S3 files from AWS Oregon Region (us-west-2) to AWS Beijing Regi
 - Average speed per EC2 instance: ~1GB/min
 - Total EC2 instance hours: ~17 hours
 
-As of April 2023, the cost of using the solution to complete the transfer task is shown in the following table:
+As of this revision, the cost of using the solution to complete the transfer task is shown in the following table:
 
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
@@ -36,7 +36,7 @@ Transfer 1 TB of S3 files from AWS Oregon region (us-west-2) to China Beijing Re
 - Average speed per EC2 instance: ~6MB/min (~10 files per sec)
 - Total EC2 instance hours: ~3000 hours
 
-As of April 2023, the cost of using the solution to complete the transfer task is shown in the following table:
+As of this revision, the cost of using the solution to complete the transfer task is shown in the following table:
 
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
@@ -56,7 +56,7 @@ For an Amazon ECR transfer task, the cost can vary based on network speed and to
 
 Transfer 27 Amazon ECR images (~3 GB in total size) from AWS Ireland Region (eu-west-1) to AWS Beijing Region (cn-north-1). The total runtime is about 6 minutes. 
 
-As of April 2023, the cost of using the solution to complete the transfer task is shown in the following table:
+As of this revision, the cost of using the solution to complete the transfer task is shown in the following table:
 
 | AWS service | Dimensions | Total Cost |
 |----------|--------|--------|
