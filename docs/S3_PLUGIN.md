@@ -62,7 +62,7 @@ Things to know about the deployment of this plugin:
 - The deployment will take approximately 3-5 minutes.
 - Once the deployment is completed, the data transfer task will start right away.
 
-Please follow the steps in the [Deployment Guide](./docs/S3_DEPLOYMENT_EN.md) to start the deployment.
+Please follow the steps in the [Deployment Guide](./S3_DEPLOYMENT_EN.md) to start the deployment.
 
 > Note: You can simply delete the stack from CloudFormation console if the data transfer job is no longer required.
 
@@ -105,7 +105,7 @@ Please follow the steps in the [Deployment Guide](./docs/S3_DEPLOYMENT_EN.md) to
 
 **Q**: After I deployed, I can't find any log streams in the two CloudWatch Log Groups
 
-**A**: This must because the subnets you choose when you deployed this solution doesn't have public network access, therefore, the Fargate task failed to pull the images, and the EC2 can't download the CloudWatch Agent to send logs to CloudWatch.  So please check you VPC set up (See [Deployment Guide](./docs/DEPLOYMENT_EN.md) Step 1). Once you fix the issue, you need to manually terminate the running EC2 instances by this solution if any. After that, the auto scaling group will automatically start new ones.
+**A**: This must because the subnets you choose when you deployed this solution doesn't have public network access, therefore, the Fargate task failed to pull the images, and the EC2 can't download the CloudWatch Agent to send logs to CloudWatch.  So please check you VPC set up (See [Deployment Guide](./S3_DEPLOYMENT_EN.md) Step 1). Once you fix the issue, you need to manually terminate the running EC2 instances by this solution if any. After that, the auto scaling group will automatically start new ones.
 
 
 ### How to customize

@@ -51,7 +51,7 @@ Things to know about the deployment of this plugin:
 - The deployment will take approximately 3-5 minutes.
 - Once the deployment is completed, the data transfer task will start right away.
 
-Please follow the steps in the [Deployment Guide](./docs/DEPLOYMENT_EN.md) to start the deployment.
+Please follow the steps in the [Deployment Guide](./ECR_DEPLOYMENT_EN.md) to start the deployment.
 
 > Note: You can simply delete the stack from CloudFormation console if the data transfer job is no longer required.
 
