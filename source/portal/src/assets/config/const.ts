@@ -360,7 +360,7 @@ export const S3SourcePrefixTypeList = [
   },
   {
     value: S3SourcePrefixType.MultiplePrefix,
-    name: "Objects with defferent prefixes",
+    name: "Objects with different prefixes",
   },
 ];
 
