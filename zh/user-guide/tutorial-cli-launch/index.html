@@ -17,7 +17,7 @@
     
     
       
-        <title>使用 AWS CLI 创建 S3 传输任务 - 数据传输解决方案</title>
+        <title>Tutorial cli launch - 数据传输解决方案</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              使用 AWS CLI 创建 S3 传输任务
+              Tutorial cli launch
             
           </span>
         </div>
@@ -202,8 +202,6 @@
         
   
   
-    
-  
 
 
   
@@ -215,7 +213,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link md-tabs__link--active">
+      <a href="../.." class="md-tabs__link">
         实施指南
       </a>
     </li>
@@ -273,14 +271,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
       
       
       
@@ -615,14 +611,12 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_6" type="checkbox" id="__nav_1_6" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_6" type="checkbox" id="__nav_1_6" >
       
       
       
@@ -695,52 +689,62 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
             
               
   
   
+  
     
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <li class="md-nav__item md-nav__item--nested">
       
       
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_7" type="checkbox" id="__nav_1_7" >
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          使用 AWS CLI 创建 S3 传输任务
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7">
+          技术教程
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="./" class="md-nav__link md-nav__link--active">
-        使用 AWS CLI 创建 S3 传输任务
+      <nav class="md-nav" aria-label="技术教程" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          技术教程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/IAM-Policy_CN/" class="md-nav__link">
+        为 Amazon S3 设置凭证
       </a>
-      
-        
+    </li>
+  
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+            
+          
+            
+              
   
   
   
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    参数列表
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
+    <li class="md-nav__item">
+      <a href="../../tutorial/S3-SSE-KMS-Policy_CN/" class="md-nav__link">
+        S3 源存储桶启用 SSE-CMK 的策略
+      </a>
     </li>
   
 
@@ -818,18 +822,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_11" type="checkbox" id="__nav_1_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_12" type="checkbox" id="__nav_1_12" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_1_11">
+        <label class="md-nav__link" for="__nav_1_12">
           开发者指南
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="开发者指南" data-md-level="2">
-        <label class="md-nav__title" for="__nav_1_11">
+        <label class="md-nav__title" for="__nav_1_12">
           <span class="md-nav__icon md-icon"></span>
           开发者指南
         </label>
@@ -941,7 +945,7 @@
   </a>
 
 
-  <h1>使用 AWS CLI 创建 S3 传输任务</h1>
+  <h1>Tutorial cli launch</h1>
 
 <p>您可以使用 <a href="https://aws.amazon.com/cli/">AWS CLI</a> 创建 Amazon S3 传输任务。如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。</p>
 <ol>
@@ -1189,42 +1193,6 @@
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="页脚" >
-      
-        
-        <a href="../tutorial-directconnect/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 通过 Direct Connect 传输 S3 对象" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                上一页
-              </span>
-              通过 Direct Connect 传输 S3 对象
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../../update/" class="md-footer__link md-footer__link--next" aria-label="下一页: 更新解决方案" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                下一页
-              </span>
-              更新解决方案
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

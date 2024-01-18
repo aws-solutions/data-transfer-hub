@@ -63,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#using-the-web-console" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -659,9 +664,52 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Create Amazon ECR transfer task
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Create Amazon ECR transfer task
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-web-console" class="md-nav__link">
+    Using the web console
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-ecr-plugin" class="md-nav__link">
+    Using the ECR plugin
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-aws-cli" class="md-nav__link">
+    Using AWS CLI
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -696,14 +744,61 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_7" type="checkbox" id="__nav_1_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
               
   
   
   
     <li class="md-nav__item">
-      <a href="../tutorial-cli-launch/" class="md-nav__link">
-        Use AWS CLI to create S3 transfer task
+      <a href="../../tutorial/IAM-Policy/" class="md-nav__link">
+        Set up credentials for Amazon S3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/S3-SSE-KMS-Policy/" class="md-nav__link">
+        Policy for S3 Source Bucket enabled SSE-CMK
       </a>
     </li>
   
@@ -782,18 +877,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_11" type="checkbox" id="__nav_1_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_12" type="checkbox" id="__nav_1_12" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_1_11">
+        <label class="md-nav__link" for="__nav_1_12">
           Developer guide
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Developer guide" data-md-level="2">
-        <label class="md-nav__title" for="__nav_1_11">
+        <label class="md-nav__title" for="__nav_1_12">
           <span class="md-nav__icon md-icon"></span>
           Developer guide
         </label>
@@ -886,6 +981,35 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-web-console" class="md-nav__link">
+    Using the web console
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-ecr-plugin" class="md-nav__link">
+    Using the ECR plugin
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-aws-cli" class="md-nav__link">
+    Using AWS CLI
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -906,6 +1030,25 @@
 
   <h1>Create Amazon ECR transfer task</h1>
 
+<p>The solution allows you to create an Amazon ECR transfer task in the following ways:</p>
+<ul>
+<li><a href="#using-the-web-console">using the web console</a></li>
+<li><a href="#using-the-ecr-plugin">using the ECR plugin</a></li>
+<li><a href="#using-aws-cli">using AWS CLI</a></li>
+</ul>
+<p>You can make your choice according to your needs.</p>
+<ul>
+<li>
+<p>The web console provides an intuitive user interface where you can start, clone or stop a data transfer task with a simple click. The frontend also provides metric monitoring and logging view, so you do not need to switch between different pages.</p>
+</li>
+<li>
+<p>The ECR plugin is a standalone CloudFormation template, and you can easily integrate it into your workflows. Because this option allows deployment without the frontend, it is useful if you want to deploy in AWS China Regions but do not have an ICP licensed domain.</p>
+</li>
+<li>
+<p>AWS CLI can quickly initiate data transfer tasks. Select this option if you want to leverage Data Transfer Hub in your automation scripts.</p>
+</li>
+</ul>
+<h2 id="using-the-web-console">Using the web console</h2>
 <p>You can use the web console to create an Amazon ECR transfer task. For more information about how to launch the web console, see <a href="../../deployment/deployment-overview">deployment</a>. </p>
 <ol>
 <li>
@@ -949,6 +1092,215 @@
 </li>
 </ol>
 <p>After the task is created successfully, it will appear on the <strong>Tasks</strong> page.</p>
+<h2 id="using-the-ecr-plugin">Using the ECR plugin</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This tutorial is a deployment guide for the backend-only version. For more details, please refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/ECR_PLUGIN.md">ECR Plugin Introduction</a>.</p>
+</div>
+<p><strong>Step 1. Prepare VPC (optional)</strong></p>
+<p>This solution can be deployed in both public and private subnets. Using public subnets is recommended.</p>
+<ul>
+<li>
+<p>If you want to use existing VPC, please make sure the VPC has at least 2 subnets, and both subnets must have public internet access (Either public subnets with internet gateway or private subnets with NAT gateway)</p>
+</li>
+<li>
+<p>If you want to create new default VPC for this solution, please go to Step 2 and make sure you have <em>Create a new VPC for this cluster</em> selected when you create the cluster.</p>
+</li>
+</ul>
+<p><strong>Step 2. Set up ECS Cluster</strong></p>
+<p>An ECS Cluster is required for this solution to run Fargate task.</p>
+<ol>
+<li>Sign in to AWS Management Console, and choose Elastic Container Service (ECS). </li>
+<li>From ECS Cluster home page, click <strong>Create Cluster</strong>.</li>
+<li>Select Cluster Template. Choose <strong>Network Only</strong> type. </li>
+<li>Specify a cluster name and click Create to create a cluster. If you want to also create a new VPC (public subnets only), please also check the <strong>Create a new VPC for this cluster</strong> option.</li>
+</ol>
+<p><img alt="Create Cluster" src="../../images/cluster_en.png" /></p>
+<p><strong>Step 3. Configure credentials</strong></p>
+<p>If source (or destination) is NOT in current AWS account, you will need to provide <code>AccessKeyID</code> and <code>SecretAccessKey</code> (namely <code>AK/SK</code>) to pull from or push to Amazon ECR. And Secrets Manager is used to store the credentials in a secure manner.</p>
+<blockquote>
+<p>If source type is Public, there is no need to provide the source credentials.</p>
+</blockquote>
+<p>Go to AWS Management Console &gt; Secrets Manager. From Secrets Manager home page, click <strong>Store a new secret</strong>. For secret type, please use <strong>Other type of secrets</strong>. For key/value paris, please copy and paste below JSON text into the Plaintext section, and change value to your AK/SK accordingly.</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;access_key_id&quot;: &quot;&lt;Your Access Key ID&gt;&quot;,
+  &quot;secret_access_key&quot;: &quot;&lt;Your Access Key Secret&gt;&quot;
+}
+</code></pre></div>
+<p><img alt="Secret" src="../../images/secret_en.png" /></p>
+<p>Click Next to specify a secret name, and click Create in teh last step.</p>
+<p><strong>Step 4. Launch AWS Cloudformation Stack</strong></p>
+<p>Please follow below steps to deploy this plugin via AWS Cloudformation.</p>
+<ol>
+<li>
+<p>Sign in to AWS Management Console, and switch to the Region where you want to deploy the CloudFormation Stack.</p>
+</li>
+<li>
+<p>Click the following button to launch the CloudFormation Stack in that Region.</p>
+<ul>
+<li>For AWS China Regions</li>
+</ul>
+<p><a href="https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHECRStack&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template"><img alt="Launch Stack" src="../../images/launch-stack.svg" /></a></p>
+<ul>
+<li>For AWS Global Regions</li>
+</ul>
+<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHECRStack&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template"><img alt="Launch Stack" src="../../images/launch-stack.svg" /></a></p>
+</li>
+<li>
+<p>Click <strong>Next</strong>. Specify values to parameters accordingly. Change the stack name if required.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>. Configure additional stack options such as tags (Optional). </p>
+</li>
+<li>
+<p>Click <strong>Next</strong>. Review and confirm acknowledgement, and then click <strong>Create Stack</strong> to start the deployment.</p>
+</li>
+</ol>
+<p>The deployment will take approximately 3 to 5 minutes.</p>
+<h2 id="using-aws-cli">Using AWS CLI</h2>
+<p>You can use the <a href="https://aws.amazon.com/cli/">AWS CLI</a> to create an Amazon ECR transfer task. Note that if you have deployed the DTH Portal at the same time, the tasks started through the CLI will not appear in the Task List on your Portal.</p>
+<ol>
+<li>
+<p>Create an Amazon VPC with two public subnets or two private subnets with <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT gateway</a>.</p>
+</li>
+<li>
+<p>Replace <code>&lt;CLOUDFORMATION_URL&gt;</code> as shown below.
+    <div class="highlight"><pre><span></span><code>https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template
+</code></pre></div></p>
+</li>
+<li>
+<p>Go to your terminal and enter the following command. For the parameter details, refer to the Parameters table.</p>
+<p><div class="highlight"><pre><span></span><code>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span>--stack-name<span class="w"> </span>dth-ecr-task<span class="w"> </span>--template-url<span class="w"> </span>CLOUDFORMATION_URL<span class="w"> </span><span class="se">\</span>
+--capabilities<span class="w"> </span>CAPABILITY_NAMED_IAM<span class="w"> </span><span class="se">\</span>
+--parameters<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>sourceType,ParameterValue<span class="o">=</span>Amazon_ECR<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcRegion,ParameterValue<span class="o">=</span>us-east-1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcAccountId,ParameterValue<span class="o">=</span><span class="m">123456789012</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcList,ParameterValue<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>includeUntagged,ParameterValue<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcImageList,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcCredential,ParameterValue<span class="o">=</span>dev-us-credential<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destAccountId,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destRegion,ParameterValue<span class="o">=</span>us-west-2<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destCredential,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPrefix,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>alarmEmail,ParameterValue<span class="o">=</span>your_email@example.com<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ecsVpcId,ParameterValue<span class="o">=</span>vpc-07f56e8e21630a2a0<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ecsClusterName,ParameterValue<span class="o">=</span>dth-v22-01-TaskCluster-eHzKkHatj0tN<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ecsSubnetA,ParameterValue<span class="o">=</span>subnet-034c58fe0e696eb0b<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ecsSubnetB,ParameterValue<span class="o">=</span>subnet-0487ae5a1d3badde7
+</code></pre></div>
+<strong>Parameters</strong></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Allowed Value</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sourceType</td>
+<td>Amazon_ECR <br> Public</td>
+<td>Amazon_ECR</td>
+<td>Choose type of source container registry, for example Amazon_ECR, or Public from Docker Hub, gco.io, etc.</td>
+</tr>
+<tr>
+<td>srcRegion</td>
+<td></td>
+<td></td>
+<td>Source Region Name (only required if source type is Amazon ECR), for example, us-west-1</td>
+</tr>
+<tr>
+<td>srcAccountId</td>
+<td></td>
+<td></td>
+<td>Source AWS Account ID (only required if source type is Amazon ECR), leave it blank if source is in current account</td>
+</tr>
+<tr>
+<td>srcList</td>
+<td>ALL <br> SELECTED</td>
+<td>ALL</td>
+<td>Type of Source Image List, either ALL or SELECTED, for public registry, please use SELECTED only</td>
+</tr>
+<tr>
+<td>srcImageList</td>
+<td></td>
+<td></td>
+<td>Selected Image List delimited by comma, for example, ubuntu:latest,alpine:latest..., leave it blank if Type is ALL. For ECR source, using ALL_TAGS tag to get all tags.</td>
+</tr>
+<tr>
+<td>srcCredential</td>
+<td></td>
+<td></td>
+<td>The secret name in Secrets Manager only when using AK/SK credentials to pull images from source Amazon ECR, leave it blank for public registry</td>
+</tr>
+<tr>
+<td>destRegion</td>
+<td></td>
+<td></td>
+<td>Destination Region Name, for example, cn-north-1</td>
+</tr>
+<tr>
+<td>destAccountId</td>
+<td></td>
+<td></td>
+<td>Destination AWS Account ID, leave it blank if destination is in current account</td>
+</tr>
+<tr>
+<td>destPrefix</td>
+<td></td>
+<td></td>
+<td>Destination Repo Prefix</td>
+</tr>
+<tr>
+<td>destCredential</td>
+<td></td>
+<td></td>
+<td>The secret name in Secrets Manager only when using AK/SK credentials to push images to destination Amazon ECR</td>
+</tr>
+<tr>
+<td>includeUntagged</td>
+<td>true <br> false</td>
+<td>true</td>
+<td>Whether to include untagged images in the replication</td>
+</tr>
+<tr>
+<td>ecsClusterName</td>
+<td></td>
+<td></td>
+<td>ECS Cluster Name to run ECS task (Please make sure the cluster exists)</td>
+</tr>
+<tr>
+<td>ecsVpcId</td>
+<td></td>
+<td></td>
+<td>VPC ID to run ECS task, e.g. vpc-bef13dc7</td>
+</tr>
+<tr>
+<td>ecsSubnetA</td>
+<td></td>
+<td></td>
+<td>First Subnet ID to run ECS task, e.g. subnet-97bfc4cd</td>
+</tr>
+<tr>
+<td>ecsSubnetB</td>
+<td></td>
+<td></td>
+<td>Second Subnet ID to run ECS task, e.g. subnet-7ad7de32</td>
+</tr>
+<tr>
+<td>alarmEmail</td>
+<td></td>
+<td></td>
+<td>Alarm Email address to receive notification in case of any failure</td>
+</tr>
+</tbody>
+</table>
 
 
 

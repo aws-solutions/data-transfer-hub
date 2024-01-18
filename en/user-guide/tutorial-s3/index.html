@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3" class="md-skip">
+        <a href="#using-the-web-console" class="md-skip">
           Skip to content
         </a>
       
@@ -673,6 +673,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#using-the-web-console" class="md-nav__link">
+    Using the web console
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-s3-plugin" class="md-nav__link">
+    Using the S3 plugin
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-aws-cli" class="md-nav__link">
+    Using AWS CLI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3" class="md-nav__link">
     How to transfer S3 object from KMS encrypted Amazon S3
   </a>
@@ -730,14 +751,61 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_7" type="checkbox" id="__nav_1_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
               
   
   
   
     <li class="md-nav__item">
-      <a href="../tutorial-cli-launch/" class="md-nav__link">
-        Use AWS CLI to create S3 transfer task
+      <a href="../../tutorial/IAM-Policy/" class="md-nav__link">
+        Set up credentials for Amazon S3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/S3-SSE-KMS-Policy/" class="md-nav__link">
+        Policy for S3 Source Bucket enabled SSE-CMK
       </a>
     </li>
   
@@ -816,18 +884,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_11" type="checkbox" id="__nav_1_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_12" type="checkbox" id="__nav_1_12" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_1_11">
+        <label class="md-nav__link" for="__nav_1_12">
           Developer guide
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Developer guide" data-md-level="2">
-        <label class="md-nav__title" for="__nav_1_11">
+        <label class="md-nav__title" for="__nav_1_12">
           <span class="md-nav__icon md-icon"></span>
           Developer guide
         </label>
@@ -927,6 +995,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#using-the-web-console" class="md-nav__link">
+    Using the web console
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-s3-plugin" class="md-nav__link">
+    Using the S3 plugin
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-aws-cli" class="md-nav__link">
+    Using AWS CLI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#how-to-transfer-s3-object-from-kms-encrypted-amazon-s3" class="md-nav__link">
     How to transfer S3 object from KMS encrypted Amazon S3
   </a>
@@ -955,11 +1044,26 @@
 
   <h1>Create Amazon S3 transfer task</h1>
 
+<p>The solution allows you to create an Amazon S3 transfer task in the following ways:</p>
+<ul>
+<li><a href="#using-the-web-console">using the web console</a></li>
+<li><a href="#using-the-dth-s3-plugin">using the S3 plugin</a></li>
+<li><a href="#using-aws-cli">using AWS CLI</a></li>
+</ul>
+<p>You can make your choice according to your needs.</p>
+<ul>
+<li>
+<p>The web console provides an intuitive user interface where you can start, clone or stop a data transfer task with a simple click. The frontend also provides metric monitoring and logging view, so you do not need to switch between different pages.</p>
+</li>
+<li>
+<p>The S3 plugin is a standalone CloudFormation template, and you can easily integrate it into your workflows. Because this option allows deployment without the frontend, it is useful if you want to deploy in AWS China Regions but do not have an ICP licensed domain.</p>
+</li>
+<li>
+<p>AWS CLI can quickly initiate data transfer tasks. Select this option if you want to leverage Data Transfer Hub in your automation scripts.</p>
+</li>
+</ul>
+<h2 id="using-the-web-console">Using the web console</h2>
 <p>You can use the web console to create an Amazon S3 transfer task. For more information about how to launch the web console, see <a href="../../deployment/deployment-overview">deployment</a>. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Data Transfer Hub also supports using AWS CLI to create an Amazon S3 transfer task. For details, refer to this <a href="../tutorial-cli-launch/">tutorial</a>.</p>
-</div>
 <ol>
 <li>
 <p>From the <strong>Create Transfer Task</strong> page, select <strong>Start a New Task</strong>, and then select <strong>Next</strong>.</p>
@@ -982,7 +1086,7 @@
 </ul>
 </li>
 <li>If the source bucket is not in the same account where Data Transfer Hub was deployed, select <strong>No</strong>, then specify the credentials for the source bucket. </li>
-<li>If you choose to synchronize objects with multiple prefixes, please transfer the prefix list file separated by rows to the root directory of the data source bucket, and then fill in the name of the file. For details, please refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/USING_PREFIX_LIST.md">Multi-Prefix List Configuration Tutorial</a>。</li>
+<li>If you choose to synchronize objects with multiple prefixes, please transfer the prefix list file separated by rows to the root directory of the Data Transfer Hub central bucket, and then fill in the name of the file. For details, please refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/USING_PREFIX_LIST.md">Multi-Prefix List Configuration Tutorial</a>。</li>
 </ul>
 </li>
 <li>
@@ -1041,7 +1145,356 @@
 </li>
 </ol>
 <p>After the task is created successfully, it will appear on the <strong>Tasks</strong> page.</p>
-<h3 id="how-to-transfer-s3-object-from-kms-encrypted-amazon-s3">How to transfer S3 object from KMS encrypted Amazon S3</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your destination bucket in Amazon S3 is set to require all data uploads to be encrypted with Amazon S3 managed keys. You can check the tutorial below.</p>
+</div>
+<p><strong>Destination bucket encrypted with Amazon S3 managed keys</strong></p>
+<p>Select "SSE-S3 AES256" from the dropdown menu under 'Destination bucket policy check' in the destination's configuration. For more information, refer to this <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">documentation</a>. </p>
+<p>If your destination bucket is set to require that objects be encrypted using only SSE-KMS (Server-Side Encryption with AWS Key Management Service), which is detailed in this <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/specifying-kms-encryption.html">documentation</a>, and your policy looks something like the example provided:</p>
+<div class="highlight"><pre><span></span><code>        {
+        &quot;Version&quot;: &quot;2012-10-17&quot;,
+        &quot;Id&quot;: &quot;PutObjectPolicy&quot;,
+        &quot;Statement&quot;: [
+        {
+                &quot;Sid&quot;: &quot;DenyIncorrectEncryptionHeader&quot;,
+                &quot;Effect&quot;: &quot;Deny&quot;,
+                &quot;Principal&quot;: &quot;*&quot;,
+                &quot;Action&quot;: &quot;s3:PutObject&quot;,
+                &quot;Resource&quot;: &quot;arn:aws-cn:s3:::dth-sse-debug-cn-north-1/*&quot;,
+                &quot;Condition&quot;: {
+                    &quot;StringNotEquals&quot;: {
+                        &quot;s3:x-amz-server-side-encryption&quot;: &quot;aws:kms&quot;
+                    }
+                }
+            },
+            {
+                &quot;Sid&quot;: &quot;DenyUnencryptedObjectUploads&quot;,
+                &quot;Effect&quot;: &quot;Deny&quot;,
+                &quot;Principal&quot;: &quot;*&quot;,
+                &quot;Action&quot;: &quot;s3:PutObject&quot;,
+                &quot;Resource&quot;: &quot;arn:aws-cn:s3:::dth-sse-debug-cn-north-1/*&quot;,
+                &quot;Condition&quot;: {
+                    &quot;StringNotEquals&quot;: {
+                        &quot;s3:x-amz-server-side-encryption-aws-kms-key-id&quot;: &quot;arn:aws-cn:kms:cn-north-1:123456789012:key/7c54749e-eb6a-42cc-894e-93143b32e7c0&quot;
+                    }
+                }
+            }
+        ]
+    }
+</code></pre></div>
+<p>In this case, you should select "SSE-KMS" in the 'Destination bucket policy check' dropdown menu in the destination's configuration. Additionally, you need to provide the KMS Key ID, such as "7c54749e-eb6a-42cc-894e-93143b32e7c0" in the example.</p>
+<h2 id="using-the-s3-plugin">Using the S3 plugin</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This tutorial provides guidance for the backend-only version. For more details, please refer to <a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN.md">S3 Plugin Introduction</a>.</p>
+</div>
+<p><strong>Step 1. Prepare VPC</strong></p>
+<p>This solution can be deployed in both public and private subnets. Using public subnets is recommended.</p>
+<ul>
+<li>
+<p>If you want to use existing VPC, please make sure the VPC has at least 2 subnets, and both subnets must have public internet access (Either public subnets with internet gateway or private subnets with NAT gateway).</p>
+</li>
+<li>
+<p>If you want to create new default VPC for this solution, please go to Step 2 and make sure you have <em>Create a new VPC for this cluster</em> selected when you create the cluster.</p>
+</li>
+</ul>
+<p><strong>Step 2. Configure credentials</strong></p>
+<p>You need to provide <code>AccessKeyID</code> and <code>SecretAccessKey</code> (namely <code>AK/SK</code>) to read or write bucket in S3 from or to another AWS account or other cloud storage service, and the credential will be stored in AWS Secrets Manager. You DON'T need to create credential for the bucket in the current account where you are deploying the solution.</p>
+<p>Go to AWS Management Console &gt; Secrets Manager. From Secrets Manager home page, click <strong>Store a new secret</strong>. For secret type, please use <strong>Other type of secrets</strong>. For key/value paris, please copy and paste below JSON text into the Plaintext section, and change value to your AK/SK accordingly.</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;access_key_id&quot;: &quot;&lt;Your Access Key ID&gt;&quot;,
+  &quot;secret_access_key&quot;: &quot;&lt;Your Access Key Secret&gt;&quot;
+}
+</code></pre></div>
+<p><img alt="Secret" src="../../images/secret_en.png" /></p>
+<p>Click Next to specify a secret name, and click Create in the last step.</p>
+<blockquote>
+<p>If the AK/SK is for source bucket, <strong>READ</strong> access to bucket is required; if it's for destination bucket, <strong>READ</strong> and <strong>WRITE</strong> access to bucket is required. For Amazon S3, you can refer to <a href="../../tutorial/IAM-Policy/">Set up credentials for Amazon S3</a>.</p>
+</blockquote>
+<p><strong>Step 3. Launch AWS Cloudformation Stack</strong></p>
+<p>Please follow below steps to deploy this solution via AWS Cloudformation.</p>
+<ol>
+<li>
+<p>Sign in to AWS Management Console, and switch to the Region where you want to deploy the CloudFormation Stack.</p>
+</li>
+<li>
+<p>Click the following button to launch the CloudFormation Stack.</p>
+<ul>
+<li>For AWS China Regions</li>
+</ul>
+<p><a href="https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template"><img alt="Launch Stack" src="../../images/launch-stack.svg" /></a></p>
+<ul>
+<li>For AWS Global Regions</li>
+</ul>
+<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template"><img alt="Launch Stack" src="../../images/launch-stack.svg" /></a></p>
+</li>
+<li>
+<p>Click <strong>Next</strong>. Specify values to parameters accordingly. Change the stack name if required.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>. Configure additional stack options such as tags (Optional). </p>
+</li>
+<li>
+<p>Click <strong>Next</strong>. Review and confirm acknowledgement, and then click <strong>Create Stack</strong> to start the deployment.</p>
+</li>
+</ol>
+<p>The deployment will take approximately 3 to 5 minutes.</p>
+<h2 id="using-aws-cli">Using AWS CLI</h2>
+<p>You can use the <a href="https://aws.amazon.com/cli/">AWS CLI</a> to create an Amazon S3 transfer task. Note that if you have deployed the DTH Portal at the same time, the tasks started through the CLI will not appear in the Task List on your Portal.</p>
+<ol>
+<li>
+<p>Create an Amazon VPC with two public subnets or two private subnets with <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT gateway</a>.</p>
+</li>
+<li>
+<p>Replace <code>&lt;CLOUDFORMATION_URL&gt;</code> as shown below.
+    <div class="highlight"><pre><span></span><code>https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template
+</code></pre></div></p>
+</li>
+<li>
+<p>Go to your terminal and enter the following command. For the parameter details, refer to the Parameters table.</p>
+<p><div class="highlight"><pre><span></span><code>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span>--stack-name<span class="w"> </span>dth-s3-task<span class="w"> </span>--template-url<span class="w"> </span>CLOUDFORMATION_URL<span class="w"> </span><span class="se">\</span>
+--capabilities<span class="w"> </span>CAPABILITY_NAMED_IAM<span class="w"> </span><span class="se">\</span>
+--parameters<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>alarmEmail,ParameterValue<span class="o">=</span>your_email@example.com<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destBucket,ParameterValue<span class="o">=</span>dth-receive-cn-north-1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPrefix,ParameterValue<span class="o">=</span>test-prefix<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destCredentials,ParameterValue<span class="o">=</span>drh-cn-secret-key<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destInCurrentAccount,ParameterValue<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destRegion,ParameterValue<span class="o">=</span>cn-north-1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destStorageClass,ParameterValue<span class="o">=</span>STANDARD<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPutObjectSSEType,ParameterValue<span class="o">=</span>None<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPutObjectSSEKmsKeyId,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcBucket,ParameterValue<span class="o">=</span>dth-us-west-2<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcInCurrentAccount,ParameterValue<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcCredentials,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcRegion,ParameterValue<span class="o">=</span>us-west-2<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcPrefix,ParameterValue<span class="o">=</span>case1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcType,ParameterValue<span class="o">=</span>Amazon_S3<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2VpcId,ParameterValue<span class="o">=</span>vpc-040bbab85f0e4e088<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2Subnets,ParameterValue<span class="o">=</span>subnet-0d1bf2725ab8e94ee<span class="se">\\</span>,subnet-06d17b2b3286be40e<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>finderEc2Memory,ParameterValue<span class="o">=</span><span class="m">8</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2CronExpression,ParameterValue<span class="o">=</span><span class="s2">&quot;0/60 * * * ? *&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>includeMetadata,ParameterValue<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcEvent,ParameterValue<span class="o">=</span>No<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>maxCapacity,ParameterValue<span class="o">=</span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>minCapacity,ParameterValue<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>desiredCapacity,ParameterValue<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<strong>Parameters</strong></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Allowed Value</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alarmEmail</td>
+<td></td>
+<td></td>
+<td>An email to which errors will be sent</td>
+</tr>
+<tr>
+<td>desiredCapacity</td>
+<td></td>
+<td>1</td>
+<td>Desired capacity for Auto Scaling Group</td>
+</tr>
+<tr>
+<td>destAcl</td>
+<td>private <br> public-read <br> public-read-write <br> authenticated-read <br> aws-exec-read <br> bucket-owner-read <br> bucket-owner-full-control</td>
+<td>bucket-owner-full-control</td>
+<td>Destination access control list</td>
+</tr>
+<tr>
+<td>destBucket</td>
+<td></td>
+<td></td>
+<td>Destination bucket name</td>
+</tr>
+<tr>
+<td>destCredentials</td>
+<td></td>
+<td></td>
+<td>Secret name in Secrets Manager used to keep AK/SK credentials for destination bucket. Leave it blank if the destination bucket is in the current account</td>
+</tr>
+<tr>
+<td>destInCurrentAccount</td>
+<td>true <br> false</td>
+<td>true</td>
+<td>Indicates whether the destination bucket is in current account. If not, you should provide a credential with read and write access</td>
+</tr>
+<tr>
+<td>destPrefix</td>
+<td></td>
+<td></td>
+<td>Destination prefix (Optional)</td>
+</tr>
+<tr>
+<td>destRegion</td>
+<td></td>
+<td></td>
+<td>Destination region name</td>
+</tr>
+<tr>
+<td>destStorageClass</td>
+<td>STANDARD <br> STANDARD_IA <br> ONEZONE_IA <br> INTELLIGENT_TIERING</td>
+<td>INTELLIGENT_TIERING</td>
+<td>Destination storage class, which defaults to INTELLIGENT_TIERING</td>
+</tr>
+<tr>
+<td>destPutObjectSSEType</td>
+<td>None <br> AES256 <br> AWS_KMS</td>
+<td>None</td>
+<td>Specifies the server-side encryption algorithm used for storing objects in Amazon S3. 'AES256' applies AES256 encryption, 'AWS_KMS' uses AWS Key Management Service encryption, and 'None' indicates that no encryption is applied.</td>
+</tr>
+<tr>
+<td>destPutObjectSSEKmsKeyId</td>
+<td></td>
+<td></td>
+<td>Specifies the ID of the symmetric customer managed AWS KMS Customer Master Key (CMK) used for object encryption. This parameter should only be set when destPutObjectSSEType is set to 'AWS_KMS'. If destPutObjectSSEType is set to any value other than 'AWS_KMS', please leave this parameter empty. The default value is not set.</td>
+</tr>
+<tr>
+<td>isPayerRequest</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>Indicates whether to enable payer request. If true, it will get object in payer request mode.</td>
+</tr>
+<tr>
+<td>ec2CronExpression</td>
+<td></td>
+<td>0/60 * * * ? *</td>
+<td>Cron expression for EC2 Finder task <br> "" for one time transfer.</td>
+</tr>
+<tr>
+<td>finderEc2Memory</td>
+<td>8 <br> 16 <br> 32 <br> 64 <br> 128 <br> 256</td>
+<td>8 GB</td>
+<td>The amount of memory (in GB) used by the Finder task.</td>
+</tr>
+<tr>
+<td>ec2Subnets</td>
+<td></td>
+<td></td>
+<td>Two public subnets or two private subnets with <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT gateway</a></td>
+</tr>
+<tr>
+<td>ec2VpcId</td>
+<td></td>
+<td></td>
+<td>VPC ID to run EC2 task, for example, vpc-bef13dc7</td>
+</tr>
+<tr>
+<td>finderDepth</td>
+<td></td>
+<td>0</td>
+<td>Depth of sub folders to compare in parallel. 0 means comparing all objects in sequence</td>
+</tr>
+<tr>
+<td>finderNumber</td>
+<td></td>
+<td>1</td>
+<td>The number of finder threads to run in parallel</td>
+</tr>
+<tr>
+<td>includeMetadata</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>Indicates whether to add replication of object metadata. If true, there will be additional API calls.</td>
+</tr>
+<tr>
+<td>maxCapacity</td>
+<td></td>
+<td>20</td>
+<td>Maximum capacity for Auto Scaling Group</td>
+</tr>
+<tr>
+<td>minCapacity</td>
+<td></td>
+<td>1</td>
+<td>Minimum capacity for Auto Scaling Group</td>
+</tr>
+<tr>
+<td>srcBucket</td>
+<td></td>
+<td></td>
+<td>Source bucket name</td>
+</tr>
+<tr>
+<td>srcCredentials</td>
+<td></td>
+<td></td>
+<td>Secret name in Secrets Manager used to keep AK/SK credentials for Source Bucket. Leave it blank if source bucket is in the current account or source is open data</td>
+</tr>
+<tr>
+<td>srcEndpoint</td>
+<td></td>
+<td></td>
+<td>Source Endpoint URL (Optional). Leave it blank unless you want to provide a custom Endpoint URL</td>
+</tr>
+<tr>
+<td>srcEvent</td>
+<td>No <br> Create <br> CreateAndDelete</td>
+<td>No</td>
+<td>Whether to enable S3 Event to trigger the replication. Note that S3Event is only applicable if source is in the current account</td>
+</tr>
+<tr>
+<td>srcInCurrentAccount</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>Indicates whether the source bucket is in the current account. If not, you should provide a credential with read access</td>
+</tr>
+<tr>
+<td>srcPrefix</td>
+<td></td>
+<td></td>
+<td>Source prefix (Optional)</td>
+</tr>
+<tr>
+<td>srcPrefixListBucket</td>
+<td></td>
+<td></td>
+<td>Source prefix list file S3 bucket name (Optional). It used to store the Source prefix list file. The specified bucket must be located in the same AWS region and under the same account as the DTH deployment. If your PrefixList File is stored in the Source Bucket, please leave this parameter empty.</td>
+</tr>
+<tr>
+<td>srcPrefixsListFile</td>
+<td></td>
+<td></td>
+<td>Source prefix list file S3 path (Optional). It supports txt type, for example, my_prefix_list.txt, and the maximum number of lines is 10 millions</td>
+</tr>
+<tr>
+<td>srcRegion</td>
+<td></td>
+<td></td>
+<td>Source region name</td>
+</tr>
+<tr>
+<td>srcSkipCompare</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>Indicates whether to skip the data comparison in task finding process. If yes, all data in the source will be sent to the destination</td>
+</tr>
+<tr>
+<td>srcType</td>
+<td>Amazon_S3 <br> Aliyun_OSS <br> Qiniu_Kodo <br> Tencent_COS</td>
+<td>Amazon_S3</td>
+<td>If you choose to use the Endpoint mode, please select Amazon_S3.</td>
+</tr>
+<tr>
+<td>workerNumber</td>
+<td>1 ~ 10</td>
+<td>4</td>
+<td>The number of worker threads to run in one worker node/instance. For small files (size &lt; 1MB), you can increase the number of workers to improve the transfer performance.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-transfer-s3-object-from-kms-encrypted-amazon-s3">How to transfer S3 object from KMS encrypted Amazon S3</h2>
 <p>By default, Data Transfer Hub supports data source bucket using SSE-S3 and SSE-KMS.</p>
 <p>If your source bucket enabled <strong>SSE-CMK</strong>, you need to create an IAM Policy and attach it to DTH worker and finder node. You can go to <a href="https://us-east-1.console.aws.amazon.com/iamv2/home#/roles">Amazon IAM Roles</a> Console and search for <code>&lt;StackName&gt;-FinderStackFinderRole&lt;random suffix&gt;</code> and <code>&lt;StackName&gt;-EC2WorkerStackWorkerAsgRole&lt;random suffix&gt;</code>.</p>
 <p>Pay attention to the following:</p>

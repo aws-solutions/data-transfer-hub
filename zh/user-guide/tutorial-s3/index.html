@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#kms-amazon-s3-s3" class="md-skip">
+        <a href="#_1" class="md-skip">
           跳转至
         </a>
       
@@ -675,6 +675,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    使用控制台传输任务 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dth-s3" class="md-nav__link">
+    使用DTH S3 插件创建传输任务 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-cli" class="md-nav__link">
+    使用AWS CLI创建传输任务 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kms-amazon-s3-s3" class="md-nav__link">
     从 KMS 加密的 Amazon S3 传输 S3 对象
   </a>
@@ -732,14 +753,61 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_7" type="checkbox" id="__nav_1_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7">
+          技术教程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="技术教程" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          技术教程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
               
   
   
   
     <li class="md-nav__item">
-      <a href="../tutorial-cli-launch/" class="md-nav__link">
-        使用 AWS CLI 创建 S3 传输任务
+      <a href="../../tutorial/IAM-Policy_CN/" class="md-nav__link">
+        为 Amazon S3 设置凭证
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/S3-SSE-KMS-Policy_CN/" class="md-nav__link">
+        S3 源存储桶启用 SSE-CMK 的策略
       </a>
     </li>
   
@@ -818,18 +886,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_11" type="checkbox" id="__nav_1_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_12" type="checkbox" id="__nav_1_12" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_1_11">
+        <label class="md-nav__link" for="__nav_1_12">
           开发者指南
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="开发者指南" data-md-level="2">
-        <label class="md-nav__title" for="__nav_1_11">
+        <label class="md-nav__title" for="__nav_1_12">
           <span class="md-nav__icon md-icon"></span>
           开发者指南
         </label>
@@ -915,6 +983,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    使用控制台传输任务 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dth-s3" class="md-nav__link">
+    使用DTH S3 插件创建传输任务 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-cli" class="md-nav__link">
+    使用AWS CLI创建传输任务 
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kms-amazon-s3-s3" class="md-nav__link">
     从 KMS 加密的 Amazon S3 传输 S3 对象
   </a>
@@ -943,10 +1032,29 @@
 
   <h1>创建 Amazon S3 传输任务</h1>
 
+<p>该解决方案允许您通过以下方式创建 Amazon S3 传输任务：</p>
+<ul>
+<li><a href="#console-launch">使用控制台传输任务</a></li>
+<li><a href="#plugin-launch">使用DTH S3 插件创建传输任务</a></li>
+<li><a href="#cli-launch">使用AWS CLI创建传输任务</a></li>
+</ul>
+<p>您可以根据您的需要进行选择。</p>
+<ul>
+<li>
+<p>Web 控制台提供直观的用户界面，您只需单击即可启动、克隆或停止数据传输任务。前端还提供指标监控和日志记录视图，因此您无需在不同页面之间切换。</p>
+</li>
+<li>
+<p>S3 插件是一个独立的 CloudFormation 模板，您可以轻松地将其集成到您的工作流程中。由于此选项允许在没有前端的情况下进行部署，因此如果您想在 AWS 中国区域部署但没有 ICP 备案的域名，则此选项非常有用。</p>
+</li>
+<li>
+<p>AWS CLI可以快速启动数据传输任务。如果您想在自动化脚本中使用该解决方案，请选择此选项。</p>
+</li>
+</ul>
+<h2 id="_1">使用控制台传输任务 <a name="console-launch"></a></h2>
 <p>您可以在网页控制台创建Amazon S3数据传输任务。更多信息请参考<a href="../../deployment/deployment-overview">部署解决方案</a>。</p>
 <div class="admonition note">
 <p class="admonition-title">注意</p>
-<p>Data Transfer Hub 也支持通过 AWS CLI 创建 Amazon S3 的传输任务, 请参考该<a href="../tutorial-cli-launch/">教程</a>.</p>
+<p>Data Transfer Hub 也支持通过 AWS CLI 创建 Amazon S3 的传输任务, 请参考该<a href="#aws-cli">教程</a>.</p>
 </div>
 <ol>
 <li>从<strong>创建传输任务</strong>页面，选择<strong>创建新任务</strong>，然后选择<strong>下一步</strong>。</li>
@@ -962,7 +1070,7 @@
 </ul>
 </li>
 <li>如果数据源桶不在方案部署的账户中，请选择<strong>No</strong>，然后指定源存储桶的凭证。</li>
-<li>如果您选择同步多个前缀的对象，请将以换行为分隔的前缀列表文件传输到数据源桶的根目录下，然后填写该文件的名称。具体可参考<a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/USING_PREFIX_LIST_CN.md">多前缀列表配置教程</a>。</li>
+<li>如果您选择同步多个前缀的对象，请将以换行为分隔的前缀列表文件传输到Data Transfer Hub存储桶的根目录下，然后填写该文件的名称。具体可参考<a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/USING_PREFIX_LIST_CN.md">多前缀列表配置教程</a>。</li>
 </ul>
 </li>
 <li>
@@ -1021,7 +1129,361 @@
 </li>
 </ol>
 <p>任务创建成功后，会出现在<strong>任务</strong>页面。</p>
-<h3 id="kms-amazon-s3-s3">从 KMS 加密的 Amazon S3 传输 S3 对象</h3>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>如果 Amazon S3 中的目标存储桶设置为要求使用 Amazon S3 托管密钥加密所有上传的数据。 您可以查看下面的教程。</p>
+</div>
+<p><strong>使用 Amazon S3 托管密钥加密的目标存储桶</strong></p>
+<p>如果您在 Amazon S3 中的目标存储桶设置为要求所有数据上传都使用 Amazon S3 托管密钥进行加密，具体信息请参见 <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">文档</a>, </p>
+<ol>
+<li>
+<p>从目标桶配置中“目标存储桶策略检查”下的下拉菜单中选择“SSE-S3 AES256”。</p>
+</li>
+<li>
+<p>如果您的目标存储桶设置为要求仅使用 SSE-KMS（使用 AWS Key Management Service 的服务器端加密）加密对象<a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/specifying-kms-encryption.html">详细信息</a>, 并且你的策略类似于提供的示例:</p>
+<div class="highlight"><pre><span></span><code>    {
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Id&quot;: &quot;PutObjectPolicy&quot;,
+    &quot;Statement&quot;: [
+    {
+            &quot;Sid&quot;: &quot;DenyIncorrectEncryptionHeader&quot;,
+            &quot;Effect&quot;: &quot;Deny&quot;,
+            &quot;Principal&quot;: &quot;*&quot;,
+            &quot;Action&quot;: &quot;s3:PutObject&quot;,
+            &quot;Resource&quot;: &quot;arn:aws-cn:s3:::dth-sse-debug-cn-north-1/*&quot;,
+            &quot;Condition&quot;: {
+                &quot;StringNotEquals&quot;: {
+                    &quot;s3:x-amz-server-side-encryption&quot;: &quot;aws:kms&quot;
+                }
+            }
+        },
+        {
+            &quot;Sid&quot;: &quot;DenyUnencryptedObjectUploads&quot;,
+            &quot;Effect&quot;: &quot;Deny&quot;,
+            &quot;Principal&quot;: &quot;*&quot;,
+            &quot;Action&quot;: &quot;s3:PutObject&quot;,
+            &quot;Resource&quot;: &quot;arn:aws-cn:s3:::dth-sse-debug-cn-north-1/*&quot;,
+            &quot;Condition&quot;: {
+                &quot;StringNotEquals&quot;: {
+                    &quot;s3:x-amz-server-side-encryption-aws-kms-key-id&quot;: &quot;arn:aws-cn:kms:cn-north-1:123456789012:key/7c54749e-eb6a-42cc-894e-93143b32e7c0&quot;
+                }
+            }
+        }
+    ]
+}
+</code></pre></div>
+<p>在这种情况下，您应该在目标桶配置的“目标存储桶策略检查”下拉菜单中选择“SSE-KMS”。 此外，您还需要提供 KMS 密钥 ID，例如示例中的“7c54749e-eb6a-42cc-894e-93143b32e7c0”。</p>
+</li>
+</ol>
+<h2 id="dth-s3">使用DTH S3 插件创建传输任务 <a name="plugin-launch"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>本教程是纯后端版本的部署指南。如需了解详情，请参考该<a href="https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN_CN.md">DTH S3插件介绍</a>.</p>
+</div>
+<p><strong>1. 准备VPC</strong></p>
+<p>此解决方案可以部署在公共和私有子网中。 建议使用公共子网。</p>
+<ul>
+<li>
+<p>如果您想使用现有的 VPC，请确保 VPC 至少有 2 个子网，并且两个子网都必须具有公网访问权限（带有 Internet 网关的公有子网或带有 NAT 网关的私有子网）</p>
+</li>
+<li>
+<p>如果您想为此解决方案创建新的默认 VPC，请转到步骤2，并确保您在创建集群时选择了<em>为此集群创建一个新的 VPC</em>。</p>
+</li>
+</ul>
+<p><strong>2. 配置凭据</strong></p>
+<p>您需要提供<code>AccessKeyID</code>和<code>SecretAccessKey</code>（即<code>AK/SK</code>）才能从另一个 AWS 账户或其他云存储服务读取或写入 S3中的存储桶，凭证将存储在 AWS Secrets Manager 中。 您<strong>不需要</strong>为此方案部署的当前账户里的存储桶创建凭证。</p>
+<p>打开AWS 管理控制台 &gt; Secrets Manager。 在 Secrets Manager 主页上，单击 <strong>存储新的密钥</strong>。 对于密钥类型，请使用<strong>其他类型的秘密</strong>。 对于键/值对，请将下面的 JSON 文本复制并粘贴到明文部分，并相应地将值更改为您的 AK/SK。</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;access_key_id&quot;: &quot;&lt;Your Access Key ID&gt;&quot;,
+  &quot;secret_access_key&quot;: &quot;&lt;Your Access Key Secret&gt;&quot;
+}
+</code></pre></div>
+<p><img alt="密钥" src="../../images/secret_cn.png" /></p>
+<p>然后下一步指定密钥名称，最后一步点击创建。</p>
+<blockquote>
+<p>注意：如果该AK/SK是针对源桶, 则需要具有桶的<strong>读</strong>权限, 如果是针对目标桶, 则需要具有桶的<strong>读与写</strong>权限。 如果是Amazon S3, 可以参考<a href="../../tutorial/IAM-Policy_CN/">配置凭据</a></p>
+</blockquote>
+<p><strong>3. 启动AWS Cloudformation部署</strong></p>
+<p>请按照以下步骤通过AWS Cloudformation部署此解决方案。</p>
+<ol>
+<li>
+<p>登录到AWS管理控制台，切换到将CloudFormation Stack部署到的区域。</p>
+</li>
+<li>
+<p>单击以下按钮在该区域中启动CloudFormation堆栈。</p>
+<ul>
+<li>部署到AWS中国北京和宁夏区</li>
+</ul>
+<p><a href="https://console.amazonaws.cn/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template"><img alt="Launch Stack" src="../../images/launch-stack.svg" /></a></p>
+<ul>
+<li>部署到AWS海外区</li>
+</ul>
+<p><a href="https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&amp;templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template"><img alt="Launch Stack" src="../../images/launch-stack.svg" /></a></p>
+</li>
+<li>
+<p>单击<strong>下一步</strong>。 相应地为参数指定值。 如果需要，请更改堆栈名称。</p>
+</li>
+<li>
+<p>单击<strong>下一步</strong>。 配置其他堆栈选项，例如标签（可选）。</p>
+</li>
+<li>
+<p>单击<strong>下一步</strong>。 查看并勾选确认，然后单击“创建堆栈”开始部署。</p>
+</li>
+</ol>
+<p>部署预计用时3-5分钟</p>
+<h2 id="aws-cli">使用AWS CLI创建传输任务 <a name="cli-launch"></a></h2>
+<p>您可以使用 <a href="https://aws.amazon.com/cli/">AWS CLI</a> 创建 Amazon S3 传输任务。如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。</p>
+<ol>
+<li>
+<p>创建一个具有两个公有子网或两个拥有<a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT 网关</a> 私有子网的Amazon VPC。</p>
+</li>
+<li>
+<p>根据需要替换<code>&lt;CLOUDFORMATION_URL&gt;</code>为<code>https://s3.amazonaws.com/solutions-reference/data-transfer-hub/latest/DataTransferS3Stack-ec2.template</code>。</p>
+</li>
+<li>
+<p>转到您的终端并输入以下命令。详情请参考<strong>参数列表</strong>。</p>
+<div class="highlight"><pre><span></span><code>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span>--stack-name<span class="w"> </span>dth-s3-task<span class="w"> </span>--template-url<span class="w"> </span>CLOUDFORMATION_URL<span class="w"> </span><span class="se">\</span>
+--capabilities<span class="w"> </span>CAPABILITY_NAMED_IAM<span class="w"> </span><span class="se">\</span>
+--parameters<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>alarmEmail,ParameterValue<span class="o">=</span>your_email@example.com<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destBucket,ParameterValue<span class="o">=</span>dth-recive-cn-north-1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPrefix,ParameterValue<span class="o">=</span>test-prefix<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destCredentials,ParameterValue<span class="o">=</span>drh-cn-secret-key<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destInCurrentAccount,ParameterValue<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destRegion,ParameterValue<span class="o">=</span>cn-north-1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destStorageClass,ParameterValue<span class="o">=</span>STANDARD<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPutObjectSSEType,ParameterValue<span class="o">=</span>None<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>destPutObjectSSEKmsKeyId,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcBucket,ParameterValue<span class="o">=</span>dth-us-west-2<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcInCurrentAccount,ParameterValue<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcCredentials,ParameterValue<span class="o">=</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcRegion,ParameterValue<span class="o">=</span>us-west-2<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcPrefix,ParameterValue<span class="o">=</span>case1<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcType,ParameterValue<span class="o">=</span>Amazon_S3<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2VpcId,ParameterValue<span class="o">=</span>vpc-040bbab85f0e4e088<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2Subnets,ParameterValue<span class="o">=</span>subnet-0d1bf2725ab8e94ee<span class="se">\\</span>,subnet-06d17b2b3286be40e<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>finderEc2Memory,ParameterValue<span class="o">=</span><span class="m">8</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>ec2CronExpression,ParameterValue<span class="o">=</span><span class="s2">&quot;0/60 * * * ? *&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>includeMetadata,ParameterValue<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>srcEvent,ParameterValue<span class="o">=</span>No<span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>maxCapacity,ParameterValue<span class="o">=</span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>minCapacity,ParameterValue<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ParameterKey</span><span class="o">=</span>desiredCapacity,ParameterValue<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</li>
+</ol>
+<p><strong>参数列表</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>允许值</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alarmEmail</td>
+<td></td>
+<td></td>
+<td>用于接收错误信息的电子邮件</td>
+</tr>
+<tr>
+<td>desiredCapacity</td>
+<td></td>
+<td>1</td>
+<td>Auto Scaling 组的所需容量</td>
+</tr>
+<tr>
+<td>destAcl</td>
+<td>private <br> public-read <br> public-read-write <br> authenticated-read <br> aws-exec-read <br> bucket-owner-read <br> bucket-owner-full-control</td>
+<td>bucket-owner-full-control</td>
+<td>目的桶访问控制列表</td>
+</tr>
+<tr>
+<td>destBucket</td>
+<td></td>
+<td></td>
+<td>目标桶名称</td>
+</tr>
+<tr>
+<td>destCredentials</td>
+<td></td>
+<td></td>
+<td>Secrets Manager 中用于保存目标存储桶的 AK/SK 凭证的密钥名称。如果目标存储桶在当前帐户中，则留空</td>
+</tr>
+<tr>
+<td>destInCurrentAccount</td>
+<td>true <br> false</td>
+<td>true</td>
+<td>目标存储桶是否在当前帐户中。如果不在，您应该提供具有读写权限的凭证</td>
+</tr>
+<tr>
+<td>destPrefix</td>
+<td></td>
+<td></td>
+<td>目标前缀（可选）</td>
+</tr>
+<tr>
+<td>destRegion</td>
+<td></td>
+<td></td>
+<td>目标区域名称</td>
+</tr>
+<tr>
+<td>destStorageClass</td>
+<td>STANDARD <br> STANDARD_IA <br> ONEZONE_IA <br> INTELLIGENT_TIERING</td>
+<td>INTELLIGENT_TIERING</td>
+<td>目标存储类。默认值为INTELLIGENT_TIERING</td>
+</tr>
+<tr>
+<td>destPutObjectSSEType</td>
+<td>None <br> AES256 <br> AWS_KMS</td>
+<td>None</td>
+<td>Specifies the server-side encryption algorithm used for storing objects in Amazon S3. 'AES256' applies AES256 encryption, 'AWS_KMS' uses AWS Key Management Service encryption, and 'None' indicates that no encryption is applied.</td>
+</tr>
+<tr>
+<td>destPutObjectSSEKmsKeyId</td>
+<td></td>
+<td></td>
+<td>Specifies the ID of the symmetric customer managed AWS KMS Customer Master Key (CMK) used for object encryption. This parameter should only be set when destPutObjectSSEType is set to 'AWS_KMS'. If destPutObjectSSEType is set to any value other than 'AWS_KMS', please leave this parameter empty. The default value is not set.</td>
+</tr>
+<tr>
+<td>isPayerRequest</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>是否启用付费者请求模式</td>
+</tr>
+<tr>
+<td>ec2CronExpression</td>
+<td></td>
+<td>0/60 * * * ? *</td>
+<td>EC2 Finder 任务的 Cron 表达式。<br> "" 表示一次性转移。</td>
+</tr>
+<tr>
+<td>finderEc2Memory</td>
+<td>8 <br> 16 <br> 32 <br> 64 <br> 128 <br> 256</td>
+<td>8 GB</td>
+<td>Finder 任务使用的内存量（以 GB 为单位）</td>
+</tr>
+<tr>
+<td>ec2Subnets</td>
+<td></td>
+<td></td>
+<td>两个公共子网或具有 <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT 网关</a> 的两个私有子网</td>
+</tr>
+<tr>
+<td>ec2VpcId</td>
+<td></td>
+<td></td>
+<td>运行 EC2 任务的 VPC ID，例如 vpc-bef13dc7</td>
+</tr>
+<tr>
+<td>finderDepth</td>
+<td></td>
+<td>0</td>
+<td>要并行比较的子文件夹的深度。 0 表示按顺序比较所有对象</td>
+</tr>
+<tr>
+<td>finderNumber</td>
+<td></td>
+<td>1</td>
+<td>并行运行的查找器线程数</td>
+</tr>
+<tr>
+<td>includeMetadata</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>添加对象元数据的复制，会有额外的 API 调用</td>
+</tr>
+<tr>
+<td>maxCapacity</td>
+<td></td>
+<td>20</td>
+<td>Auto Scaling 组的最大容量</td>
+</tr>
+<tr>
+<td>minCapacity</td>
+<td></td>
+<td>1</td>
+<td>Auto Scaling 组的最小容量</td>
+</tr>
+<tr>
+<td>srcBucket</td>
+<td></td>
+<td></td>
+<td>源桶名称</td>
+</tr>
+<tr>
+<td>srcCredentials</td>
+<td></td>
+<td></td>
+<td>Secrets Manager 中用于保存 Source Bucket 的 AK/SK 凭证的密钥名称。 如果源存储桶在当前帐户中或源是开源数据，则留空</td>
+</tr>
+<tr>
+<td>srcEndpoint</td>
+<td></td>
+<td></td>
+<td>源端点 URL（可选），除非您想提供自定义端点 URL，否则留空</td>
+</tr>
+<tr>
+<td>srcEvent</td>
+<td>No <br> Create <br> CreateAndDelete</td>
+<td>No</td>
+<td>是否启用 S3 Event 触发复制。 请注意，S3Event 仅适用于源位于当前帐户中的情况</td>
+</tr>
+<tr>
+<td>srcInCurrentAccount</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>源存储桶是否当前帐户中。如果不在，您应该提供具有读取权限的凭证</td>
+</tr>
+<tr>
+<td>srcPrefix</td>
+<td></td>
+<td></td>
+<td>源前缀（可选）</td>
+</tr>
+<tr>
+<td>srcPrefixListBucket</td>
+<td></td>
+<td></td>
+<td>Source prefix list file S3 bucket name (Optional). It used to store the Source prefix list file. The specified bucket must be located in the same AWS region and under the same account as the DTH deployment. If your PrefixList File is stored in the Source Bucket, please leave this parameter empty.</td>
+</tr>
+<tr>
+<td>srcPrefixsListFile</td>
+<td></td>
+<td></td>
+<td>Source prefix list file S3 path (Optional). It supports txt type, for example, my_prefix_list.txt, and the maximum number of lines is 10 millions</td>
+</tr>
+<tr>
+<td>srcRegion</td>
+<td></td>
+<td></td>
+<td>Source region name</td>
+</tr>
+<tr>
+<td>srcSkipCompare</td>
+<td>true <br> false</td>
+<td>false</td>
+<td>Indicates whether to skip the data comparison in task finding process. If yes, all data in the source will be sent to the destination</td>
+</tr>
+<tr>
+<td>srcType</td>
+<td>Amazon_S3 <br> Aliyun_OSS <br> Qiniu_Kodo <br> Tencent_COS</td>
+<td>Amazon_S3</td>
+<td>如果选择使用Endpoint模式，请选择Amazon_S3</td>
+</tr>
+<tr>
+<td>workerNumber</td>
+<td>1 ~ 10</td>
+<td>4</td>
+<td>在一个工作节点/实例中运行的工作线程数。 对于小文件（平均文件大小 &lt; 1MB），您可以增加工作线程数量以提高传输性能。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="kms-amazon-s3-s3">从 KMS 加密的 Amazon S3 传输 S3 对象</h2>
 <p>Data Transfer Hub 默认支持使用 SSE-S3 和 SSE-KMS 的数据源。</p>
 <p>但如果您的源存储桶启用了 <strong>SSE-CMK</strong>，请创建一个IAM Policy，并将 Policy 关联到 DTH Worker 和Finder。您可以跳转到 <a href="https://us-east-1.console.aws.amazon.com/iamv2/home#/roles">Amazon IAM Roles</a> 控制台并搜索<code>&lt;StackName&gt;-FinderStackFinderRole&lt;random suffix&gt;</code>和<code>&lt;StackName&gt;-EC2WorkerStackWorkerAsgRole&lt;random suffix&gt;</code>。</p>
 <p>注意进行以下修改：</p>

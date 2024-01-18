@@ -688,14 +688,61 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_7" type="checkbox" id="__nav_1_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7">
+          技术教程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="技术教程" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          技术教程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
               
   
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/tutorial-cli-launch/" class="md-nav__link">
-        使用 AWS CLI 创建 S3 传输任务
+      <a href="../tutorial/IAM-Policy_CN/" class="md-nav__link">
+        为 Amazon S3 设置凭证
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/S3-SSE-KMS-Policy_CN/" class="md-nav__link">
+        S3 源存储桶启用 SSE-CMK 的策略
       </a>
     </li>
   
@@ -774,18 +821,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_11" type="checkbox" id="__nav_1_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_12" type="checkbox" id="__nav_1_12" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_1_11">
+        <label class="md-nav__link" for="__nav_1_12">
           开发者指南
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="开发者指南" data-md-level="2">
-        <label class="md-nav__title" for="__nav_1_11">
+        <label class="md-nav__title" for="__nav_1_12">
           <span class="md-nav__icon md-icon"></span>
           开发者指南
         </label>
@@ -927,6 +974,10 @@
 <tr>
 <td>2023年9月</td>
 <td>发布版本2.5 <br> 1. 通过利用集群的并行能力，提升了Amazon S3大文件传输的性能 <br> 2. 启用了未标记的ECR镜像传输 <br> 3. 优化了停止任务操作，并添加了新的筛选条件以查看所有历史任务</td>
+</tr>
+<tr>
+<td>2024年1月</td>
+<td>发布版本 2.6 <br> 1. 增加了对使用Amazon S3托管密钥加密Amazon S3目标存储桶的支持 <br> 2. 提供了可选的Amazon S3存储桶来保存前缀列表文件 <br> 3. 在DTH管道状态停止后，添加了自动删除KMS密钥的功能  <br> 4. 在外部重新启动后，增加了Finder实例自动启用DTH-CLI的功能 <br> 5.增加了Finder的容量至316GB和512GB  <br> 6.新增了3个支持的区域：亚太地区（墨尔本），加拿大（卡尔加里），以色列（特拉维夫）</td>
 </tr>
 </tbody>
 </table>

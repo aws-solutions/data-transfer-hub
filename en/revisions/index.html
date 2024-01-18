@@ -686,14 +686,61 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_7" type="checkbox" id="__nav_1_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
               
   
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/tutorial-cli-launch/" class="md-nav__link">
-        Use AWS CLI to create S3 transfer task
+      <a href="../tutorial/IAM-Policy/" class="md-nav__link">
+        Set up credentials for Amazon S3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/S3-SSE-KMS-Policy/" class="md-nav__link">
+        Policy for S3 Source Bucket enabled SSE-CMK
       </a>
     </li>
   
@@ -772,18 +819,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_11" type="checkbox" id="__nav_1_11" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_12" type="checkbox" id="__nav_1_12" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_1_11">
+        <label class="md-nav__link" for="__nav_1_12">
           Developer guide
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Developer guide" data-md-level="2">
-        <label class="md-nav__title" for="__nav_1_11">
+        <label class="md-nav__title" for="__nav_1_12">
           <span class="md-nav__icon md-icon"></span>
           Developer guide
         </label>
@@ -939,6 +986,10 @@
 <tr>
 <td>September 2023</td>
 <td>Released version 2.5 <br> 1. Added support for transferring ECR assets without tags <br> 2. Optimize stop task operation, add new filter condition to view all history tasks <br> 3. Enhanced transfer performance by utilizing cluster capabilities through parallel multipart upload for large file transfers <br> 4.Added automatic restart functionality for the Worker CLI <br> 5.Enabled IMDSv2 by default for Auto Scaling Groups</td>
+</tr>
+<tr>
+<td>January 2024</td>
+<td>Released version 2.6 <br> 1. Added support for Amazon S3 destination bucket being encrypted with Amazon S3 managed keys <br> 2. Provided the optional Amazon S3 bucket to hold prefix list file <br> 3. Added the feature of deleting KMS Key automatically after the solution pipeline status turns to stopped  <br> 4. Added the feature that Finder Instance enables DTH-CLI automatically after external reboot <br> 5. Increased Finder capacity to 316GB&amp;512GB  <br> 6. Added three supported Regions: Asia Pacific (Melbourne), Canada (Calgary), Israel (Tel Aviv)</td>
 </tr>
 </tbody>
 </table>
