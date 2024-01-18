@@ -328,6 +328,7 @@ export class CloudFormationStateMachine extends Construct {
             "kms:TagResource",
             "kms:UntagResource",
             "kms:UpdateAlias",
+            "kms:ScheduleKeyDeletion",
           ],
           resources: [
             `*`,

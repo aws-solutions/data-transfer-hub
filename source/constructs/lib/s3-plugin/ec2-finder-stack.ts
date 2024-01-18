@@ -145,7 +145,9 @@ export class Ec2FinderStack extends Construct {
         "32": { instanceType: "r6g.xlarge" },
         "64": { instanceType: "r6g.2xlarge" },
         "128": { instanceType: "r6g.4xlarge" },
-        "256": { instanceType: "r6g.8xlarge" }
+        "256": { instanceType: "r6g.8xlarge" },
+        "384": { instanceType: "r6g.12xlarge" },
+        "512": { instanceType: "r6g.16xlarge" },
       }
     });
 
@@ -238,6 +240,7 @@ export class Ec2FinderStack extends Construct {
       `echo "export SRC_BUCKET=${props.env.SRC_BUCKET}" >> env.sh`,
       `echo "export SRC_PREFIX=${props.env.SRC_PREFIX}" >> env.sh`,
       `echo "export SRC_PREFIX_LIST=${props.env.SRC_PREFIX_LIST}" >> env.sh`,
+      `echo "export SRC_PREFIX_LIST_BUCKET=${props.env.SRC_PREFIX_LIST_BUCKET}" >> env.sh`,
       `echo "export SRC_REGION=${props.env.SRC_REGION}" >> env.sh`,
       `echo "export SRC_ENDPOINT=${props.env.SRC_ENDPOINT}" >> env.sh`,
       `echo "export SRC_CREDENTIALS=${props.env.SRC_CREDENTIALS}" >> env.sh`,
@@ -268,6 +271,8 @@ export class Ec2FinderStack extends Construct {
       `echo "sleep 61; mycount=0; while (( \\$mycount < 5 )); do aws autoscaling update-auto-scaling-group --region ${Aws.REGION} --auto-scaling-group-name ${Aws.STACK_NAME}-Finder-ASG --desired-capacity 0; sleep 10; ((mycount=\$mycount+1)); done;" >> start-finder.sh`, // change the asg desired-capacity to 0 to stop the finder task
 
       "chmod +x start-finder.sh",
+      // Add to startup items
+      'echo "@reboot /home/ec2-user/start-finder.sh" >> /var/spool/cron/root',
       // Run the script
       "./start-finder.sh"
     );

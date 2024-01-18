@@ -30,7 +30,9 @@ nav:
         - Create Amazon ECR transfer task: user-guide/tutorial-ecr.md
         - Transfer S3 object from Alibaba Cloud OSS: user-guide/tutorial-oss.md
         - Transfer S3 object via Direct Connect: user-guide/tutorial-directconnect.md
-        - Use AWS CLI to create S3 transfer task: user-guide/tutorial-cli-launch.md
+    - Tutorials:
+        - Set up credentials for Amazon S3: tutorial/IAM-Policy.md
+        - Policy for S3 Source Bucket enabled SSE-CMK: tutorial/S3-SSE-KMS-Policy.md
     - Upgrade the solution: update.md
     - Uninstall the solution: uninstall.md
     - FAQ: faq.md 

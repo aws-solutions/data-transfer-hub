@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useDispatch, useMappedState } from "redux-react-hook";
 
 // DRH Comp
@@ -36,8 +36,10 @@ import {
 
 import { IState } from "store/Store";
 import Alert from "common/Alert";
+import { buildS3Link } from "assets/utils/utils";
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
+  amplifyConfig: state.amplifyConfig,
 });
 
 interface SourcePropType {
@@ -58,7 +60,7 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
   } = props;
   console.info("engineType:", engineType);
   const { t } = useTranslation();
-  const { tmpTaskInfo } = useMappedState(mapState);
+  const { tmpTaskInfo, amplifyConfig } = useMappedState(mapState);
   const dispatch = useDispatch();
   console.info("tmpTaskInfo:", tmpTaskInfo);
 
@@ -385,9 +387,23 @@ const SourceSettings: React.FC<SourcePropType> = (props) => {
                 optionTitle={t(
                   "creation.step2.settings.source.nameOfPrefixList"
                 )}
-                optionDesc={t(
-                  "creation.step2.settings.source.nameOfPrefixListDesc"
-                )}
+                optionDesc={
+                  <Trans
+                    i18nKey="creation.step2.settings.source.nameOfPrefixListDesc"
+                    components={[
+                      <DescLink
+                        key={1}
+                        link={buildS3Link(
+                          amplifyConfig.aws_project_region,
+                          amplifyConfig.src_prefix_list_bucket
+                        )}
+                        title={t(
+                          "creation.step2.settings.source.solutionLoggingBucket"
+                        )}
+                      />,
+                    ]}
+                  />
+                }
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setSrcPrefixsListFile(event.target.value);
                 }}

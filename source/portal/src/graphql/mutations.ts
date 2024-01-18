@@ -1,5 +1,3 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
 /* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten

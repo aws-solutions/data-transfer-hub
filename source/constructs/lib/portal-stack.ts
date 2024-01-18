@@ -46,6 +46,47 @@ export class PortalStack extends Construct {
   constructor(scope: Construct, id: string, props: PortalStackProps) {
     super(scope, id);
 
+    const getDefaultBehavior = () => {
+      if (props.auth_type === AuthType.COGNITO) {
+        return {
+          responseHeadersPolicy: new cloudfront.ResponseHeadersPolicy(
+            this,
+            'ResponseHeadersPolicy',
+            {
+              responseHeadersPolicyName: `SecHdr${Aws.REGION}${Aws.STACK_NAME}`,
+              comment: 'Security Headers Policy',
+              securityHeadersBehavior: {
+                contentSecurityPolicy: {
+                  contentSecurityPolicy: `default-src 'self'; upgrade-insecure-requests; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ${props.aws_appsync_graphqlEndpoint} https://cognito-idp.${Aws.REGION}.amazonaws.com/`,
+                  override: true,
+                },
+                contentTypeOptions: { override: true },
+                frameOptions: {
+                  frameOption: cloudfront.HeadersFrameOption.DENY,
+                  override: true,
+                },
+                referrerPolicy: {
+                  referrerPolicy: cloudfront.HeadersReferrerPolicy.NO_REFERRER,
+                  override: true,
+                },
+                strictTransportSecurity: {
+                  accessControlMaxAge: Duration.seconds(600),
+                  includeSubdomains: true,
+                  override: true,
+                },
+                xssProtection: {
+                  protection: true,
+                  modeBlock: true,
+                  override: true,
+                },
+              },
+            }
+          ),
+        };
+      }
+      return {};
+    };
+
     const website = new CloudFrontToS3(this, 'Web', {
       bucketProps: {
         versioned: true,
@@ -60,14 +101,15 @@ export class PortalStack extends Construct {
         minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
         enableIpv6: false,
         enableLogging: true,  //Enable access logging for the distribution.
-        comment: 'Data Transfer Hub Portal Distribution',
+        comment: `Data Transfer Hub Portal Distribution (${Aws.REGION})`,
         errorResponses: [
           {
             httpStatus: 403,
             responseHttpStatus: 200,
             responsePagePath: "/index.html",
           }
-        ]
+        ],
+        defaultBehavior: getDefaultBehavior(),
       },
       insertHttpSecurityHeaders: false,
     });
@@ -88,6 +130,7 @@ export class PortalStack extends Construct {
     );
 
     const websiteBucket = website.s3Bucket as s3.Bucket;
+    const websiteLoggingBucket = website.s3LoggingBucket as s3.Bucket;
     const websiteDist = website.cloudFrontWebDistribution.node.defaultChild as cloudfront.CfnDistribution
 
     if (props.auth_type === AuthType.OPENID) {
@@ -198,6 +241,7 @@ function handler(event) {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../custom-resource/')),
       environment: {
         WEB_BUCKET_NAME: websiteBucket.bucketName,
+        SRC_PREFIX_LIST_BUCKET_NAME: websiteLoggingBucket.bucketName,
         API_ENDPOINT: props.aws_appsync_graphqlEndpoint,
         OIDC_PROVIDER: props.aws_oidc_provider,
         OIDC_CLIENT_ID: props.aws_oidc_client_id,

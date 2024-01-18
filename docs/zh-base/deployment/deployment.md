@@ -64,7 +64,7 @@
 7. 将Endpoint Information中的`App ID`（即`client_id`）和`Issuer`保存到一个文本文件中，以备后面使用。
     [![](../images/OIDC/endpoint-info.png)](../images/OIDC/endpoint-info.png)
 
-8. 将`Login Callback URL`和`Logout Callback URL`更新为IPC记录的域名。
+8. 将`Login Callback URL`和`Logout Callback URL`更新为ICP记录的域名。
     [![](../images/OIDC/authentication-configuration.png)](../images/OIDC/authentication-configuration.png)
 
 9. 设置以下授权配置。

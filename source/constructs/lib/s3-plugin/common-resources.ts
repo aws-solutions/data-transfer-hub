@@ -144,6 +144,9 @@ export class CommonStack extends Construct {
     });
 
     const snsKey = new kms.Key(this, "SNSTopicEncryptionKey", {
+      removalPolicy: RemovalPolicy.DESTROY,
+      pendingWindow: Duration.days(7),
+      description: "Data Transfer Hub KMS-CMK for encrypting the objects in SNS",
       enableKeyRotation: true,
       enabled: true,
       alias: `alias/dth/sns/${Aws.STACK_NAME}`,

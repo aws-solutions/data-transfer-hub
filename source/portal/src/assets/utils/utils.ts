@@ -55,3 +55,34 @@ export const buildCloudFormationLink = (
   }
   return `https://${region}.console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/events?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false&stackId=${cfnId}`;
 };
+
+export const getDirPrefixByPrefixStr = (prefix: string) => {
+  if (prefix && prefix.indexOf("/") >= 0) {
+    const slashPos = prefix.lastIndexOf("/");
+    prefix = prefix.slice(0, slashPos + 1);
+  }
+  return prefix;
+};
+
+export const buildS3Link = (
+  region: string,
+  bucketName: string,
+  prefix?: string
+): string => {
+  if (region.startsWith("cn")) {
+    if (prefix) {
+      const resPrefix = getDirPrefixByPrefixStr(prefix);
+      if (resPrefix.endsWith("/")) {
+        return `https://console.amazonaws.cn/s3/buckets/${bucketName}?region=${region}&prefix=${resPrefix}`;
+      }
+    }
+    return `https://console.amazonaws.cn/s3/buckets/${bucketName}`;
+  }
+  if (prefix) {
+    const resPrefix = getDirPrefixByPrefixStr(prefix);
+    if (resPrefix.endsWith("/")) {
+      return `https://s3.console.aws.amazon.com/s3/buckets/${bucketName}?region=${region}&prefix=${resPrefix}`;
+    }
+  }
+  return `https://s3.console.aws.amazon.com/s3/buckets/${bucketName}`;
+};

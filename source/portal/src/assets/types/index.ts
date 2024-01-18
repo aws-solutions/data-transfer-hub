@@ -32,6 +32,7 @@ export interface AmplifyConfigType {
   aws_cloudfront_url: string;
   aws_appsync_graphqlEndpoint: string;
   aws_user_pools_web_client_id: string;
+  src_prefix_list_bucket: string;
 }
 
 export interface AmplifyJSONType {

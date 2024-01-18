@@ -11,7 +11,7 @@ type DrhInputProps = {
   inputType?: string;
   isHidden?: boolean;
   optionTitle: string;
-  optionDesc: string;
+  optionDesc: string | React.ReactElement;
   isOptional?: boolean;
   defaultValue?: string;
   inputValue: string;

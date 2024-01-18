@@ -34,7 +34,7 @@
 
 **7. 能否使用 AWS CLI 创建 DTH S3 传输任务？**</br>
 
-可以。请参考[使用AWS CLI启动DTH S3 Transfer任务](../user-guide/tutorial-cli-launch)指南。
+可以。请参考[使用AWS CLI启动DTH S3 Transfer任务](../user-guide/tutorial-s3/#aws-cli)指南。
 
 ## 性能相关问题
 

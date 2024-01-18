@@ -13,12 +13,15 @@ This solution uses services which may not be currently available in all AWS Regi
 | Asia Pacific (Seoul) | ap-northeast-2|
 | Asia Pacific (Singapore) | ap-southeast-1|
 | Asia Pacific (Sydney) | ap-southeast-2|
+| Asia Pacific (Melbourne) | ap-southeast-4|
 | Canada (Central) | ca-central-1|
+| Canada (Calgary) | ca-west-1|
 | Europe (Ireland) | eu-west-1|
 | Europe (London) | eu-west-2|
 | Europe (Stockholm) | eu-north-1|
 | Europe (Frankfurt) | eu-central-1|
 | South America (São Paulo) | sa-east-1|
+| Israel (Tel Aviv) | il-central-1|
 
 ## Supported regions for deployment in AWS China Regions
 

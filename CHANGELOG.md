@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2024-01-18 
+
+### Added
+
+- Implemented server-side encryption options for writing objects into the Amazon S3 destination bucket: 'AES256' for AES256 encryption, 'AWS_KMS' for AWS Key Management Service encryption, and 'None' for no encryption. #124
+- Provided the optional Amazon S3 bucket to hold prefix list file. #125, #97
+
+### Changed
+
+- Expanded Finder memory options, now including increased capacities of 316GB & 512GB.
+- Added the feature of deleting KMS Key automatically after the solution pipeline status turns to stopped. #135
+- Added the feature that Finder Instance enables DTH-CLI automatically after external reboot.
+- Add documentation of how to deploy the S3/ECR transfer task using CloudFormation. #128
+
 ## [2.5.0] - 2023-09-15
 
 ### Added
