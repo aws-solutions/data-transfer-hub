@@ -24,6 +24,8 @@ import {
   AWS_REGION_LIST,
   DEST_OBJECT_ACL_LINK,
   OBJECT_ACL_LIST,
+  S3_ENCRYPTION_OPTIONS,
+  S3_ENCRYPTION_TYPE,
 } from "assets/config/const";
 
 import { ACTION_TYPE, S3_ENGINE_TYPE } from "assets/types/index";
@@ -39,6 +41,7 @@ interface DestPropType {
   destShowBucketValidError: boolean;
   destShowRegionRequiredError: boolean;
   destShowPrefixFormatError: boolean;
+  kmsKeyRequiredError: boolean;
 }
 
 const DestSettings: React.FC<DestPropType> = (props) => {
@@ -51,6 +54,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
     destShowBucketValidError,
     destShowRegionRequiredError,
     destShowPrefixFormatError,
+    kmsKeyRequiredError,
   } = props;
   // Refs
   const destBucketRef = useRef<any>(null);
@@ -63,6 +67,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   const [showDestCredential, setShowDestCredential] = useState(false);
   const [showDestRegion, setShowDestRegion] = useState(false);
   const [showDestInAccount, setShowDestInAccount] = useState(true);
+  const [showKMSKeyInput, setShowKMSKeyInput] = useState(false);
 
   const [destInAccount, setDestInAccount] = useState<string>(
     tmpTaskInfo?.parametersObj?.destInAccount || YES_NO.YES
@@ -98,6 +103,13 @@ const DestSettings: React.FC<DestPropType> = (props) => {
 
   const [destRegionObj, setDestRegionObj] = useState<IRegionType | null>(
     tmpTaskInfo?.parametersObj?.destRegionObj || null
+  );
+
+  const [destPutObjectSSEType, setDestPutObjectSSEType] = useState(
+    tmpTaskInfo?.parametersObj?.destPutObjectSSEType || S3_ENCRYPTION_TYPE.NONE
+  );
+  const [destPutObjectSSEKmsKeyId, setDestPutObjectSSEKmsKeyId] = useState(
+    tmpTaskInfo?.parametersObj?.destPutObjectSSEKmsKeyId || ""
   );
 
   // Show Error
@@ -190,7 +202,7 @@ const DestSettings: React.FC<DestPropType> = (props) => {
   // Monitor SourceInAccount When Lambda Engine
   useEffect(() => {
     const srcInAccount =
-      tmpTaskInfo?.parametersObj?.sourceInAccount === YES_NO.YES ? true : false;
+      tmpTaskInfo?.parametersObj?.sourceInAccount === YES_NO.YES;
     if (engineType === S3_ENGINE_TYPE.LAMBDA) {
       // engine type is lambda
       // show dest credential and dest region when src in account is true, else hide
@@ -238,6 +250,22 @@ const DestSettings: React.FC<DestPropType> = (props) => {
       setDestRegionObj(null);
     }
   }, [tmpTaskInfo?.parametersObj?.srcRegionName]);
+
+  // Change destPutObjectSSEType
+  useEffect(() => {
+    updateTmpTaskInfo("destPutObjectSSEType", destPutObjectSSEType);
+    if (destPutObjectSSEType === S3_ENCRYPTION_TYPE.AWS_KMS) {
+      setShowKMSKeyInput(true);
+    } else {
+      setShowKMSKeyInput(false);
+      setDestPutObjectSSEKmsKeyId("");
+    }
+  }, [destPutObjectSSEType]);
+
+  // Change destPutObjectSSEKmsKeyId
+  useEffect(() => {
+    updateTmpTaskInfo("destPutObjectSSEKmsKeyId", destPutObjectSSEKmsKeyId);
+  }, [destPutObjectSSEKmsKeyId]);
 
   return (
     <div className="box-shadow card-list">
@@ -396,6 +424,41 @@ const DestSettings: React.FC<DestPropType> = (props) => {
                     ]}
                     selectValue={destAcl}
                     optionList={OBJECT_ACL_LIST}
+                  />
+                </div>
+              )}
+
+              <div className="form-items">
+                <DrhSelect
+                  optionTitle={t("creation.step2.settings.dest.encryptionType")}
+                  optionDesc={t(
+                    "creation.step2.settings.dest.encryptionTypeDesc"
+                  )}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setDestPutObjectSSEType(event.target.value);
+                  }}
+                  selectValue={destPutObjectSSEType}
+                  optionList={S3_ENCRYPTION_OPTIONS}
+                />
+              </div>
+
+              {showKMSKeyInput && (
+                <div className="form-items">
+                  <DrhInput
+                    optionTitle={t(
+                      "creation.step2.settings.dest.encryptionKey"
+                    )}
+                    optionDesc={t(
+                      "creation.step2.settings.dest.encryptionKeyDesc"
+                    )}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setDestPutObjectSSEKmsKeyId(event.target.value);
+                    }}
+                    inputName="destPutObjectSSEKmsKeyId"
+                    inputValue={destPutObjectSSEKmsKeyId}
+                    placeholder="12345678-1234-1234-1234-123456789012"
+                    showRequiredError={kmsKeyRequiredError}
+                    requiredErrorMsg={t("tips.error.kmsKeyRequired")}
                   />
                 </div>
               )}

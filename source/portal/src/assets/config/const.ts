@@ -161,6 +161,10 @@ export const S3_PARAMS_LIST_MAP: any = {
     en_name: "Destination Bucket Object Prefix",
     zh_name: "目标数据桶对象前缀",
   },
+  srcPrefixListBucket: {
+    en_name: "Prefix List Storage Bucket",
+    zh_name: "前缀文件存储桶",
+  },
   destStorageClass: {
     en_name: "Destination Object Storage Class",
     zh_name: "目标S3存储类型",
@@ -184,6 +188,14 @@ export const S3_PARAMS_LIST_MAP: any = {
   destCredentials: {
     en_name: "Destination Secret key for Credentials",
     zh_name: "目标区域的密钥名称",
+  },
+  destPutObjectSSEType: {
+    en_name: "Encryption type",
+    zh_name: "加密类型",
+  },
+  destPutObjectSSEKmsKeyId: {
+    en_name: "KMS Key ID",
+    zh_name: "KMS 密钥 ID",
   },
   includeMetadata: {
     en_name: "Include Metadata",
@@ -343,6 +355,12 @@ export enum S3_STORAGE_CLASS_TYPE {
   INTELLIGENT_TIERING = "INTELLIGENT_TIERING",
 }
 
+export enum S3_ENCRYPTION_TYPE {
+  NONE = "None",
+  AES256 = "AES256",
+  AWS_KMS = "AWS_KMS",
+}
+
 export enum CRON_FIX_UNIT {
   DAYS = "DAYS",
   MINUTES = "MINUTES",
@@ -380,7 +398,9 @@ export const AWS_REGION_LIST = [
   { value: "ap-southeast-1", name: "Singapore" },
   { value: "ap-southeast-2", name: "Sydney" },
   { value: "ap-northeast-1", name: "Tokyo" },
+  { value: "ap-southeast-4", name: "Melbourne" },
   { value: "ca-central-1", name: "Central" },
+  { value: "ca-west-1 ", name: "Calgary" },
   { value: "eu-central-1", name: "Frankfurt" },
   { value: "eu-west-1", name: "Ireland" },
   { value: "eu-west-2", name: "London" },
@@ -392,13 +412,14 @@ export const AWS_REGION_LIST = [
   { value: "me-south-1", name: "Bahrain" },
   { value: "me-central-1", name: "UAE" },
   { value: "sa-east-1", name: "São Paulo" },
+  { value: "il-central-1", name: "Tel Aviv" },
   { value: "cn-north-1", name: "Beijing" },
   { value: "cn-northwest-1", name: "Ningxia" },
   { value: "us-gov-west-1", name: "US-Gov-West" },
   { value: "us-gov-east-1", name: "US-Gov-East" },
 ];
 
-// https://www.alibabacloud.com/help/en/basics-for-beginners/latest/regions-and-zones
+// https://help.aliyun.com/document_detail/40654.html
 export const ALICLOUD_REGION_LIST = [
   { value: "cn-qingdao", name: "Qingdao" },
   { value: "cn-beijing", name: "Beijing" },
@@ -413,6 +434,7 @@ export const ALICLOUD_REGION_LIST = [
   { value: "cn-wulanchabu", name: "Ulanqab" },
   { value: "cn-nanjing", name: "Nanjing" },
   { value: "cn-fuzhou", name: "Fuzhou" },
+  { value: "cn-wuhan-lr", name: "Wuhan" },
   { value: "cn-hongkong", name: "Hong Kong" },
   { value: "ap-southeast-1", name: "Singapore" },
   { value: "ap-southeast-2", name: "Sydney" },
@@ -427,6 +449,7 @@ export const ALICLOUD_REGION_LIST = [
   { value: "us-west-1", name: "Silicon Valley" },
   { value: "us-east-1", name: "Virginia" },
   { value: "me-east-1", name: "Dubai" },
+  { value: "me-central-1", name: "Riyadh" },
   { value: "ap-south-1", name: "Mumbai" },
 ];
 
@@ -535,6 +558,8 @@ export const EC2_MEMORY_LIST = [
   { name: "64GB", value: "64" },
   { name: "128GB", value: "128" },
   { name: "256GB", value: "256" },
+  { name: "384GB", value: "384" },
+  { name: "512GB", value: "512" },
 ];
 
 export const CRON_TYPE_LIST = [
@@ -571,6 +596,12 @@ export const S3_STORAGE_CLASS_OPTIONS = [
     name: "Intelligent-Tiering",
     value: S3_STORAGE_CLASS_TYPE.INTELLIGENT_TIERING,
   },
+];
+
+export const S3_ENCRYPTION_OPTIONS = [
+  { name: "None", value: S3_ENCRYPTION_TYPE.NONE },
+  { name: "AES256", value: S3_ENCRYPTION_TYPE.AES256 },
+  { name: "SSE-KMS", value: S3_ENCRYPTION_TYPE.AWS_KMS },
 ];
 
 export const SOURCE_TYPE_OPTIONS_LAMBDA = [

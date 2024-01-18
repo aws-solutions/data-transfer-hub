@@ -48,7 +48,7 @@ In this scenario, DTH is deployed in the **destination side** and within a VPC w
 13. Choose **Create Task**. 
 
 ## Use DTH to transfer data via DX in an isolated network <a name="isolated-network"></a>
-In this scenario, DTH is deployed in the **destination side** and within a VPC **without public access** (isolated VPC), and the source bucket is also in an isolated network. For details, refer to the [tutorial][https://github.com/awslabs/data-transfer-hub/blob/main/docs/tutorial-directconnect-isolated.md].
+In this scenario, DTH is deployed in the **destination side** and within a VPC **without public access** (isolated VPC), and the source bucket is also in an isolated network. For details, refer to the [tutorial](https://github.com/awslabs/data-transfer-hub/blob/main/docs/tutorial-directconnect-isolated.md).
 
 [![architecture]][architecture]
 

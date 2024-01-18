@@ -77,7 +77,7 @@ export class DataTransferS3Stack extends Stack {
 
     const runType: RunType = this.node.tryGetContext("runType") || RunType.EC2;
 
-    const cliRelease = "1.3.0";
+    const cliRelease = "1.4.0";
 
     const srcType = new CfnParameter(this, "srcType", {
       description:
@@ -103,13 +103,24 @@ export class DataTransferS3Stack extends Stack {
 
     const srcPrefixsListFile = new CfnParameter(this, "srcPrefixsListFile", {
       description:
-        "Source Prefixs List File S3 path (Optional), support txt type, the maximum number of lines is 10 millions. e.g. my_prefix_list.txt",
+        "Source Prefix List File S3 path (Optional), support txt type, the maximum number of lines is 10 millions. e.g. my_prefix_list.txt",
       default: "",
       type: "String"
     });
     this.addToParamLabels(
-      "Source Prefixs List File",
+      "Source Prefix List File",
       srcPrefixsListFile.logicalId
+    );
+
+    const srcPrefixListBucket = new CfnParameter(this, "srcPrefixListBucket", {
+      description:
+        "Source prefix list file S3 bucket name (Optional). It used to store the Source prefix list file. The specified bucket must be located in the same AWS region and under the same account as the DTH deployment. If your PrefixList File is stored in the Source Bucket, please leave this parameter empty.",
+      default: "",
+      type: "String"
+    });
+    this.addToParamLabels(
+      "Bucket Name for Source Prefix List File",
+      srcPrefixListBucket.logicalId
     );
 
     const srcSkipCompare = new CfnParameter(this, "srcSkipCompare", {
@@ -241,6 +252,36 @@ export class DataTransferS3Stack extends Stack {
     });
     this.addToParamLabels("Destination Access Control List", destAcl.logicalId);
 
+    const destPutObjectSSEType = new CfnParameter(
+      this,
+      "destPutObjectSSEType",
+      {
+        description:
+          "Specifies the server-side encryption algorithm used for storing objects in Amazon S3 (PutObjectPolicy).",
+        default: "None",
+        type: "String",
+        allowedValues: ["None", "AES256", "AWS_KMS"]
+      }
+    );
+    this.addToParamLabels(
+      "Destination Bucket PutObjectPolicy SSE Type",
+      destPutObjectSSEType.logicalId
+    );
+
+    const destPutObjectSSEKmsKeyId = new CfnParameter(
+      this,
+      "destPutObjectSSEKmsKeyId",
+      {
+        description: "Destination Bucket SSE KMS Key ID (Optional). This field is required only if the SSE Type in your Destination Bucket's PutObject Policy is set to 'AWS_KMS'.",
+        default: "",
+        type: "String"
+      }
+    );
+    this.addToParamLabels(
+      "Destination Bucket SSE KMS Key ID",
+      destPutObjectSSEKmsKeyId.logicalId
+    );
+
     const ec2VpcId = new CfnParameter(this, "ec2VpcId", {
       description: "VPC ID to run EC2 task, e.g. vpc-bef13dc7",
       default: "",
@@ -260,7 +301,7 @@ export class DataTransferS3Stack extends Stack {
       description: "The amount of memory (in GB) used by the Finder task.",
       default: "8",
       type: "String",
-      allowedValues: ["8", "16", "32", "64", "128", "256"]
+      allowedValues: ["8", "16", "32", "64", "128", "256", "384", "512"]
     });
     this.addToParamLabels("EC2 Finder Memory", finderEc2Memory.logicalId);
 
@@ -323,6 +364,7 @@ export class DataTransferS3Stack extends Stack {
       srcBucket.logicalId,
       srcPrefix.logicalId,
       srcPrefixsListFile.logicalId,
+      srcPrefixListBucket.logicalId,
       srcRegion.logicalId,
       srcEndpoint.logicalId,
       srcInCurrentAccount.logicalId,
@@ -339,7 +381,9 @@ export class DataTransferS3Stack extends Stack {
       destInCurrentAccount.logicalId,
       destCredentials.logicalId,
       destStorageClass.logicalId,
-      destAcl.logicalId
+      destAcl.logicalId,
+      destPutObjectSSEType.logicalId,
+      destPutObjectSSEKmsKeyId.logicalId
     );
     this.addToParamGroups("Notification Information", alarmEmail.logicalId);
     this.addToParamGroups(
@@ -420,7 +464,12 @@ export class DataTransferS3Stack extends Stack {
       `DestBucket`,
       destBucket.valueAsString
     );
-
+    const prefixListFileIBucket = s3.Bucket.fromBucketName(
+      this,
+      `PrefixListFileBucket`,
+      srcPrefixListBucket.valueAsString
+    );
+    
     // Get VPC
     const vpc = ec2.Vpc.fromVpcAttributes(this, "EC2Vpc", {
       vpcId: ec2VpcId.valueAsString,
@@ -498,6 +547,7 @@ export class DataTransferS3Stack extends Stack {
       SRC_BUCKET: srcBucket.valueAsString,
       SRC_PREFIX: srcPrefix.valueAsString,
       SRC_PREFIX_LIST: srcPrefixsListFile.valueAsString,
+      SRC_PREFIX_LIST_BUCKET: srcPrefixListBucket.valueAsString,
       SRC_REGION: srcRegion.valueAsString,
       SRC_ENDPOINT: srcEndpoint.valueAsString,
       SRC_CREDENTIALS: srcCredentials.valueAsString,
@@ -528,7 +578,10 @@ export class DataTransferS3Stack extends Stack {
     commonStack.sqsQueue.grantSendMessages(finderStack.finderRole);
     srcIBucket.grantRead(finderStack.finderRole);
     destIBucket.grantRead(finderStack.finderRole);
-    multipartStateMachine.multiPartControllerStateMachine.grantRead(finderStack.finderRole);
+    prefixListFileIBucket.grantRead(finderStack.finderRole);
+    multipartStateMachine.multiPartControllerStateMachine.grantRead(
+      finderStack.finderRole
+    );
 
     const workerEnv = {
       JOB_TABLE_NAME: commonStack.jobTable.tableName,
@@ -554,6 +607,8 @@ export class DataTransferS3Stack extends Stack {
       DEST_IN_CURRENT_ACCOUNT: destInCurrentAccount.valueAsString,
       DEST_STORAGE_CLASS: destStorageClass.valueAsString,
       DEST_ACL: destAcl.valueAsString,
+      DEST_SSE_TYPE: destPutObjectSSEType.valueAsString,
+      DEST_SSE_KMS_KEY_ID: destPutObjectSSEKmsKeyId.valueAsString,
 
       FINDER_DEPTH: finderDepth.valueAsString,
       FINDER_NUMBER: finderNumber.valueAsString,
@@ -581,7 +636,9 @@ export class DataTransferS3Stack extends Stack {
       commonStack.sqsQueue.grantSendMessages(ec2Stack.workerAsg.role);
       srcIBucket.grantRead(ec2Stack.workerAsg.role);
       destIBucket.grantReadWrite(ec2Stack.workerAsg.role);
-      multipartStateMachine.multiPartControllerStateMachine.grantStartExecution(ec2Stack.workerAsg.role);
+      multipartStateMachine.multiPartControllerStateMachine.grantStartExecution(
+        ec2Stack.workerAsg.role
+      );
 
       asgName = ec2Stack.workerAsg.autoScalingGroupName;
     }

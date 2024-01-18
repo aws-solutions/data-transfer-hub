@@ -49,7 +49,15 @@ const FinderMemory: React.FC<Page> = () => {
             <td>256GB</td>
           </tr>
           <tr>
-            <td>&gt;640 M</td>
+            <td>960 M</td>
+            <td>384GB</td>
+          </tr>
+          <tr>
+            <td>1280 M</td>
+            <td>512GB</td>
+          </tr>
+          <tr>
+            <td>&gt;1280 M</td>
             <td>{t("comps.finderMemory.notSupport")}</td>
           </tr>
         </table>

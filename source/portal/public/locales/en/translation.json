@@ -127,10 +127,11 @@
           "objectACLDesc3": " Use the default value if you don't want to set the object ACL.",
           "transferType": "Transfer Type",
           "nameOfPrefixList": "Name of Prefix List",
-          "nameOfPrefixListDesc": "Upload the prefix list (.txt file, one prefix per line) in root directory of source bucket. E.g. prefix_list.txt",
+          "nameOfPrefixListDesc": "Upload the prefix list (.txt file, one prefix per line) in root directory of <0></0>. E.g. prefix_list.txt",
           "govCloudTips": "GovCloud data transfer limited in US",
           "payerRequest": "Enable S3 Payer Request?",
-          "payerRequestDesc": "S3 Payer Request required the Requestor pay DTO fee"
+          "payerRequestDesc": "S3 Payer Request required the Requester pay DTO fee",
+          "solutionLoggingBucket": "Solution logging bucket"
         },
         "dest": {
           "title": "Destination settings",
@@ -143,7 +144,11 @@
           "storageClass": "Storage Class",
           "storageClassDesc": "Objects will be stored with the selected storage class.",
           "destRegionName": "Region Name",
-          "destRegionNameDesc": "You can enter region name or region code."
+          "destRegionNameDesc": "You can enter region name or region code.",
+          "encryptionType": "Encryption type",
+          "encryptionTypeDesc": "Check the destination bucket encryption type.",
+          "encryptionKey": "KMS Key ID",
+          "encryptionKeyDesc": "Input the KMS Key ID for access destination bucket"
         },
         "credential": {
           "title": "Credentials",
@@ -397,7 +402,8 @@
       "destPrefixInvalid": "Do not append / at the end of the prefix",
       "emailRequired": "Alarm Email is required",
       "emailValidate": "Alarm Email must be validate",
-      "credentialRequired": "Secret Key is Required"
+      "credentialRequired": "Secret Key is Required",
+      "kmsKeyRequired": "Please input the KMS Key ID"
     }
   },
   "comps": {
@@ -448,7 +454,7 @@
     },
     "engineSettingsEC2": {
       "name": "Engine settings",
-      "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimum,  maximum and desired instance number. The transfer engine will auto scale between the minimun value and maximum value.",
+      "tip1": "The S3 transfer engine use Amazon EC2 Graviton2 in an Auto Scaling Group to transfer objects. You can adjust the concurrency by setting the minimum,  maximum and desired instance number. The transfer engine will auto scale between the minimum value and maximum value.",
       "tip2": "You can adjust these numbers on Amazon Web Services Console after creating the task.",
       "linkName": "Adjust the Auto Scaling Group to change the transfer concurrency."
     },
@@ -467,7 +473,7 @@
       "numberName": "Finder Number",
       "ex1": "Example 1: ",
       "ex2": "Example 2: ",
-      "tip1": "If there're 10 subdirectories with over 100k files each, it's recommended to set finderDepth=1 and finderNumber=10",
+      "tip1": "If there are 10 subdirectories with over 100k files each, it's recommended to set finderDepth=1 and finderNumber=10",
       "tip2": "If the transferred files are under two tier subdirectories, with 10 tier 1 subdirectories and 15 tier 2 subdirectories incl. over 100k leaf objects each. It is recommended to set finderDepth=2, finderNumber=10*15=150"
     },
     "finderMemory": {

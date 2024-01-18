@@ -48,6 +48,8 @@ export interface S3ec2Task {
     chunkSize?: string;
     maxThreads?: string;
     isPayerRequest: string;
+    destPutObjectSSEType: string;
+    destPutObjectSSEKmsKeyId: string;
   };
   [key: string]: any;
 }

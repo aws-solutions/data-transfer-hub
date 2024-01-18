@@ -58,7 +58,7 @@ In AWS Regions where Amazon Cognito is not yet available, you can use OIDC to pr
 7. Save the `App ID` (that is, `client_id`) and `Issuer` to a text file from Endpoint Information, which will be used later.
     [![](../images/OIDC/endpoint-info.png)](../images/OIDC/endpoint-info.png)
 
-8. Update the `Login Callback URL` and `Logout Callback URL` to your IPC recorded domain name.
+8. Update the `Login Callback URL` and `Logout Callback URL` to your ICP recorded domain name.
     [![](../images/OIDC/authentication-configuration.png)](../images/OIDC/authentication-configuration.png)
 
 9. Set the Authorization Configuration.

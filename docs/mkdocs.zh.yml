@@ -31,7 +31,9 @@ nav:
         - 创建 Amazon ECR 传输任务: user-guide/tutorial-ecr.md
         - 从阿里云 OSS 传输 S3 对象: user-guide/tutorial-oss.md
         - 通过 Direct Connect 传输 S3 对象: user-guide/tutorial-directconnect.md
-        - 使用 AWS CLI 创建 S3 传输任务: user-guide/tutorial-cli-launch.md
+    - 技术教程:
+        - 为 Amazon S3 设置凭证: tutorial/IAM-Policy_CN.md
+        - S3 源存储桶启用 SSE-CMK 的策略: tutorial/S3-SSE-KMS-Policy_CN.md
     - 更新解决方案: update.md
     - 卸载解决方案: uninstall.md
     - 常见问题解答: faq.md

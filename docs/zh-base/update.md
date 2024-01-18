@@ -7,8 +7,7 @@
 
 * [步骤 1. 更新 CloudFormation 堆栈](#1)
 * [步骤 2. （可选）更新 OIDC 配置](#oidc-update)
-* [步骤 3. 在 CloudFront 创建失效](#cloudfront)
-* [步骤 4. 刷新网页控制台](#4)
+* [步骤 3. 刷新网页控制台](#3)
 
 ## 步骤 1. 更新 CloudFormation 堆栈
 

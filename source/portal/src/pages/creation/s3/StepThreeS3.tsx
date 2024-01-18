@@ -31,6 +31,7 @@ import {
   CREATE_USE_LESS_PROPERTY,
   DRH_CONFIG_JSON_NAME,
   YES_NO,
+  S3SourcePrefixType,
 } from "assets/config/const";
 import {
   ACTION_TYPE,
@@ -44,6 +45,7 @@ import { ScheduleType } from "API";
 
 const mapState = (state: IState) => ({
   tmpTaskInfo: state.tmpTaskInfo,
+  amplifyConfig: state.amplifyConfig,
 });
 
 const JOB_TYPE_MAP: any = {
@@ -64,7 +66,7 @@ const StepThreeS3: React.FC = () => {
     }
   }, [i18n.language]);
 
-  const { tmpTaskInfo } = useMappedState(mapState);
+  const { tmpTaskInfo, amplifyConfig } = useMappedState(mapState);
   const [paramShowList, setParamShowList] = useState<any>([]);
   const [createTaskGQL, setCreateTaskGQL] = useState<any>();
   const [isCreating, setIsCreating] = useState(false);
@@ -135,6 +137,14 @@ const StepThreeS3: React.FC = () => {
       ParameterKey: "srcPrefixsListFile",
       ParameterValue: parametersObj.srcPrefixsListFile,
     });
+    // set prefix bucket
+    if (parametersObj.srcPrefixType === S3SourcePrefixType.MultiplePrefix) {
+      taskParamArr.push({
+        ParameterKey: "srcPrefixListBucket",
+        ParameterValue: amplifyConfig.src_prefix_list_bucket,
+      });
+    }
+
     taskParamArr.push({
       ParameterKey: "srcEvent",
       ParameterValue: parametersObj.enableS3Event,
@@ -185,6 +195,14 @@ const StepThreeS3: React.FC = () => {
       ParameterValue: tmpIsPayerRequest,
     });
     taskParamArr.push({
+      ParameterKey: "destPutObjectSSEType",
+      ParameterValue: parametersObj.destPutObjectSSEType,
+    });
+    taskParamArr.push({
+      ParameterKey: "destPutObjectSSEKmsKeyId",
+      ParameterValue: parametersObj.destPutObjectSSEKmsKeyId,
+    });
+    taskParamArr.push({
       ParameterKey: "destAcl",
       ParameterValue: parametersObj.destAcl,
     });
@@ -228,6 +246,7 @@ const StepThreeS3: React.FC = () => {
       ParameterKey: "alarmEmail",
       ParameterValue: parametersObj.alarmEmail,
     });
+
     return taskParamArr;
   };
 

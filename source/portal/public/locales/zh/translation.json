@@ -127,10 +127,11 @@
           "objectACLDesc3": " 如果您不想设置对象ACL，请使用默认值.",
           "transferType": "传输类型",
           "nameOfPrefixList": "前缀列表文件名",
-          "nameOfPrefixListDesc": "请将前缀文件以.txt的格式上传到源存储桶根目录，每行写一个前缀。例如: prefix_list.txt",
+          "nameOfPrefixListDesc": "请将前缀文件以.txt的格式上传到<0></0>根目录，每行写一个前缀。例如: prefix_list.txt",
           "govCloudTips": "GovCloud 数据传输仅限在美国",
           "payerRequest": "使用申请方付款?",
-          "payerRequestDesc": "使用申请方付款存储桶时，申请方将支付请求和从存储桶下载数据的费用"
+          "payerRequestDesc": "使用申请方付款存储桶时，申请方将支付请求和从存储桶下载数据的费用",
+          "solutionLoggingBucket": "解决方案日志存储桶"
         },
         "dest": {
           "title": "目标桶设置",
@@ -143,7 +144,11 @@
           "storageClass": "存储类型",
           "storageClassDesc": "对象将会传输到您所选择的存储类型.",
           "destRegionName": "目标区域名称",
-          "destRegionNameDesc": "您可以输入区域名称或区域代码."
+          "destRegionNameDesc": "您可以输入区域名称或区域代码.",
+          "encryptionType": "加密类型",
+          "encryptionTypeDesc": "检查目标存储桶加密类型。",
+          "encryptionKey": "KMS 密钥 ID",
+          "encryptionKeyDesc": "输入访问目标存储桶的 KMS 密钥 ID"
         },
         "credential": {
           "title": "凭证",
@@ -397,7 +402,8 @@
       "destPrefixInvalid": "不需要在后缀后面添加‘/’",
       "emailRequired": "通知邮箱必填",
       "emailValidate": "请输入合法的通知邮箱地址",
-      "credentialRequired": "凭证参数必填"
+      "credentialRequired": "凭证参数必填",
+      "kmsKeyRequired": "请输入 KMS 秘钥 ID"
     }
   },
   "comps": {

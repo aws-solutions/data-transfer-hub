@@ -13,12 +13,15 @@
 | 亚太地区（首尔）区域 | ap-northeast-2
 | 亚太地区（新加坡）区域 | ap-southeast-1
 | 亚太地区（悉尼）区域 | ap-southeast-2
+| 亚太地区（墨尔本）区域 | ap-southeast-4
 | 加拿大（中部）区域 | ca-central-1
+| 加拿大（卡尔加里）区域 | ca-west-1
 | 欧洲（爱尔兰）区域 | eu-west-1
 | 欧洲（伦敦）区域 | eu-west-2
 | 欧洲（米兰）区域 | eu-north-1
 | 欧洲（法兰克福）区域 | eu-central-1
 | 南美洲（圣保罗）区域 | sa-east-1
+| 以色列（特拉维夫）区域 | il-central-1
 
 ## 支持部署的中国区域
 

@@ -226,6 +226,8 @@ export class Ec2WorkerStack extends Construct {
       `echo "export DEST_IN_CURRENT_ACCOUNT=${props.env.DEST_IN_CURRENT_ACCOUNT}" >> env.sh`,
       `echo "export DEST_STORAGE_CLASS=${props.env.DEST_STORAGE_CLASS}" >> env.sh`,
       `echo "export DEST_ACL=${props.env.DEST_ACL}" >> env.sh`,
+      `echo "export DEST_SSE_TYPE=${props.env.DEST_SSE_TYPE}" >> env.sh`,
+      `echo "export DEST_SSE_KMS_KEY_ID=${props.env.DEST_SSE_KMS_KEY_ID}" >> env.sh`,
 
       // `echo "export MULTIPART_THRESHOLD=${props.env.MULTIPART_THRESHOLD}" >> env.sh`,
       // `echo "export CHUNK_SIZE=${props.env.CHUNK_SIZE}" >> env.sh`,

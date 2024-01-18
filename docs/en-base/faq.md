@@ -35,7 +35,7 @@ Not supported currently. For this scenario, we recommend using Amazon S3's [Cros
 
 **7. Can I use AWS CLI to create a DTH S3 Transfer Task?**</br>
 
-Yes. Please refer to the tutorial [Using AWS CLI to launch DTH S3 Transfer task](../user-guide/tutorial-cli-launch).
+Yes. Please refer to the tutorial [Using AWS CLI to launch DTH S3 Transfer task](../user-guide/tutorial-s3#using-aws-cli).
 
 ## Performance
 

@@ -1,4 +1,4 @@
-The Data Transfer Hub solution provides secure, scalable, and trackable data transfer for Amazon Simple Storage Service (Amazon S3) objects and Amazon Elastic Container Registry (Amazon ECR) images. This data transfer helps customers expand their businesses globally by easily moving data in and out of Amazon Web Services (AWS) China Regions. 
+The Data Transfer Hub solution provides secure, scalable, and trackable data transfer for Amazon Simple Storage Service (Amazon S3) objects and Amazon Elastic Container Registry (Amazon ECR) images. This data transfer helps customers easily create and manage different types (Amazon S3 object and Amazon ECR image) of transfer tasks between AWS [partitions](https://docs.aws.amazon.com/whitepapers/latest/aws-fault-isolation-boundaries/partitions.html) (for example, aws, aws-cn, aws-us-gov), and from other cloud providers to AWS. 
 
 This implementation guide provides an overview of the Data Transfer Hub solution, its reference architecture and components, considerations for planning the deployment, configuration steps for deploying the Data Transfer Hub solution to the AWS Cloud. 
 

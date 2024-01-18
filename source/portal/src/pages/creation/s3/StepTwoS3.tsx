@@ -26,6 +26,7 @@ import EC2Config from "./comps/EC2Config";
 import OptionSettings from "./comps/MoreSettings";
 
 import {
+  S3_ENCRYPTION_TYPE,
   bucketNameIsValid,
   emailIsValid,
   urlIsValid,
@@ -60,6 +61,7 @@ const StepTwoS3: React.FC = () => {
   const [alarmEmailFormatError, setAlarmEmailFormatError] = useState(false);
 
   const [fixedRateInvalidError, setFixedRateInvalidError] = useState(false);
+  const [kmsKeyRequiredError, setKmsKeyRequiredError] = useState(false);
 
   useEffect(() => {
     // if the taskInfo has no taskType, redirect to Step one
@@ -143,6 +145,16 @@ const StepTwoS3: React.FC = () => {
             }
           }
         }
+        // check kms key required
+        if (
+          paramsObj?.destPutObjectSSEType === S3_ENCRYPTION_TYPE.AWS_KMS &&
+          !paramsObj?.destPutObjectSSEKmsKeyId?.trim()
+        ) {
+          setKmsKeyRequiredError(true);
+          errorCount++;
+        } else {
+          setKmsKeyRequiredError(false);
+        }
       }
     }
 
@@ -188,9 +200,13 @@ const StepTwoS3: React.FC = () => {
     setFixedRateInvalidError(false);
   }, [tmpTaskInfo?.parametersObj?.ec2CronExpression]);
 
+  useEffect(() => {
+    setKmsKeyRequiredError(false);
+  }, [tmpTaskInfo?.parametersObj?.destPutObjectSSEKmsKeyId]);
+
   // END Monitor tmpTaskInfo and hide validation error
   const goToHomePage = () => {
-    navigate("/");
+    navigate(-1);
   };
 
   const goToStepOne = () => {
@@ -217,6 +233,7 @@ const StepTwoS3: React.FC = () => {
     setDestPrefixFormatError(false);
     setAlramEmailRequireError(false);
     setAlarmEmailFormatError(false);
+    setKmsKeyRequiredError(false);
   }, [tmpTaskInfo?.parametersObj?.sourceType]);
 
   return (
@@ -259,6 +276,7 @@ const StepTwoS3: React.FC = () => {
                 destShowBucketValidError={destBucketFormatError}
                 destShowRegionRequiredError={destRegionRequiredError}
                 destShowPrefixFormatError={destPrefixFormatError}
+                kmsKeyRequiredError={kmsKeyRequiredError}
               />
               {engine === S3_ENGINE_TYPE.LAMBDA && <LambdaConfig />}
               {engine === S3_ENGINE_TYPE.EC2 && (

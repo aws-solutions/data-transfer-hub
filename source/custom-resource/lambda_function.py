@@ -25,6 +25,7 @@ default_region = os.environ.get("AWS_REGION")
 s3 = boto3.resource("s3", region_name=default_region, config=default_config)
 
 bucket_name = os.environ.get("WEB_BUCKET_NAME")
+src_prefix_list_bucket = os.environ.get("SRC_PREFIX_LIST_BUCKET_NAME")
 api_endpoint = os.environ.get("API_ENDPOINT")
 user_pool_id = os.environ.get("USER_POOL_ID")
 user_pool_client_id = os.environ.get("USER_POOL_CLIENT_ID")
@@ -65,12 +66,12 @@ def upgrade_data():
 
 
 def get_config_str():
-    """ Get config string """
+    """Get config string"""
     export_json = {
         "taskCluster": {
             "ecsVpcId": ecs_vpc_id,
-            "ecsClusterName":ecs_cluster_name,
-            "ecsSubnets": ecs_subnets.split(",")
+            "ecsClusterName": ecs_cluster_name,
+            "ecsSubnets": ecs_subnets.split(","),
         },
         "aws_appsync_region": region,
         "aws_appsync_authenticationType": authentication_type,
@@ -82,14 +83,15 @@ def get_config_str():
         "aws_oidc_client_id": client_id,
         "aws_cloudfront_url": cloudfront_url,
         "aws_appsync_graphqlEndpoint": api_endpoint,
-        "aws_user_pools_web_client_id": user_pool_client_id
+        "aws_user_pools_web_client_id": user_pool_client_id,
+        "src_prefix_list_bucket": src_prefix_list_bucket,
     }
 
     return json.dumps(export_json)
 
 
 def write_to_s3(config_str):
-    """ Write config file to S3 """
+    """Write config file to S3"""
     logger.info("Put config file to S3")
     key_name = "aws-exports.json"
     s3.Bucket(bucket_name).put_object(Key=key_name, Body=config_str)
@@ -97,7 +99,7 @@ def write_to_s3(config_str):
 
 
 def cloudfront_invalidate(distribution_id, distribution_paths):
-    """ Create a CloudFront invalidation request """
+    """Create a CloudFront invalidation request"""
     invalidation_resp = cloudfront.create_invalidation(
         DistributionId=distribution_id,
         InvalidationBatch={

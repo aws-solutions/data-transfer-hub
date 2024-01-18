@@ -330,6 +330,10 @@ const StepTwoECR: React.FC = () => {
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("sourceInAccount", sourceInAccount);
+    if (sourceInAccount === YES_NO.YES) {
+      updatetmpECRTaskInfo("srcAccountId", "");
+      updatetmpECRTaskInfo("srcCredential", "");
+    }
   }, [sourceInAccount]);
 
   useEffect(() => {
@@ -361,6 +365,10 @@ const StepTwoECR: React.FC = () => {
   useEffect(() => {
     // Update tmpECRTaskInfo
     updatetmpECRTaskInfo("destInAccount", destInAccount);
+    if (destInAccount === YES_NO.YES) {
+      updatetmpECRTaskInfo("destAccountId", "");
+      updatetmpECRTaskInfo("destCredential", "");
+    }
   }, [destInAccount]);
 
   useEffect(() => {

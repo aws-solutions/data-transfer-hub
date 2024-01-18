@@ -6,8 +6,7 @@ Use the following steps to upgrade the solution on AWS console.
 
 * [Step 1. Update the CloudFormation Stack](#step-1-update-the-cloudformation-stack)
 * [Step 2. (Optional) Update the OIDC configuration](#oidc-update)
-* [Step 3. Create an invalidation on CloudFront](#step-3-create-an-invalidation-on-cloudfront)
-* [Step 4. Refresh the web console](#step-4-refresh-the-web-console)
+* [Step 3. Refresh the web console](#step-3-refresh-the-web-console)
 
 ## Step 1. Update the CloudFormation stack
 

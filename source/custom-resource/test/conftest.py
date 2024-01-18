@@ -16,6 +16,7 @@ def default_environment_variables():
     os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 
     os.environ["WEB_BUCKET_NAME"] = "solution-web-bucket"
+    os.environ["SRC_PREFIX_LIST_BUCKET_NAME"] = "solution-web-logging-bucket"
     os.environ["API_ENDPOINT"] = "https:/solution.xxx.amazonaws.com/graphql"
     os.environ["USER_POOL_ID"] = "abc"
     os.environ["USER_POOL_CLIENT_ID"] = "abcd"

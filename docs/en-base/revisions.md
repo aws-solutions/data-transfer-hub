@@ -1,5 +1,5 @@
 | Date | Description|
-|----------|--------|
+|----------------|--------|
 | January 2021 | Initial release of version 1.0 |
 | July 2021 | Released version 2.0 <br> 1. Support general OIDC providers, including Authing, Auth0, okta, etc.<br> 2. Support transferring objects from more Amazon S3 compatible storage services, such as Huawei Cloud OBS.<br> 3. Support setting the access control list (ACL) of the target bucket object<br> 4. Support deployment in account A, and copying data from account B to account C<br> 5. Change to use Graviton 2 instance, and turn on BBR to transfer S3 objects to improve performance and save costs<br> 6. Change to use Secrets Manager to maintain credential information |
 | December 2021 | Released version 2.1 <br> 1. Support custom prefix list to filter transfer tasks<br> 2. Support configuration of single-run file transfer tasks<br> 3. Support configuration of tasks through custom CRON Expression timetable<br> 4. Support manual enabling or disabling of data comparison function |
@@ -7,3 +7,4 @@
 | March 2023 | Released version 2.3 <br> 1. Support embedded dashboard and logs <br> 2. Support S3 Access Key Rotation <br> 3. Enhance One Time Transfer Task monitoring| 
 | April 2023 | Released version 2.4 <br> 1. Support payer request S3 object transfer| 
 | September 2023 | Released version 2.5 <br> 1. Added support for transferring ECR assets without tags <br> 2. Optimize stop task operation, add new filter condition to view all history tasks <br> 3. Enhanced transfer performance by utilizing cluster capabilities through parallel multipart upload for large file transfers <br> 4.Added automatic restart functionality for the Worker CLI <br> 5.Enabled IMDSv2 by default for Auto Scaling Groups | 
+| January 2024 | Released version 2.6 <br> 1. Added support for Amazon S3 destination bucket being encrypted with Amazon S3 managed keys <br> 2. Provided the optional Amazon S3 bucket to hold prefix list file <br> 3. Added the feature of deleting KMS Key automatically after the solution pipeline status turns to stopped  <br> 4. Added the feature that Finder Instance enables DTH-CLI automatically after external reboot <br> 5. Increased Finder capacity to 316GB&512GB  <br> 6. Added three supported Regions: Asia Pacific (Melbourne), Canada (Calgary), Israel (Tel Aviv)  | 
