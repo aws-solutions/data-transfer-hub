@@ -1,7 +1,7 @@
 The solution allows you to create an Amazon S3 transfer task in the following ways:
 
 - [using the web console](#using-the-web-console)
-- [using the S3 plugin](#using-the-dth-s3-plugin)
+- [using the S3 plugin](#using-the-s3-plugin)
 - [using AWS CLI](#using-aws-cli)
 
 You can make your choice according to your needs.
@@ -164,6 +164,10 @@ Please follow below steps to deploy this solution via AWS Cloudformation.
     - For AWS Global Regions
 
       [![Launch Stack](../images/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
+
+    - For AWS GovCloud (US) Regions
+
+      [![Launch Stack](../images/launch-stack.svg)](https://console.amazonaws-us-gov.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
     
 1. Click **Next**. Specify values to parameters accordingly. Change the stack name if required.
 

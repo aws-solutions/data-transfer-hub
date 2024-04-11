@@ -2,7 +2,7 @@
 
 1. 创建一个具有两个公有子网或两个拥有[NAT 网关][nat] 私有子网的Amazon VPC。
 
-2. 根据需要替换`<CLOUDFORMATION_URL>`为`https://s3.amazonaws.com/solutions-reference/data-transfer-hub/latest/DataTransferS3Stack-ec2.template`。
+2. 根据需要替换`<CLOUDFORMATION_URL>`为`https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template`。
 
 3. 转到您的终端并输入以下命令。详情请参考**参数列表**。
 

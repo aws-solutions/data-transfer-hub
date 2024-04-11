@@ -1,12 +1,18 @@
 该解决方案允许您通过以下方式创建 Amazon ECR 传输任务：
 
-- 使用控制台传输任务
-- 使用 DTH ECR 插件传输任务
-- 使用 AWS CLI 创建传输任务
+- [使用控制台传输任务](#console-launch)
+- [使用 DTH ECR 插件传输任务](#plugin-launch)
+- [使用AWS CLI创建传输任务](#cli-launch)
 
-想要了解这几种方式的更多信息，可参考[创建 Amazon S3 传输任务](./tutorial-s3.md)。
+您可以根据您的需要进行选择。
 
-## 使用控制台传输任务
+- Web 控制台提供直观的用户界面，您只需单击即可启动、克隆或停止数据传输任务。前端还提供指标监控和日志记录视图，因此您无需在不同页面之间切换。
+
+- ECR 插件是一个独立的 CloudFormation 模板，您可以轻松地将其集成到您的工作流程中。由于此选项允许在没有前端的情况下进行部署，因此如果您想在 AWS 中国区域部署但没有 ICP 备案的域名，则此选项非常有用。
+
+- AWS CLI可以快速启动数据传输任务。如果您想在自动化脚本中使用该解决方案，请选择此选项。
+
+## 使用控制台传输任务 <a name="console-launch"></a>
 您可以在网页控制台创建Amazon ECR数据传输任务。更多信息请参考[部署解决方案](../../deployment/deployment-overview)。
 
 1. 从**创建传输任务**页面，选择**创建新任务**，然后选择**下一步**。
@@ -37,7 +43,7 @@
 
 任务创建成功后，会出现在任务页面。
 
-## 使用DTH ECR 插件传输任务
+## 使用DTH ECR 插件传输任务 <a name="plugin-launch"></a>
 
     !!! note "注意"
 
@@ -102,6 +108,10 @@
 
   [![Launch Stack](../images/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHECRStack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template)
 
+  - 部署到AWS GovCloud (US) 区
+
+  [![Launch Stack](../images/launch-stack.svg)](https://console.amazonaws-us-gov.com/cloudformation/home#/stacks/create/template?stackName=DTHECRStack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template)
+
     
 1.单击**下一步**。 相应地为参数指定值。 如果需要，请更改堆栈名称。
 
@@ -111,7 +121,7 @@
 
 部署预计用时3-5分钟
 
-## 使用AWS CLI创建传输任务
+## 使用AWS CLI创建传输任务 <a name="cli-launch"></a>
 您可以使用 [AWS CLI][aws-cli] 创建 Amazon ECR传输任务。如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。
 
 1. 创建一个具有两个公有子网或两个拥有[NAT 网关][nat] 私有子网的Amazon VPC。

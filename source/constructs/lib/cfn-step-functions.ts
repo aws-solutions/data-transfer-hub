@@ -160,6 +160,9 @@ export class CloudFormationStateMachine extends Construct {
             "dynamodb:UpdateItem",
             "dynamodb:DescribeContinuousBackups",
             "dynamodb:UpdateContinuousBackups",
+            "dynamodb:UpdateContinuousBackups",
+            "dynamodb:TagResource",
+            "dynamodb:ListTagsOfResource",
           ],
           resources: [
             `arn:${Aws.PARTITION}:dynamodb:${Aws.REGION}:${Aws.ACCOUNT_ID}:table/DTH*`,
@@ -214,6 +217,7 @@ export class CloudFormationStateMachine extends Construct {
             "ecs:RegisterTaskDefinition",
             "ecs:DeregisterTaskDefinition",
             "ecs:DescribeTaskDefinition",
+            "ecs:TagResource",
           ],
           resources: [`*`]
         }),
