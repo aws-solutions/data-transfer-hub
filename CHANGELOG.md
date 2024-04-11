@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2024-04-11
+
+### Fixed
+
+- Fix the ECR transfer task creation issue #147
+- Fix the S3 transfer task creation issue #141
+- Fix the Gov Cloud S3 transfer task assets issue #140
+- Fix the error s3 plugin address issue #145
+
 ## [2.6.0] - 2024-01-18 
 
 ### Added

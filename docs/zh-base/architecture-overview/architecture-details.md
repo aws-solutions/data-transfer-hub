@@ -34,8 +34,8 @@
 
 Amazon S3传输引擎运行Amazon S3插件，用于将对象从其来源传输到S3存储桶中。S3插件支持以下功能：
 
-- 在AWS中国区域和AWS区域之间传输Amazon S3对象
-- 从阿里云OSS/Tencent COS/Qiniu Kodo传输对象到Amazon S3
+- 在AWS中国区域和其它AWS区域之间传输Amazon S3对象
+- 从其它云提供商传输对象到Amazon S3
 - 从S3兼容存储服务传输对象到Amazon S3
 - 支持通过S3事件进行几乎实时的传输
 - 支持传输对象元数据
@@ -47,7 +47,7 @@ Amazon S3传输引擎运行Amazon S3插件，用于将对象从其来源传输�
 
 Amazon ECR引擎运行Amazon ECR插件，用于从其他容器注册表传输容器镜像。ECR插件支持以下功能：
 
-- 在AWS中国区域和AWS区域之间传输Amazon ECR镜像
+- 在AWS中国区域和其它AWS区域之间传输Amazon ECR镜像
 - 从公共容器注册表（如Docker Hub、GCR.io、Quay.io）传输到Amazon ECR
 - 传输选定的镜像到Amazon ECR
 - 从Amazon ECR传输所有镜像和标签

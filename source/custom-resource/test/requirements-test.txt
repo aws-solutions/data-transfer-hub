@@ -1,6 +1,6 @@
-moto
+moto==3.1.18
 pytest
 pytest-cov
 pyyaml
-openapi_spec_validator
+openapi_spec_validator==0.3.3
 docker

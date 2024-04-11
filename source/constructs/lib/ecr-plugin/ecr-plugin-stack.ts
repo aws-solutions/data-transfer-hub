@@ -597,7 +597,7 @@ export class DataTransferECRStack extends Stack {
           'ecs:RunTask'
         ],
         resources: [
-          taskDefArnNoVersion
+          `${taskDefArnNoVersion}*`
         ]
       }),
       new iam.PolicyStatement({

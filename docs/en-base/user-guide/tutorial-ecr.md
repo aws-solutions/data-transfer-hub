@@ -1,10 +1,16 @@
 The solution allows you to create an Amazon ECR transfer task in the following ways:
 
 - [using the web console](#using-the-web-console)
-- [using the ECR plugin](#using-the-dth-ecr-plugin)
+- [using the ECR plugin](#using-the-ecr-plugin)
 - [using AWS CLI](#using-aws-cli)
 
-For a comparison between those options, refer to [Create Amazon S3 transfer task](./tutorial-s3.md).
+You can make your choice according to your needs.
+
+- The web console provides an intuitive user interface where you can start, clone or stop a data transfer task with a simple click. The frontend also provides metric monitoring and logging view, so you do not need to switch between different pages.
+
+- The ECR plugin is a standalone CloudFormation template, and you can easily integrate it into your workflows. Because this option allows deployment without the frontend, it is useful if you want to deploy in AWS China Regions but do not have an ICP licensed domain.
+
+- AWS CLI can quickly initiate data transfer tasks. Select this option if you want to leverage Data Transfer Hub in your automation scripts.
 
 ## Using the web console
 You can use the web console to create an Amazon ECR transfer task. For more information about how to launch the web console, see [deployment](../../deployment/deployment-overview). 
@@ -101,6 +107,10 @@ Please follow below steps to deploy this plugin via AWS Cloudformation.
     - For AWS Global Regions
 
     [![Launch Stack](../images/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHECRStack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template)
+
+    - For AWS GovCloud (US) Regions
+
+    [![Launch Stack](../images/launch-stack.svg)](https://console.amazonaws-us-gov.com/cloudformation/home#/stacks/create/template?stackName=DTHECRStack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferECRStack.template)
     
 1. Click **Next**. Specify values to parameters accordingly. Change the stack name if required.
 

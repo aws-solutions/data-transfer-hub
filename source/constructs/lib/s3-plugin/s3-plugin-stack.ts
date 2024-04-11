@@ -665,10 +665,8 @@ export class DataTransferS3Stack extends Stack {
       })
     );
 
-    // Here we create the notification resource by default
-    // Using cdk condition to enable or disable this notification
-    // Using cdk Aspects to modify the event type.
-    // Lambda to enable bucket notification of log source account.
+    // Here we using Custom resource Lambda to determine whether to enable or disable S3 Event.
+    // We do not use CloudFormation intrinsic function to create S3 Event because our creation logic is complex.
     const s3NotificationHelperFn = new lambda.Function(
       this,
       "s3NotificationHelperFn",
@@ -692,7 +690,7 @@ export class DataTransferS3Stack extends Stack {
         }
       }
     );
-    // Create the policy and role for the Lambda to create and delete CloudWatch Log Group Subscription Filter with cross-account scenario
+    // Create the policy and role for the Lambda to create and delete S3 notification
     s3NotificationHelperFn.addToRolePolicy(
       new iam.PolicyStatement({
         actions: ["s3:GetBucketNotification", "s3:PutBucketNotification"],

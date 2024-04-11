@@ -52,6 +52,10 @@ Please follow below steps to deploy this solution via AWS Cloudformation.
 
       [![Launch Stack](./images/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
     
+    - For AWS GovCloud (US) Regions
+
+    [![Launch Stack](../images/launch-stack.svg)](https://console.amazonaws-us-gov.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
+
 1. Click **Next**. Specify values to parameters accordingly. Change the stack name if required.
 
 1. Click **Next**. Configure additional stack options such as tags (Optional). 

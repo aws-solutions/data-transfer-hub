@@ -33,8 +33,8 @@ This solution provides a simple web console which allows you to create and manag
 ### Amazon S3 transfer engine
 Amazon S3 transfer engine runs the Amazon S3 plugin and is used for transferring objects from their sources into S3 buckets. The S3 plugin supports the following features:
 
-- Transfer Amazon S3 objects between AWS China Regions and AWS Regions
-- Transfer objects from Alibaba Cloud OSS / Tencent COS / Qiniu Kodo to Amazon S3
+- Transfer Amazon S3 objects between AWS China Regions and AWS Global Regions
+- Transfer objects from other cloud providers to Amazon S3
 - Transfer objects from S3 Compatible Storage service to Amazon S3
 - Support near real time transfer via S3 Event
 - Support transfer with object metadata
@@ -46,7 +46,7 @@ Amazon S3 transfer engine runs the Amazon S3 plugin and is used for transferring
 
 Amazon ECR engine runs the Amazon ECR plugin and is used for transferring container images from other container registries. The ECR plugin supports the following features:
 
-- Transfer Amazon ECR images between AWS China Regions and AWS Regions
+- Transfer Amazon ECR images between AWS China Regions and AWS Global Regions
 - Transfer from public container registry (such as Docker Hub, GCR.io, Quay.io) to Amazon ECR
 - Transfer selected images to Amazon ECR
 - Transfer all images and tags from Amazon ECR

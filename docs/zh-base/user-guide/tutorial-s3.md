@@ -1,8 +1,8 @@
 该解决方案允许您通过以下方式创建 Amazon S3 传输任务：
 
-- 使用控制台传输任务
-- 使用DTH S3 插件创建传输任务
-- 使用AWS CLI创建传输任务
+- [使用控制台传输任务](#console-launch)
+- [使用DTH S3 插件创建传输任务](#plugin-launch)
+- [使用AWS CLI创建传输任务](#cli-launch)
 
 您可以根据您的需要进行选择。
 
@@ -12,7 +12,7 @@
 
 - AWS CLI可以快速启动数据传输任务。如果您想在自动化脚本中使用该解决方案，请选择此选项。
 
-## 使用控制台传输任务
+## 使用控制台传输任务 <a name="console-launch"></a>
 您可以在网页控制台创建Amazon S3数据传输任务。更多信息请参考[部署解决方案](../../deployment/deployment-overview)。
 
 !!! Note "注意"
@@ -119,7 +119,7 @@
 
 
 
-## 使用DTH S3 插件创建传输任务
+## 使用DTH S3 插件创建传输任务 <a name="plugin-launch"></a>
 !!! Note "注意"
     本教程是纯后端版本的部署指南。如需了解详情，请参考该[DTH S3插件介绍](https://github.com/awslabs/data-transfer-hub/blob/main/docs/S3_PLUGIN_CN.md).
 
@@ -149,7 +149,7 @@
 然后下一步指定密钥名称，最后一步点击创建。
 
 
-> 注意：如果该AK/SK是针对源桶, 则需要具有桶的**读**权限, 如果是针对目标桶, 则需要具有桶的**读与写**权限。 如果是Amazon S3, 可以参考[配置凭据](./IAM-Policy_CN.md)
+> 注意：如果该AK/SK是针对源桶, 则需要具有桶的**读**权限, 如果是针对目标桶, 则需要具有桶的**读与写**权限。 如果是Amazon S3, 可以参考[配置凭据](../tutorial/IAM-Policy_CN.md)
 
 
 **3. 启动AWS Cloudformation部署**
@@ -167,7 +167,10 @@
     - 部署到AWS海外区
 
       [![Launch Stack](../images/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
+    
+    - 部署到AWS GovCloud (US) 区
 
+      [![Launch Stack](../images/launch-stack.svg)](https://console.amazonaws-us-gov.com/cloudformation/home#/stacks/create/template?stackName=DTHS3Stack&templateURL=https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template)
     
 
 1. 单击**下一步**。 相应地为参数指定值。 如果需要，请更改堆栈名称。
@@ -178,12 +181,12 @@
 
 部署预计用时3-5分钟
 
-## 使用AWS CLI创建传输任务
+## 使用AWS CLI创建传输任务 <a name="cli-launch"></a>
 您可以使用 [AWS CLI][aws-cli] 创建 Amazon S3 传输任务。如果您同时部署了DTH Portal，通过CLI启动的任务将不会出现在您Portal的任务列表界面中。
 
 1. 创建一个具有两个公有子网或两个拥有[NAT 网关][nat] 私有子网的Amazon VPC。
 
-2. 根据需要替换`<CLOUDFORMATION_URL>`为`https://s3.amazonaws.com/solutions-reference/data-transfer-hub/latest/DataTransferS3Stack-ec2.template`。
+2. 根据需要替换`<CLOUDFORMATION_URL>`为`https://solutions-reference.s3.amazonaws.com/data-transfer-hub/latest/DataTransferS3Stack.template`。
 
 3. 转到您的终端并输入以下命令。详情请参考**参数列表**。
 
