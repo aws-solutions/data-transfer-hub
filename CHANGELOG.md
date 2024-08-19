@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.2] - 2024-08-19
+
+### Fixed
+- Fix the ECR get image tags issue [#153](https://github.com/aws-solutions/data-transfer-hub/issues/153).
+
+### Security
+- `ip` to mitigate [CVE-2024-29415]
+- `webpack-dev-middleware` to mitigate [CVE-2024-29180]
+- `@babel/traverse` to mitigate [CVE-2023-45133]
+- `ws` to mitigate [CVE-2024-37890]
+- `axios` to mitigate [CVE-2024-39338]
+- `braces` to mitigate [CVE-2024-4068]
+- `fast-xml-parser` to mitigate [CVE-2024-41818]
+- `ejs` to mitigate [CVE-2024-33883]
+- `express` to mitigate [CVE-2024-29041]
+- `tar` to mitigate [CVE-2024-28863]
+- `follow-redirects` to mitigate [CVE-2024-28849]
+- `postcss` to mitigate [CVE-2023-44270]
+
 ## [2.6.1] - 2024-04-11
 
 ### Fixed
