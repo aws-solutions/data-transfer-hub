@@ -177,7 +177,6 @@ def sfn_client():
         )
 
         os.environ["MOCK_SFN_ARN"] = response["stateMachineArn"]
-        print("fuck")
         print(os.environ["MOCK_SFN_ARN"])
         yield
 

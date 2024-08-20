@@ -198,7 +198,7 @@ class ECRHelper(BaseHelper):
         )
         image_details = response.get('imageDetails')
         while "nextToken" in response:
-            response = self._ecr.describe_repositories(
+            response = self._ecr.describe_images(
                 repositoryName=repo_name,
                 filter={
                     'tagStatus': 'TAGGED'

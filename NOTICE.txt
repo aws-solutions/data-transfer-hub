@@ -140,3 +140,12 @@ python-dateutil under Apache Software License, BSD License (Dual License)
 typing_extensions under Python Software Foundation License
 boolean.py under BSD-2-Clause
 license-expression under Apache License Version 2.0
+pyrsistent under the MIT License
+pyasn1 under the MIT License
+pyrsistent under the MIT License
+awscli under the Apache License Version 2.0
+rsa under the Apache License Version 2.0
+colorama under the BSD License
+docutils under the BSD License
+isodate under the BSD License
+ajv under the MIT License
