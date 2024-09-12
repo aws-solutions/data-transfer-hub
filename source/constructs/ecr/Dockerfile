@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM public.ecr.aws/docker/library/alpine:edge
 
 RUN apk update \
     && apk add skopeo aws-cli-v2 jq
