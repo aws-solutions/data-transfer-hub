@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.3] - 2024-09-12
+
+### Changed
+- `Alpine` base image to be sourced from Amazon ECR.
+
+### Security
+- `micromatch` to mitigate [CVE-2024-4067](https://github.com/advisories/GHSA-952p-6rrq-rcjv) 
+- `webpack` to mitigate [CVE-2024-43788](https://github.com/advisories/GHSA-4vvj-4cpr-p986)
+- `path-to-regexp` to mitigate [CVE-2024-45296](https://github.com/advisories/GHSA-9wv6-86v2-598j)
+- `serve-static` to mitigate [CVE-2024-43800](https://github.com/advisories/GHSA-cm22-4g7w-348p)
+- `body-parser` to mitigate [CVE-2024-45590](https://github.com/advisories/GHSA-qwcr-r2fm-qrc7)
+- `express` to mitigate [CVE-2024-43796](https://github.com/advisories/GHSA-qw6h-vgh9-j6wx)
+- `send` to mitigate [CVE-2024-43799](https://github.com/advisories/GHSA-m6fv-jmcg-4jfg)
+
 ## [2.6.2] - 2024-08-19
 
 ### Fixed
